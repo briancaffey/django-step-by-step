@@ -13,13 +13,13 @@ This file will document our project setup, step by step.
 ## Create a virtual environment
 
 ```
-python3 -m venv .env
+python3 -m venv .local-env
 ```
 
 ## Activate the virtual environment
 
 ```
-source .env/bin/activate
+source .local-env/bin/activate
 ```
 
 ## Make sure pip is upgraded to the latest version
@@ -154,7 +154,7 @@ DEBUG = bool(int(os.environ.get("DEBUG", "1")))
 
 This uses a `True` default value for `DEBUG` if the `DEBUG` environment variable is not set.
 
-## Move `backend/backend/settings.py` to `backend/backend/settings/base.py` and add `backend/backend/settings/__init__.py
+## Move `backend/backend/settings.py` to `backend/backend/settings/base.py` and add `backend/backend/settings/**init**.py
 
 ```
 mkdir backend/backend/settings && touch backend/backend/settings/__init__.py && mv backend/backend/settings.py backend/backend/settings/base.py
@@ -237,8 +237,6 @@ backend/
     ├── dev.txt
     └── test.txt
 ```
-
-
 
 ## Install Django Debug Toolbar
 
@@ -328,46 +326,11 @@ urlpatterns = [
 ]
 ```
 
-## Rename the virtual environment from `.env` to something else
-
-When we created our virtual environment with `python3 -m venv .env`, this created a new folder in the root of our project called `.env`. Later on we will want to use the name `.env` for a special file in which we will define our project's environment variables.
-
-Let's remove the `.env` folder and its contents:
-
-```
-rm -rf .env
-```
-
-And now let's create a new virtual environment with a name other than `.env`:
-
-```
-python3 -m venv .my-env
-```
-
-Next, we will need to install our project dependencies. To do this, run:
-
-```
-source .my-env/bin/activate
-```
-
-This activates the environment, next use pip to install dependencies into the activated virtual environment:
-
-```
-python3 -m pip install --upgrade pip && pip install -r backend/requirements/base.txt
-```
-
-
-
-
-
-
-
-
 ## Setup a Django app called `core`
 
 Next we will add the first app to this Django project. Apps are Django's way of encapsulating logic. My Django projects typically have three apps: `core`, `accounts` and some other app that contains the majority of my project's logic.
 
-I use the `core` app for models, views, middleware and other logic that doesn't directly related to our applications logic. For example, a view that is used for application health checks, a model that is used for logging all requests, and a middleware used to save a record in our database for each request. We will implement these later, but for now let's just add the `core` app:
+I use the `core` app for models, views, middleware and other logic that isn't directly related to our application's logic. For example, a view that is used for application health checks, a model that is used for logging all requests, and a middleware used to save a record in our database for each request. We will implement these later, but for now let's just add the `core` app:
 
 ```
 mkdir -p backend/apps/core && django-admin startapp core ./backend/apps/core
@@ -392,13 +355,11 @@ INSTALLED_APPS = [
 
 ## Setup a Django app called `accounts`
 
-
 ```
 mkdir -p backend/apps/accounts && django-admin startapp accounts ./backend/apps/accounts
 ```
 
 Add `'apps.accounts'` to `INSTALLED_APPS` in `base.py`
-
 
 ## Setup a Custom User Model
 
@@ -660,7 +621,6 @@ pytest backend --cov=backend
 
 This will give a coverage report:
 
-
 ```
 ----------- coverage: platform linux, python 3.8.7-final-0 -----------
 Name                                               Stmts   Miss  Cover
@@ -689,6 +649,26 @@ backend/manage.py                                     12     12     0%
 ----------------------------------------------------------------------
 TOTAL                                                126     33    74%
 ```
+
+## Write browsable coverage to a directory and view with simple HTTP server
+
+Run pyest with the following options:
+
+```
+pytest backend --cov=backend --cov-report html:backend/.coverage
+```
+
+Then run a simple local file server
+
+```
+python -m http.server 8002 --directory backend/.coverage
+```
+
+[http://localhost:8002](http://localhost:8002) will open the code coverage report.
+
+`.coverage` is already included in the `.gitignore` file that was included originally, so generating the coverage report at this location will not add anything to git.
+
+More options for pytest-cov can be found here: [https://pytest-cov.readthedocs.io/en/latest/reporting.html](https://pytest-cov.readthedocs.io/en/latest/reporting.html)
 
 ## Python code linting with flake8
 
@@ -806,7 +786,7 @@ tcp        0      0 127.0.0.1:5433          0.0.0.0:*               LISTEN      
 
 ## Another approach to running postgres on our machine and an introduction to docker: run postgres in a docker container
 
-Reference: [https://hub.docker.com/_/postgres](https://hub.docker.com/_/postgres)
+Reference: [https://hub.docker.com/\_/postgres](https://hub.docker.com/_/postgres)
 
 ```
 docker run -d \
@@ -878,6 +858,14 @@ We can use docker and docker-compose for "dockerizing" our application as much o
 ## Setup redis-commander
 
 ## Setup Celery app, celery settings, debug tasks, watchdog commands
+
+## Decide if you need `CELERY_TASKS_ALWAYS_EAGER` to be set to `True`
+
+Depending on the type of celery tasks your app uses, you may or may not want to use a special Django setting that will run the task directly on the webserver and not on the worker. It can also be said that this setting runs the celery tasks synchronously when `CELERY_TASKS_ALWAYS_EAGER = True`. If your tasks involve simple steps like sending email or doing relatively fast processing, this might be fine.
+
+If you want to simulate celery workers running in your local environment in a way similar that they would be running in production, you can also start different celery processes that can run one or more queues.
+
+First it will be shown using the `CELERY_TASKS_ALWAYS_EAGER = True` setting, and second it will be shown how to use separate celery worker processes to simulate a production environment on a local development machine.
 
 ## Setup celery beat, settings, period task
 

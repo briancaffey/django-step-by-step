@@ -1,6 +1,16 @@
 .PHONY: all
 all: migrate	runserver
 
+.PHONY: pip-install
+pip-install:
+	pip install -r backend/requirements/base.txt
+	pip install -r backend/requirements/test.txt
+	pip install -r backend/requirements/dev.txt
+
+.PHONY: source
+source:
+	. .local-env/bin/activate
+
 .PHONY: migrate
 migrate:
 	# migrate
