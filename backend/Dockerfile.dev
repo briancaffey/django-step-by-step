@@ -1,0 +1,15 @@
+FROM python:3.8-slim
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
+RUN mkdir /code
+WORKDIR /code
+ADD requirements/base.txt \
+    requirements/dev.txt \
+    requirements/test.txt \
+    /code/requirements/
+RUN pip3 install -r requirements/base.txt
+RUN pip3 install -r requirements/dev.txt
+RUN pip3 install -r requirements/test.txt
+ADD . /code/
+RUN useradd -m app
+USER app
