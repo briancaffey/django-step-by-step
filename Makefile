@@ -33,3 +33,7 @@ pip-local:
 pytest:
 	# Running Django test suite
 	pytest backend
+
+PHONY: notebook
+notebook:
+	backend/manage.py shell_plus --notebook

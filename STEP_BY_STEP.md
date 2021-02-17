@@ -771,17 +771,87 @@ Add the `django-extensions` app to `INSTALLED_APPS`:
 
 ## Add a base model for tracking created/modified timestamps
 
+Adding a base model can be useful for adding fields to models that will be included on most of the other models in our project.
+
+Here's an example of a base model we can use in our project. This model will be added to our `core` Django app and is a typical example of why it helps to have a `core` or `common` app that can help to organize things that aren't specific to one app.
+
+```py
+from django.conf import settings
+from django.db import models
+
+
+class BaseModel(models.Model):
+
+    created_on = models.DateTimeField(auto_now_add=True, editable=False)
+    modified_on = models.DateTimeField(auto_now=True, editable=False)
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        default=None,
+        blank=True,
+        editable=False,
+        on_delete=models.SET_NULL,
+        related_name='%(app_label)s_%(class)s_created_by',
+    )
+    modified_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        default=None,
+        blank=True,
+        editable=False,
+        on_delete=models.SET_NULL,
+        related_name='%(app_label)s_%(class)s_modified_by',
+    )
+
+    class Meta:
+        abstract = True
+```
+
+There's no need to run migrations since the model is `abstract`. This model can now be subclassed when making new models. This will be used shortly.
+
 ## Add settings for enabling use of Jupyter notebooks
 
-## Add Django constance
+Add the following dependencies that will allow us to use Jupyter notebooks to work with our Django application in it's own environment.
 
-## Add constants file
+`dev.txt`
 
-## VSCode remote container
+```
+# for Jupyter notebooks
+ipython==7.20.0
+jupyter==1.0.0
+```
+
+Add the following make command:
+
+```
+PHONY: notebook
+notebook:
+	backend/manage.py shell_plus --notebook
+```
+
+Running `make notebook` (or `backend/manage.py shell_plus --notebook`) will open up a Jupyter notebook in the browser. Click on `New` > `Django Shell-Plus` and you can run `!pip freeze` to view the dependencies installed to confirm that the environment is correct.
+
+In order to make ORM queries, the following must be ran in the notebook:
+
+```python
+%env DJANGO_ALLOW_ASYNC_UNSAFE=true
+```
+
+This will set the environment variable `DJANGO_ALLOW_ASYNC_UNSAFE` which we will allow for the execution database queries through the ORM, for example:
+
+```py
+%env DJANGO_ALLOW_ASYNC_UNSAFE=true
+from django.contrib.auth import get_user_model
+User = get_user_model()
+users = User.objects.all()
+users.count()
+```
+
+The `DJANGO_ALLOW_ASYNC_UNSAFE` environment variable can also be set in your shell before launching Jupyter notebook.
 
 ## Setup Postgres locally
 
-Run the following command to ensure that Postgres is correctly on you computer:
+Run the following command to ensure that Postgres is install and running:
 
 ```
 sudo service postgresql status
@@ -810,6 +880,39 @@ sudo service postgresql status
 ```
 
 ## Configure our Django application to use our local postgres service
+
+The Postgres service is available at `localhost:5432`.
+
+```
+sudo -u postgres psql postgres
+ALTER USER postgres WITH PASSWORD 'postgres';
+```
+
+Add `psycopg2` to our project dependencies (in `base.txt`):
+
+```
+psycopg2-binary==2.8.6
+```
+
+Add the following settings to `base.py`:
+
+```py
+# Database
+# https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+
+DATABASES = {
+    "default": {
+        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "NAME": os.environ.get("POSTGRES_NAME", "postgres"),
+        "USER": os.environ.get("POSTGRES_USERNAME", "postgres"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "postgres"),
+        "HOST": os.environ.get("POSTGRES_SERVICE_HOST", "localhost"),
+        "PORT": os.environ.get("POSTGRES_SERVICE_PORT", 5432),
+    }
+}
+```
+
+Now run the `migrate` management command and then `runserver` (or just run `make` to run the migrate command and start the development server).
 
 ## Another approach to running postgres on our machine and an introduction to docker: run postgres in a docker container
 
@@ -866,13 +969,104 @@ networks:
 
 We can use docker and docker-compose for "dockerizing" our application as much or as little as we want. Eventually I'll show how to fully dockerize all components of our application. This will simplify the process of starting the entire project locally and will also ensure that developers don't have any issues with running the application properly.
 
-## Setup pgadmin in docker-compose
+## Setup pgadmin4 locally
+
+Add `pgadmin4` to `dev.txt` and install the local dependencies (**`make pip-local`**).
+
+If you see errors about log file permissions, run the following:
+
+```
+sudo mkdir /var/log/pgadmin
+sudo chown -R $USER:$USER /var/log/pgadmin
+```
+
+Run `pgadmin4` in a terminal with the virtual environment activated, then enter an email and password that you will use to login for the first time. Login to the program when it opens in the browser, enter your email and password and create a new server. User `postgres` for the name, user and password.
+
+## Setup pgadmin4 in docker-compose
 
 ## Add a Dockerfile for our Django application
+
+Now that the main dependency for our project (postgres) is running in docker, it is important to decide if the Django application itself should run as a containerized process in our local development environment. For most Django projects, either way is probably fine. If we don't use docker for running the Django application, then there is no problem with running it directly on the virtual environment as it has been running in up until now.
+
+The main reasons why I choose to run project locally in docker are:
+
+- it is easy to start everything at once with one command
+- it is a standard format and makes it easy for people to start a complex project quickly without setting anything up
+- it makes me more confident that something working correctly on my local docker environment will work on a remote server's docker environment as well.
+- it will make deployment easier and more predictable
+
+We need to do 2 things in order to start running our Django app in a container: write a Dockerfile and also provide some options for how to run the container.
+
+First, we can start with this Dockerfile:
+
+`backend/Dockerfile.dev`:
+
+```Dockerfile
+FROM python:3.8-slim
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
+RUN mkdir /code
+WORKDIR /code
+ADD requirements/base.txt \
+    requirements/dev.txt \
+    requirements/test.txt \
+    /code/requirements/
+RUN pip3 install -r requirements/base.txt
+RUN pip3 install -r requirements/dev.txt
+RUN pip3 install -r requirements/test.txt
+ADD . /code/
+RUN useradd -m app
+USER app
+```
+
+Next, we need to think about how the container will run. Because there is no `EXEC` keyword in Dockerfile.dev, this Dockerfile doesn't tell the container what to do. Similar to how it was shown that postgres can be launched from the command line with command line arguments or from the `docker-compose` command that references a `docker-compose.yml` file, our containerized Django app can also be launched in these two ways.
+
+Before we run the container, we need to build it. We can start with the `docker build` command:
+
+```
+docker build -t my-backend -f backend/Dockerfile.dev backend
+```
+
+You should see:
+
+```
+Successfully built 6aaa6b60ad17
+Successfully tagged my-backend:latest
+```
+
+To run the container, use the following command:
+
+```
+docker run -p 8000:8000 my-backend
+```
+
+What about postgres? If we run:
+
+```
+docker run -p 8000:8000 my-backend python3 manage.py runserver
+```
+
+We will see the following error:
+
+```
+        Is the server running on host "localhost" (::1) and accepting
+        TCP/IP connections on port 5432?
+```
+
+This is because the `localhost` on our browser is not the same as the `localhost` on our container.
+
+To fix this, we need to run the docker container
+
+```
+docker run --network=host -p 8000:8000 my-backend python3 manage.py runserver_plus
+```
+
 
 ## Add redis to docker-compose file for celery broker
 
 ## Setup redis-commander
+
+## Add Django constance
 
 ## Setup Celery app, celery settings, debug tasks, watchdog commands
 
@@ -923,6 +1117,10 @@ First it will be shown using the `CELERY_TASKS_ALWAYS_EAGER = True` setting, and
 ## Draw a project diagram using diagrams.net
 
 ## Generate model visualizations with graphviz
+
+## Django Doctor
+
+## VSCode remote container
 
 ---
 
