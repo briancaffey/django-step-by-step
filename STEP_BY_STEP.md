@@ -670,6 +670,28 @@ python -m http.server 8002 --directory backend/.coverage
 
 More options for pytest-cov can be found here: [https://pytest-cov.readthedocs.io/en/latest/reporting.html](https://pytest-cov.readthedocs.io/en/latest/reporting.html)
 
+## Configure VSCode settings
+
+In order to do linting with `flake8` and formatting with `black`, VSCode needs some special settings:
+
+Here's my VSCode configuration:
+
+```json
+{
+  "python.pythonPath": ".local-env/bin/python",
+  "python.linting.flake8Enabled": true,
+  "python.linting.pylintEnabled": false,
+  "python.linting.enabled": true,
+  "editor.formatOnSave": true,
+  "python.formatting.provider": "black",
+  "python.formatting.blackPath": ".local-env/bin/black",
+  // flake8 has a default line-length of 79, so we use that for black as well
+  "python.formatting.blackArgs": ["--line-length", "79"]
+}
+```
+
+These settings will automatically format Python code and do code linting to indicate errors that need fixing. `black` has a default line-length of 88 columns. Thi is the one setting to change in the `black` command line arguments in the VSCode project settings.
+
 ## Python code linting with flake8
 
 We will use flake8 in our python code tests together with `pytest`. Add the flake8 dependency to the `test.txt` requirements file:
@@ -690,33 +712,11 @@ backend/manage.py:9:80: E501 line too long (83 > 79 characters)
 backend/apps/accounts/views.py:1:1: F401 'django.shortcuts.render' imported but unused
 backend/apps/accounts/admin.py:1:1: F401 'django.contrib.admin' imported but unused
 backend/apps/accounts/tests.py:9:80: E501 line too long (80 > 79 characters)
-backend/apps/accounts/migrations/0001_initial.py:19:80: E501 line too long (114 > 79 characters)
-backend/apps/accounts/migrations/0001_initial.py:20:80: E501 line too long (88 > 79 characters)
-backend/apps/accounts/migrations/0001_initial.py:21:80: E501 line too long (103 > 79 characters)
-backend/apps/accounts/migrations/0001_initial.py:22:80: E501 line too long (196 > 79 characters)
-backend/apps/accounts/migrations/0001_initial.py:23:80: E501 line too long (104 > 79 characters)
-backend/apps/accounts/migrations/0001_initial.py:24:80: E501 line too long (102 > 79 characters)
-backend/apps/accounts/migrations/0001_initial.py:25:80: E501 line too long (165 > 79 characters)
-backend/apps/accounts/migrations/0001_initial.py:26:80: E501 line too long (203 > 79 characters)
-backend/apps/accounts/migrations/0001_initial.py:27:80: E501 line too long (117 > 79 characters)
-backend/apps/accounts/migrations/0001_initial.py:28:80: E501 line too long (104 > 79 characters)
-backend/apps/accounts/migrations/0001_initial.py:29:80: E501 line too long (266 > 79 characters)
-backend/apps/accounts/migrations/0001_initial.py:30:80: E501 line too long (229 > 79 characters)
-backend/apps/core/views.py:1:1: F401 'django.shortcuts.render' imported but unused
-backend/apps/core/admin.py:1:1: F401 'django.contrib.admin' imported but unused
-backend/apps/core/models.py:1:1: F401 'django.db.models' imported but unused
-backend/apps/core/tests.py:1:1: F401 'django.test.TestCase' imported but unused
-backend/backend/urls.py:28:6: W292 no newline at end of file
-backend/backend/settings/development.py:3:1: F405 'INSTALLED_APPS' may be undefined, or defined from star imports: .base
-backend/backend/settings/development.py:5:1: F405 'MIDDLEWARE' may be undefined, or defined from star imports: .base
-backend/backend/settings/development.py:7:29: W292 no newline at end of file
-backend/backend/settings/base.py:93:80: E501 line too long (91 > 79 characters)
-backend/backend/settings/base.py:96:80: E501 line too long (81 > 79 characters)
-backend/backend/settings/base.py:99:80: E501 line too long (82 > 79 characters)
-backend/backend/settings/base.py:102:80: E501 line too long (83 > 79 characters)
+
+...
 ```
 
-Instead of manually going over each of these files and making the required formatting changes, we can install `black` as a way to automatically. `black` should be able to format most of the `E501 line too long` errors.
+Instead of manually going over each of these files and making the required formatting changes, we can install `black` as a way to automatically format all of the python code at once. `black` should be able to format most of the `E501 line too long` errors.
 
 ## Format python code with black
 
@@ -752,6 +752,33 @@ Now run `flake8 backend` to see how many errors there are:
 
 ```
 
+## Add runserver_plus and Werkzeug
+
+Install dependencies for `runserver_plus` and `Werkzeug`:
+
+```
+django-extensions==3.1.0
+Werkzeug==1.0.1 # used for runserver_plus exception console
+```
+
+Add the `django-extensions` app to `INSTALLED_APPS`:
+
+```py
+    'django_extensions',
+```
+
+`runserver_plus`
+
+## Add a base model for tracking created/modified timestamps
+
+## Add settings for enabling use of Jupyter notebooks
+
+## Add Django constance
+
+## Add constants file
+
+## VSCode remote container
+
 ## Setup Postgres locally
 
 Run the following command to ensure that Postgres is correctly on you computer:
@@ -771,15 +798,15 @@ Feb 01 19:41:34 x1 systemd[1]: Starting PostgreSQL RDBMS...
 Feb 01 19:41:34 x1 systemd[1]: Started PostgreSQL RDBMS.
 ```
 
-Check which port postgres is running on:
+Ubuntu 20.04 shows the following:
 
 ```
-sudo netstat -plunt | grep postgres
+sudo service postgresql start
 ```
 
 ```
-tcp        0      0 127.0.0.1:5432          0.0.0.0:*               LISTEN      5491/postgres
-tcp        0      0 127.0.0.1:5433          0.0.0.0:*               LISTEN      5490/postgres
+sudo service postgresql status
+12/main (port 5432): online
 ```
 
 ## Configure our Django application to use our local postgres service
@@ -842,16 +869,6 @@ We can use docker and docker-compose for "dockerizing" our application as much o
 ## Setup pgadmin in docker-compose
 
 ## Add a Dockerfile for our Django application
-
-## Add runserver_plus and Werkzeug
-
-## Add a base model for tracking created/modified timestamps
-
-## Add settings for enabling use of Jupyter notebooks
-
-## Add Django constance
-
-## Add constants file
 
 ## Add redis to docker-compose file for celery broker
 

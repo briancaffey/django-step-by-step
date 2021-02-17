@@ -1,1 +1,5 @@
 django-debug-toolbar==3.2
+
+# for runserver_plus
+django-extensions==3.1.0
+Werkzeug==1.0.1

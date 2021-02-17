@@ -19,7 +19,7 @@ migrate:
 .PHONY: runserver
 runserver:
 	# runserver
-	backend/manage.py runserver
+	backend/manage.py runserver_plus
 
 .PHONY: pip-local
 pip-local:
