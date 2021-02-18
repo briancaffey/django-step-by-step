@@ -1,4 +1,28 @@
-# Django Step by Step
+# How I start Django projects in 2021 in 2**8 simple steps
+
+This document covers Django project setup step by step at a high level of detail. Starting from a blank directory, this guide will progressively build an application in a local development environment that uses Django as the core service. In addition to Django, there is a demonstration on how to use Vue.js along with Django in a "progressive" fashion. Vue is a personal choice, but it can be easily exchanged with any other frontend library or framework.
+
+## What is a Django application?
+
+Django application is an ambiguous term. There are three possible meanings that come to mind when someone says "Django application":
+
+1. A web application built using the Django Web framework. Examples include YouTube, Pinterest, reddit, etc.
+2. A reusable "plugin" that can installed in another Django application that a developer is creating.
+3. A logical grouping of code in a Django application (these are typically called `apps`, and are created with the management command `startapp`)
+
+This guide will focus on the first definition of "Django application". The application logic and data model will be very simple so that the guide can focus on showing how to build a productive Django development environment.
+
+There are tools that generate Django projects with complete development environments, [cookiecutter-django](https://github.com/pydanny/cookiecutter-django) is a popular example. This guide is focusing on the order of each step and explaining how and why certain architectural decisions are made. This project will not provide a "production ready" template, but it will be developed in a way that will support multiple deployment scenarios such as containers and functions (such as AWS Lambda). This guide will cover continuous integration (automated acceptance testing)
+
+Again, the goal of this project is to walk the reader through each step of setting up a Django project from scratch. Some of the topics include:
+
+- How to setup your development environment on Windows (WSL 2) and Linux environment
+- Popular tools used to help build Django applications (testing, debugging, etc.)
+- Authentication and social authentication
+- Different ways to incorporate Vue.js and which one you should choose for your next project if you intend on using Vue.
+- How docker can be used in a Django application development workflow and reasons you might want to use docker
+
+Writing this is not easy. There are lots of decisions to make regarding what to explain and selecting which combination of competing technologies to use.
 
 ## Start with a blank git repo and create two files: `README.md` and `STEP_BY_STEP.md`:
 
@@ -1130,14 +1154,133 @@ To fix this, we need to run the docker container
 docker run --network=host -p 8000:8000 my-backend python3 manage.py runserver_plus
 ```
 
+## Setup redis locally
+
+[https://redis.io/topics/quickstart](https://redis.io/topics/quickstart)
+
+[https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-18-04](https://www.digitalocean.com/community/tutorials/how-to-install-and-secure-redis-on-ubuntu-18-04)
+
+Install redis:
+
+```
+sudo apt install redis-server
+```
+
+Edit the configuration file so that redis uses `systemd`:
+
+```
+sudo nano /etc/redis/redis.conf
+```
+
+Change the following line in `redis.conf`:
+
+```
+supervised systemd
+```
+
+Check on the status of the `redis-server` service:
+
+```
+sudo service redis-server status
+```
+
+We can verify that redis works, but first install the py-redis client:
+
+
+```
+# base.txt
+
+redis==3.5.3
+```
+
+Run **`make pip-local`** to install the dependency to your local environment.
+
+Redis stands for `remote dictionary service`. Using a Jupyter notebook or IPython, you can test the redis connection with:
+
+
+```py
+import os
+import redis
+
+REDIS_SERVICE_HOST = os.environ.get('REDIS_SERVICE_HOST', 'localhost')
+
+REDIS = redis.Redis(
+    host=REDIS_SERVICE_HOST,
+    port=6379,
+    db=0,
+    charset="utf-8",
+    decode_responses=True,
+)
+```
+
+Redis will allow us to do several different things with our Django application:
+
+- **caching**: this refers to storing responses in redis so that database queries can be avoided. This is useful for expensive queries that will likely not change frequently and it will also result in a faster request/response cycle.
+- **async processing**: redis will help us do long-running tasks on "another computer", such as processing large files, sending emails, etc. Redis will keep track of the tasks that need to be processed. You can think about redis as a way to store python lists, dictionaries, sets, strings and numbers on a remote database. Redis offers some additional data types, as well. I'll use redis with `celery` later on.
+- **web sockets**: redis will allow us to work with web sockets. This allows for real-time communication between the server and connected clients using web sockets.
+- **constance**: Django constance is a package that allows you to configure settings that you can change in real-time. This will be used later
+- more: there are likely other use cases that use redis. The examples listed here can usually use a number of different services such as `memcached` or `RabbitMQ`. A redis server can use dedicated numbered databases so that there is no possibility of key collision.
 
 ## Add redis to docker-compose file for celery broker
 
-## Setup redis-commander
+## Setup redis-commander locally
 
-## Add Django constance
+Similar to how we installed `pgadmin4` to give us a GUI for our Postgres database, we can also install a GUI for our redis database that will provide a similar functionality and will also give us visibility into how our Django application interacts with redis.
 
-## Setup Celery app, celery settings, debug tasks, watchdog commands
+First, install redis-commander with `npm`. Check you node and npm versions with:
+
+```
+node -v
+v15.0.1
+npm -v
+7.0.3
+```
+
+Install the program in our global npm modules:
+
+```
+npm install -g redis-commander
+```
+
+We can now see this installed in our global dependencies with:
+
+```
+npm list -g --depth=0
+```
+
+Here are my globally installed npm packages:
+
+```
+npm list -g --depth=0
+/home/brian/.nvm/versions/node/v15.0.1/lib
+├── @quasar/cli@1.1.2
+├── aws-cdk@1.70.0
+├── generator-code@1.3.9
+├── npm@7.0.3
+├── redis-commander@0.7.0 <-- this is what we just installed
+└── yo@3.1.1
+```
+
+Now start the redis-commander program with `redis-commander` and visit `http://127.0.0.1:8081`:
+
+```
+redis-commander
+Using scan instead of keys
+No Save: false
+listening on 0.0.0.0:8081
+access with browser at http://127.0.0.1:8081
+Redis Connection localhost:6379 using Redis DB #0
+```
+
+You may need to add a new server in order to inspect a different redis database. Click on `More` > `Add Server`, add a `Display-Name` and a `Database Index`.
+
+## Setup Celery app
+
+## Add celery settings to Django settings
+
+## Add a debug celery task
+
+## Setup watchdog command for celery
 
 ## Decide if you need `CELERY_TASKS_ALWAYS_EAGER` to be set to `True`
 
