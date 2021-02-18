@@ -6,6 +6,6 @@
     "editor.formatOnSave": true,
     "python.formatting.provider": "black",
     "python.formatting.blackPath": ".local-env/bin/black",
-    // flake8 has a default line-length of 79, so we use that for black as well 
+    // flake8 has a default line-length of 79, so we use that for black as well
     "python.formatting.blackArgs": ["--line-length", "79"],
 }

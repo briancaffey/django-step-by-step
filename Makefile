@@ -34,6 +34,17 @@ pytest:
 	# Running Django test suite
 	pytest backend
 
-PHONY: notebook
+.PHONY: notebook
 notebook:
 	backend/manage.py shell_plus --notebook
+
+.PHONY: flake8
+flake8:
+	flake8 backend
+
+.PHONY: black
+black:
+	black -l 79 backend
+
+.PHONY: format
+format: flake8	black

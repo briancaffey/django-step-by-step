@@ -1274,7 +1274,167 @@ Redis Connection localhost:6379 using Redis DB #0
 
 You may need to add a new server in order to inspect a different redis database. Click on `More` > `Add Server`, add a `Display-Name` and a `Database Index`.
 
+
+## Add a RequestLog model
+
+Next let's add a model that will keep track of each request that is made to our application. On this model we will have the following fields:
+
+- `user` (Foreign key to user model, store on `created_by` field from base model)
+- `date` (use `created_on` field from base model)
+- `path` (`/api/resource/1/`)
+- `full_path` (`/api/resource/1/?query=something`)
+- `execution_time` (in milliseconds)
+- `response_code` (`200`, `301`, `404`, `500`, etc.)
+- `method` (`GET`, `POST`, etc.)
+- `remote_address` (IP address of connecting client)
+
+Here's the model we can use:
+
+```py
+# apps/core/models.py
+from django.db import models
+from django.contrib.auth import get_user_model
+
+
+User = get_user_model()
+
+
+class RequestLog(models.Model):
+    """
+    Request Log
+    """
+
+    user = models.ForeignKey(
+        User, null=True, on_delete=models.SET_NULL, blank=True
+    )
+    date = models.DateTimeField(auto_now_add=True)
+    path = models.CharField(max_length=3000)
+    full_path = models.CharField(max_length=3000)
+    execution_time = models.IntegerField(null=True)
+    response_code = models.PositiveIntegerField()
+    method = models.CharField(max_length=10, null=True)
+    remote_address = models.CharField(max_length=20, null=True)
+```
+
+Add this code and then run the `makemigrations` management command to add the migration file.
+
+## Add a middleware to handle RequestLog creation
+
+Next we need to add a middleware that will create and save a `RequestLog` object on each request. We can use the following middleware:
+
+```py
+# apps/core/middleware.py
+import logging
+import time
+
+from core.models import RequestLog
+
+logger = logging.getLogger(__name__)
+
+
+class RequestLogMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        start_time = time.time()
+        response = self.get_response(request)
+        duration = time.time() - start_time
+        response_ms = duration * 1000
+
+        user = None
+        if request.user.is_authenticated:
+            user = request.user
+        path = request.path
+        full_path = request.get_full_path()
+        method = str(getattr(request, "method", "")).upper()
+        remote_address = self.get_client_ip(request)
+        response_code = response.status_code
+
+        request_log = RequestLog(
+            user=user,
+            path=path,
+            full_path=full_path,
+            execution_time=response_ms,
+            response_code=response_code,
+            method=method,
+            remote_address=remote_address,
+        )
+
+        request_log.save()
+
+        return response
+
+    def get_client_ip(self, request):
+        x_forwarded_for = request.META.get("HTTP_X_FORWARDED_FOR")
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(",")[0]
+        else:
+            ip = request.META.get("REMOTE_ADDR")
+        return ip
+```
+
+Add this middleware to Django's `MIDDLEWARE` settings value at the end of the list:
+
+```py
+MIDDLEWARE = [
+    ...
+    "apps.core.middleware.RequestLogMiddleware",
+]
+```
+
+## Add an admin view for the RequestLog
+
+```py
+from django.contrib import admin
+
+from .models import RequestLog
+
+
+class RequestLogAdmin(admin.ModelAdmin):
+    class Meta:
+        model = RequestLog
+
+    def get_queryset(self, request):
+        qs = super(RequestLogAdmin, self).get_queryset(request)
+        qs = qs.exclude(full_path__startswith="/admin/")
+        return qs
+
+    search_fields = ("full_path",)
+
+    list_select_related = ("user",)
+
+    list_filter = ("method", "response_code", "user")
+
+    readonly_fields = (
+        "user",
+        "date",
+        "path",
+        "full_path",
+        "execution_time",
+        "response_code",
+        "method",
+        "remote_address",
+    )
+    list_display = (
+        "id",
+        "user",
+        "date",
+        "path",
+        "full_path",
+        "execution_time",
+        "response_code",
+        "method",
+        "remote_address",
+    )
+
+
+admin.site.register(RequestLog, RequestLogAdmin)
+```
+
 ## Setup Celery app
+
+
 
 ## Add celery settings to Django settings
 
