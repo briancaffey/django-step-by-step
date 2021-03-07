@@ -114,6 +114,28 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Celery
+
+REDIS_SERVICE_HOST = os.environ.get("REDIS_SERVICE_HOST", "localhost")
+REDIS_PORT = 6379
+BROKER_PORT = 1
+RESULTS_PORT = 2
+
+CELERY_BROKER_URL = f"redis://{REDIS_SERVICE_HOST}:{REDIS_PORT}/{BROKER_PORT}"
+CELERY_RESULT_BACKEND = (
+    f"redis://{REDIS_SERVICE_HOST}:{REDIS_PORT}/{RESULTS_PORT}"
+)
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+
+
+CELERY_BEAT_SCHEDULE = {
+    "celery-beat-debug-task": {
+        "task": "apps.core.tasks.celery_beat_debug_task",
+        "schedule": 10,  # scrape suppliers once every 5 minutes
+    },
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/

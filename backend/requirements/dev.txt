@@ -10,3 +10,11 @@ jupyter==1.0.0
 
 # pgadmin
 pgadmin4
+
+# for restarting celery
+watchdog==0.10.3
+pyyaml==5.3.1
+argh==0.26.2
+
+# flower
+flower==0.9.7

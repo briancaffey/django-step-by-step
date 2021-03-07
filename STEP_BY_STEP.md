@@ -1,4 +1,4 @@
-# How I start Django projects in 2021 in 2**8 simple steps
+# How I start Django projects in 2021 in 2\*\*8 simple steps
 
 This document covers Django project setup step by step at a high level of detail. Starting from a blank directory, this guide will progressively build an application in a local development environment that uses Django as the core service. In addition to Django, there is a demonstration on how to use Vue.js along with Django in a "progressive" fashion. Vue is a personal choice, but it can be easily exchanged with any other frontend library or framework.
 
@@ -1164,6 +1164,7 @@ Install redis:
 
 ```
 sudo apt install redis-server
+sudo apt install redis-tools
 ```
 
 Edit the configuration file so that redis uses `systemd`:
@@ -1186,7 +1187,6 @@ sudo service redis-server status
 
 We can verify that redis works, but first install the py-redis client:
 
-
 ```
 # base.txt
 
@@ -1196,7 +1196,6 @@ redis==3.5.3
 Run **`make pip-local`** to install the dependency to your local environment.
 
 Redis stands for `remote dictionary service`. Using a Jupyter notebook or IPython, you can test the redis connection with:
-
 
 ```py
 import os
@@ -1220,6 +1219,17 @@ Redis will allow us to do several different things with our Django application:
 - **web sockets**: redis will allow us to work with web sockets. This allows for real-time communication between the server and connected clients using web sockets.
 - **constance**: Django constance is a package that allows you to configure settings that you can change in real-time. This will be used later
 - more: there are likely other use cases that use redis. The examples listed here can usually use a number of different services such as `memcached` or `RabbitMQ`. A redis server can use dedicated numbered databases so that there is no possibility of key collision.
+
+Check the redis connection using the CLI command:
+
+```
+# we can ping the local redis server with the following:
+# redis-cli -h localhost -p 6379 ping
+# the `-h` and `-p` arguments are the default host and port for redis-cli, so this is equivalent to:
+
+redis-cli ping
+PONG
+```
 
 ## Add redis to docker-compose file for celery broker
 
@@ -1273,7 +1283,6 @@ Redis Connection localhost:6379 using Redis DB #0
 ```
 
 You may need to add a new server in order to inspect a different redis database. Click on `More` > `Add Server`, add a `Display-Name` and a `Database Index`.
-
 
 ## Add a RequestLog model
 
@@ -1434,13 +1443,273 @@ admin.site.register(RequestLog, RequestLogAdmin)
 
 ## Setup Celery app
 
+To setup celery, we need to do a few things:
 
+1. Add `celery` to our installed packages
+1. Add a `celery_app.py` file to configure celery
+1. Import celery in `backend/backend/__init__.py`
+1. Add settings to Django settings for celery
+1. Define a celery task in our project code
+1. Start a celery worker
+1. Run the test task to confirm that it is working
+
+You can read more about celery here: [https://docs.celeryproject.org/en/stable/getting-started/introduction.html](https://docs.celeryproject.org/en/stable/getting-started/introduction.html)
+
+Also, the celery documentation has some helpful Django-specific settings that will be used here:
+[https://docs.celeryproject.org/en/stable/getting-started/introduction.html](https://docs.celeryproject.org/en/stable/getting-started/introduction.html)
+
+First, add celery to `requirements/base.txt`:
+
+```
+celery==5.0.5
+```
+
+Now reinstall pip requirements.
+
+## Add `celery_app.py` to `backend/backend`
+
+Here's the contents for the `celery_app.py` file:
+
+```py
+from celery import Celery
+from django.conf import settings
+
+app = Celery("backend")
+
+app.config_from_object("django.conf:settings", namespace="CELERY")
+
+app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
+```
+
+## Install celery in `backend/backend/__init__.py`
+
+```py
+# This will make sure the app is always imported when
+# Django starts so that shared_task will use this app.
+from .celery import app as celery_app
+
+__all__ = ('celery_app',)
+```
 
 ## Add celery settings to Django settings
 
+Next the celery application can be configured in Django settings.
+
+We need to tell celery about the redis server since this will be used as the broker.
+
+You can think about the role that redis plays in the context of celery as a bulletin board.
+
+In our Django application, we will post messages on the bulletin board. The contents of the bulletin board messages are all pretty simple. At a basic level, the messages will specify the name of a function defined in our Django project along with any arguments that should be passed to the function. Celery workers will constantly be checking the bulletin board for work and will take messages off of the board and start doing the work specified by the messages. That's celery in a nutshell. It can get a lot more complicated, but the bulletin board / worker analogy can be stretched to explain some of the more complex parts of celery's advanced features.
+
+Here are the settings to add:
+
+```py
+# use `localhost` as the Redis server hostname unless `REDIS_SERVICE_HOST` is provided
+REDIS_SERVICE_HOST = os.environ.get("REDIS_SERVICE_HOST", "localhost")
+REDIS_PORT = 6379
+BROKER_PORT = 1
+RESULTS_PORT = 2
+
+CELERY_BROKER_URL = f"redis://{REDIS_SERVICE_HOST}:{REDIS_PORT}/{BROKER_PORT}"
+CELERY_RESULT_BACKEND = (
+    f"redis://{REDIS_SERVICE_HOST}:{REDIS_PORT}/{RESULTS_PORT}"
+)
+CELERY_ACCEPT_CONTENT = ["application/json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+```
+
 ## Add a debug celery task
 
+The simplest celery task we can write simply sleeps for 1 second and then returns a success message.
+
+We can write a simple task that sleeps for 1 second in the `core` app.
+
+Create a new file `apps/core/tasks.py` with the following celery task:
+
+```py
+import time
+
+@app.task(queue="default")
+def process_filing_list(filing_list_id):
+```
+
+## Run the celery command to start a worker
+
+In a new terminal window, activate the virtual environment and run the following from the root directory of the project:
+
+```
+cd backend
+```
+
+Then run
+
+```
+DJANGO_SETTINGS_MODULE=backend.settings.development celery -A backend.celery_app:app worker -l INFO
+```
+
+```
+ -------------- celery@DESKTOP-VF05L4R v5.0.5 (singularity)
+--- ***** -----
+-- ******* ---- Linux-4.19.128-microsoft-standard-x86_64-with-glibc2.29 2021-03-06 21:59:44
+- *** --- * ---
+- ** ---------- [config]
+- ** ---------- .> app:         backend:0x7f9e8d48f880
+- ** ---------- .> transport:   redis://localhost:6379/1
+- ** ---------- .> results:     redis://localhost:6379/2
+- *** --- * --- .> concurrency: 8 (prefork)
+-- ******* ---- .> task events: OFF (enable -E to monitor tasks in this worker)
+--- ***** -----
+ -------------- [queues]
+                .> celery           exchange=celery(direct) key=celery
+
+
+[tasks]
+  . apps.core.tasks.debug_task
+
+[2021-03-06 21:59:44,833: INFO/MainProcess] Connected to redis://localhost:6379/1
+[2021-03-06 21:59:44,842: INFO/MainProcess] mingle: searching for neighbors
+[2021-03-06 21:59:45,878: INFO/MainProcess] mingle: all alone
+[2021-03-06 21:59:45,884: WARNING/MainProcess] /home/brian/gitlab/django-step-by-step/.local-env/lib/python3.8/site-packages/celery/fixups/django.py:203: UserWarning: Using settings.DEBUG leads to a memory
+            leak, never use this setting in production environments!
+  warnings.warn('''Using settings.DEBUG leads to a memory
+
+[2021-03-06 21:59:45,884: INFO/MainProcess] celery@DESKTOP-VF05L4R ready.
+```
+
+## Run the debug task
+
+Now that we have a celery worker running, we are ready to post messages to our bulletin board. Let's open a Jupyter notebook and see how message are sent to redis (the bulletin). First, open a Jupyter notebook `Django Shell-Plus` session with:
+
+```
+make notebook
+```
+
+In a new notebook, run the following command:
+
+```py
+import time
+from apps.core.tasks import debug_task
+
+# calling `.delay` is what "posts" the message to redis (the bulletin board)
+task = debug_task.delay()
+
+print(f"Task ID is: {task}")
+print(f"Task status is: {task.status}")
+print(f"Task successful? {task.successful()}")
+print(f"Type: {type(task)}")
+
+print("waiting 2 seconds (the task should have been completed by now)")
+time.sleep(2)
+
+print(f"Task status: {task.status}")
+print(f"Task successful? {task.successful()}")
+```
+
+```
+Task ID is: 21846505-1473-4ba4-9544-dc969b6aa02c
+Task status is: PENDING
+Task successful? False
+Type: <class 'celery.result.AsyncResult'>
+waiting 2 seconds (the task should have been completed by now)
+Task status: SUCCESS
+Task successful? True
+```
+
+Notice that the terminal window in which we started the celery worker now has some output in the logs:
+
+```
+[2021-03-06 22:22:51,686: INFO/MainProcess] Received task: apps.core.tasks.debug_task[21846505-1473-4ba4-9544-dc969b6aa02c]
+[2021-03-06 22:22:52,692: INFO/ForkPoolWorker-7] Task apps.core.tasks.debug_task[21846505-1473-4ba4-9544-dc969b6aa02c] succeeded in 1.0044008000113536s: 'Debug task slept for 1 second.'
+```
+
+We see that the task was received, and that it took about 1 second to complete (the length of time for which the task called `sleep`) and we see the task's result, which is the string `Debug task slept for 1 second.`
+
 ## Setup watchdog command for celery
+
+If we want to change the length of time that the debug task sleeps for, then we will need to stop the celery worker and restart. As you develop tasks, stopping and restarting the celery worker can be tedious. We can have the celery worker restart automatically on code changes similar to how the Django development server (`runserver`, also `runserver_plus` that we are using) restarts automatically on code changes. To do this, we can use a package in our local development environment called `watchdog`.
+
+Add the following to `requirements/dev.txt`:
+
+```
+watchdog==0.10.3
+```
+
+And then reinstall pip requirements with `make pip-local`.
+
+Stop the current celery worker by pressing `Ctrl+C` in the terminal window, and then run the celery command again with watchdog (make sure you are running this from the `backend` directory):
+
+```
+DJANGO_SETTINGS_MODULE=backend.settings.development watchmedo auto-restart --directory=./ --pattern=*.py --recursive -- celery -A backend.celery_app:app worker -l INFO
+```
+
+To make this easier to read, we can also write this command as:
+
+```bash
+DJANGO_SETTINGS_MODULE=backend.settings.development \
+watchmedo \
+    auto-restart \
+    --directory=./ \
+    --pattern=*.py \
+    --recursive \
+    -- \
+    celery \
+    -A \
+    backend.celery_app:app \
+    worker \
+    -l \
+    INFO
+```
+
+Since this is a little bit verbose, we can add this command as a `make` command in our `Makefile`:
+
+```Makefile
+start-celery-default-worker:
+	DJANGO_SETTINGS_MODULE=backend.settings.development watchmedo auto-restart --directory=./ --pattern=*.py --recursive -- celery -A backend.celery_app:app worker -l INFO
+```
+
+Now the celery worker will be restarted whenever we make code changes to the Django project. We do have to remember to run the command from the correct directory and to set the `DJANGO_SETTINGS_MODULE` environment variable
+
+## Setup flower for celery monitoring
+
+Now that we have our celery worker running and processing tasks successfully, it would be good to add a tool to our project called `flower`. `flower` is a celery monitoring utility that provides a web interface for viewing task and worker status.
+
+We can use flower in local development, but we can also use flower in production to monitor our tasks in a live environment. We can add the flower dependency to `dev.txt`:
+
+```
+flower==0.9.7
+```
+
+After re-installing dependencies, run the following command:
+
+```
+DJANGO_SETTINGS_MODULE=backend.settings.development celery flower -A backend.celery_app:app --address=127.0.0.1 --port=5555
+```
+
+```
+[I 210306 23:17:22 command:135] Visit me at http://127.0.0.1:5555
+[I 210306 23:17:22 command:142] Broker: redis://localhost:6379/1
+[I 210306 23:17:22 command:143] Registered tasks:
+    ['apps.core.tasks.debug_task',
+     'celery.accumulate',
+     'celery.backend_cleanup',
+     'celery.chain',
+     'celery.chord',
+     'celery.chord_unlock',
+     'celery.chunks',
+     'celery.group',
+     'celery.map',
+     'celery.starmap']
+[I 210306 23:17:22 mixins:229] Connected to redis://localhost:6379/1
+```
+
+Visiting `http://127.0.0.1:5555` should show that there is a celery worker online. Try stopping and restarting the celery worker and you can see that the worker `STATUS` changes from `Online` to `Offline` and then back to `Online`. Try running the celery task again from the Jupyter notebook and you should see 1 task in `Active` and `Processed` and then once the task finished we should see 1 task in the `Succeeded` column.
+
+Celery can also be started with the following command:
+
+```
+flower -A backend.celery_app:app --broker=redis://localhost:6379/1
+```
 
 ## Decide if you need `CELERY_TASKS_ALWAYS_EAGER` to be set to `True`
 
@@ -1450,11 +1719,73 @@ If you want to simulate celery workers running in your local environment in a wa
 
 First it will be shown using the `CELERY_TASKS_ALWAYS_EAGER = True` setting, and second it will be shown how to use separate celery worker processes to simulate a production environment on a local development machine.
 
-## Setup celery beat, settings, period task
+## Setup celery beat, settings, periodics tasks
+
+One nice feature of celery is that it allows us to easily schedule tasks that should be performed on regular intervals, similar to how cron jobs schedule tasks.
+
+This is provided through a part of celery called `beat`.
+
+To use celery, we need to define a `CELERY_BEAT_SCHEDULE` in Django settings and then start another process to start celery beat. This process will send messages to Redis (the bulletin board) at regular intervals that will be processed by celery workers.
+
+We can use another "debug" task for celery beat:
+
+```
+@app.task
+def celery_beat_debug_task():
+    return "Celery debug task complete."
+```
+
+## Run the celery beat process
+
+Run the following command to start celery beat:
+
+```bash
+DJANGO_SETTINGS_MODULE=backend.settings.development \
+    celery \
+    --app=backend.celery_app:app \
+    beat \
+    --loglevel=INFO
+```
+
+```
+celery beat v4.4.7 (cliffs) is starting.
+__    -    ... __   -        _
+LocalTime -> 2021-03-06 23:53:35
+Configuration ->
+    . broker -> redis://localhost:6379/1
+    . loader -> celery.loaders.app.AppLoader
+    . scheduler -> celery.beat.PersistentScheduler
+    . db -> celerybeat-schedule
+    . logfile -> [stderr]@%INFO
+    . maxinterval -> 5.00 minutes (300s)
+[2021-03-06 23:53:35,922: INFO/MainProcess] beat: Starting...
+[2021-03-06 23:53:45,934: INFO/MainProcess] Scheduler: Sending due task celery-beat-debug-task (apps.core.tasks.celery_beat_debug_task)
+[2021-03-06 23:53:55,930: INFO/MainProcess] Scheduler: Sending due task celery-beat-debug-task (apps.core.tasks.celery_beat_debug_task)
+```
+
+Now we should be able to see `celery_beat_debug_task` tasks processed by the celery worker.
+
+The only issue is that our celery beat configuration will not be reloaded automatically like celery and the Django development server do. To fix this, we can use `watchdog`:
+
+Stop the celery beat process and run the following command from the backend directory:
+
+```
+DJANGO_SETTINGS_MODULE=backend.settings.development \
+    watchmedo \
+    auto-restart \
+    --directory=./ \
+    --pattern=*.py \
+    --recursive \
+    -- \
+    celery \
+    --app=backend.celery_app:app \
+    beat \
+    --loglevel=INFO
+```
+
+Now try changing the celery beat task to be fired every 2 seconds or some other value.
 
 ## Setup mailhog for testing email locally
-
-## Setup flower for celery monitoring
 
 ## Setup Django Channels (settings, routers, consumers, async tests)
 
