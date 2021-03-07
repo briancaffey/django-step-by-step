@@ -1787,6 +1787,73 @@ Now try changing the celery beat task to be fired every 2 seconds or some other 
 
 ## Setup mailhog for testing email locally
 
+Mailhog is a simple tool that I use when working with email. If your Django application involves sending email from the application, I recommend using Mailhog to preview emails that will be sent from Django.
+
+Mailhog is written in go, so you will need to do the following to use it locally:
+
+```
+sudo apt-get -y install golang-go
+go get github.com/mailhog/MailHog
+```
+
+Once it has finished installing, run the following command to start Mailhog:
+
+```
+~/go/bin/MailHog
+```
+
+Then you can see Mailhog in the browser by going to `http://localhost:8025/`.
+
+We can write a simple task that will send an email, but we first need to tell Django what to use to send email, so we can add the following lines to `base.py`
+
+```py
+# Email
+EMAIL_HOST = os.environ.get("DJANGO_EMAIL_HOST", "localhost")
+EMAIL_PORT = os.environ.get("DJANGO_EMAIL_PORT", "1025")
+```
+
+It is generally a good idea to send email from celery, so let's create an `email_debug_task` task in `apps/core/tasks.py`:
+
+```py
+@app.task
+def send_email_debug_task():
+
+    email = EmailMessage(
+        "Django Step-by-step",
+        "This email was sent from Celery.",
+        os.environ.get("DJANGO_EMAIL_HOST_USER", "debug+email@local.dev"),
+        [settings.ADMIN_EMAIL],
+    )
+
+    email.send()
+```
+
+Now we can call this task from Jupyter notebook:
+
+```py
+import time
+from apps.core.tasks import send_email_debug_task
+
+send_email_debug_task.delay()
+```
+
+We should now see the email in Mailhog.
+
+## Build a Model that we can use to demonstrate CRUD and other concepts
+
+Now we can turn to our Django application and setup a model that we can use for demonstration purposes. We will use this model to demonstrate some of the following patterns that are often used in Django projects.
+
+- More complex data relationships
+- Templates
+- Views
+- Forms
+- Media files
+- DRF, Serializers
+- Web sockets
+- Testing patterns with pytest and factory
+
+Let's suppose we are developing a microblogging application and we want to allow users to create posts. Our post model will contain a text field with a limited number of characters and will optionally allow users to upload media files such as images and gifs.
+
 ## Setup Django Channels (settings, routers, consumers, async tests)
 
 ## Setup git hooks in docker-compose
@@ -1834,3 +1901,7 @@ Optional/Extra steps
 ## Spatial and Geographic Databases (PostGIS)
 
 ## Portainer UI for viewing containers and logs
+
+```
+
+```

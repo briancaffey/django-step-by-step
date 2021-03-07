@@ -70,6 +70,5 @@ redis-cli-ping:
 start-celery-default-worker:
 	DJANGO_SETTINGS_MODULE=backend.settings.development watchmedo auto-restart --directory=./ --pattern=*.py --recursive -- celery -A backend.celery_app:app worker -l INFO
 
-
 flower:
 	DJANGO_SETTINGS_MODULE=backend.settings.development celery flower -A backend.celery_app:app --address=127.0.0.1 --port=5555

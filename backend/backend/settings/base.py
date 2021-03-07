@@ -158,3 +158,8 @@ STATIC_URL = "/static/"
 
 # Custom user model
 AUTH_USER_MODEL = "accounts.CustomUser"
+
+# Email
+
+EMAIL_HOST = os.environ.get("DJANGO_EMAIL_HOST", "localhost")
+EMAIL_PORT = os.environ.get("DJANGO_EMAIL_PORT", "1025")
