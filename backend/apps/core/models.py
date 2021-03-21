@@ -1,8 +1,5 @@
 from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.db import models
-
-User = get_user_model()
 
 
 class BaseModel(models.Model):
@@ -38,7 +35,10 @@ class RequestLog(models.Model):
     """
 
     user = models.ForeignKey(
-        User, null=True, on_delete=models.SET_NULL, blank=True
+        settings.AUTH_USER_MODEL,
+        null=True,
+        on_delete=models.SET_NULL,
+        blank=True,
     )
     date = models.DateTimeField(auto_now_add=True)
     path = models.CharField(max_length=3000)

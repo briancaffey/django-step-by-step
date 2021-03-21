@@ -1886,8 +1886,7 @@ from apps.core.models import BaseModel
 
 
 class Post(BaseModel):
-    user = models.ForeignKey()
-    text = models.TextField()
+    body = models.CharField(max_length=200)
 ```
 
 A more complicated model might include some of the features you would see on a site like Twitter:
@@ -1914,6 +1913,8 @@ class Post(BaseModel):
 ```
 
 We can start wit a simple model for now, and then explore adding additional features of a more complex model later.
+
+The simple model will have the `body` field and the four fields from the `BaseModel` that it inherits from: `created_on`, `modified_on`, `created_by` and `modified_by`. It doesn't really make sense to have the `modified_by` attribute on the `Post` model since only the creator of a post will be able to edit that post. We could either include it, or we can set the `modified_by` attribute to `None` on our `Post` model.
 
 ## Add model factories for micro blog post
 
