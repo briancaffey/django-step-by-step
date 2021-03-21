@@ -1854,6 +1854,75 @@ Now we can turn to our Django application and setup a model that we can use for 
 
 Let's suppose we are developing a microblogging application and we want to allow users to create posts. Our post model will contain a text field with a limited number of characters and will optionally allow users to upload media files such as images and gifs.
 
+Before we build the model, we should build a new Django app that will contain the majority of the logic for our application.
+
+## Create a new Django app for our microblogging demo application
+
+Again, the typical way to add an app to a Django application would be the following command:
+
+```
+django-admin startapp blog
+```
+
+We want to create the app in the `apps` directory that we have created in the root of our Django project (the `apps` directory is located in the same directory as `manage.py`)
+
+```
+mkdir -p backend/apps/blog && django-admin startapp blog ./backend/apps/blog
+```
+
+Make sure to add `apps.blog` to the `INSTALLED_APPS` in `base.py`.
+
+## Add the model for our microblogs posts
+
+Next we can add a post model to the `blog` app that was created.
+
+Let's consider both a simple version of our post model, and a more complex model.
+
+For a simple model, we can do something like this:
+
+```py
+# simple Post model
+from apps.core.models import BaseModel
+
+
+class Post(BaseModel):
+    user = models.ForeignKey()
+    text = models.TextField()
+```
+
+A more complicated model might include some of the features you would see on a site like Twitter:
+
+```py
+# a more complex Post model
+from apps.core.models import BaseModel
+
+
+VISIBILITY_OPTIONS = [
+    (1, "Public"),
+    (2, "Private"),
+    (3, "Visible to Friends")
+]
+
+class Post(BaseModel):
+    user = models.ForeignKey()
+    text = models.TextField()
+    visibility = models.SmallIntegerField(options=VISIBILITY_OPTIONS)
+    likes = models.ManyToManyField(through=PostLike)
+    hashtags = models.ManyToManyField(Hashtag)
+    mentions = models.ManyToManyField()
+    repost = models.ForeignKey('self')
+```
+
+We can start wit a simple model for now, and then explore adding additional features of a more complex model later.
+
+## Add model factories for micro blog post
+
+## Create a view to create a list with all posts
+
+- urls.py
+- views (function based view, then class based views later)
+- templates
+
 ## Setup Django Channels (settings, routers, consumers, async tests)
 
 ## Setup git hooks in docker-compose
