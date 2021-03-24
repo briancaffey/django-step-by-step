@@ -1916,7 +1916,209 @@ We can start wit a simple model for now, and then explore adding additional feat
 
 The simple model will have the `body` field and the four fields from the `BaseModel` that it inherits from: `created_on`, `modified_on`, `created_by` and `modified_by`. It doesn't really make sense to have the `modified_by` attribute on the `Post` model since only the creator of a post will be able to edit that post. We could either include it, or we can set the `modified_by` attribute to `None` on our `Post` model.
 
+## Run `makemigrations`
+
+Next run the `makemigrations` command:
+
+```
+$ python3 backend/manage.py makemigrations
+Migrations for 'blog':
+  apps/blog/migrations/0001_initial.py
+    - Create model Post
+```
+
+Check out the `0001_initial.py` file that was generated and we can see the fields that will created for our `Post` model (when we run the `migrate` command):
+
+- `id`
+- `created_on`
+- `modified_on`
+- `body`
+- `created_by`
+
+## Run the `migrate` command
+
+```
+$ python3 backend/manage.py migrate
+Operations to perform:
+  Apply all migrations: accounts, admin, auth, blog, contenttypes, core, sessions
+Running migrations:
+  Applying blog.0001_initial... OK
+```
+
+## Register the `Post` model to the Django admin
+
+The first thing I usually do after creating or changing a model is to register that model to the Django admin. To do this, we can add a few lines of code to the `admin.py` file in our `blog` app:
+
+```py
+# apps/blog/admin.py
+from django.contrib import admin
+
+# Register your models here.
+from .models import Post
+
+admin.site.register(Post)
+```
+
+This gives us an interface that we can use to start doing CRUD with our new model. This is one of the big selling points of Django! It is possible to make changes to the behavior of the admin, but you are generally supposed to use this for only admin purposes, not for anything that is face non-technical end users of your application.
+
+Click on the `Posts` model, and add a Post with the `Add Post` button. You will then see our post:
+
+```
+Post object (1)
+```
+
+## Add a \_\_str\_\_ method to our model
+
+It would be better if we could see a preview of the post text. We can implement this by adding a `__str__` method to our `Post` model:
+
+```
+    def __str__(self):
+        return self.body
+```
+
 ## Add model factories for micro blog post
+
+Now that we have a basic working model, we can start adding some tools that will help us test our application's logic. I have had good experiences using `factory`.
+
+Add factory to the `test.txt` dependencies file:
+
+```
+factory-boy==3.2.0
+```
+
+Install the depenencies again with:
+
+```
+pip3 install -r backend/requirements/test.txt
+```
+
+## Setup a `factory.py` file in the blog app with a `PostFactory`
+
+```py
+from django.contrib.auth import get_user_model
+from factory.django import DjangoModelFactory
+
+from apps.blog.models import Post
+
+User = get_user_model()
+
+
+class UserFactory(DjangoModelFactory):
+    class Meta:
+        model = User
+
+
+# Another, different, factory for the same object
+class PostFactory(DjangoModelFactory):
+    class Meta:
+        model = Post
+```
+
+## Create a simple test using `PostFactory`
+
+```py
+import pytest
+
+from django.test import TestCase
+from apps.blog.factory import PostFactory
+from apps.blog.models import Post
+
+
+@pytest.mark.django_db(transaction=True)
+def test_post():
+
+    POST_TEXT = "This is a test post."
+
+    # this saves the post in the database
+    post = PostFactory(body=POST_TEXT)
+
+    # this queries the database for the number of posts
+    post_count = Post.objects.count()
+
+    # checks to see if the number of posts queried is 1
+    assert post_count == 1
+
+    # checks that the post has the body that we assigned to it in the test
+    assert post.body == POST_TEXT
+```
+
+This is typically not the type of test we want to write, but this does help to make sure that everything is setup correctly. The problem with this test is that it doesn't test any of the logic in our application. Later on we will write some tests that do test specific parts of our application logic.
+
+## Create a URL pattern that will list all of the blog posts
+
+Create `apps/blog/urls.py` with the following code:
+
+```py
+from django.urls import path
+
+from apps.blog import views
+
+urlpatterns = [
+    path("posts/", views.posts),
+]
+```
+
+## Include the URLs you just created in the main URLs file
+
+Django uses the `backend/urls.py` to find URLs in our application. Even though we defined a `urls.py` file in our `blog` app, Django doesn't know about it. In order to let Django know about these URLs, add the following line of code to `backend/urls.py`:
+
+```py
+urlpatterns = [
+    path("", include("apps.blog.urls")), # <-- add this line
+    path("my-admin-portal/", admin.site.urls),
+]
+```
+
+## Create a simple function-based view for viewing all posts
+
+In `apps/blog/views.py` add a `posts` function:
+
+```py
+from django.shortcuts import render
+
+from apps.blog.models import Post
+
+
+def posts(request):
+    context = {"posts": Post.objects.all()}
+    return render(request, template_name="posts.html", context=context)
+```
+
+## Create a `templates` directory in the `blog` app and add `posts.html`
+
+```
+{% extends "base.html" %}
+
+This is the post template
+```
+
+## Add `"DIRS": [BASE_DIR / "templates"],` to `settings/base.py`
+
+```py
+TEMPLATES = [
+    {
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "templates"], # <-- this line
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.debug",
+                "django.template.context_processors.request",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
+            ],
+        },
+    },
+]
+```
+
+## Add a new folder in the `backend` directory called `templates` and add `base.html`
+
+We are now going to implement template inheritance ([https://docs.djangoproject.com/en/3.1/ref/templates/language/#template-inheritance](https://docs.djangoproject.com/en/3.1/ref/templates/language/#template-inheritance))
+
+```
+This is the base template
+```
 
 ## Create a view to create a list with all posts
 

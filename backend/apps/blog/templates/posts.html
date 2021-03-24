@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}All Posts{% endblock %}
+{% block nav_title %}Posts{% endblock %}
+
+{% block content %}
+
+<div style="margin-top: 50px">
+
+    {% for post in posts %}
+    <div class="mdc-card mdc-card--outlined adopt-a-pup-card">
+        <!-- <div class="mdc-card__media mdc-card__media--square" style="background-image: url('{{ post.img }}')"></div> -->
+        <div class="mdc-typography--body1">{{ post.body }}</div>
+        <div class="mdc-typography--body2">
+            {{ post.created_on }}
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+    
+{% endblock %}
