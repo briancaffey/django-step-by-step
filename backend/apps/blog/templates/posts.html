@@ -1,22 +1,60 @@
 {% extends "base.html" %}
 
+<!-- Title -->
+
 {% block title %}All Posts{% endblock %}
+
+<!-- Nav -->
+
 {% block nav_title %}Posts{% endblock %}
+
+<!-- Content -->
 
 {% block content %}
 
-<div style="margin-top: 50px">
-
-    {% for post in posts %}
-    <div class="mdc-card mdc-card--outlined adopt-a-pup-card">
-        <!-- <div class="mdc-card__media mdc-card__media--square" style="background-image: url('{{ post.img }}')"></div> -->
-        <div class="mdc-typography--body1">{{ post.body }}</div>
-        <div class="mdc-typography--body2">
-            {{ post.created_on }}
-        </div>
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+    <div{% if message.tags %} class="{{ message.tags }}"{% endif %}>
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+        {{ message }}
     </div>
     {% endfor %}
-
 </div>
-    
+{% endif %}
+
+<h2>Posts ({{ page_obj.paginator.count }})</h2>
+
+<div>
+  {% for post in page_obj %}
+  <a href="/posts/{{ post.id }}" style="text-decoration: none; color: #000">
+    <div class="card p-4 mb-2">
+      <div class="">{{ post.body }}</div>
+      <div class="">{{ post.created_on }}</div>
+      {% if post.created_by %}
+      <div>{{ post.created_by }}</div>
+      {% endif %}
+    </div>
+  </a>
+  {% endfor %}
+
+  <div class="pagination">
+    <span class="step-links">
+      {% if page_obj.has_previous %}
+      <a href="?page=1">&laquo; first</a>
+      <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+      {% endif %}
+
+      <span class="current">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+      </span>
+
+      {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}">next</a>
+      <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+      {% endif %}
+    </span>
+  </div>
+</div>
+
 {% endblock %}

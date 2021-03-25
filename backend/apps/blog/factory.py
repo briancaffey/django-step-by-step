@@ -1,3 +1,5 @@
+import factory
+
 from django.contrib.auth import get_user_model
 from factory.django import DjangoModelFactory
 
@@ -16,3 +18,6 @@ class UserFactory(DjangoModelFactory):
 class PostFactory(DjangoModelFactory):
     class Meta:
         model = Post
+
+    # title = factory.Faker('sentence', nb_words=4)
+    body = factory.Faker("text")

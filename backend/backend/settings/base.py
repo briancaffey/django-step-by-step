@@ -164,3 +164,8 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 
 EMAIL_HOST = os.environ.get("DJANGO_EMAIL_HOST", "localhost")
 EMAIL_PORT = os.environ.get("DJANGO_EMAIL_PORT", "1025")
+
+# Login Redirect
+
+LOGIN_REDIRECT_URL = "/posts"
+LOGOUT_REDIRECT_URL = "/posts"

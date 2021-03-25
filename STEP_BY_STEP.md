@@ -2120,11 +2120,107 @@ We are now going to implement template inheritance ([https://docs.djangoproject.
 This is the base template
 ```
 
-## Create a view to create a list with all posts
+## Write a management command that generates fake data
 
-- urls.py
-- views (function based view, then class based views later)
-- templates
+To test out our template logic, we can generate some posts. We can use the `faker` library to do this along with a Django managment command.
+
+Create the following file in `apps/blog/management/commands/generate_posts.py`:
+
+```py
+from django.core.management.base import BaseCommand
+
+from apps.blog.factory import PostFactory
+
+
+class Command(BaseCommand):
+    help = "Generate some posts"
+
+    def handle(self, *args, **options):
+
+        print("generating posts")
+        for _ in range(20):
+            PostFactory()
+
+        print("finished generating posts")
+```
+
+## Add pagination to posts view
+
+We should add pagination so we can limit the number of posts that are shown.
+
+[https://docs.djangoproject.com/en/3.1/topics/pagination/#using-paginator-in-a-view-function](https://docs.djangoproject.com/en/3.1/topics/pagination/#using-paginator-in-a-view-function)
+
+```py
+from django.core.paginator import Paginator
+```
+
+## Create a post detail view
+
+## Add URL for post detail view
+
+## Create a template called `post.html` in templates
+
+## Link to detail views from the list view
+
+## Set up <head> for Post detail page for SEO
+
+## Add Post Create Form
+
+We can generate posts through the admin and through our management command. Now let's add a way for users to add posts.
+
+## Add a URL for a creating a new post
+
+## Add `new_post.html` template
+
+## Change the ordering of posts in the Post model
+
+```py
+class Post(BaseModel):
+
+    # meta class
+    class Meta:
+        ordering = ("-created_on",)
+```
+
+## Add wildcard to `ALLOWED_HOSTS` in `development` settings module
+
+This will allow you to view the appliction from a mobile device on your local network
+
+## Use Django messaging framework to update user on post creation success
+
+## Create `urls.py` in the accounts app with a login path
+
+## Create the login view in `apps/accounts/views`
+
+## Override the Default Login form
+
+[https://stackoverflow.com/questions/55369645/how-to-customize-default-auth-login-form-in-django/55369791](https://stackoverflow.com/questions/55369645/how-to-customize-default-auth-login-form-in-django/55369791)
+
+## Set `LOGIN_REDIRECT_URL` and `LOGIN_REDIRECT_URL` in `base` settings module
+
+```py
+LOGIN_REDIRECT_URL = "/posts"
+LOGOUT_REDIRECT_URL = "/posts"
+```
+
+## Create Login page
+
+## Enable logout
+
+## Create update view for post
+
+## Create update URL for post
+
+```
+
+```
+
+
+## Add delete URL path for posts
+
+## Create delete view for post
+
+## Enable searching posts
 
 ## Setup Django Channels (settings, routers, consumers, async tests)
 

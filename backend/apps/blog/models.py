@@ -3,6 +3,11 @@ from django.db import models
 
 
 class Post(BaseModel):
+
+    # meta class
+    class Meta:
+        ordering = ("-modified_on",)
+
     body = models.CharField(max_length=200)
     modified_by = None
 

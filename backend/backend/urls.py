@@ -17,10 +17,13 @@ import debug_toolbar
 from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
+from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path("", include("apps.blog.urls")),
+    path("", include("apps.accounts.urls")),
     path("my-admin-portal/", admin.site.urls),
+    path("", RedirectView.as_view(url="/posts")),
 ]
 
 if settings.DEBUG:

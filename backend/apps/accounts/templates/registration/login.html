@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+<!-- -->
+{% block title %}Login{% endblock %}
+
+<!-- -->
+
+{% block content %}
+<h2>Login</h2>
+<form method="post">
+  {% csrf_token %}
+  <!-- fields -->
+  {% for field in form %}
+  <div class="fieldWrapper pb-2">
+    <!-- errors -->
+    {{ field.errors }}
+
+    <!-- field -->
+    {{ field }}
+
+    <!-- help text -->
+    {% if field.help_text %}
+    <p class="help">{{ field.help_text|safe }}</p>
+    {% endif %}
+  </div>
+  {% endfor %}
+  <button class="btn btn-primary" type="submit">Login</button>
+</form>
+{% endblock %}

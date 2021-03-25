@@ -43,6 +43,9 @@ pytest:
 	# Running Django test suite
 	pytest backend
 
+pytest-cov:
+	pytest backend --cov=backend
+
 .PHONY: notebook
 notebook:
 	backend/manage.py shell_plus --notebook
@@ -72,3 +75,6 @@ start-celery-default-worker:
 
 flower:
 	DJANGO_SETTINGS_MODULE=backend.settings.development celery flower -A backend.celery_app:app --address=127.0.0.1 --port=5555
+
+generate_posts:
+	backend/manage.py generate_posts
