@@ -69,12 +69,19 @@ pg_isready:
 redis-cli-ping:
 	redis-cli ping
 
-.PHONY: start-celery-default-worker
-start-celery-default-worker:
-	DJANGO_SETTINGS_MODULE=backend.settings.development watchmedo auto-restart --directory=./ --pattern=*.py --recursive -- celery -A backend.celery_app:app worker -l INFO
+.PHONY: celery-default-worker
+celery-default-worker:
+	cd backend && watchmedo auto-restart --directory=./ --pattern=*.py --recursive -- celery -A backend.celery_app:app worker -l INFO
 
 flower:
-	DJANGO_SETTINGS_MODULE=backend.settings.development celery flower -A backend.celery_app:app --address=127.0.0.1 --port=5555
+	cd backend && celery flower -A backend.celery_app:app --address=127.0.0.1 --port=5555
 
 generate_posts:
 	backend/manage.py generate_posts
+
+# mock mail server
+mailhog:
+	~/go/bin/MailHog
+
+pgadmin4:
+	pgadmin4

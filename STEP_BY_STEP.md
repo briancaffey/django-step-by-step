@@ -1075,6 +1075,12 @@ sudo chown -R $USER:$USER /var/log/pgadmin
 
 Run `pgadmin4` in a terminal with the virtual environment activated, then enter an email and password that you will use to login for the first time. Login to the program when it opens in the browser, enter your email and password and create a new server. User `postgres` for the name, user and password.
 
+You can find the email that used to sign up here:
+
+```
+/var/lib/pgadmin/storage/
+```
+
 ## Setup pgadmin4 in docker-compose
 
 ## Add a Dockerfile for our Django application
@@ -2222,9 +2228,29 @@ LOGOUT_REDIRECT_URL = "/posts"
 
 ## Enable searching posts
 
-## Setup Django Channels (settings, routers, consumers, async tests)
+## Fix pagination with search term
 
-## Setup git hooks in docker-compose
+## Add registration URL
+
+## Add registration view
+
+There are a lot of ways to do registration, and lots of packages that can help with this process.
+
+We can start with a simle implementation that allows us to signup with an email address with a confirmation email. Since we have already setup MailHog, this should be easy.
+
+## Add registration form
+
+## Add email confirmation url and view
+
+## Add request Password reset form
+
+## Add password reset email with link
+
+## Add password reset URL
+
+## Add password reset form
+
+## Add password reset view
 
 ## Add Vue in Django templates
 
@@ -2235,6 +2261,10 @@ LOGOUT_REDIRECT_URL = "/posts"
 ## Add NGINX and remove CORS
 
 ## Add NGINX Dockerfile for local development
+
+## Setup Django Channels (settings, routers, consumers, async tests)
+
+## Setup git hooks in docker-compose
 
 ## Setup Vue in NGINX (web-sockets for hot reloading, index.html, etc)
 

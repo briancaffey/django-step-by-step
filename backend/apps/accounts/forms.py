@@ -4,8 +4,11 @@ from django.contrib.auth.forms import (
     UserCreationForm,
     UserChangeForm,
 )
+from django.contrib.auth import get_user_model
 
 from .models import CustomUser
+
+User = get_user_model()
 
 
 class CustomUserCreationForm(UserCreationForm):
@@ -46,3 +49,45 @@ class UserLoginForm(AuthenticationForm):
             }
         )
     )
+
+
+class CustomUserRegistrationForm(UserCreationForm):
+    # username = forms.CharField(max_length=30)
+    # email = forms.EmailField(max_length=200)
+    email = forms.EmailField(
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "email",
+                "id": "email",
+            }
+        )
+    )
+    password1 = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "password",
+                "id": "password1",
+            }
+        )
+    )
+
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "repeat password",
+                "id": "password2",
+            }
+        )
+    )
+
+    class Meta:
+        model = User
+        fields = (
+            # "username",
+            "email",
+            "password1",
+            "password2",
+        )

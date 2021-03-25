@@ -1,4 +1,4 @@
-from django.forms import ModelForm, CharField, Textarea, TextInput
+from django.forms import ModelForm, CharField, Textarea
 
 from apps.blog.models import Post
 
@@ -23,4 +23,3 @@ class PostForm(ModelForm):
                 "id": "post-body",
             }
         )
-        # self.fields["comment"].widget.attrs.update(size="40")

@@ -11,4 +11,10 @@ urlpatterns = [
         name="login",
     ),
     path("logout", views.CustomLogoutView.as_view(), name="logout"),
+    path("register", views.register, name="register"),
+    path(
+        "activate/<uidb64>/<token>/",
+        views.ActivateAccount.as_view(),
+        name="activate",
+    ),
 ]

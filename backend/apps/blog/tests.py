@@ -1,6 +1,5 @@
 import pytest
 
-from django.test import TestCase
 from apps.blog.factory import PostFactory
 from apps.blog.models import Post
 

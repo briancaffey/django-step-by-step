@@ -7,7 +7,7 @@ urlpatterns = [
     # create
     path("posts/new", views.new_post),
     # read (paginated list)
-    path("posts", views.posts),
+    path("posts", views.posts, name="posts"),
     # update
     path("posts/<str:id>/edit", views.edit_post),
     # delete

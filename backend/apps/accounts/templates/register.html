@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+<!-- -->
+{% block title %}Register{% endblock %}
+
+<!-- -->
+
+{% block content %}
+<h2>Register</h2>
+<form method="post">
+  {% csrf_token %}
+  <!-- fields -->
+  {% for field in form %}
+  <div class="fieldWrapper pb-2">
+    <!-- errors -->
+    {% comment %} {{ field.errors }} {% endcomment %}
+
+    <!-- field -->
+    {{ field }}
+
+    <!-- help text -->
+    {% if field.help_text %}
+    <p class="help">{{ field.help_text|safe }}</p>
+    {% endif %}
+  </div>
+  {% endfor %}
+  <button class="btn btn-primary" type="submit">Register</button>
+</form>
+{% endblock %}
