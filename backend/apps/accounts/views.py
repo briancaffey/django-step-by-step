@@ -14,7 +14,7 @@ from django.contrib.auth import get_user_model, login
 
 # Create your views here.
 
-from django.utils.encoding import force_text
+from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.views.generic import View
 
@@ -27,7 +27,7 @@ User = get_user_model()
 class ActivateAccount(View):
     def get(self, request, uidb64, token, *args, **kwargs):
         try:
-            uid = force_text(urlsafe_base64_decode(uidb64))
+            uid = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.get(pk=uid)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
             user = None

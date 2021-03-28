@@ -4,11 +4,13 @@ import logging
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from django.shortcuts import get_object_or_404
+from django.db.models import Count, Exists, OuterRef
+from django.http import HttpResponseRedirect, JsonResponse, Http404
+from django.shortcuts import get_object_or_404, render
+from django.views.decorators.http import require_POST
 
-from apps.blog.models import Post
+
+from apps.blog.models import Post, PostLike
 from apps.blog.forms import PostForm
 
 
@@ -16,7 +18,29 @@ logger = logging.getLogger()
 
 
 def posts(request):
-    posts = Post.objects.all()
+    if request.user.is_authenticated:
+        posts = (
+            Post.objects.all()
+            .prefetch_related("created_by")
+            .annotate(
+                like_count=Count("likes"),
+                # see if the request.user liked the post
+                liked=Exists(
+                    PostLike.objects.filter(
+                        liked_by_id=request.user.id, post=OuterRef("id")
+                    )
+                ),
+            )
+        ).order_by("-modified_on")
+    else:
+        posts = (
+            Post.objects.all()
+            .prefetch_related("created_by")
+            .annotate(
+                like_count=Count("likes"),
+            )
+        ).order_by("-modified_on")
+
     if request.GET.get("q"):
         search_query = request.GET.get("q")
         posts = posts.filter(body__icontains=search_query)
@@ -31,7 +55,22 @@ def posts(request):
 
 def post(request, id):
 
-    post = Post.objects.get(id=id)
+    post = (
+        Post.objects.filter(id=id)
+        .prefetch_related("created_by")
+        .annotate(
+            like_count=Count("likes"),
+            liked=Exists(
+                PostLike.objects.filter(
+                    liked_by_id=request.user.id, post=OuterRef("id")
+                )
+            ),
+        )
+    )
+    if post.exists() and post.count() == 1:
+        post = post.first()
+    else:
+        raise Http404("The post does not exist.")
 
     return render(request, template_name="post.html", context={"post": post})
 
@@ -65,6 +104,7 @@ def new_post(request):
     return render(request, "new_post.html", {"form": form})
 
 
+@login_required
 def edit_post(request, id):
 
     instance = get_object_or_404(Post, id=id)
@@ -140,3 +180,22 @@ def delete_post(request, id):
         return HttpResponseRedirect("/posts")
 
     return render(request, "posts.html", {})
+
+
+@login_required
+@require_POST
+def like_post(request, id):
+
+    # implement like post logic
+    post = get_object_or_404(Post, id=id)
+
+    if request.user not in post.likes.all():
+        post_like_through_model = PostLike(post=post, liked_by=request.user)
+        post_like_through_model.save()
+        like = True
+    else:
+        post.likes.remove(request.user)
+        like = False
+
+    post_like_count = post.likes.all().count()
+    return JsonResponse({"likes": post_like_count, "like": like})

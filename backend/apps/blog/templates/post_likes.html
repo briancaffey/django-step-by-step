@@ -1,0 +1,39 @@
+<div id="counter-{{ post_id }}">
+  {% if request.user.is_authenticated %} [[ counter ]]
+  <i
+    @click.prevent="toggleLike"
+    class="bi bi-heart"
+    :style="{ 'color': liked ? 'red' : 'black' }"
+  ></i>
+  {% else %} {{ like_count }}
+  <i class="bi bi-heart"></i>
+  {% endif %}
+</div>
+
+<script>
+
+  const LikeCounter{{ post_id }} = {
+    delimiters: ["[[", "]]"],
+    data() {
+      return {
+        counter: {{ like_count }},
+        liked: {{ liked | lower }},
+      };
+    },
+    methods: {
+        async toggleLike() {
+            try {
+                const resp = await axios.post("/api/posts/{{ post_id }}/like");
+                console.log(resp.data);
+                this.counter = resp.data.likes;
+                this.liked = resp.data.like;
+            } catch (err) {
+                console.log(err);
+                alert("Please login or create an account to like posts");
+            }
+        }
+    }
+  };
+
+  Vue.createApp(LikeCounter{{ post_id }}).mount("#counter-{{ post_id }}");
+</script>

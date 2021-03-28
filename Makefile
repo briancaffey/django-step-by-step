@@ -1,3 +1,5 @@
+# Makefile - common commands for development
+
 .PHONY: all
 all: migrate	runserver
 
@@ -19,6 +21,9 @@ source:
 migrate:
 	# migrate
 	backend/manage.py migrate
+
+migrations:
+	backend/manage.py makemigrations
 
 .PHONY: createsuperuser
 createsuperuser:
@@ -44,7 +49,10 @@ pytest:
 	pytest backend
 
 pytest-cov:
-	pytest backend --cov=backend
+	pytest backend --cov-report html --cov=backend
+
+pytest-cov-report:
+	python3 -m http.server 8002
 
 .PHONY: notebook
 notebook:
@@ -85,3 +93,6 @@ mailhog:
 
 pgadmin4:
 	pgadmin4
+
+flush:
+	backend/manage.py flush

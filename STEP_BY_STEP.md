@@ -2126,6 +2126,8 @@ We are now going to implement template inheritance ([https://docs.djangoproject.
 This is the base template
 ```
 
+## Add Bootstrap to our base template
+
 ## Write a management command that generates fake data
 
 To test out our template logic, we can generate some posts. We can use the `faker` library to do this along with a Django managment command.
@@ -2230,6 +2232,12 @@ LOGOUT_REDIRECT_URL = "/posts"
 
 ## Fix pagination with search term
 
+Add the following do each of the links in the pagination section of the post list. This will ensure that the search term query parameter and pagination can be used together.
+
+```html
+      <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
+```
+
 ## Add registration URL
 
 ## Add registration view
@@ -2252,7 +2260,60 @@ We can start with a simle implementation that allows us to signup with an email 
 
 ## Add password reset view
 
-## Add Vue in Django templates
+## Add Vue via CDN in `base.html`
+
+[https://v3.vuejs.org/guide/installation.html#cdn](https://v3.vuejs.org/guide/installation.html#cdn)
+
+```html
+<script src="https://unpkg.com/vue@next"></script>
+```
+
+## Add an example of how to setup a Vue component in Django template
+
+## Create a template called `post_likes.html`
+
+## Add Vue component definition and template
+
+## Add axios Via CDN
+
+## Configure Axios CDN
+
+## Add a method to the PostLike component that will make an API call using axios
+
+## Setup an endpoint that will handle our axios call
+
+```py
+    path("api/posts/<str:id>/like", views.like_post, name="like-post"),
+```
+
+## Setup a view to handle the like-post endpoint that returns a JsonResponse
+
+## Implement through Model for ManyToMany field for Post likes
+
+```py
+# apps/blog/models.py
+class PostLike(models.Model):
+    liked_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+```
+
+## Add through model to Django admin
+
+```py
+admin.site.register(PostLike)
+```
+
+## Run `makemigrations` and `migrate` for PostLike
+
+## Add `prefetch_related("created_by")` to post list query to reduce DB queries
+
+## Add a favicon in static
+
+Add `favicon.ico` to the `static` folder.
+
+```html
+<link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+```
 
 ## Add Vue as standalone SPA (show how API calls will not work without CORS)
 

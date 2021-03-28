@@ -19,7 +19,7 @@
 
     <a
       class="btn btn-primary"
-      href="http://{{ domain }}{% url 'activate' uidb64=uid token=token %}"
+      href="{{ domain }}{% url 'activate' uidb64=uid token=token %}"
     >
       Confirm Email
     </a>

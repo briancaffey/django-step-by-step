@@ -13,7 +13,11 @@
   {% for field in form %}
   <div class="fieldWrapper pb-2">
     <!-- errors -->
-    {{ field.errors }}
+    {% if field.errors %}
+    <div class="alert alert-danger">
+    {{ field.errors.as_text }}
+    </div>
+    {% endif %}
 
     <!-- field -->
     {{ field }}
@@ -24,6 +28,22 @@
     {% endif %}
   </div>
   {% endfor %}
+
+{% if messages %}
+<div class="messages">
+    {% for message in messages %}
+    <div{% if message.tags %} class="alert alert-danger"{% endif %}>
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+        {{ message }}
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+{% if form.non_field_errors %}
+<div class="alert alert-danger">
+  {{form.non_field_errors.as_text}}
+</div>
+{% endif %}
   <button class="btn btn-primary" type="submit">Login</button>
 </form>
 {% endblock %}

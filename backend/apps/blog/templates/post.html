@@ -29,18 +29,27 @@
 {% endif %}
 <div>
   <div class="card p-4 mb-2" style="font-size: 1.75em">{{ post.body }}</div>
+    <a style="text-decoration: none; color: black" href="#">
+      {% include "post_likes.html" with post_id=post.id like_count=post.like_count liked=post.liked %}
+    </a>
 </div>
 
+<!-- Edit post -->
+<div>
 {% if post.created_by%}
-<a class="btn btn-primary" href="/posts/{{ post.id}}/edit">Edit this post</a>
+<a class="btn btn-primary" href="/posts/{{ post.id}}/edit"><i class="bi bi-pencil"></i></a>
 {% endif %}
 
+<!-- Delete post -->
 {% if request.user.is_authenticated %}
 {% if post.created_by.id == request.user.id %}
 <form action="/posts/{{ post.id }}/delete" method="post">
     {% csrf_token %}
-    <input type="submit" class="btn btn-danger" value="Delete this post"></a>
+<button type="submit" class="btn btn-danger">
+  <i class="bi bi-trash"></i>
+</button>
 </form>
+</div>
 {% endif %}
 {% endif %}
 
