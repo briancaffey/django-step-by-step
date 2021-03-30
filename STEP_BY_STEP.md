@@ -2276,7 +2276,20 @@ We can start with a simle implementation that allows us to signup with an email 
 
 ## Add axios Via CDN
 
+```html
+    <!-- Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+```
+
 ## Configure Axios CDN
+
+```html
+    <!-- configure axios to use csrftoken -->
+    <script>
+      axios.defaults.xsrfCookieName = "csrftoken";
+      axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+    </script>
+```
 
 ## Add a method to the PostLike component that will make an API call using axios
 

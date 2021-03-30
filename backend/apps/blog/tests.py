@@ -54,3 +54,32 @@ def test_search_posts(client):
 
     assert "Post A" not in response_html
     assert "Post C" in response_html
+
+
+@pytest.mark.django_db(transaction=True)
+def test_create_post(client):
+
+    """
+    Test the view that creates a post. This indirectly tests PostForm
+    """
+    user = User.objects.create_user(
+        email="user@email.com", password="abcd1234!", is_active=True
+    )
+
+    client.force_login(user)
+
+    form_data = {"body": "Test post."}
+    response = client.post(reverse("new-post"), data=form_data, follow=True)
+
+    assert "Your post was created!" in response.content.decode("utf-8")
+
+
+@pytest.mark.django_db(transaction=True)
+def test_edit_post(client):
+
+    # create a user
+
+    # create a post by that user
+
+    # edit that post as the user
+    pass
