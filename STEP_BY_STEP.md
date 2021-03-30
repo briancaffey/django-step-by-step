@@ -2328,6 +2328,14 @@ Add `favicon.ico` to the `static` folder.
 <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
 ```
 
+## Add `.github/workflows/lint.yml` for GitHub Action that lints Python code
+
+Let's add a GitHub action following this example.
+
+[https://docs.github.com/en/actions/quickstart](https://docs.github.com/en/actions/quickstart)
+
+
+
 ## Add Vue as standalone SPA (show how API calls will not work without CORS)
 
 ## Add CORS
