@@ -3,6 +3,7 @@ import re
 from django.core import mail
 from django.test import TestCase
 from django.contrib.auth import get_user_model
+from django.test import override_settings
 from django.urls import reverse
 
 import pytest
@@ -98,6 +99,7 @@ def test_registration_form(client):
 
 
 @pytest.mark.django_db(transaction=True)
+@override_settings(CELERY_TASK_ALWAYS_EAGER=True)
 def test_registration_view(client):
     url = reverse("register")
     response = client.post(
