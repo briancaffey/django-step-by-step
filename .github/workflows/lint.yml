@@ -1,4 +1,4 @@
-name: lint-python
+name: lint-and-test-python
 
 # Run this workflow every time a new commit pushed to your repository
 on:
@@ -9,9 +9,9 @@ on:
 jobs:
   # Set the job key. The key is displayed as the job name
   # when a job name is not provided
-  lint-python:
+  lint-and-test-python:
     # Name the Job
-    name: Lint python code
+    name: Lint and test python code
     # Set the type of machine to run on
     runs-on: ubuntu-latest
 
@@ -40,6 +40,7 @@ jobs:
         python-version: [3.8]
 
     steps:
+      # Setup python version
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
@@ -48,6 +49,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # install pip dependencies
       - name: pip install
         run: |
           python -m pip install --upgrade pip
@@ -55,8 +57,10 @@ jobs:
           pip install -r backend/requirements/dev.txt
           pip install -r backend/requirements/test.txt
 
+      # lint python code using flake8
       - name: Lint code
         run: flake8 backend
 
+      # run pytest tests
       - name: Run pytest tests
         run: pytest backend
