@@ -2,7 +2,6 @@ import pytest
 
 from django.contrib.auth import get_user_model
 from django.urls import reverse
-from django.utils.http import urlencode
 
 
 from apps.blog.factory import PostFactory
