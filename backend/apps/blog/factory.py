@@ -19,5 +19,4 @@ class PostFactory(DjangoModelFactory):
     class Meta:
         model = Post
 
-    # title = factory.Faker('sentence', nb_words=4)
     body = factory.Faker("text")

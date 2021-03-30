@@ -763,6 +763,16 @@ python -m http.server 8002 --directory backend/.coverage
 
 More options for pytest-cov can be found here: [https://pytest-cov.readthedocs.io/en/latest/reporting.html](https://pytest-cov.readthedocs.io/en/latest/reporting.html)
 
+
+
+## Add `.coveragerc` to exclude files from coverage report
+
+```
+# .coveragerc
+[run]
+omit = manage.py
+```
+
 ## Configure VSCode settings
 
 In order to do linting with `flake8` and formatting with `black`, VSCode needs some special settings:

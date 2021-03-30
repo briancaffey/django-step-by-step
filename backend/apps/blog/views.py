@@ -132,6 +132,7 @@ def edit_post(request, id):
         form = PostForm(request.POST or None, instance=instance)
 
         if form.is_valid():
+            print("here....")
             # process data
             logger.info("Form is valid")
             logger.info("saving form")

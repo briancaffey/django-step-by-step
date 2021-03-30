@@ -75,10 +75,96 @@ def test_create_post(client):
 
 @pytest.mark.django_db(transaction=True)
 def test_edit_post(client):
+    """
+    Tests that a post can be updated through the update form
+    """
 
     # create a user
+    user = User.objects.create_user(
+        email="user@email.com", password="abcd1234!", is_active=True
+    )
+
+    client.force_login(user)
 
     # create a post by that user
+    post = PostFactory(created_by=user, body="Original post")
 
     # edit that post as the user
-    pass
+    response = client.post(
+        reverse("update-post", kwargs={"id": post.id}),
+        data={"body": "Original post, updated."},
+        follow=True,
+    )
+
+    assert response.status_code == 200
+
+    post.refresh_from_db()
+
+    assert post.body == "Original post, updated."
+
+
+@pytest.mark.django_db(transaction=True)
+def test_delete_post(client):
+    """
+    Tests that a post can be delete through the delete form
+    """
+
+    # create a user
+    user = User.objects.create_user(
+        email="user@email.com", password="abcd1234!", is_active=True
+    )
+
+    client.force_login(user)
+
+    # create a post by that user
+    post = PostFactory(created_by=user, body="Random post")
+
+    assert Post.objects.all().count() == 1
+    # delete that post as the user
+    response = client.post(
+        reverse("delete-post", kwargs={"id": post.id}),
+        follow=True,
+    )
+
+    assert response.status_code == 200
+
+    assert Post.objects.all().count() == 0
+
+
+@pytest.mark.django_db(transaction=True)
+def test_like_post(client):
+    """
+    Tests that a post can be liked and unliked by a logged in user
+    """
+
+    # TODO: make tests more DRY
+
+    # create a user
+    user = User.objects.create_user(
+        email="user@email.com", password="abcd1234!", is_active=True
+    )
+
+    client.force_login(user)
+
+    # create a post by that user
+    post = PostFactory(body="Awesome post")
+
+    # post has no likes
+    assert post.likes.all().count() == 0
+
+    # user likes their own post
+    response = client.post(
+        reverse("like-post", kwargs={"id": post.id}), follow=True
+    )
+
+    assert response.status_code == 200
+
+    # post has 1 like
+    assert post.likes.all().count() == 1
+
+    # user unlikes their own post
+    response = client.post(
+        reverse("like-post", kwargs={"id": post.id}), follow=True
+    )
+
+    assert post.likes.all().count() == 0
