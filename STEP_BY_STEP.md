@@ -2280,9 +2280,47 @@ We can start with a simle implementation that allows us to signup with an email 
 
 ## Add an example of how to setup a Vue component in Django template
 
+```html
+  {% for post in page_obj %}
+  <a href="/posts/{{ post.id }}" style="text-decoration: none; color: #000">
+    <div class="card p-4 mb-2">
+      <div class="">{{ post.body }}</div>
+      <div class="">{{ post.created_on }}</div>
+      {% if post.created_by %}
+      <div>{{ post.created_by }}</div>
+      {% endif %}
+      {% include "post_likes.html" with post_id=post.id like_count=post.like_count liked=post.liked %}
+    </div>
+  </a>
+  {% endfor %}
+```
+
+Notice the `{% include "post_likes.html" ... %}`, will add a nested template with different parameters to our page that will contain a clickable heart button that will make an API call to the backend.
+
 ## Create a template called `post_likes.html`
 
+```
+backend/apps/blog/templates/post_likes.html
+```
+
 ## Add Vue component definition and template
+
+Notice how the Javascript `const` definition for the Vue component contains a Django template variable. We need to do this so the name of each created Vue component is unique.
+
+```js
+const LikeCounter{{ post_id }} = {
+  delimiters: ["[[", "]]"],
+  data() {
+      return {
+      counter: {{ like_count }},
+      liked: {{ liked | lower }},
+      };
+  },
+}
+
+Vue.createApp(LikeCounter{{ post_id }}).mount("#counter-{{ post_id }}");
+```
+
 
 ## Add axios Via CDN
 
@@ -2303,6 +2341,22 @@ We can start with a simle implementation that allows us to signup with an email 
 
 ## Add a method to the PostLike component that will make an API call using axios
 
+```js
+    methods: {
+        async toggleLike() {
+            try {
+                const resp = await axios.post("/api/posts/{{ post_id }}/like");
+                console.log(resp.data);
+                this.counter = resp.data.likes;
+                this.liked = resp.data.like;
+            } catch (err) {
+                console.log(err);
+                alert("Please login or create an account to like posts");
+            }
+        }
+    }
+```
+
 ## Setup an endpoint that will handle our axios call
 
 ```py
@@ -2310,6 +2364,32 @@ We can start with a simle implementation that allows us to signup with an email 
 ```
 
 ## Setup a view to handle the like-post endpoint that returns a JsonResponse
+
+```py
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.http import require_POST
+
+
+@login_required
+@require_POST
+def like_post(request, id):
+
+    # implement like post logic
+    post = get_object_or_404(Post, id=id)
+
+    if request.user not in post.likes.all():
+        post_like_through_model = PostLike(post=post, liked_by=request.user)
+        post_like_through_model.save()
+        like = True
+    else:
+        post.likes.remove(request.user)
+        like = False
+
+    post_like_count = post.likes.all().count()
+    return JsonResponse({"likes": post_like_count, "like": like})
+
+```
+
 
 ## Implement through Model for ManyToMany field for Post likes
 
@@ -2344,7 +2424,75 @@ Let's add a GitHub action following this example.
 
 [https://docs.github.com/en/actions/quickstart](https://docs.github.com/en/actions/quickstart)
 
+```yml
+name: lint-and-test-python
 
+# Run this workflow every time a new commit pushed to your repository
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # Set the job key. The key is displayed as the job name
+  # when a job name is not provided
+  lint-and-test-python:
+    # Name the Job
+    name: Lint and test python code
+    # Set the type of machine to run on
+    runs-on: ubuntu-latest
+
+    # Service containers to run with `container-job`
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+        ports:
+          # Maps tcp port 5432 on service container to the host
+          - 5432:5432
+
+    strategy:
+      matrix:
+        python-version: [3.8]
+
+    steps:
+      # Setup python version
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      # Checks out a copy of your repository on the ubuntu-latest machine
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # install pip dependencies
+      - name: pip install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements/base.txt
+          pip install -r backend/requirements/dev.txt
+          pip install -r backend/requirements/test.txt
+
+      # lint python code using flake8
+      - name: Lint code
+        run: flake8 backend
+
+      # run pytest tests
+      - name: Run pytest tests
+        run: pytest backend
+
+```
 
 ## Add Vue as standalone SPA (show how API calls will not work without CORS)
 
@@ -2392,6 +2540,4 @@ Optional/Extra steps
 
 ## Portainer UI for viewing containers and logs
 
-```
-
-```
+## Wagtail for managing blog content
