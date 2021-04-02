@@ -27,7 +27,7 @@ urlpatterns = [
     path("", RedirectView.as_view(url="/posts")),
 ]
 
-if settings.DEBUG:
+if settings.DEBUG:  # pragma: no cover
     urlpatterns += [path("__debug__/", include(debug_toolbar.urls))] + static(
         settings.STATIC_URL,
         document_root=settings.STATIC_ROOT,

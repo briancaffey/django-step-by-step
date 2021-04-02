@@ -27,7 +27,7 @@ class UsersManagersTests(TestCase):
             # username is None for the AbstractUser option
             # username does not exist for the AbstractBaseUser option
             self.assertIsNone(user.username)
-        except AttributeError:
+        except AttributeError:  # pragma: no cover
             pass
         with self.assertRaises(TypeError):
             User.objects.create_user()
@@ -46,7 +46,7 @@ class UsersManagersTests(TestCase):
             # username is None for the AbstractUser option
             # username does not exist for the AbstractBaseUser option
             self.assertIsNone(admin_user.username)
-        except AttributeError:
+        except AttributeError:  # pragma: no cover
             pass
         with self.assertRaises(ValueError):
             User.objects.create_superuser(
@@ -64,6 +64,19 @@ def extract_urls(string):
 
 
 class EmailConfirmationTest(TestCase):
+    def test_email_confirmation_failure(self):
+
+        User.objects.create_user(email="user@email.com", password="foo")
+
+        response = self.client.get(
+            reverse("activate", kwargs={"uidb64": "abc123", "token": "token"}),
+            follow=True,
+        )
+
+        assert "The confirmation link was invalid." in response.content.decode(
+            "utf-8"
+        )
+
     def test_email_confirmation(self):
         domain = "http://localhost:8000"
         user = User.objects.create_user(email="user@email.com", password="foo")
@@ -78,9 +91,11 @@ class EmailConfirmationTest(TestCase):
 
         confirmation_link = links[-1]
 
-        response = self.client.get(confirmation_link, follow=True).content
+        response = self.client.get(confirmation_link, follow=True)
 
-        assert b"Your email has been confirmed." in response
+        assert "Your email has been confirmed." in response.content.decode(
+            "utf-8"
+        )
 
 
 @pytest.mark.django_db(transaction=True)
@@ -114,7 +129,15 @@ def test_registration_view(client):
 
     assert User.objects.all().count() == 1
 
-    assert b"Thank you for signing up!" in response.content
+    assert "Thank you for signing up!" in response.content.decode("utf-8")
+
+
+@pytest.mark.django_db(transaction=True)
+@override_settings(CELERY_TASK_ALWAYS_EAGER=True)
+def test_registration_page(client):
+    response = client.get("/register")
+
+    assert "Register" in response.content.decode("utf-8")
 
 
 @pytest.mark.django_db(transaction=True)
@@ -128,3 +151,31 @@ def test_login(client):
     client.login(username=username, password=password)
     response = client.get("/posts")
     assert b"Profile" in response.content
+
+
+@pytest.mark.django_db(transaction=True)
+def test_login_view(client):
+    username = "user@email.com"
+    password = "Qwer1234!"
+    User.objects.create_user(email=username, password=password, is_active=True)
+
+    response = client.post(
+        "/login", data={"email": username, "password": password}, follow=True
+    )
+
+    assert response.status_code == 200
+
+
+@pytest.mark.django_db(transaction=True)
+def test_logout(client):
+    username = "user@email.com"
+    password = "bar"
+    user = User.objects.create_user(
+        email=username, password=password, is_active=True
+    )
+
+    client.force_login(user)
+
+    response = client.get("/logout", follow=True)
+
+    assert "You successfully logged out!" in response.content.decode("utf-8")

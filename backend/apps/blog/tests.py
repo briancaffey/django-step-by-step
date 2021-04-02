@@ -29,6 +29,12 @@ def test_post():
 
 
 @pytest.mark.django_db(transaction=True)
+def test_post_not_found(client):
+    response = client.get("post", kwargs={"id": 2})
+    assert response.status_code == 404
+
+
+@pytest.mark.django_db(transaction=True)
 def test_homepage(client):
     response = client.get("/")
     assert response.status_code == 302
@@ -53,6 +59,22 @@ def test_search_posts(client):
 
     assert "Post A" not in response_html
     assert "Post C" in response_html
+
+
+@pytest.mark.django_db(transaction=True)
+def test_new_post_page(client):
+    response = client.get(reverse("new-post"))
+    assert response.status_code == 200
+    assert "Create a new post" in response.content.decode("utf-8")
+
+
+@pytest.mark.django_db(transaction=True)
+def test_anonymous_post(client):
+    anonymous_post = "an anonymous post"
+    form_data = {"body": anonymous_post}
+    response = client.post(reverse("new-post"), data=form_data, follow=True)
+    assert response.status_code == 200
+    assert anonymous_post in response.content.decode("utf-8")
 
 
 @pytest.mark.django_db(transaction=True)
@@ -88,6 +110,13 @@ def test_edit_post(client):
 
     # create a post by that user
     post = PostFactory(created_by=user, body="Original post")
+
+    # go to the page where the post can be edited
+    response = client.get(
+        reverse("update-post", kwargs={"id": post.id}),
+    )
+
+    assert "Edit" in response.content.decode("utf-8")
 
     # edit that post as the user
     response = client.post(

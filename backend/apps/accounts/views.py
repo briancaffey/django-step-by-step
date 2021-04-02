@@ -52,10 +52,7 @@ class ActivateAccount(View):
                 ("The confirmation link was invalid."),
                 extra_tags="alert alert-warning",
             )
-            messages.warning(
-                request,
-                ("The confirmation link was invalid."),
-            )
+
             return HttpResponseRedirect("/posts")
 
 
@@ -70,7 +67,7 @@ class CustomLogoutView(auth_views.LogoutView):
         messages.add_message(
             self.request,
             messages.SUCCESS,
-            "You successfully log out!",
+            "You successfully logged out!",
             extra_tags="alert alert-success",
         )
         return next_page
@@ -81,41 +78,34 @@ def register(request):
     if request.user.is_authenticated:
         return HttpResponseRedirect("/posts")
 
-    form = CustomUserRegistrationForm(request.POST)
-    if form.is_valid():
-        user = form.save(commit=False)
-        user.is_active = False
-        user.save()
-        # logger.info("")
-        # this should be false if user hasn't confirmed email
-        # print(form.cleaned_data)
-        # username = form.cleaned_data.get("email")
-        # password = form.cleaned_data.get("password1")
-        # user = authenticate(username=username, password=password)
-        # print(user)
-        # login(
-        #     request,
-        #     user,
-        #     backend="django.contrib.auth.backends.ModelBackend",
-        # )
-        current_site = get_current_site(request)
+    form = CustomUserRegistrationForm()
 
-        # user.email_user(subject, message)
-        # this celery task will send the confirmation email
-        send_confirmation_email.apply_async(
-            kwargs={
-                "user_id": user.id,
-                "domain": current_site.domain,
-            }
-        )
+    if request.method == "POST":
 
-        # this will tell the user to check their email
-        messages.add_message(
-            request,
-            messages.SUCCESS,
-            "Thank you for signing up! Please confirm your email address!",
-            extra_tags="alert alert-success",
-        )
-        return HttpResponseRedirect("/posts")
+        form = CustomUserRegistrationForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+
+            current_site = get_current_site(request)
+
+            # user.email_user(subject, message)
+            # this celery task will send the confirmation email
+            send_confirmation_email.apply_async(
+                kwargs={
+                    "user_id": user.id,
+                    "domain": current_site.domain,
+                }
+            )
+
+            # this will tell the user to check their email
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                "Thank you for signing up! Please confirm your email address!",
+                extra_tags="alert alert-success",
+            )
+            return HttpResponseRedirect("/posts")
 
     return render(request, "register.html", {"form": form})

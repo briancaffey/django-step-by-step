@@ -2530,6 +2530,10 @@ jobs:
 
 ## VSCode remote container
 
+## Add a privacy policy
+
+## Cookie consent form
+
 ---
 
 Optional/Extra steps
