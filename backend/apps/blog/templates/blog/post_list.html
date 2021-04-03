@@ -6,7 +6,7 @@
 
 <!-- Nav -->
 
-{% block nav_title %}All Posts{% endblock %}
+{% block nav_title %}Posts with CBV{% endblock %}
 
 <!-- Content -->
 
@@ -23,11 +23,11 @@
 </div>
 {% endif %}
 
-<h2>Posts ({{ page_obj.paginator.count }})</h2>
+<h2>Posts ({{ page_obj.paginator.count }}) - CBV</h2>
 
 <div>
   {% for post in page_obj %}
-  <a href="/posts/{{ post.id }}" style="text-decoration: none; color: #000">
+  <a href="/cbv/posts/{{ post.id }}" style="text-decoration: none; color: #000">
     <div class="card p-4 mb-2">
       <div class="">{{ post.body }}</div>
       <div class="">{{ post.created_on }}</div>

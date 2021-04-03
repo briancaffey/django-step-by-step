@@ -32,12 +32,16 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # django apps
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # third-party
+    "rest_framework",
+    # local apps
     "apps.accounts",
     "apps.core",
     "apps.blog",
@@ -171,5 +175,6 @@ EMAIL_PORT = os.environ.get("DJANGO_EMAIL_PORT", "1025")
 
 # Login Redirect
 
+LOGIN_URL = "/login"
 LOGIN_REDIRECT_URL = "/posts"
 LOGOUT_REDIRECT_URL = "/posts"

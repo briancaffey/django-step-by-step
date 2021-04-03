@@ -22,6 +22,7 @@ from django.views.generic.base import RedirectView
 
 urlpatterns = [
     path("", include("apps.blog.urls")),
+    path("cbv/", include("apps.blog.cbv_urls")),
     path("", include("apps.accounts.urls")),
     path("my-admin-portal/", admin.site.urls),
     path("", RedirectView.as_view(url="/posts")),
@@ -32,3 +33,5 @@ if settings.DEBUG:  # pragma: no cover
         settings.STATIC_URL,
         document_root=settings.STATIC_ROOT,
     )
+
+    urlpatterns += [path("api-auth/", include("rest_framework.urls"))]

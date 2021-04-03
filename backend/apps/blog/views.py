@@ -18,28 +18,21 @@ logger = logging.getLogger()
 
 
 def posts(request):
-    if request.user.is_authenticated:
-        posts = (
-            Post.objects.all()
-            .prefetch_related("created_by")
-            .annotate(
-                like_count=Count("likes"),
-                # see if the request.user liked the post
-                liked=Exists(
-                    PostLike.objects.filter(
-                        liked_by_id=request.user.id, post=OuterRef("id")
-                    )
-                ),
-            )
-        ).order_by("-modified_on")
-    else:
-        posts = (
-            Post.objects.all()
-            .prefetch_related("created_by")
-            .annotate(
-                like_count=Count("likes"),
-            )
-        ).order_by("-modified_on")
+
+    posts = (
+        Post.objects.all()
+        .prefetch_related("created_by")
+        .annotate(
+            like_count=Count("likes"),
+            # see if the request.user liked the post
+            liked=Exists(
+                PostLike.objects.filter(
+                    liked_by_id=request.user.id or None,
+                    post=OuterRef("id"),
+                )
+            ),
+        )
+    ).order_by("-modified_on")
 
     if request.GET.get("q"):
         search_query = request.GET.get("q")
@@ -56,8 +49,7 @@ def posts(request):
 def post(request, id):
 
     post = (
-        Post.objects.filter(id=id)
-        .prefetch_related("created_by")
+        Post.objects.prefetch_related("created_by")
         .annotate(
             like_count=Count("likes"),
             liked=Exists(
@@ -66,11 +58,8 @@ def post(request, id):
                 )
             ),
         )
+        .get(id=id)
     )
-    if post.exists() and post.count() == 1:
-        post = post.first()
-    else:
-        raise Http404("The post does not exist.")
 
     return render(request, template_name="post.html", context={"post": post})
 
@@ -83,13 +72,10 @@ def new_post(request):
 
         if form.is_valid():
             # process data
-            logger.info("Form is valid")
-            logger.info("saving form")
             post = form.save()
             if request.user.is_authenticated:
                 post.created_by = request.user
                 post.save()
-            logger.info("form saved")
             messages.add_message(
                 request,
                 messages.SUCCESS,
@@ -132,12 +118,8 @@ def edit_post(request, id):
         form = PostForm(request.POST or None, instance=instance)
 
         if form.is_valid():
-            print("here....")
             # process data
-            logger.info("Form is valid")
-            logger.info("saving form")
             post = form.save()
-            logger.info("form saved")
             messages.add_message(
                 request,
                 messages.SUCCESS,

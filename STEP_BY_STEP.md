@@ -2176,6 +2176,11 @@ from django.core.paginator import Paginator
 
 ## Add URL for post detail view
 
+```py
+    # read (detail)
+    path("posts/<str:id>", views.post, name="post"),
+```
+
 ## Create a template called `post.html` in templates
 
 ## Link to detail views from the list view
@@ -2247,6 +2252,9 @@ Add the following do each of the links in the pagination section of the post lis
 ```html
       <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
 ```
+
+If there are lots of other parametes to add, use the following solution:
+[https://stackoverflow.com/questions/2047622/how-to-paginate-django-with-other-get-variables](https://stackoverflow.com/questions/2047622/how-to-paginate-django-with-other-get-variables)
 
 ## Add registration URL
 
@@ -2494,6 +2502,127 @@ jobs:
 
 ```
 
+## Generic Class Based Views
+
+We can reimplement our application logic with generic class-based views (GCBVs). There's nothing wrong with out function-based views (FBVs). The code is straightforward and relatively easy to understand. GCBVs will let us acheive the same functionality with fewer lines of code. You can use only CBVs, only GBVs or a mix of the two together. However you decide to write your view, GCBVs are in import part of Django that you should know about.
+
+This project demonstrates implementations of FBVs and GCBVs, as well as other ways of expressing our views using the Django REST Framework, which also has a similar concpet of FBVs and GCBVs.
+
+
+## Create a file in the `blog` app called `class_based_views.py`
+
+```
+touch backend/apps/blog/class_based_views.py
+```
+
+## Add a generic `ListView` to the `class_based_views` file
+
+```py
+# class_based_views.py
+from django.views.generic import ListView
+from apps.blog.models import Post
+
+
+class PostList(ListView):
+    model = Post
+```
+
+**Note**: the name of the file `cbv_urls.py` doesn't matter.
+
+
+## Setup a new URLs file
+
+Let's add a new URLs file to the `blog` app that will contain urls for our GCBVs.
+
+```
+touch backend/apps/blog/cbv_urls.py
+```
+
+## Add a `urlpatterns` with a path that uses the `PostList` CBV
+
+```py
+# URLs for GCBVs
+
+from django.urls import path
+from apps.blog.class_based_views import PostList
+
+urlpatterns = [
+    path("posts", PostList.as_view()),
+]
+```
+
+## Include `cbv_urls.py` in `backend/urls.py`
+
+```py
+    path("cbv/", include("apps.blog.cbv_urls")),
+```
+
+Now visit `http://127.0.0.1:8000/cbv/posts` and we will see the following error:
+
+```
+django.template.exceptions.TemplateDoesNotExist
+```
+
+## Fix the template for the PostList CBV
+
+Class based-views expect to find a template at `blog/post_list.html` in our app's `templates` directory. We can put a template there, or we can override the location by adding `template_name` to `PostList`:
+
+
+```py
+class PostList(ListView):
+    model = Post
+    template_name = "blog/posts.html"
+```
+
+
+## Add CBV DetailView for viewing a single post
+
+```py
+class PostDetailView(DetailView):
+    model = Post
+```
+
+## Add URL path for DetailView
+
+```py
+    path("posts/<int:pk>", PostDetailView.as_view()),
+```
+
+## Add a teplate for the PostDetailView in `blog/post_detail` in the `blog` app `templates` directory
+
+```html
+
+```
+
+## Add a PostCreateView for creating posts using CBV
+
+## Add a UpdatePostView for editing posts
+
+## Add a DeletePostView for deleting posts
+
+## Add tests for CBVs
+
+## Django REST Framework
+
+
+## Add Django REST Framework to `base.txt` dependencies
+
+```
+djangorestframework==3.12.4
+```
+
+## Add `restframework` to `INSTALLED_APPS` in base settings module
+
+```py
+    "rest_framework",
+```
+
+## Add REST Framework URLs under the `if settings.DEBUG` block in `backend/urls.py`
+
+```py
+    urlpatterns += [path("api-auth/", include("rest_framework.urls"))]
+```
+
 ## Add Vue as standalone SPA (show how API calls will not work without CORS)
 
 ## Add CORS
@@ -2508,7 +2637,6 @@ jobs:
 
 ## Setup Vue in NGINX (web-sockets for hot reloading, index.html, etc)
 
-## Add Django REST Framework
 
 ## Setup OpenAPI documentation
 
