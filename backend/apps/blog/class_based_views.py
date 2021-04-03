@@ -3,16 +3,15 @@ import logging
 
 from django.contrib import messages
 from django.contrib.auth.mixins import (
-    PermissionRequiredMixin,
     UserPassesTestMixin,
 )
 from django.core.paginator import Paginator
 from django.db.models import Count, Exists, OuterRef
-from django.http import HttpResponseRedirect, HttpResponseNotFound, Http404
+from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import DetailView, ListView
-from django.views.generic.edit import FormView, UpdateView, DeleteView
+from django.views.generic.edit import FormView, UpdateView  # , DeleteView
 
 from apps.blog.forms import PostForm
 from apps.blog.models import Post, PostLike
