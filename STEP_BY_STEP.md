@@ -2596,7 +2596,12 @@ class PostDetailView(DetailView):
 
 ## Add a PostCreateView for creating posts using CBV
 
-## Add a UpdatePostView for editing posts
+## Add a PostUpdateView for editing posts
+
+- tempalte
+- URL pattern
+- CBV
+- tests
 
 ## Add a DeletePostView for deleting posts
 

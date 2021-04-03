@@ -7,11 +7,6 @@ class RequestLogAdmin(admin.ModelAdmin):
     class Meta:
         model = RequestLog
 
-    def get_queryset(self, request):
-        qs = super(RequestLogAdmin, self).get_queryset(request)
-        qs = qs.exclude(full_path__startswith="/admin/")
-        return qs
-
     search_fields = ("full_path",)
 
     list_select_related = ("user",)

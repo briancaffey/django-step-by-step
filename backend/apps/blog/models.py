@@ -15,7 +15,7 @@ class Post(BaseModel):
     modified_by = None
     likes = models.ManyToManyField(User, through="PostLike")
 
-    def __str__(self):
+    def __str__(self):  # pragma: no cover
         return self.body
 
 

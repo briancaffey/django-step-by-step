@@ -26,32 +26,25 @@ def send_confirmation_email(*, user_id, domain):
 
     https://stackoverflow.com/questions/3005080/how-to-send-html-email-with-django-with-dynamic-content-in-it
     """
-    user = User.objects.filter(id=user_id)
+    user = User.objects.get(id=user_id)
 
-    if user.exists():
+    html_message = render_to_string(
+        "emails/account_activation_email.html",
+        {
+            "user": user,
+            "domain": domain,
+            "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+            "token": account_activation_token.make_token(user),
+        },
+    )
 
-        user = user.first()
+    subject = f"Activate Your Account for {domain}"
+    email = EmailMessage(
+        subject,
+        html_message,
+        os.environ.get("DJANGO_EMAIL_HOST_USER", "debug+email@local.dev"),
+        [settings.ADMIN_EMAIL],
+    )
+    email.content_subtype = "html"
 
-        html_message = render_to_string(
-            "emails/account_activation_email.html",
-            {
-                "user": user,
-                "domain": domain,
-                "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                "token": account_activation_token.make_token(user),
-            },
-        )
-
-        subject = f"Activate Your Account for {domain}"
-        email = EmailMessage(
-            subject,
-            html_message,
-            os.environ.get("DJANGO_EMAIL_HOST_USER", "debug+email@local.dev"),
-            [settings.ADMIN_EMAIL],
-        )
-        email.content_subtype = "html"
-
-        email.send()
-
-    else:
-        logger.info("User does not exist")
+    email.send()

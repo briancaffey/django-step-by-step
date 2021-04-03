@@ -154,6 +154,19 @@ def test_login(client):
 
 
 @pytest.mark.django_db(transaction=True)
+def test_redirect_register_route_for_logged_in_user(client):
+    username = "user1"
+    password = "bar"
+    user = User.objects.create_user(email=username, password=password)
+
+    client.force_login(user)
+
+    response = client.get("/register")
+
+    assert response.status_code == 302
+
+
+@pytest.mark.django_db(transaction=True)
 def test_login_view(client):
     username = "user@email.com"
     password = "Qwer1234!"

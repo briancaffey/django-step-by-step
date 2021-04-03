@@ -103,13 +103,24 @@ def test_edit_post(client):
 
     # create a user
     user = User.objects.create_user(
-        email="user@email.com", password="abcd1234!", is_active=True
+        email="user1@email.com", password="abcd1234!", is_active=True
     )
 
-    client.force_login(user)
+    anonymous_post = PostFactory(body="Anonymous Post")
 
     # create a post by that user
     post = PostFactory(created_by=user, body="Original post")
+
+    client.force_login(user)
+
+    # go to the page where the post can be edited
+    response = client.get(
+        reverse("update-post", kwargs={"id": anonymous_post.id}), follow=True
+    )
+
+    assert "You cannot edit an anonymous post" in response.content.decode(
+        "utf-8"
+    )
 
     # go to the page where the post can be edited
     response = client.get(
@@ -130,6 +141,35 @@ def test_edit_post(client):
     post.refresh_from_db()
 
     assert post.body == "Original post, updated."
+
+
+@pytest.mark.django_db(transaction=True)
+def test_edit_other_user_post(client):
+    """
+    Tests that a user can't update a post made by another user
+    """
+
+    # create a user
+    user1 = User.objects.create_user(
+        email="user1@email.com", password="abcd1234!", is_active=True
+    )
+
+    # create another user
+    user2 = User.objects.create_user(
+        email="user2@email.com", password="abcd1234!", is_active=True
+    )
+
+    # create a post by that user
+    post = PostFactory(created_by=user1, body="Original post")
+
+    client.force_login(user2)
+
+    # go to the page where the post can be edited
+    response = client.post(
+        reverse("update-post", kwargs={"id": post.id}), follow=True
+    )
+
+    assert "You cannot edit this post" in response.content.decode("utf-8")
 
 
 @pytest.mark.django_db(transaction=True)
@@ -158,6 +198,31 @@ def test_delete_post(client):
     assert response.status_code == 200
 
     assert Post.objects.all().count() == 0
+
+
+@pytest.mark.django_db(transaction=True)
+def test_delete_anonymous_post(client):
+    """
+    Tests that an anonymous post cannot be deleted
+    """
+
+    # create a user
+    user = User.objects.create_user(
+        email="user@email.com", password="abcd1234!", is_active=True
+    )
+
+    client.force_login(user)
+
+    # create a post by that user
+    post = PostFactory(body="Random post")
+
+    response = client.post(
+        reverse("delete-post", kwargs={"id": post.id}), follow=True
+    )
+
+    assert "You cannot delete an anonymous post" in response.content.decode(
+        "utf-8"
+    )
 
 
 @pytest.mark.django_db(transaction=True)

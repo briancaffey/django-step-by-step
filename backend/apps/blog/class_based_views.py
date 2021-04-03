@@ -1,14 +1,45 @@
 # class_based_views.py
+import logging
+
 from django.contrib import messages
+from django.contrib.auth.mixins import (
+    PermissionRequiredMixin,
+    UserPassesTestMixin,
+)
 from django.core.paginator import Paginator
 from django.db.models import Count, Exists, OuterRef
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotFound, Http404
+from django.shortcuts import get_object_or_404
 from django.urls import reverse
 from django.views.generic import DetailView, ListView
-from django.views.generic.edit import FormView
+from django.views.generic.edit import FormView, UpdateView, DeleteView
 
 from apps.blog.forms import PostForm
 from apps.blog.models import Post, PostLike
+
+logger = logging.getLogger(__name__)
+
+
+class PostUpdateView(UserPassesTestMixin, UpdateView):
+    model = Post
+    template_name = "blog/post_edit.html"
+    form_class = PostForm
+
+    def test_func(self):
+        post = get_object_or_404(Post, id=self.kwargs["pk"])
+        return self.request.user == post.created_by
+
+    def form_valid(self, form):
+        messages.add_message(
+            self.request,
+            messages.SUCCESS,
+            "Your post was updated!",
+            extra_tags="alert alert-success",
+        )
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse("post-detail-cbv", kwargs={"pk": self.kwargs["pk"]})
 
 
 class PostCreateView(FormView):
@@ -35,20 +66,25 @@ class PostCreateView(FormView):
 
 class PostDetailView(DetailView):
     def get_object(self):
-        post = (
-            Post.objects.prefetch_related("created_by")
-            .annotate(
-                like_count=Count("likes"),
-                liked=Exists(
-                    PostLike.objects.filter(
-                        liked_by_id=self.request.user.pk, post=OuterRef("pk")
-                    )
-                ),
+        logger.info("in get_object..")
+        try:
+            post = (
+                Post.objects.prefetch_related("created_by")
+                .annotate(
+                    like_count=Count("likes"),
+                    liked=Exists(
+                        PostLike.objects.filter(
+                            liked_by_id=self.request.user.pk,
+                            post=OuterRef("pk"),
+                        )
+                    ),
+                )
+                .get(pk=self.kwargs["pk"])
             )
-            .get(pk=self.kwargs["pk"])
-        )
 
-        return post
+            return post
+        except Post.DoesNotExist:
+            raise Http404()
 
     def get_context_data(self, **kwargs):
         post = self.get_object()

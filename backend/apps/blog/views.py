@@ -95,14 +95,16 @@ def edit_post(request, id):
 
     instance = get_object_or_404(Post, id=id)
 
-    if instance.created_by is None:
+    if not instance.created_by:
         messages.add_message(
             request,
             messages.WARNING,
-            "You can't edit an anonymous post",
+            "You cannot edit an anonymous post",
             extra_tags="alert alert-warning",
         )
         return HttpResponseRedirect(f"/posts/{instance.id}")
+    else:
+        logger.info("here.")
 
     if request.method == "POST":
 
@@ -110,7 +112,7 @@ def edit_post(request, id):
             messages.add_message(
                 request,
                 messages.WARNING,
-                "You can't edit this post",
+                "You cannot edit this post",
                 extra_tags="alert alert-warning",
             )
             return HttpResponseRedirect(f"/posts/{instance.id}")
@@ -136,6 +138,7 @@ def edit_post(request, id):
 
 
 @login_required
+@require_POST
 def delete_post(request, id):
 
     instance = get_object_or_404(Post, id=id)
@@ -144,25 +147,22 @@ def delete_post(request, id):
         messages.add_message(
             request,
             messages.WARNING,
-            "You can't delete an anonymous post",
+            "You cannot delete an anonymous post",
             extra_tags="alert alert-warning",
         )
         return HttpResponseRedirect(f"/posts/{instance.id}")
 
-    if request.method == "POST":
-        # delete object
-        instance.delete()
-        messages.add_message(
-            request,
-            messages.WARNING,
-            "Your post was deleted",
-            extra_tags="alert alert-success",
-        )
-        # after deleting redirect to
-        # home page
-        return HttpResponseRedirect("/posts")
-
-    return render(request, "posts.html", {})
+    # delete object
+    instance.delete()
+    messages.add_message(
+        request,
+        messages.WARNING,
+        "Your post was deleted",
+        extra_tags="alert alert-success",
+    )
+    # after deleting redirect to
+    # home page
+    return HttpResponseRedirect("/posts")
 
 
 @login_required

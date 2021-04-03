@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+<!-- Title -->
+
+{% block title %}Edit post{% endblock %}
+
+<!-- Nav -->
+
+{% block nav_title %}Edit post{% endblock %}
+
+<!-- Content -->
+
+{% block content %}
+<form action="/cbv/posts/{{ form.instance.id }}/edit" method="post">
+  <div class="form-group">
+    {% csrf_token %}
+    <h1>Edit this post</h1>
+    <!-- form loop -->
+    {% for field in form %}
+    <div class="fieldWrapper">
+      <!-- errors -->
+      {{ field.errors }}
+      <!-- field -->
+      {{ field }}
+      <!-- help text -->
+      {% if field.help_text %}
+      <p class="help">{{ field.help_text|safe }}</p>
+      {% endif %}
+    </div>
+    {% endfor %}
+    <input class="btn btn-primary mt-2" type="submit" value="Submit" />
+  </div>
+</form>
+{% endblock %}
