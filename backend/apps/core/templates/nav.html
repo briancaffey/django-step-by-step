@@ -89,6 +89,16 @@
           <a class="nav-link" href="/register" aria-disabled="true">Register</a>
         </li>
         {% endif %}
+
+        <!-- Admin Link -->
+
+        {% if request.user.is_staff %}
+        <li class="nav-item">
+          <a class="nav-link" href="/my-admin-portal/" aria-disabled="true"
+            >Admin</a
+          >
+        </li>
+        {% endif %}
       </ul>
       <form method="get">
         <input
