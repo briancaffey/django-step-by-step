@@ -135,22 +135,20 @@ def test_registration_view(client):
 @pytest.mark.django_db(transaction=True)
 @override_settings(CELERY_TASK_ALWAYS_EAGER=True)
 def test_registration_page(client):
-    response = client.get("/register")
+    response = client.get(reverse("register"))
 
     assert "Register" in response.content.decode("utf-8")
 
 
 @pytest.mark.django_db(transaction=True)
 def test_login(client):
-    username = "user1"
+    email = "user1@email.com"
     password = "bar"
-    User.objects.create_user(email=username, password=password)
-    # Use this:
-    # client.force_login(user)
-    # Or this:
-    client.login(username=username, password=password)
-    response = client.get("/posts")
-    assert b"Profile" in response.content
+    user = User.objects.create_user(email=email, password=password)
+
+    client.force_login(user)
+    response = client.get(reverse("posts"))
+    assert "Profile" in response.content.decode("utf-8")
 
 
 @pytest.mark.django_db(transaction=True)
@@ -161,7 +159,7 @@ def test_redirect_register_route_for_logged_in_user(client):
 
     client.force_login(user)
 
-    response = client.get("/register")
+    response = client.get(reverse("register"))
 
     assert response.status_code == 302
 
@@ -173,7 +171,9 @@ def test_login_view(client):
     User.objects.create_user(email=username, password=password, is_active=True)
 
     response = client.post(
-        "/login", data={"email": username, "password": password}, follow=True
+        reverse("login"),
+        data={"email": username, "password": password},
+        follow=True,
     )
 
     assert response.status_code == 200
@@ -189,7 +189,7 @@ def test_logout(client):
 
     client.force_login(user)
 
-    response = client.get("/logout", follow=True)
+    response = client.get(reverse("logout"), follow=True)
 
     assert "You successfully logged out!" in response.content.decode("utf-8")
 

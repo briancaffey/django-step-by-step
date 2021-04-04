@@ -21,6 +21,7 @@ from django.views.generic import View
 
 from apps.accounts.tokens import account_activation_token
 from apps.blog.models import Post, PostLike
+from apps.core import constants as c
 
 
 User = get_user_model()
@@ -44,7 +45,7 @@ class ActivateAccount(View):
                 request,
                 messages.SUCCESS,
                 "Your email has been confirmed.",
-                extra_tags="alert alert-success",
+                extra_tags=c.BOOTSTRAP_ALERT_SUCCESS,
             )
             return HttpResponseRedirect("/posts")
         else:
@@ -52,7 +53,7 @@ class ActivateAccount(View):
                 request,
                 messages.WARNING,
                 ("The confirmation link was invalid."),
-                extra_tags="alert alert-warning",
+                extra_tags=c.BOOTSTRAP_ALERT_WARNING,
             )
 
             return HttpResponseRedirect("/posts")
@@ -70,7 +71,7 @@ class CustomLogoutView(auth_views.LogoutView):
             self.request,
             messages.SUCCESS,
             "You successfully logged out!",
-            extra_tags="alert alert-success",
+            extra_tags=c.BOOTSTRAP_ALERT_SUCCESS,
         )
         return next_page
 
@@ -106,7 +107,7 @@ def register(request):
                 request,
                 messages.SUCCESS,
                 "Thank you for signing up! Please confirm your email address!",
-                extra_tags="alert alert-success",
+                extra_tags=c.BOOTSTRAP_ALERT_SUCCESS,
             )
             return HttpResponseRedirect("/posts")
 

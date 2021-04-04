@@ -14,6 +14,7 @@ from django.views.generic.edit import FormView, UpdateView  # , DeleteView
 
 from apps.blog.forms import PostForm
 from apps.blog.models import Post
+from apps.core import constants as c
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +38,7 @@ class PostUpdateView(UserPassesTestMixin, UpdateView):
             self.request,
             messages.SUCCESS,
             "Your post was updated!",
-            extra_tags="alert alert-success",
+            extra_tags=c.BOOTSTRAP_ALERT_SUCCESS,
         )
         return super().form_valid(form)
 
@@ -62,7 +63,7 @@ class PostCreateView(FormView):
             self.request,
             messages.SUCCESS,
             "Your post was created!",
-            extra_tags="alert alert-success",
+            extra_tags=c.BOOTSTRAP_ALERT_SUCCESS,
         )
         return HttpResponseRedirect(self.get_success_url(post_id=post.id))
 

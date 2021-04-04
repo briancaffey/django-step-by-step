@@ -2686,6 +2686,30 @@ djangorestframework==3.12.4
 
 ## Cookie consent form
 
+## Add a constants file
+
+In general it is not idea to have strings with the same value used in multiple parts of your application's code. One place where we have used the same string values is in multiple places is Bootstrap class names in Django forms.
+
+We can use a file in our core app called `constants.py` and import this like:
+
+```
+from apps.core import constants as c
+```
+
+Then we can add values to this such as:
+
+```
+BOOTSTRAP_ALERT_SUCCESS = "alert alert-success"
+```
+
+This will make it easier for us to keep track of things. If we need to change our CSS Framework from Bootstrap to something else, this will be easy to when we are using constants instead of duplicate strings.
+
+Create a `constants.py` file:
+
+```
+touch backend/apps/core/constants.py
+```
+
 ---
 
 Optional/Extra steps

@@ -6,11 +6,13 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from django.views.decorators.http import require_POST
 
 
 from apps.blog.models import Post, PostLike
 from apps.blog.forms import PostForm
+from apps.core import constants as c
 
 
 logger = logging.getLogger()
@@ -55,9 +57,11 @@ def new_post(request):
                 request,
                 messages.SUCCESS,
                 "Your post was created!",
-                extra_tags="alert alert-success",
+                extra_tags=c.BOOTSTRAP_ALERT_SUCCESS,
             )
-            return HttpResponseRedirect(f"/posts/{post.id}")
+            return HttpResponseRedirect(
+                reverse("post", kwargs={"id": post.id})
+            )
 
     else:
         form = PostForm()
@@ -68,16 +72,21 @@ def new_post(request):
 @login_required
 def edit_post(request, id):
 
+    # get the post by id
     instance = get_object_or_404(Post, id=id)
 
+    # TODO: refactor this
+    # a user cannot edit a post created anonymously
     if not instance.created_by:
         messages.add_message(
             request,
             messages.WARNING,
             "You cannot edit an anonymous post",
-            extra_tags="alert alert-warning",
+            extra_tags=c.BOOTSTRAP_ALERT_WARNING,
         )
-        return HttpResponseRedirect(f"/posts/{instance.id}")
+        return HttpResponseRedirect(
+            reverse("post", kwargs={"id": instance.id})
+        )
     else:
         logger.info("here.")
 
@@ -88,9 +97,11 @@ def edit_post(request, id):
                 request,
                 messages.WARNING,
                 "You cannot edit this post",
-                extra_tags="alert alert-warning",
+                extra_tags=c.BOOTSTRAP_ALERT_WARNING,
             )
-            return HttpResponseRedirect(f"/posts/{instance.id}")
+            return HttpResponseRedirect(
+                reverse("post", kwargs={"id": instance.id})
+            )
 
         form = PostForm(request.POST or None, instance=instance)
 
@@ -101,9 +112,11 @@ def edit_post(request, id):
                 request,
                 messages.SUCCESS,
                 "Your post was updated!",
-                extra_tags="alert alert-success",
+                extra_tags=c.BOOTSTRAP_ALERT_SUCCESS,
             )
-            return HttpResponseRedirect(f"/posts/{post.id}")
+            return HttpResponseRedirect(
+                reverse("post", kwargs={"id": post.id})
+            )
 
     else:
         post = get_object_or_404(Post, id=id)
@@ -123,9 +136,11 @@ def delete_post(request, id):
             request,
             messages.WARNING,
             "You cannot delete an anonymous post",
-            extra_tags="alert alert-warning",
+            extra_tags=c.BOOTSTRAP_ALERT_WARNING,
         )
-        return HttpResponseRedirect(f"/posts/{instance.id}")
+        return HttpResponseRedirect(
+            reverse("post", kwargs={"id": instance.id})
+        )
 
     # delete object
     instance.delete()
@@ -133,11 +148,10 @@ def delete_post(request, id):
         request,
         messages.WARNING,
         "Your post was deleted",
-        extra_tags="alert alert-success",
+        extra_tags=c.BOOTSTRAP_ALERT_SUCCESS,
     )
-    # after deleting redirect to
-    # home page
-    return HttpResponseRedirect("/posts")
+    # after deleting redirect to post list
+    return HttpResponseRedirect(reverse("list-posts"))
 
 
 @login_required
