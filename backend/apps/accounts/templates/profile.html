@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+<!-- -->
+{% block title %}Profile{% endblock %}
+
+<!-- -->
+
+{% block content %}
+<h2>Your Profile</h2>
+
+<h3>Your Email</h3>
+
+<p>{{ request.user.email }}</p>
+
+<div class="card p-4 mb-2">
+  <h3>Your Posts ({{ posts.count }})</h3>
+  <a href="/profile/posts" class="btn btn-primary">View all of your posts</a>
+</div>
+
+<div class="card p-4 mb-2">
+  <h3>Your likes ({{ liked_posts.count }})</h3>
+  <a href="/profile/likes" class="btn btn-primary">View all of your likes</a>
+</div>
+
+<div class="card p-4 mb-2">
+  <h3>Likes on your posts ({{ post_likes.count }})</h3>
+  <a href="/profile/post-likes" class="btn btn-primary"
+    >View all likes on your posts</a
+  >
+</div>
+
+{% endblock %}

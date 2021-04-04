@@ -2607,6 +2607,25 @@ class PostDetailView(DetailView):
 
 ## Add tests for CBVs
 
+## Account Management
+
+## Add profile view
+
+- All posts
+- Likes
+- Post likes
+- tests
+
+## Add account settings view
+
+- Delete account
+- Change password
+
+
+## Refactor QuerySet and Manager for Post model
+
+## Account settings
+
 ## Django REST Framework
 
 

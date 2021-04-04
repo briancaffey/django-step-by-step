@@ -5,6 +5,7 @@ from django.contrib.sites.shortcuts import get_current_site
 
 from django.contrib import messages
 from django.contrib.auth import views as auth_views
+from django.contrib.auth.decorators import login_required
 
 from apps.accounts.forms import CustomUserRegistrationForm
 from apps.accounts.tasks import send_confirmation_email
@@ -19,6 +20,7 @@ from django.utils.http import urlsafe_base64_decode
 from django.views.generic import View
 
 from apps.accounts.tokens import account_activation_token
+from apps.blog.models import Post, PostLike
 
 
 User = get_user_model()
@@ -109,3 +111,18 @@ def register(request):
             return HttpResponseRedirect("/posts")
 
     return render(request, "register.html", {"form": form})
+
+
+@login_required
+def profile_view(request):
+    posts = Post.objects.filter(created_by=request.user)
+    liked_posts = PostLike.objects.prefetch_related("post").filter(
+        liked_by=request.user
+    )
+    post_likes = PostLike.objects.filter(post__created_by=request.user)
+    context = {
+        "posts": posts,
+        "liked_posts": liked_posts,
+        "post_likes": post_likes,
+    }
+    return render(request, "profile.html", context)

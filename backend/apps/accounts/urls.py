@@ -17,4 +17,5 @@ urlpatterns = [
         views.ActivateAccount.as_view(),
         name="activate",
     ),
+    path("profile", views.profile_view, name="profile"),
 ]

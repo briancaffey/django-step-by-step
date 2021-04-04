@@ -192,3 +192,18 @@ def test_logout(client):
     response = client.get("/logout", follow=True)
 
     assert "You successfully logged out!" in response.content.decode("utf-8")
+
+
+@pytest.mark.django_db(transaction=True)
+def test_profile_view(client):
+    username = "user@email.com"
+    password = "bar"
+    user = User.objects.create_user(
+        email=username, password=password, is_active=True
+    )
+
+    client.force_login(user)
+
+    response = client.get(reverse("profile"))
+
+    assert response.status_code == 200
