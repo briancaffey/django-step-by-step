@@ -35,9 +35,6 @@ class PostManager(models.Manager):
     def with_like_counts(self):
         return self.get_queryset().with_like_counts()
 
-    def with_liked(self, user):
-        return self.get_queryset().with_liked(user=user)
-
     def with_like_info(self, user):
         return (
             self.with_like_counts().with_liked(user).order_by("-modified_on")

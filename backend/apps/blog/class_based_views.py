@@ -6,7 +6,6 @@ from django.contrib.auth.mixins import (
     UserPassesTestMixin,
 )
 from django.core.paginator import Paginator
-from django.db.models import Count, Exists, OuterRef
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
 from django.urls import reverse
@@ -14,7 +13,7 @@ from django.views.generic import DetailView, ListView
 from django.views.generic.edit import FormView, UpdateView  # , DeleteView
 
 from apps.blog.forms import PostForm
-from apps.blog.models import Post, PostLike
+from apps.blog.models import Post
 
 logger = logging.getLogger(__name__)
 
@@ -25,10 +24,15 @@ class PostUpdateView(UserPassesTestMixin, UpdateView):
     form_class = PostForm
 
     def test_func(self):
+        """
+        Check to see if the user trying to update the post is the
+        user that created the post
+        """
         post = get_object_or_404(Post, id=self.kwargs["pk"])
         return self.request.user == post.created_by
 
     def form_valid(self, form):
+        # TODO: move to get_success_message
         messages.add_message(
             self.request,
             messages.SUCCESS,
@@ -65,22 +69,10 @@ class PostCreateView(FormView):
 
 class PostDetailView(DetailView):
     def get_object(self):
-        logger.info("in get_object..")
         try:
-            post = (
-                Post.objects.prefetch_related("created_by")
-                .annotate(
-                    like_count=Count("likes"),
-                    liked=Exists(
-                        PostLike.objects.filter(
-                            liked_by_id=self.request.user.pk,
-                            post=OuterRef("pk"),
-                        )
-                    ),
-                )
-                .get(pk=self.kwargs["pk"])
+            post = Post.objects.with_like_info(user=self.request.user).get(
+                pk=self.kwargs["pk"]
             )
-
             return post
         except Post.DoesNotExist:
             raise Http404()
@@ -95,20 +87,7 @@ class PostListView(ListView):
         """
         Get the list of posts and filter posts by search query if it is present
         """
-        posts = (
-            Post.objects.all()
-            .prefetch_related("created_by")
-            .annotate(
-                like_count=Count("likes"),
-                # see if the request.user liked the post
-                liked=Exists(
-                    PostLike.objects.filter(
-                        liked_by_id=self.request.user.id or None,
-                        post=OuterRef("id"),
-                    )
-                ),
-            )
-        ).order_by("-modified_on")
+        posts = Post.objects.with_like_info(user=self.request.user)
 
         if self.request.GET.get("q"):
             search_query = self.request.GET.get("q")
