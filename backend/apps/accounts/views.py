@@ -1,28 +1,20 @@
 from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.shortcuts import render, reverse
 from django.contrib.sites.shortcuts import get_current_site
-
 
 from django.contrib import messages
 from django.contrib.auth import views as auth_views
-from django.contrib.auth.decorators import login_required
-
-from apps.accounts.forms import CustomUserRegistrationForm
-from apps.accounts.tasks import send_confirmation_email
-
-# from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import get_user_model, login
-
-# Create your views here.
-
+from django.contrib.auth.decorators import login_required
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.views.generic import View
 
+from apps.accounts.forms import CustomUserRegistrationForm
+from apps.accounts.tasks import send_confirmation_email
 from apps.accounts.tokens import account_activation_token
 from apps.blog.models import Post, PostLike
 from apps.core import constants as c
-
 
 User = get_user_model()
 
@@ -47,7 +39,7 @@ class ActivateAccount(View):
                 "Your email has been confirmed.",
                 extra_tags=c.BOOTSTRAP_ALERT_SUCCESS,
             )
-            return HttpResponseRedirect("/posts")
+            return HttpResponseRedirect(reverse("list-posts"))
         else:
             messages.add_message(
                 request,
@@ -56,7 +48,7 @@ class ActivateAccount(View):
                 extra_tags=c.BOOTSTRAP_ALERT_WARNING,
             )
 
-            return HttpResponseRedirect("/posts")
+            return HttpResponseRedirect(reverse("list-posts"))
 
 
 class CustomLogoutView(auth_views.LogoutView):
@@ -79,7 +71,7 @@ class CustomLogoutView(auth_views.LogoutView):
 def register(request):
 
     if request.user.is_authenticated:
-        return HttpResponseRedirect("/posts")
+        return HttpResponseRedirect(reverse("list-posts"))
 
     form = CustomUserRegistrationForm()
 
@@ -109,7 +101,7 @@ def register(request):
                 "Thank you for signing up! Please confirm your email address!",
                 extra_tags=c.BOOTSTRAP_ALERT_SUCCESS,
             )
-            return HttpResponseRedirect("/posts")
+            return HttpResponseRedirect(reverse("list-posts"))
 
     return render(request, "register.html", {"form": form})
 
