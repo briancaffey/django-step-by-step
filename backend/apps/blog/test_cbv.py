@@ -114,3 +114,31 @@ def test_post_404(client):
     response = client.get(reverse("post-detail-cbv", kwargs={"pk": 1}))
 
     assert response.status_code == 404
+
+
+@pytest.mark.django_db(transaction=True)
+def test_delete_post_cbv(client):
+
+    user = User.objects.create_user(
+        email="foo@bar.com", password="Qwer1234!", is_active=True
+    )
+
+    POST_TEXT = "This is the first post test post."
+
+    # this saves the post in the database
+    post = PostFactory(created_by=user, body=POST_TEXT)
+
+    response = client.get(reverse("post-delete-cbv", kwargs={"pk": 100}))
+
+    assert response.status_code == 404
+
+    response = client.get(reverse("post-delete-cbv", kwargs={"pk": post.id}))
+
+    assert (
+        "Are you sure you want to delete this post?"
+        in response.content.decode("utf-8")
+    )
+
+    response = client.post(reverse("post-delete-cbv", kwargs={"pk": post.id}))
+
+    assert Post.objects.count() == 0

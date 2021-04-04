@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+<!-- Title -->
+
+{% block title %}Delete post{% endblock %}
+
+<!-- Nav -->
+
+{% block nav_title %}Delete post{% endblock %}
+
+<!-- Content -->
+
+{% block content %}
+
+<form method="post">
+  {% csrf_token %}
+  <h3>Are you sure you want to delete this post?</h3>
+  <div>
+    <div class="card p-4 mb-2" style="font-size: 1.75em">{{ post.body }}</div>
+    <a style="text-decoration: none; color: black" href="#">
+      {% include "post_likes.html" with post=post %}
+    </a>
+  </div>
+  <input class="btn btn-danger" type="submit" value="Delete" />
+</form>
+{% endblock %}

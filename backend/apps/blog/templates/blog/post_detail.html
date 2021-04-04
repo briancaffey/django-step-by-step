@@ -30,7 +30,7 @@
 <div>
   <div class="card p-4 mb-2" style="font-size: 1.75em">{{ post.body }}</div>
     <a style="text-decoration: none; color: black" href="#">
-      {% include "post_likes.html" with post_id=post.id like_count=post.like_count liked=post.liked %}
+      {% include "post_likes.html" with post=post %}
     </a>
 </div>
 
@@ -43,12 +43,7 @@
 <!-- Delete post -->
 {% if request.user.is_authenticated %}
 {% if post.created_by.id == request.user.id %}
-<form action="/posts/{{ post.id }}/delete" method="post">
-    {% csrf_token %}
-<button type="submit" class="btn btn-danger">
-  <i class="bi bi-trash"></i>
-</button>
-</form>
+<a class="btn btn-danger" href="{% url 'post-delete-cbv' pk=post.id %}"><i class="bi bi-trash"></i></a>
 </div>
 {% endif %}
 {% endif %}

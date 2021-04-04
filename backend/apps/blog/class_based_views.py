@@ -8,9 +8,9 @@ from django.contrib.auth.mixins import (
 from django.core.paginator import Paginator
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import get_object_or_404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views.generic import DetailView, ListView
-from django.views.generic.edit import FormView, UpdateView  # , DeleteView
+from django.views.generic.edit import FormView, UpdateView, DeleteView
 
 from apps.blog.forms import PostForm
 from apps.blog.models import Post
@@ -106,3 +106,25 @@ class PostListView(ListView):
         page_obj = paginator.get_page(page_number)
 
         return {"page_obj": page_obj}
+
+
+class PostDeleteView(DeleteView):
+    model = Post
+
+    def get_object(self):
+        try:
+            post = Post.objects.with_like_info(user=self.request.user).get(
+                pk=self.kwargs["pk"]
+            )
+            return post
+        except Post.DoesNotExist:
+            raise Http404()
+
+    def get_success_url(self):
+        messages.add_message(
+            self.request,
+            messages.SUCCESS,
+            "Your post was deleted",
+            extra_tags=c.BOOTSTRAP_ALERT_SUCCESS,
+        )
+        return reverse_lazy("post-list-cbv")

@@ -147,7 +147,7 @@ def test_login(client):
     user = User.objects.create_user(email=email, password=password)
 
     client.force_login(user)
-    response = client.get(reverse("posts"))
+    response = client.get(reverse("list-posts"))
     assert "Profile" in response.content.decode("utf-8")
 
 

@@ -34,7 +34,7 @@
       {% if post.created_by %}
       <div>{{ post.created_by }}</div>
       {% endif %}
-      {% include "post_likes.html" with post_id=post.id like_count=post.like_count liked=post.liked %}
+      {% include "post_likes.html" with post=post %}
     </div>
   </a>
   {% endfor %}
