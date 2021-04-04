@@ -19,20 +19,7 @@ logger = logging.getLogger()
 
 def posts(request):
 
-    posts = (
-        Post.objects.all()
-        .prefetch_related("created_by")
-        .annotate(
-            like_count=Count("likes"),
-            # see if the request.user liked the post
-            liked=Exists(
-                PostLike.objects.filter(
-                    liked_by_id=request.user.id or None,
-                    post=OuterRef("id"),
-                )
-            ),
-        )
-    ).order_by("-modified_on")
+    posts = Post.objects.with_like_info(user=request.user)
 
     if request.GET.get("q"):
         search_query = request.GET.get("q")
@@ -48,18 +35,7 @@ def posts(request):
 
 def post(request, id):
 
-    post = (
-        Post.objects.prefetch_related("created_by")
-        .annotate(
-            like_count=Count("likes"),
-            liked=Exists(
-                PostLike.objects.filter(
-                    liked_by_id=request.user.id, post=OuterRef("id")
-                )
-            ),
-        )
-        .get(id=id)
-    )
+    post = Post.objects.with_like_info(user=request.user).get(id=id)
 
     return render(request, template_name="post.html", context={"post": post})
 

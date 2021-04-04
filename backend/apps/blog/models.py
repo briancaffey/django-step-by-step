@@ -2,12 +2,15 @@ from apps.core.models import BaseModel
 from django.db import models
 from django.contrib.auth import get_user_model
 
+from apps.blog.managers import PostManager
+
 User = get_user_model()
 
 
 class Post(BaseModel):
 
-    # meta class
+    objects = PostManager()
+
     class Meta:
         ordering = ("-modified_on",)
 
@@ -20,6 +23,10 @@ class Post(BaseModel):
 
 
 class PostLike(models.Model):
+    """
+    Through model for `likes` m2m field on Post model
+    """
+
     liked_by = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     liked_on = models.DateTimeField(auto_now_add=True)
