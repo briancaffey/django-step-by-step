@@ -138,7 +138,7 @@ CELERY_RESULT_SERIALIZER = "json"
 CELERY_BEAT_SCHEDULE = {
     "celery-beat-debug-task": {
         "task": "apps.core.tasks.celery_beat_debug_task",
-        "schedule": 10,  # scrape suppliers once every 5 minutes
+        "schedule": 10,
     },
 }
 
