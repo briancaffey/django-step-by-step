@@ -96,3 +96,7 @@ pgadmin4:
 
 flush:
 	backend/manage.py flush
+
+.PHONY: openapi
+openapi:
+	python3 backend/manage.py generateschema > backend/static/openapi/schema.yml

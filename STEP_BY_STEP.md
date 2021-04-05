@@ -2647,6 +2647,91 @@ djangorestframework==3.12.4
     urlpatterns += [path("api-auth/", include("rest_framework.urls"))]
 ```
 
+## Add OpenAPI/SwaggerUI URL path in `backend/urls.py`
+
+```py
+from django.views.generic import TemplateView
+
+urlpatterns = [
+    path(
+        "api/swagger-ui/",
+        TemplateView.as_view(
+            template_name="swagger-ui.html", extra_context={"schema_url": ""},
+        ),
+        name="swagger-ui",
+    ),
+    ...
+```
+
+## Add the following file to the top-level templates directory
+
+**templates/swagger-ui.html**
+
+```html
+{% load static %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Swagger</title>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="//unpkg.com/swagger-ui-dist@3/swagger-ui.css" />
+  </head>
+  <body>
+    <div id="swagger-ui"></div>
+    <script src="//unpkg.com/swagger-ui-dist@3/swagger-ui-bundle.js"></script>
+    <script>
+    const ui = SwaggerUIBundle({
+        url: "{% static 'openapi/schema.yml' %}",
+        dom_id: '#swagger-ui',
+        presets: [
+          SwaggerUIBundle.presets.apis,
+          SwaggerUIBundle.SwaggerUIStandalonePreset
+        ],
+        layout: "BaseLayout",
+        requestInterceptor: (request) => {
+          request.headers['X-CSRFToken'] = "{{ csrf_token }}"
+          return request;
+        }
+      })
+    </script>
+  </body>
+</html>
+```
+
+## Add dependencies for OpenAPI to base.txt
+
+```
+# for OpenAPI
+uritemplate==3.0.1
+coreapi==2.3.3
+pyyaml==5.4.1
+```
+
+## Create a directory for the OpenAPI Schema
+
+```
+mkdir backend/static/openapi
+```
+
+## Generate the OpenAPI schema
+
+```
+python3 backend/manage.py generateschema > backend/static/openapi/schema.yml
+```
+
+Visit `localhost:8000/api/swagger-ui/` and we should see an empty OpenAPI/Swagger UI page. As we build an API for our microblog application, this page will be populated.
+
+## Add `PostSerializer` in `serializers.py`
+
+## Add CRUD DRF CBVs for `blog` app
+
+## Add CRUD DRF FBVs for `blog` app
+
+-
+
+## Add CRUD GCBVs for `blog` app??
+
 ## Add Vue as standalone SPA (show how API calls will not work without CORS)
 
 ## Add CORS

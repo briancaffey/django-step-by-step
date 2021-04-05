@@ -19,8 +19,18 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 from django.views.generic.base import RedirectView
+from django.views.generic import TemplateView
+
 
 urlpatterns = [
+    path(
+        "api/swagger-ui/",
+        TemplateView.as_view(
+            template_name="swagger-ui.html",
+            extra_context={"schema_url": ""},
+        ),
+        name="swagger-ui",
+    ),
     path("", include("apps.blog.urls")),
     path("cbv/", include("apps.blog.cbv_urls")),
     path("", include("apps.accounts.urls")),

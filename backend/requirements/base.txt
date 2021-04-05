@@ -6,3 +6,8 @@ redis==3.5.3
 
 # celery
 celery==5.0.5
+
+# for OpenAPI
+uritemplate==3.0.1
+coreapi==2.3.3
+pyyaml==5.4.1
