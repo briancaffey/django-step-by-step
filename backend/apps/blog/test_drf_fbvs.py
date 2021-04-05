@@ -70,7 +70,7 @@ def test_update_post_drf_fbv():
 
     post = PostFactory(created_by=user, body=post_data)
 
-    updated_post_data = {"body": "second draft", "id": post.id}
+    updated_post_data = {"body": "second draft"}
 
     response = client.put(
         reverse("drf-fbv-update-post", kwargs={"pk": post.id}),
@@ -90,8 +90,6 @@ def test_delete_post_drf_fbv():
     )
     client = APIClient()
 
-    client.force_login(user)
-
     post_data = {"body": "first draft"}
 
     post = PostFactory(created_by=user, body=post_data)
@@ -100,4 +98,38 @@ def test_delete_post_drf_fbv():
         reverse("drf-fbv-delete-post", kwargs={"pk": post.id})
     )
 
+    assert response.status_code == status.HTTP_403_FORBIDDEN
+
+    client.force_login(user)
+
+    response = client.delete(
+        reverse("drf-fbv-delete-post", kwargs={"pk": post.id})
+    )
+
     assert response.status_code == status.HTTP_204_NO_CONTENT
+
+
+@pytest.mark.django_db(transaction=True)
+def test_like_post_drf_fbv():
+    user = User.objects.create_user(
+        email="user@email.com", password="MyPassword!"
+    )
+    client = APIClient()
+
+    post_data = {"body": "first draft"}
+
+    post = PostFactory(created_by=user, body=post_data)
+
+    response = client.post(
+        reverse("drf-fbv-like-post", kwargs={"pk": post.id})
+    )
+
+    assert response.status_code == status.HTTP_403_FORBIDDEN
+
+    client.force_login(user)
+
+    response = client.post(
+        reverse("drf-fbv-like-post", kwargs={"pk": post.id})
+    )
+
+    assert response.status_code == status.HTTP_200_OK

@@ -7,6 +7,7 @@ from apps.blog.drf_fbv_views import (
     create_post,
     update_post,
     delete_post,
+    like_post,
 )
 
 urlpatterns = [
@@ -20,4 +21,6 @@ urlpatterns = [
     path("posts/", list_posts, name="drf-fbv-list-posts"),
     # delete
     path("posts/<int:pk>/delete/", delete_post, name="drf-fbv-delete-post"),
+    # like post
+    path("posts/<int:pk>/like/", like_post, name="drf-fbv-like-post"),
 ]

@@ -33,6 +33,7 @@ urlpatterns = [
     ),
     path("", include("apps.blog.urls")),
     path("api/", include("apps.blog.drf_fbv_urls")),
+    path("api/", include("apps.accounts.drf_fbv_urls")),
     path("cbv/", include("apps.blog.cbv_urls")),
     path("", include("apps.accounts.urls")),
     path("my-admin-portal/", admin.site.urls),

@@ -25,7 +25,7 @@ paths:
   /api/posts/:
     get:
       operationId: listlist_posts
-      description: Retrieve a paginated list of posts
+      description: Retrieve a paginated list of posts with like info
       parameters: []
       responses:
         '200':
@@ -37,11 +37,57 @@ paths:
           description: ''
       tags:
       - api
+  /api/users/{id}/:
+    get:
+      operationId: retrieveget_user
+      description: Returns email and id for a single user
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: ''
+      tags:
+      - api
   /api/posts/new/:
     post:
       operationId: createcreate_post
       description: Create a single post
       parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+          application/x-www-form-urlencoded:
+            schema: {}
+          multipart/form-data:
+            schema: {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema: {}
+          description: ''
+      tags:
+      - api
+  /api/posts/{id}/like/:
+    post:
+      operationId: createlike_post
+      description: Like a post. Returns the post with like info.
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
       requestBody:
         content:
           application/json:
