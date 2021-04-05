@@ -1,23 +1,22 @@
 # Makefile - common commands for development
 
-.PHONY: all
+.PHONY: all	pip-install	create-venv	source	migrate	createsuperuser	runserver	pip-local	pytest	notebook
+.PHONY: flake8	black	format	pg_isready	celery-default-worker	redis-cli-ping	openapi
+
 all: migrate	runserver
 
-.PHONY: pip-install
+
 pip-install:
 	pip install -r backend/requirements/base.txt
 	pip install -r backend/requirements/test.txt
 	pip install -r backend/requirements/dev.txt
 
-.PHONY: create-venv
 create-venv:
 	python3 -m venv .local-env
 
-.PHONY: source
 source:
 	. .local-env/bin/activate
 
-.PHONY: migrate
 migrate:
 	# migrate
 	backend/manage.py migrate
@@ -25,17 +24,13 @@ migrate:
 migrations:
 	backend/manage.py makemigrations
 
-.PHONY: createsuperuser
 createsuperuser:
 	DJANGO_SUPERUSER_PASSWORD=password DJANGO_SUPERUSER_USERNAME=brian DJANGO_SUPERUSER_EMAIL=user@email.com backend/manage.py createsuperuser --no-input
 
-
-.PHONY: runserver
 runserver:
 	# runserver
 	backend/manage.py runserver_plus
 
-.PHONY: pip-local
 pip-local:
 	# install pip dependencies locally in virtual env
 	python3 -m pip install --upgrade pip
@@ -43,9 +38,7 @@ pip-local:
 	pip install -r backend/requirements/dev.txt
 	pip install -r backend/requirements/test.txt
 
-.PHONY: pytest
 pytest:
-	# Running Django test suite
 	pytest backend
 
 pytest-cov:
@@ -54,30 +47,23 @@ pytest-cov:
 pytest-cov-report:
 	python3 -m http.server 8002
 
-.PHONY: notebook
 notebook:
 	backend/manage.py shell_plus --notebook
 
-.PHONY: flake8
 flake8:
 	flake8 backend
 
-.PHONY: black
 black:
 	black -l 79 backend
 
-.PHONY: format
 format: flake8	black
 
-.PHONY: pg_isready
 pg_isready:
 	pg_isready
 
-.PHONY: redis-cli-ping
 redis-cli-ping:
 	redis-cli ping
 
-.PHONY: celery-default-worker
 celery-default-worker:
 	cd backend && watchmedo auto-restart --directory=./ --pattern=*.py --recursive -- celery -A backend.celery_app:app worker -l INFO
 
@@ -87,7 +73,6 @@ flower:
 generate_posts:
 	backend/manage.py generate_posts
 
-# mock mail server
 mailhog:
 	~/go/bin/MailHog
 
@@ -97,6 +82,5 @@ pgadmin4:
 flush:
 	backend/manage.py flush
 
-.PHONY: openapi
 openapi:
 	python3 backend/manage.py generateschema > backend/static/openapi/schema.yml
