@@ -2724,11 +2724,20 @@ Visit `localhost:8000/api/swagger-ui/` and we should see an empty OpenAPI/Swagge
 
 ## Add `PostSerializer` in `serializers.py`
 
-## Add CRUD DRF CBVs for `blog` app
+```
+touch backend/apps/blog/serializers.py
+```
 
 ## Add CRUD DRF FBVs for `blog` app
 
--
+- [x] Read (detail)
+- [x] Read (list)
+- [x] Create
+- [x] Update
+- [x] Delete
+- [x] Tests
+
+## Add CRUD DRF CBVs for `blog` app
 
 ## Add CRUD GCBVs for `blog` app??
 

@@ -178,3 +178,14 @@ EMAIL_PORT = os.environ.get("DJANGO_EMAIL_PORT", "1025")
 LOGIN_URL = "/login"
 LOGIN_REDIRECT_URL = "/posts"
 LOGOUT_REDIRECT_URL = "/posts"
+
+# REST Framework
+
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.LimitOffsetPagination",  # noqa
+    "PAGE_SIZE": 10,
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework.authentication.SessionAuthentication",
+    ),
+}

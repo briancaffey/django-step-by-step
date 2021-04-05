@@ -90,6 +90,24 @@
         </li>
         {% endif %}
 
+        <!-- Documentation -->
+
+        <li class="nav-item dropdown">
+          <a
+            class="nav-link dropdown-toggle"
+            href="#"
+            id="dropdown04"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+            >Documentation</a
+          >
+          <ul class="dropdown-menu" aria-labelledby="dropdown04">
+            <li>
+              <a class="dropdown-item" href="{% url 'swagger-ui' %}">OpenAPI</a>
+            </li>
+          </ul>
+        </li>
+
         <!-- Admin Link -->
 
         {% if request.user.is_staff %}

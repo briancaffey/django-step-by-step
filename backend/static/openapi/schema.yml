@@ -2,4 +2,102 @@ openapi: 3.0.2
 info:
   title: ''
   version: ''
-paths: {}
+paths:
+  /api/posts/{id}/:
+    get:
+      operationId: retrieveget_post
+      description: Retrieve a single post
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: ''
+      tags:
+      - api
+  /api/posts/:
+    get:
+      operationId: listlist_posts
+      description: Retrieve a paginated list of posts
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {}
+          description: ''
+      tags:
+      - api
+  /api/posts/new/:
+    post:
+      operationId: createcreate_post
+      description: Create a single post
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+          application/x-www-form-urlencoded:
+            schema: {}
+          multipart/form-data:
+            schema: {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema: {}
+          description: ''
+      tags:
+      - api
+  /api/posts/{id}/update/:
+    put:
+      operationId: updateupdate_post
+      description: Update a post
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: {}
+          application/x-www-form-urlencoded:
+            schema: {}
+          multipart/form-data:
+            schema: {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: ''
+      tags:
+      - api
+  /api/posts/{id}/delete/:
+    delete:
+      operationId: destroydelete_post
+      description: Delete a post
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+      tags:
+      - api
