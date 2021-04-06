@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from apps.blog.models import Post  # , PostLike
+from apps.blog.models import Post
 
 from apps.accounts.serializers import CustomUserSerializer
 

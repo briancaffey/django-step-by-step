@@ -2728,6 +2728,31 @@ Visit `localhost:8000/api/swagger-ui/` and we should see an empty OpenAPI/Swagge
 touch backend/apps/blog/serializers.py
 ```
 
+```py
+from rest_framework import serializers
+
+from apps.blog.models import Post
+
+from apps.accounts.serializers import CustomUserSerializer
+
+
+class PostSerializer(serializers.ModelSerializer):
+    liked = serializers.BooleanField(read_only=True)
+    like_count = serializers.IntegerField(read_only=True)
+    created_by = CustomUserSerializer(read_only=True)
+
+    class Meta:
+        model = Post
+        fields = (
+            "id",
+            "body",
+            "created_by",
+            "modified_on",
+            "liked",
+            "like_count",
+        )
+```
+
 ## Add CRUD DRF FBVs for `blog` app
 
 - [x] Read (detail)
@@ -2738,6 +2763,8 @@ touch backend/apps/blog/serializers.py
 - [x] Tests
 
 ## Add CRUD DRF CBVs for `blog` app
+
+- [x]
 
 ## Add CRUD GCBVs for `blog` app??
 

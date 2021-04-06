@@ -23,7 +23,13 @@ def test_get_post_drf_fbv():
 
     post = PostFactory()
 
-    client.get(reverse("drf-fbv-get-post", kwargs={"pk": post.id}))
+    response = client.get(reverse("drf-fbv-get-post", kwargs={"pk": post.id}))
+
+    assert response.status_code == status.HTTP_200_OK
+
+    response = client.get(reverse("drf-fbv-get-post", kwargs={"pk": 111}))
+
+    assert response.status_code == status.HTTP_404_NOT_FOUND
 
 
 @pytest.mark.django_db(transaction=True)
@@ -45,6 +51,10 @@ def test_create_post_drf_fbv():
 
     client = APIClient()
 
+    user = User.objects.create_user(
+        email="user@email.com", password="MyPassword!"
+    )
+
     post_data = {"body": "my post"}
     response = client.post(reverse("drf-fbv-create-post"), data=post_data)
 
@@ -56,19 +66,35 @@ def test_create_post_drf_fbv():
 
     assert response.status_code == status.HTTP_400_BAD_REQUEST
 
+    client.force_login(user)
+
+    response = client.post(
+        reverse("drf-fbv-create-post"), data={"body": "my post"}
+    )
+
+    assert response.status_code == status.HTTP_201_CREATED
+
+    print(Post.objects.all().count())
+    assert Post.objects.filter(created_by=user).count() == 1
+
 
 @pytest.mark.django_db(transaction=True)
 def test_update_post_drf_fbv():
-    user = User.objects.create_user(
+    user1 = User.objects.create_user(
         email="user@email.com", password="MyPassword!"
     )
+
+    user2 = User.objects.create_user(
+        email="user2@email.com", password="MyPassword!"
+    )
+
     client = APIClient()
 
-    client.force_login(user)
+    client.force_login(user1)
 
     post_data = {"body": "first draft"}
 
-    post = PostFactory(created_by=user, body=post_data)
+    post = PostFactory(created_by=user1, body=post_data)
 
     updated_post_data = {"body": "second draft"}
 
@@ -82,31 +108,70 @@ def test_update_post_drf_fbv():
 
     assert Post.objects.all().count() == 1
 
+    response = client.put(
+        reverse("drf-fbv-update-post", kwargs={"pk": 404}),
+        data=updated_post_data,
+    )
+
+    assert response.status_code == status.HTTP_404_NOT_FOUND
+
+    response = client.put(
+        reverse("drf-fbv-update-post", kwargs={"pk": post.id}),
+        data={"body": "long" * 100},
+    )
+
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+
+    unauthorized_update_data = {"body": "this will not work"}
+
+    client.force_login(user2)
+
+    response = client.put(
+        reverse("drf-fbv-update-post", kwargs={"pk": post.id}),
+        data=unauthorized_update_data,
+    )
+
+    assert response.status_code == status.HTTP_403_FORBIDDEN
+
 
 @pytest.mark.django_db(transaction=True)
 def test_delete_post_drf_fbv():
-    user = User.objects.create_user(
+    user1 = User.objects.create_user(
         email="user@email.com", password="MyPassword!"
+    )
+
+    user2 = User.objects.create_user(
+        email="user2@email.com", password="MyPassword!"
     )
     client = APIClient()
 
     post_data = {"body": "first draft"}
 
-    post = PostFactory(created_by=user, body=post_data)
+    post1 = PostFactory(created_by=user1, body=post_data)
 
     response = client.delete(
-        reverse("drf-fbv-delete-post", kwargs={"pk": post.id})
+        reverse("drf-fbv-delete-post", kwargs={"pk": post1.id})
     )
 
     assert response.status_code == status.HTTP_403_FORBIDDEN
 
-    client.force_login(user)
+    client.force_login(user1)
 
     response = client.delete(
-        reverse("drf-fbv-delete-post", kwargs={"pk": post.id})
+        reverse("drf-fbv-delete-post", kwargs={"pk": post1.id})
     )
 
     assert response.status_code == status.HTTP_204_NO_CONTENT
+
+    post2 = PostFactory(created_by=user1, body="some post")
+
+    client.force_login(user2)
+
+    response = client.delete(
+        reverse("drf-fbv-delete-post", kwargs={"pk": post2.id})
+    )
+
+    assert response.status_code == status.HTTP_403_FORBIDDEN
 
 
 @pytest.mark.django_db(transaction=True)
@@ -133,3 +198,15 @@ def test_like_post_drf_fbv():
     )
 
     assert response.status_code == status.HTTP_200_OK
+
+    response = client.post(
+        reverse("drf-fbv-like-post", kwargs={"pk": post.id})
+    )
+
+    assert response.status_code == status.HTTP_200_OK
+
+    assert post.likes.count() == 0
+
+    response = client.post(reverse("drf-fbv-like-post", kwargs={"pk": 404}))
+
+    assert response.status_code == status.HTTP_404_NOT_FOUND

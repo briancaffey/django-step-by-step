@@ -14,7 +14,6 @@ def get_post(request, pk):
     """
     Retrieve a single post
     """
-    # TODO: add like info using manager
     try:
         post = Post.objects.with_like_info(user=request.user).get(id=pk)
     except Post.DoesNotExist:
@@ -44,10 +43,8 @@ def create_post(request):
     serializer = PostSerializer(data=request.data)
     if serializer.is_valid():
         if request.user.is_authenticated:
-            serializer.created_by = request.user
-            serializer.save()
-        else:
-            serializer.save()
+            serializer.validated_data["created_by"] = request.user
+        serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
