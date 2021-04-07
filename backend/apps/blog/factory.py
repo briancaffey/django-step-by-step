@@ -13,6 +13,8 @@ class UserFactory(DjangoModelFactory):
     class Meta:
         model = User
 
+    # email = factory.Faker("email")
+
 
 # Another, different, factory for the same object
 class PostFactory(DjangoModelFactory):

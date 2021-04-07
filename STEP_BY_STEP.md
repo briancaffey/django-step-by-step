@@ -2720,6 +2720,13 @@ mkdir backend/static/openapi
 python3 backend/manage.py generateschema > backend/static/openapi/schema.yml
 ```
 
+Add a `make` command for this:
+
+```yml
+openapi:
+    python3 backend/manage.py generateschema > backend/static/openapi/schema.yml
+```
+
 Visit `localhost:8000/api/swagger-ui/` and we should see an empty OpenAPI/Swagger UI page. As we build an API for our microblog application, this page will be populated.
 
 ## Add `PostSerializer` in `serializers.py`
