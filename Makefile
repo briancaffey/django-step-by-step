@@ -1,7 +1,7 @@
 # Makefile - common commands for development
 
 .PHONY: all	pip-install	create-venv	source	migrate	createsuperuser	runserver	pip-local	pytest	notebook
-.PHONY: flake8	black	format	pg_isready	celery-default-worker	redis-cli-ping	openapi
+.PHONY: flake8	black	format	pg_isready	celery-default-worker	redis-cli-ping	openapi	show_urls
 
 all: migrate	runserver
 
@@ -84,3 +84,6 @@ flush:
 
 openapi:
 	python3 backend/manage.py generateschema > backend/static/openapi/schema.yml
+
+show_urls:
+	python3 backend/manage.py show_urls

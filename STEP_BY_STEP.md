@@ -2771,6 +2771,8 @@ class PostSerializer(serializers.ModelSerializer):
 
 ## Add CRUD DRF CBVs for `blog` app
 
+Use `viewsets.ModelViewSet`
+
 - [x]
 
 ## Add CRUD GCBVs for `blog` app??
