@@ -45,6 +45,9 @@
                 >Posts (DRF CBV)</a
               >
             </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'graphql' %}">GraphQL</a>
+            </li>
           </ul>
         </li>
         <li class="nav-item dropdown">
@@ -76,6 +79,9 @@
               <a class="dropdown-item" href="{% url 'drf-cbv-posts-list' %}"
                 >New Post (DRF CBV)</a
               >
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'graphql' %}">GraphQL</a>
             </li>
           </ul>
         </li>
@@ -124,6 +130,11 @@
           <ul class="dropdown-menu" aria-labelledby="dropdown04">
             <li>
               <a class="dropdown-item" href="{% url 'swagger-ui' %}">OpenAPI</a>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'graphql' %}"
+                >Graph<i>i</i>QL</a
+              >
             </li>
           </ul>
         </li>

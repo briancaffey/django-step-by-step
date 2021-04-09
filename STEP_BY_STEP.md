@@ -2771,11 +2771,113 @@ class PostSerializer(serializers.ModelSerializer):
 
 ## Add CRUD DRF CBVs for `blog` app
 
-Use `viewsets.ModelViewSet`
-
-- [x]
+- [x] Use `viewsets.ModelViewSet`
 
 ## Add CRUD GCBVs for `blog` app??
+
+## GraphQL Setup Tasks
+
+- Resources
+- Install packages
+- Configurure settings
+- JWT Token Auth setup
+- PostType
+- PostLikeType
+- UserType
+- AccountType
+- PostMutation for creating, updating and deleting
+- Query post by ID
+- PostLikeMutation for liking a post
+- Handle permissions correctly for all mutations
+- Pagination
+- Filtering
+- Relay
+- Insomnia Client
+- Testing Authentication
+- Testing Post queries and mutations (permissions!)
+- Pytest and Class Based tests
+- Add links in nav UI for GraphiQL
+
+## GraphQL Resources
+
+- [https://graphene-python.org/](https://graphene-python.org/)
+- [https://www.howtographql.com/graphql-python/1-getting-started/](https://www.howtographql.com/graphql-python/1-getting-started/)
+
+## Add GraphQL dependencies
+
+GraphQL is another way to access data in our application. One of the main advantages of GraphQL is that it is easier to request the data that you need from the frontend.
+
+Here's a helpful guide that we can use as a reference:
+
+[https://www.howtographql.com/graphql-python/1-getting-started/](https://www.howtographql.com/graphql-python/1-getting-started/)
+
+```
+# base.txt
+
+# graphql
+graphene-django==2.15.0
+```
+
+## Add `graphene_django` to `INSTALLED_APPS`
+
+## Add `GRAPHENE` settings to `base.py`
+
+```py
+GRAPHENE = {
+    "SCHEMA": "backend.schema.schema",
+}
+```
+
+## Add `schema.py` in the `blog` app directory
+
+```py
+import graphene
+from graphene_django import DjangoObjectType
+
+from apps.blog.models import Post
+
+
+class PostType(DjangoObjectType):
+    class Meta:
+        model = Post
+
+
+class Query(graphene.ObjectType):
+    posts = graphene.List(PostType)
+
+    def resolve_posts(self, info, **kwargs):
+        return Post.objects.all()
+```
+
+## Add a `schema.py` to the `backend/backend` directory
+
+```py
+import graphene
+
+import apps.blog.schema
+
+
+class Query(apps.blog.schema.Query, graphene.ObjectType):
+    pass
+
+
+schema = graphene.Schema(query=Query)
+```
+
+## Add a GraphQL endpoint to `backend/urls.py`
+
+```py
+from django.views.decorators.csrf import csrf_exempt
+from graphene_django.views import GraphQLView
+
+urlpatterns = [
+    ...
+    path('graphql/', csrf_exempt(GraphQLView.as_view(graphiql=True))),
+]
+```
+
+
+## Frontend clients
 
 ## Add Vue as standalone SPA (show how API calls will not work without CORS)
 
@@ -2790,9 +2892,6 @@ Use `viewsets.ModelViewSet`
 ## Setup git hooks in docker-compose
 
 ## Setup Vue in NGINX (web-sockets for hot reloading, index.html, etc)
-
-
-## Setup OpenAPI documentation
 
 ## Add Session Authentication for Vue SPA
 

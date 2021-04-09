@@ -11,3 +11,10 @@ celery==5.0.5
 uritemplate==3.0.1
 coreapi==2.3.3
 pyyaml==5.4.1
+
+# graphql
+graphene-django==2.15.0
+django-graphql-jwt==0.3.1
+# TODO: watch this issue
+# https://github.com/flavors/django-graphql-jwt/issues/241
+PyJWT<2

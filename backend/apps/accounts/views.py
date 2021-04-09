@@ -32,7 +32,11 @@ class ActivateAccount(View):
         ):
             user.is_active = True
             user.save()
-            login(request, user)
+            login(
+                request,
+                user,
+                backend="django.contrib.auth.backends.ModelBackend",
+            )
             messages.add_message(
                 request,
                 messages.SUCCESS,
