@@ -284,6 +284,18 @@ Next there are some Django settings to change. Similar to how we only want the D
 - Add Debug Toolbar to URLconf
 - Add Debug Toolbar to middleware
 
+Here's the documentation for Django Debug Toolbar:
+
+[https://django-debug-toolbar.readthedocs.io/en/1.0/configuration.html](https://django-debug-toolbar.readthedocs.io/en/1.0/configuration.html)
+
+Consider adding some options for the debug toolbar in the `development` settings module:
+
+```
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_COLLAPSED": True,
+}
+```
+
 ## Add `debug_toolbar` to `INSTALLED_APPS`
 
 ```py
