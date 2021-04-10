@@ -29,6 +29,8 @@
   {% if form.non_field_errors %}
   <div class="alert alert-danger">{{form.non_field_errors.as_text}}</div>
   {% endif %}
-  <button class="btn btn-primary" type="submit">Register</button>
+  <button class="btn btn-primary" id="register-button" type="submit">
+    Register
+  </button>
 </form>
 {% endblock %}

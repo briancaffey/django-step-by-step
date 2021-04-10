@@ -36,7 +36,7 @@ class UserLoginForm(AuthenticationForm):
             attrs={
                 "class": "form-control",
                 "placeholder": "email",
-                "id": "hello",
+                "id": "email",
                 "autofocus": True,
             }
         )

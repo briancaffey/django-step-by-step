@@ -2880,6 +2880,33 @@ urlpatterns = [
 ```
 
 
+
+
+## Add Cypress Dependencies
+
+Following along with [https://docs.cypress.io/guides/getting-started/installing-cypress#System-requirements](https://docs.cypress.io/guides/getting-started/installing-cypress#System-requirements):
+
+```
+sudo apt-get install libgtk2.0-0 libgtk-3-0 libgbm-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2 libxtst6 xauth xvfb
+```
+
+Install cypress with:
+
+```
+npm install cypress --save-dev
+```
+
+## Start Cypress
+
+```
+$(npm bin)/cypress open
+```
+
+## Use npm to open Cypress
+
+```
+npx cypress open
+```
 ## Frontend clients
 
 ## Add Vue as standalone SPA (show how API calls will not work without CORS)

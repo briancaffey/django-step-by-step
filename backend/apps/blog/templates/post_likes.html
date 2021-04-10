@@ -6,7 +6,7 @@
     :style="{ 'color': liked ? 'red' : 'black' }"
   ></i>
   {% else %} {{ post.like_count }}
-  <i class="bi bi-heart"></i>
+  <i class="bi bi-heart" id="like-post-{{ post.id }}"></i>
   {% endif %}
 </div>
 

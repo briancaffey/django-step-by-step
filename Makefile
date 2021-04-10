@@ -1,7 +1,7 @@
 # Makefile - common commands for development
 
 .PHONY: all	pip-install	create-venv	source	migrate	createsuperuser	runserver	pip-local	pytest	notebook
-.PHONY: flake8	black	format	pg_isready	celery-default-worker	redis-cli-ping	openapi	show_urls
+.PHONY: flake8	black	format	pg_isready	celery-default-worker	redis-cli-ping	openapi	show_urls cypress
 
 all: migrate	runserver
 
@@ -87,3 +87,6 @@ openapi:
 
 show_urls:
 	python3 backend/manage.py show_urls
+
+cypress:
+	npx cypress open
