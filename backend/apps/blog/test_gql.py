@@ -40,17 +40,18 @@ def test_gql_post_query(client_query):
     response = client_query(
         """
             query ($by_creator_id: Int) {
-                posts (search: "1C", byCreatorId: $by_creator_id) {
-                    id
-                    body
+                paginatedPosts (search: "1C", byCreatorId: $by_creator_id) {
+                    objects {
+                        id
+                        body
+                    }
                 }
             }
         """
     )
 
     content = json.loads(response.content)
-    print(content)
-    assert len(content["data"]["posts"]) == 1
+    assert len(content["data"]["paginatedPosts"]["objects"]) == 1
     assert "errors" not in content
 
 
@@ -89,17 +90,22 @@ class GqlPostTests(JSONWebTokenTestCase):
             PostFactory(body=post[0], created_by=post[1])
 
         query = """
-            query ($by_creator_id: Int, $search: String!) {
-                posts (byCreatorId: $by_creator_id, search: $search, ) {
+
+        query ($by_creator_id: Int, $search: String!) {
+            paginatedPosts (byCreatorId: $by_creator_id, search: $search, ) {
+                objects {
                     id
                     body
                 }
             }
+        }
+
         """
 
         variables = {"by_creator_id": self.user.id, "search": "C"}
         resp = self.client.execute(query, variables)
 
+        print(resp)
         assert "Post 1C" in str(resp.data)
 
     def test_gql_get_posts(self):
@@ -111,18 +117,25 @@ class GqlPostTests(JSONWebTokenTestCase):
         self.client.authenticate(self.user)
 
         query = """
-            query {
-                posts {
+
+        query {
+            paginatedPosts {
+                objects {
                     body
+                    id
                     liked
                     likeCount
                 }
             }
+        }
+
         """
 
         resp = self.client.execute(query)
 
-        self.assertEqual(resp.data["posts"][0]["likeCount"], 1)
+        self.assertEqual(
+            resp.data["paginatedPosts"]["objects"][0]["likeCount"], 1
+        )
 
     def test_create_post_mutation(self):
 

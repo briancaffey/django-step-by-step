@@ -6,26 +6,30 @@ from graphene_django import DjangoObjectType
 from apps.accounts.schema import UserType
 from apps.blog.models import Post, PostLike
 
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+
+
 User = get_user_model()
 
 
-def paginate(qs, limit=None, offset=None):
-    """
-    Copy DRF's LimitOffsetPagination.paginate_queryset behavior
-    """
-
-    if offset is None:
-        offset = 0
-
-    if limit is None:
-        limit = 10
-
-    count = qs.count()
-
-    if count == 0 or offset > count:
-        return []
-
-    return list(qs[offset : offset + limit])  # noqa
+# https://gist.github.com/mbrochh/f92594ab8188393bd83c892ef2af25e6
+def get_paginator(qs, page_size, page, paginated_type, **kwargs):
+    p = Paginator(qs, page_size)
+    try:
+        page_obj = p.page(page)
+    except PageNotAnInteger:
+        page_obj = p.page(1)
+    except EmptyPage:
+        page_obj = p.page(p.num_pages)
+    return paginated_type(
+        count=qs.count(),
+        page=page_obj.number,
+        pages=p.num_pages,
+        has_next=page_obj.has_next(),
+        has_prev=page_obj.has_previous(),
+        objects=page_obj.object_list,
+        **kwargs
+    )
 
 
 class PostType(DjangoObjectType):
@@ -42,6 +46,20 @@ class PostType(DjangoObjectType):
         return getattr(self, "liked", None)
 
 
+class PostPaginatedType(graphene.ObjectType):
+    """
+    The type that contains a list of posts and page information
+    including page count
+    """
+
+    count = graphene.Int()
+    page = graphene.Int()
+    pages = graphene.Int()
+    has_next = graphene.Boolean()
+    has_prev = graphene.Boolean()
+    objects = graphene.List(PostType)
+
+
 class PostLikeType(DjangoObjectType):
     class Meta:
         model = PostLike
@@ -50,13 +68,40 @@ class PostLikeType(DjangoObjectType):
 class Query(graphene.ObjectType):
     post = graphene.Field(PostType, post_id=graphene.Int(required=True))
 
-    posts = graphene.List(
-        PostType,
+    paginated_posts = graphene.Field(
+        PostPaginatedType,
+        page=graphene.Int(),
+        page_size=graphene.Int(),
         by_creator_id=graphene.Int(),
         search=graphene.String(),
-        limit=graphene.Int(),
-        offset=graphene.Int(),
     )
+
+    # Now, in your resolver functions, you just query your objects and
+    # turn thequeryset into the PaginatedType using the helper function:
+    def resolve_paginated_posts(
+        self,
+        info,
+        page=None,
+        page_size=None,
+        by_creator_id=None,
+        search=None,
+        **kwargs
+    ):
+        posts = Post.objects.with_like_info(user=info.context.user)
+
+        if search:
+            posts = posts.filter(body__icontains=search)
+
+        if by_creator_id:
+            posts = posts.filter(created_by_id=by_creator_id)
+
+        if page_size is None:
+            page_size = 10
+
+        if page is None:
+            page = 1
+
+        return get_paginator(posts, page_size, page, PostPaginatedType)
 
     def resolve_post(self, info, post_id=None, **kwargs):
         if post_id is None:
@@ -70,27 +115,6 @@ class Query(graphene.ObjectType):
             raise Exception("No such post")
 
         return post
-
-    def resolve_posts(
-        self,
-        info,
-        by_creator_id=None,
-        search=None,
-        limit=None,
-        offset=None,
-        **kwargs
-    ):
-        posts = Post.objects.with_like_info(user=info.context.user)
-
-        if search:
-            posts = posts.filter(body__icontains=search)
-
-        if by_creator_id:
-            posts = posts.filter(created_by_id=by_creator_id)
-
-        posts = paginate(posts, limit=limit, offset=offset)
-
-        return posts
 
 
 class CreatePost(graphene.Mutation):
@@ -219,8 +243,3 @@ class Mutation(graphene.ObjectType):
     update_post = UpdatePost.Field()
     delete_post = DeletePost.Field()
     toggle_post_like = TogglePostLike.Field()
-
-
-# class Query(graphene.ObjectType):
-#     post = QueryPost.Field()
-#     posts = QueryPosts.Field()

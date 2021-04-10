@@ -2791,12 +2791,15 @@ class PostSerializer(serializers.ModelSerializer):
 - Handle permissions correctly for all mutations
 - Pagination
 - Filtering
+- Sorting
 - Relay
 - Insomnia Client
 - Testing Authentication
 - Testing Post queries and mutations (permissions!)
 - Pytest and Class Based tests
 - Add links in nav UI for GraphiQL
+
+## TODO: replace Exceptions with GraphqlExceptions
 
 ## GraphQL Resources
 
