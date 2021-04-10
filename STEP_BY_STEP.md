@@ -763,8 +763,6 @@ python -m http.server 8002 --directory backend/.coverage
 
 More options for pytest-cov can be found here: [https://pytest-cov.readthedocs.io/en/latest/reporting.html](https://pytest-cov.readthedocs.io/en/latest/reporting.html)
 
-
-
 ## Add `.coveragerc` to exclude files from coverage report
 
 ```
@@ -2238,7 +2236,6 @@ LOGOUT_REDIRECT_URL = "/posts"
 
 ```
 
-
 ## Add delete URL path for posts
 
 ## Create delete view for post
@@ -2250,7 +2247,10 @@ LOGOUT_REDIRECT_URL = "/posts"
 Add the following do each of the links in the pagination section of the post list. This will ensure that the search term query parameter and pagination can be used together.
 
 ```html
-      <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">previous</a>
+<a
+  href="?page={{ page_obj.previous_page_number }}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+  >previous</a
+>
 ```
 
 If there are lots of other parametes to add, use the following solution:
@@ -2289,18 +2289,18 @@ We can start with a simle implementation that allows us to signup with an email 
 ## Add an example of how to setup a Vue component in Django template
 
 ```html
-  {% for post in page_obj %}
-  <a href="/posts/{{ post.id }}" style="text-decoration: none; color: #000">
-    <div class="card p-4 mb-2">
-      <div class="">{{ post.body }}</div>
-      <div class="">{{ post.created_on }}</div>
-      {% if post.created_by %}
-      <div>{{ post.created_by }}</div>
-      {% endif %}
-      {% include "post_likes.html" with post_id=post.id like_count=post.like_count liked=post.liked %}
-    </div>
-  </a>
-  {% endfor %}
+{% for post in page_obj %}
+<a href="/posts/{{ post.id }}" style="text-decoration: none; color: #000">
+  <div class="card p-4 mb-2">
+    <div class="">{{ post.body }}</div>
+    <div class="">{{ post.created_on }}</div>
+    {% if post.created_by %}
+    <div>{{ post.created_by }}</div>
+    {% endif %} {% include "post_likes.html" with post_id=post.id
+    like_count=post.like_count liked=post.liked %}
+  </div>
+</a>
+{% endfor %}
 ```
 
 Notice the `{% include "post_likes.html" ... %}`, will add a nested template with different parameters to our page that will contain a clickable heart button that will make an API call to the backend.
@@ -2329,22 +2329,21 @@ const LikeCounter{{ post_id }} = {
 Vue.createApp(LikeCounter{{ post_id }}).mount("#counter-{{ post_id }}");
 ```
 
-
 ## Add axios Via CDN
 
 ```html
-    <!-- Axios -->
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<!-- Axios -->
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 ```
 
 ## Configure Axios CDN
 
 ```html
-    <!-- configure axios to use csrftoken -->
-    <script>
-      axios.defaults.xsrfCookieName = "csrftoken";
-      axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
-    </script>
+<!-- configure axios to use csrftoken -->
+<script>
+  axios.defaults.xsrfCookieName = "csrftoken";
+  axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
+</script>
 ```
 
 ## Add a method to the PostLike component that will make an API call using axios
@@ -2398,7 +2397,6 @@ def like_post(request, id):
 
 ```
 
-
 ## Implement through Model for ManyToMany field for Post likes
 
 ```py
@@ -2423,7 +2421,7 @@ admin.site.register(PostLike)
 Add `favicon.ico` to the `static` folder.
 
 ```html
-<link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+<link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}" />
 ```
 
 ## Add `.github/workflows/lint.yml` for GitHub Action that lints Python code
@@ -2499,7 +2497,6 @@ jobs:
       # run pytest tests
       - name: Run pytest tests
         run: pytest backend
-
 ```
 
 ## Generic Class Based Views
@@ -2507,7 +2504,6 @@ jobs:
 We can reimplement our application logic with generic class-based views (GCBVs). There's nothing wrong with out function-based views (FBVs). The code is straightforward and relatively easy to understand. GCBVs will let us acheive the same functionality with fewer lines of code. You can use only CBVs, only GBVs or a mix of the two together. However you decide to write your view, GCBVs are in import part of Django that you should know about.
 
 This project demonstrates implementations of FBVs and GCBVs, as well as other ways of expressing our views using the Django REST Framework, which also has a similar concpet of FBVs and GCBVs.
-
 
 ## Create a file in the `blog` app called `class_based_views.py`
 
@@ -2528,7 +2524,6 @@ class PostList(ListView):
 ```
 
 **Note**: the name of the file `cbv_urls.py` doesn't matter.
-
 
 ## Setup a new URLs file
 
@@ -2567,13 +2562,11 @@ django.template.exceptions.TemplateDoesNotExist
 
 Class based-views expect to find a template at `blog/post_list.html` in our app's `templates` directory. We can put a template there, or we can override the location by adding `template_name` to `PostList`:
 
-
 ```py
 class PostList(ListView):
     model = Post
     template_name = "blog/posts.html"
 ```
-
 
 ## Add CBV DetailView for viewing a single post
 
@@ -2621,13 +2614,11 @@ class PostDetailView(DetailView):
 - Delete account
 - Change password
 
-
 ## Refactor QuerySet and Manager for Post model
 
 ## Account settings
 
 ## Django REST Framework
-
 
 ## Add Django REST Framework to `base.txt` dependencies
 
@@ -2673,27 +2664,31 @@ urlpatterns = [
 <html>
   <head>
     <title>Swagger</title>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="//unpkg.com/swagger-ui-dist@3/swagger-ui.css" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="//unpkg.com/swagger-ui-dist@3/swagger-ui.css"
+    />
   </head>
   <body>
     <div id="swagger-ui"></div>
     <script src="//unpkg.com/swagger-ui-dist@3/swagger-ui-bundle.js"></script>
     <script>
-    const ui = SwaggerUIBundle({
+      const ui = SwaggerUIBundle({
         url: "{% static 'openapi/schema.yml' %}",
-        dom_id: '#swagger-ui',
+        dom_id: "#swagger-ui",
         presets: [
           SwaggerUIBundle.presets.apis,
-          SwaggerUIBundle.SwaggerUIStandalonePreset
+          SwaggerUIBundle.SwaggerUIStandalonePreset,
         ],
         layout: "BaseLayout",
         requestInterceptor: (request) => {
-          request.headers['X-CSRFToken'] = "{{ csrf_token }}"
+          request.headers["X-CSRFToken"] = "{{ csrf_token }}";
           return request;
-        }
-      })
+        },
+      });
     </script>
   </body>
 </html>
@@ -2723,8 +2718,7 @@ python3 backend/manage.py generateschema > backend/static/openapi/schema.yml
 Add a `make` command for this:
 
 ```yml
-openapi:
-    python3 backend/manage.py generateschema > backend/static/openapi/schema.yml
+openapi: python3 backend/manage.py generateschema > backend/static/openapi/schema.yml
 ```
 
 Visit `localhost:8000/api/swagger-ui/` and we should see an empty OpenAPI/Swagger UI page. As we build an API for our microblog application, this page will be populated.
@@ -2879,9 +2873,6 @@ urlpatterns = [
 ]
 ```
 
-
-
-
 ## Add Cypress Dependencies
 
 Following along with [https://docs.cypress.io/guides/getting-started/installing-cypress#System-requirements](https://docs.cypress.io/guides/getting-started/installing-cypress#System-requirements):
@@ -2907,6 +2898,15 @@ $(npm bin)/cypress open
 ```
 npx cypress open
 ```
+
+## Using on WSL 2
+
+Cypress is not supported on WSL 2 without some workarounds. You can run the following command to run Cypress in headless mode:
+
+```
+node_modules/.bin/cypress run
+```
+
 ## Frontend clients
 
 ## Add Vue as standalone SPA (show how API calls will not work without CORS)
