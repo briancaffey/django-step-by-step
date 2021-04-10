@@ -13,7 +13,8 @@ User = get_user_model()
 
 
 # https://docs.graphene-python.org/projects/django/en/latest/testing/
-# Create a fixture using the graphql_query helper and `client` fixture from `pytest-django`.
+# Create a fixture using the graphql_query helper and `client` fixture
+# from `pytest-django`.
 @pytest.fixture
 def client_query(client):
     def func(*args, **kwargs):

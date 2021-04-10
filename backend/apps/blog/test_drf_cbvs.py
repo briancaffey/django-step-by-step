@@ -1,6 +1,6 @@
 import pytest
 
-from apps.blog.factory import PostFactory
+# from apps.blog.factory import PostFactory
 
 
 @pytest.mark.django_db(transaction=True)
