@@ -45,7 +45,7 @@ pytest-cov:
 	pytest backend --cov-report html --cov=backend
 
 pytest-cov-report:
-	python3 -m http.server 8002
+	python3 -m http.server 8002 -d htmlcov
 
 notebook:
 	backend/manage.py shell_plus --notebook

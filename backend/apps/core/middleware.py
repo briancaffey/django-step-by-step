@@ -11,7 +11,6 @@ class RequestLogMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        print(request.headers)
         start_time = time.time()
         response = self.get_response(request)
         duration = time.time() - start_time
