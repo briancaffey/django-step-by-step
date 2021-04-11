@@ -104,7 +104,9 @@ class GqlPostTests(JSONWebTokenTestCase):
         """
 
         variables = {"by_creator_id": self.user.id, "search": "C"}
-        resp = self.client.execute(query, variables)
+
+        with self.assertNumQueries(4):
+            resp = self.client.execute(query, variables)
 
         print(resp)
         assert "Post 1C" in str(resp.data)
