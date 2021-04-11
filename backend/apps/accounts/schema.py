@@ -8,6 +8,14 @@ class UserType(DjangoObjectType):
     class Meta:
         model = get_user_model()
 
+        description = """
+This is the CustomUser model
+
+Only certain fields are exposed
+        """
+
+        fields = ("id", "email", "is_superuser", "is_active", "is_staff")
+
 
 class Query(graphene.ObjectType):
     current_user = graphene.Field(UserType)
