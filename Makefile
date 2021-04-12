@@ -2,7 +2,7 @@
 
 .PHONY: all	pip-install	create-venv	source	migrate	createsuperuser	runserver	pip-local	pytest	notebook
 .PHONY: flake8	black	format	pg_isready	celery-default-worker	redis-cli-ping	openapi	show_urls cypress
-.PHONY: psql
+.PHONY: psql schema	sdl
 
 all: migrate	runserver
 
@@ -94,3 +94,9 @@ cypress:
 
 psql:
 	sudo -u postgres psql
+
+make schema:
+	python3 backend/manage.py graphql_schema --schema backend.schema.schema --out schema.json
+
+make sdl:
+	python3 backend/manage.py graphql_schema --schema backend.schema.schema --out schema.graphql

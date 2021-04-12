@@ -1,0 +1,104 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type CreatePost {
+  id: Int
+  body: String
+  createdBy: UserType
+}
+
+type CreateUser {
+  user: UserType
+}
+
+scalar DateTime
+
+type DeletePost {
+  postId: Int
+  ok: Boolean
+}
+
+scalar GenericScalar
+
+type Mutation {
+  createPost(body: String): CreatePost
+  updatePost(body: String, postId: Int): UpdatePost
+  deletePost(postId: Int): DeletePost
+  togglePostLike(postId: Int): TogglePostLike
+  createUser(email: String!, password: String!): CreateUser
+  tokenAuth(email: String!, password: String!): ObtainJSONWebToken
+  verifyToken(token: String): Verify
+  refreshToken(token: String): Refresh
+}
+
+type ObtainJSONWebToken {
+  payload: GenericScalar!
+  refreshExpiresIn: Int!
+  token: String!
+}
+
+type PostLikeType {
+  id: ID!
+  likedBy: UserType!
+  post: PostType!
+  likedOn: DateTime!
+}
+
+type PostPaginatedType {
+  count: Int
+  page: Int
+  pages: Int
+  hasNext: Boolean
+  hasPrev: Boolean
+  objects: [PostType]
+}
+
+type PostType {
+  id: ID!
+  createdOn: DateTime!
+  modifiedOn: DateTime!
+  createdBy: UserType
+  body: String!
+  likes: [UserType!]!
+  postlikeSet: [PostLikeType!]!
+  likeCount: Int
+  liked: Boolean
+}
+
+type Query {
+  post(postId: Int!): PostType
+  paginatedPosts(page: Int, pageSize: Int, byCreatorId: Int, search: String): PostPaginatedType
+  currentUser: UserType
+  users: [UserType]
+}
+
+type Refresh {
+  payload: GenericScalar!
+  refreshExpiresIn: Int!
+  token: String!
+}
+
+type TogglePostLike {
+  user: UserType
+  post: PostType
+  likeCount: Int
+  liked: Boolean
+}
+
+type UpdatePost {
+  post: PostType
+}
+
+type UserType {
+  id: ID!
+  isSuperuser: Boolean!
+  isStaff: Boolean!
+  isActive: Boolean!
+  email: String!
+}
+
+type Verify {
+  payload: GenericScalar!
+}
