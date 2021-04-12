@@ -2,6 +2,7 @@
 
 .PHONY: all	pip-install	create-venv	source	migrate	createsuperuser	runserver	pip-local	pytest	notebook
 .PHONY: flake8	black	format	pg_isready	celery-default-worker	redis-cli-ping	openapi	show_urls cypress
+.PHONY: psql
 
 all: migrate	runserver
 
@@ -90,3 +91,6 @@ show_urls:
 
 cypress:
 	npx cypress open
+
+psql:
+	sudo -u postgres psql
