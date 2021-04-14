@@ -31,8 +31,22 @@ poetry-migrate:
 poetry-createsuperuser:
 	DJANGO_SUPERUSER_PASSWORD=password DJANGO_SUPERUSER_USERNAME=brian DJANGO_SUPERUSER_EMAIL=user@email.com cd backend && poetry run python3 manage.py createsuperuser --no-input
 
-poetry-migrate:
+poetry-runserver:
 	cd backend && poetry run python3 manage.py
+
+
+poetry-make-schema:
+	cd backend && python3 manage.py graphql_schema --schema backend.schema.schema --out schema.json
+
+poetry-make-sdl:
+	cd backend && python3 manage.py graphql_schema --schema backend.schema.schema --out schema.graphql
+
+poetry-make-openapi-schema:
+	python3 backend/manage.py generateschema > backend/static/openapi/schema.yml
+
+poetry-show-urls:
+	cd backend && python3 manage.py show_urls
+
 # or, use a virtual environment
 pip-install:
 	pip install -r backend/requirements/base.txt

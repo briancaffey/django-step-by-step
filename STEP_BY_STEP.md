@@ -3049,6 +3049,24 @@ build-backend = "poetry.core.masonry.api"
 Do you confirm generation? (yes/no) [yes]
 ```
 
+## Add project dependencies using SemVer notation
+
+## Add `make` command to export `requirements.txt` and `requirements_dev.txt` from poetry
+
+
+```
+poetry-export:
+	cd backend && poetry export --without-hashes -f requirements.txt -o requirements.txt && poetry export --without-hashes -f requirements.txt -o requirements_dev.txt --dev
+```
+
+## Add new python dependencies with `poetry add`
+
+For example:
+
+```
+poetry add requests
+```
+
 Optional/Extra steps
 
 ## GraphQL (together with or replacing DRF/REST)
