@@ -2981,7 +2981,73 @@ Create a `constants.py` file:
 touch backend/apps/core/constants.py
 ```
 
----
+## Install poetry
+
+[https://github.com/python-poetry/poetry#installation](https://github.com/python-poetry/poetry#installation)
+
+```
+curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/install-poetry.py | python -
+```
+
+Check the version:
+
+```
+poetry --version
+```
+
+## Run `poetry init` to setup `pyproject.toml`
+
+```
+cd backend && poetry init
+```
+
+```
+$ cd backend && poetry init
+
+This command will guide you through creating your pyproject.toml config.
+
+Package name [backend]:
+Version [0.1.0]:
+Description []:
+Author [Brian Caffey <briancaffey2010@gmail.com>, n to skip]:  n
+License []:
+Compatible Python versions [^3.8]:
+
+Would you like to define your main dependencies interactively? (yes/no) [yes]
+You can specify a package in the following forms:
+  - A single name (requests)
+  - A name and a constraint (requests@^2.23.0)
+  - A git url (git+https://github.com/python-poetry/poetry.git)
+  - A git url with a revision (git+https://github.com/python-poetry/poetry.git#develop)
+  - A file path (../my-package/my-package.whl)
+  - A directory (../my-package/)
+  - A url (https://example.com/packages/my-package-0.1.0.tar.gz)
+
+Search for package to add (or leave blank to continue):
+
+Would you like to define your development dependencies interactively? (yes/no) [yes]
+Search for package to add (or leave blank to continue):
+
+Generated file
+
+[tool.poetry]
+name = "backend"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+[tool.poetry.dev-dependencies]
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+
+Do you confirm generation? (yes/no) [yes]
+```
 
 Optional/Extra steps
 

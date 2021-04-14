@@ -1,0 +1,73 @@
+[tool.poetry]
+name = "backend"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+# Update to Django 3.2 requires additional changes
+Django = "~3.1.5"
+djangorestframework = "^3.12.4"
+
+# redis
+redis = "^3.5.3"
+
+# celery
+celery= "^5.0.5"
+
+# for OpenAPI
+uritemplate = "^3.0.1"
+coreapi = "^2.3.3"
+pyyaml = "^5.4.1"
+
+# graphql
+graphene-django = "^2.15.0"
+django-graphql-jwt = "^0.3.1"
+# TODO: watch this issue
+# https://github.com/flavors/django-graphql-jwt/issues/241
+PyJWT = "<2"
+
+[tool.poetry.dev-dependencies]
+
+# test dependencies
+
+black = "^20.8b1"
+flake8 = "^3.8.4"
+pytest = "^6.2.2"
+pytest-cov = "^2.11.1"
+pytest-django = "^4.1.0"
+
+# factory
+factory-boy = "^3.2.0"
+
+# dev dependencies
+
+django-debug-toolbar = "^3.2"
+
+# for runserver_plus
+django-extensions = "^3.1.0"
+Werkzeug = "^1.0.1"
+
+# for Jupyter notebooks
+ipython = "^7.20.0"
+jupyter = "^1.0.0"
+
+# pgadmin
+pgadmin4 = "*"
+
+# for restarting celery
+watchdog = "^0.10.3"
+pyyaml = "^5.3.1"
+argh = "^0.26.2"
+
+# flower
+# flower = "^0.9.7"
+
+# faker
+faker = "^5.0.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

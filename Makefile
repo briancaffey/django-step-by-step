@@ -2,21 +2,42 @@
 
 .PHONY: all	pip-install	create-venv	source	migrate	createsuperuser	runserver	pip-local	pytest	notebook
 .PHONY: flake8	black	format	pg_isready	celery-default-worker	redis-cli-ping	openapi	show_urls cypress
-.PHONY: psql schema	sdl
+.PHONY: psql	schema	sdl
+
+.PHONY: check-poetry	poetry-export	poetry-update	poetry-install	poetry-update
 
 all: migrate	runserver
 
+# Poetry commands
+check-poetry:
+	poetry --version
 
+poetry-export:
+	cd backend && poetry export --without-hashes -f requirements.txt -o requirements.txt && poetry export --without-hashes -f requirements.txt -o requirements_dev.txt --dev
+
+poetry-update:
+	cd backend && poetry self update
+
+poetry-install:
+	cd backend && poetry install
+
+poetry-update:
+	cd backend && poetry update
+
+poetry-migrate:
+	# migrate
+	cd backend && poetry run python3 manage.py migrate
+
+poetry-createsuperuser:
+	DJANGO_SUPERUSER_PASSWORD=password DJANGO_SUPERUSER_USERNAME=brian DJANGO_SUPERUSER_EMAIL=user@email.com cd backend && poetry run python3 manage.py createsuperuser --no-input
+
+poetry-migrate:
+	cd backend && poetry run python3 manage.py
+# or, use a virtual environment
 pip-install:
 	pip install -r backend/requirements/base.txt
 	pip install -r backend/requirements/test.txt
 	pip install -r backend/requirements/dev.txt
-
-create-venv:
-	python3 -m venv .local-env
-
-source:
-	. .local-env/bin/activate
 
 migrate:
 	# migrate
@@ -89,14 +110,15 @@ openapi:
 show_urls:
 	python3 backend/manage.py show_urls
 
+# doesn't work on WSL
 cypress:
 	npx cypress open
 
 psql:
 	sudo -u postgres psql
 
-make schema:
+make-schema:
 	python3 backend/manage.py graphql_schema --schema backend.schema.schema --out schema.json
 
-make sdl:
+make-sdl:
 	python3 backend/manage.py graphql_schema --schema backend.schema.schema --out schema.graphql
