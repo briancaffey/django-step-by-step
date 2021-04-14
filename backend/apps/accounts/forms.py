@@ -38,6 +38,7 @@ class UserLoginForm(AuthenticationForm):
                 "placeholder": "email",
                 "id": "email",
                 "autofocus": True,
+                "type": "email",
             }
         )
     )
