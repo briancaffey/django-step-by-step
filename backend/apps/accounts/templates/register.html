@@ -6,31 +6,33 @@
 <!-- -->
 
 {% block content %}
-<h2>Register</h2>
-<form method="post">
-  {% csrf_token %}
-  <!-- fields -->
-  {% for field in form %}
-  <div class="fieldWrapper pb-2">
-    <!-- errors -->
-    {% if field.errors %}
-    <div class="alert alert-danger">{{ field.errors.as_text }}</div>
-    {% endif %}
-    <!-- field -->
-    {{ field }}
+<div class="registration-form">
+  <form method="post">
+    <h2>Register</h2>
+    {% csrf_token %}
+    <!-- fields -->
+    {% for field in form %}
+    <div class="fieldWrapper pb-2">
+      <!-- errors -->
+      {% if field.errors %}
+      <div class="alert alert-danger">{{ field.errors.as_text }}</div>
+      {% endif %}
+      <!-- field -->
+      {{ field }}
 
-    <!-- help text -->
-    {% if field.help_text %}
-    <p class="help">{{ field.help_text|safe }}</p>
+      <!-- help text -->
+      {% if field.help_text %}
+      <p class="help">{{ field.help_text|safe }}</p>
+      {% endif %}
+    </div>
+    {% endfor %}
+    <!-- Non form errors -->
+    {% if form.non_field_errors %}
+    <div class="alert alert-danger">{{form.non_field_errors.as_text}}</div>
     {% endif %}
-  </div>
-  {% endfor %}
-  <!-- Non form errors -->
-  {% if form.non_field_errors %}
-  <div class="alert alert-danger">{{form.non_field_errors.as_text}}</div>
-  {% endif %}
-  <button class="btn btn-primary" id="register-button" type="submit">
-    Register
-  </button>
-</form>
+    <button class="btn btn-primary" id="register-button" type="submit">
+      Register
+    </button>
+  </form>
+</div>
 {% endblock %}

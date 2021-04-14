@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 <!-- -->
 {% block title %}Login{% endblock %}
@@ -6,44 +7,46 @@
 <!-- -->
 
 {% block content %}
-<h2>Login</h2>
-<form method="post">
-  {% csrf_token %}
-  <!-- fields -->
-  {% for field in form %}
-  <div class="fieldWrapper pb-2">
-    <!-- errors -->
-    {% if field.errors %}
-    <div class="alert alert-danger">
-    {{ field.errors.as_text }}
-    </div>
-    {% endif %}
+<div class="login-form">
+  <form method="post">
+    <h2>Login</h2>
+    {% csrf_token %}
+    <!-- fields -->
+    {% for field in form %}
+    <div class="fieldWrapper pb-2">
+      <!-- errors -->
+      {% if field.errors %}
+      <div class="alert alert-danger">
+      {{ field.errors.as_text }}
+      </div>
+      {% endif %}
 
-    <!-- field -->
-    {{ field }}
+      <!-- field -->
+      {{ field }}
 
-    <!-- help text -->
-    {% if field.help_text %}
-    <p class="help">{{ field.help_text|safe }}</p>
-    {% endif %}
-  </div>
-  {% endfor %}
-
-{% if messages %}
-<div class="messages">
-    {% for message in messages %}
-    <div{% if message.tags %} class="alert alert-danger"{% endif %}>
-        {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
-        {{ message }}
+      <!-- help text -->
+      {% if field.help_text %}
+      <p class="help">{{ field.help_text|safe }}</p>
+      {% endif %}
     </div>
     {% endfor %}
+
+  {% if messages %}
+  <div class="messages">
+      {% for message in messages %}
+      <div{% if message.tags %} class="alert alert-danger"{% endif %}>
+          {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
+          {{ message }}
+      </div>
+      {% endfor %}
+  </div>
+  {% endif %}
+  {% if form.non_field_errors %}
+  <div class="alert alert-danger">
+    {{form.non_field_errors.as_text}}
+  </div>
+  {% endif %}
+    <button class="btn btn-primary" id="login-button" type="submit">Login</button>
+  </form>
 </div>
-{% endif %}
-{% if form.non_field_errors %}
-<div class="alert alert-danger">
-  {{form.non_field_errors.as_text}}
-</div>
-{% endif %}
-  <button class="btn btn-primary" id="login-button" type="submit">Login</button>
-</form>
 {% endblock %}
