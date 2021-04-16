@@ -5,6 +5,7 @@
 .PHONY: psql	schema	sdl
 
 .PHONY: check-poetry	poetry-export	poetry-update	poetry-install	poetry-update
+.PHONY:	poetry-pytest	poetry-pytest-cov	poetry-celery-default-worker
 
 all: migrate	runserver
 
@@ -14,9 +15,6 @@ check-poetry:
 
 poetry-export:
 	cd backend && poetry export --without-hashes -f requirements.txt -o requirements.txt && poetry export --without-hashes -f requirements.txt -o requirements_dev.txt --dev
-
-poetry-update:
-	cd backend && poetry self update
 
 poetry-install:
 	cd backend && poetry install
@@ -32,8 +30,7 @@ poetry-createsuperuser:
 	DJANGO_SUPERUSER_PASSWORD=password DJANGO_SUPERUSER_USERNAME=brian DJANGO_SUPERUSER_EMAIL=user@email.com cd backend && poetry run python3 manage.py createsuperuser --no-input
 
 poetry-runserver:
-	cd backend && poetry run python3 manage.py
-
+	cd backend && poetry run python3 manage.py runserver_plus
 
 poetry-make-schema:
 	cd backend && python3 manage.py graphql_schema --schema backend.schema.schema --out schema.json
@@ -47,12 +44,20 @@ poetry-make-openapi-schema:
 poetry-show-urls:
 	cd backend && python3 manage.py show_urls
 
-# or, use a virtual environment
-pip-install:
-	pip install -r backend/requirements/base.txt
-	pip install -r backend/requirements/test.txt
-	pip install -r backend/requirements/dev.txt
+poetry-pytest:
+	cd backend && poetry run pytest
 
+poetry-pytest-cov:
+	cd backend && poetry run pytest --cov-report html --cov=backend
+
+poetry-celery-default-worker:
+	cd backend && poetry run watchmedo auto-restart --directory=./ --pattern=*.py --recursive -- celery -A backend.celery_app:app worker -l INFO
+
+poetry-generate-posts:
+	cd backend && poetry run python3 manage.py generate_posts
+
+
+# the follow commands require a virtual environment to be activated
 migrate:
 	# migrate
 	backend/manage.py migrate
@@ -106,7 +111,7 @@ celery-default-worker:
 flower:
 	cd backend && celery flower -A backend.celery_app:app --address=127.0.0.1 --port=5555
 
-generate_posts:
+generate-posts:
 	backend/manage.py generate_posts
 
 mailhog:
@@ -124,13 +129,14 @@ openapi:
 show_urls:
 	python3 backend/manage.py show_urls
 
-# doesn't work on WSL
+# this command does not work on WSL
 cypress:
 	npx cypress open
 
 psql:
 	sudo -u postgres psql
 
+# output graphql schema as JSON and SDL
 make-schema:
 	python3 backend/manage.py graphql_schema --schema backend.schema.schema --out schema.json
 
