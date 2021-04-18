@@ -2511,6 +2511,26 @@ jobs:
         run: pytest backend
 ```
 
+## Add `bitbucket-pipelines.yml` for BitBucket pipelines
+
+```yml
+image: python:3.8
+
+pipelines:
+  default:
+    - parallel:
+      - step:
+          name: lint and test python code
+          caches:
+            - pip
+          script:
+            - pip install -r backend/requirements_dev.txt
+            - flake8 backend
+            - black -l 79 backend
+            - pytest backend
+
+```
+
 ## Generic Class Based Views
 
 We can reimplement our application logic with generic class-based views (GCBVs). There's nothing wrong with out function-based views (FBVs). The code is straightforward and relatively easy to understand. GCBVs will let us acheive the same functionality with fewer lines of code. You can use only CBVs, only GBVs or a mix of the two together. However you decide to write your view, GCBVs are in import part of Django that you should know about.

@@ -9,16 +9,11 @@ pipelines:
   default:
     - parallel:
       - step:
-          name: Test
+          name: lint and test python code
           caches:
             - pip
           script:
-            - if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-            - pip install pytest
-            - pytest -v tests/* --junitxml=test-reports/report.xml
-      - step:
-          name: Lint code
-          script:
-            # Enforce style consistency across Python projects https://flake8.pycqa.org/en/latest/manpage.html
-            - pip install flake8
-            - flake8 . --extend-exclude=dist,build --show-source --statistics
+            - pip install -r backend/requirements_dev.txt
+            - flake8 backend
+            - black -l 79 backend
+            - pytest backend
