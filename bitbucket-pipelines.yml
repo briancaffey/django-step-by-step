@@ -7,13 +7,23 @@ image: python:3.8
 
 pipelines:
   default:
-    - parallel:
-      - step:
-          name: lint and test python code
-          caches:
-            - pip
-          script:
-            - pip install -r backend/requirements_dev.txt
-            - flake8 backend
-            - black -l 79 backend
-            - pytest backend
+    - step:
+        name: lint and test python code
+        caches:
+          - pip
+        script:
+          - pip install -r backend/requirements_dev.txt
+          - flake8 backend
+          - black -l 79 backend
+          - pytest backend
+        services:
+          - postgres
+
+definitions:
+  services:
+    postgres:
+      image: postgres
+      variables:
+        POSTGRES_DB: 'postgres'
+        POSTGRES_USER: 'postgres'
+        POSTGRES_PASSWORD: 'postgres'
