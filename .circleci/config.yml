@@ -22,6 +22,5 @@ jobs:
             python3 -m venv venv
             . venv/bin/activate
             pip install -r backend/requirements_dev.txt
-
             flake8 backend
             pytest backend
