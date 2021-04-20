@@ -23,4 +23,5 @@ jobs:
             . venv/bin/activate
             pip install -r backend/requirements_dev.txt
             flake8 backend
+            black -l 79 backend
             pytest backend
