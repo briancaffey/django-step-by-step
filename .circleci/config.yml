@@ -1,0 +1,29 @@
+version: 2
+jobs:
+  build:
+
+    # Primary container image where all commands run
+
+    docker:
+      - image: circleci/python:3.8.9
+        environment:
+          TEST_DATABASE_URL: postgresql://root@localhost/circle_test
+
+    # Service container image
+      - image: circleci/postgres:13.2-ram
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: postgres
+          POSTGRES_PASSWORD: postgres
+
+    steps:
+      - checkout
+      - run:
+          name: Install Python deps in a venv
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r backend/requirements_dev.txt
+
+            flake8 backend
+            pytest backend
