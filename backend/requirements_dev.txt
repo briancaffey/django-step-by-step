@@ -60,6 +60,7 @@ graphene-django==2.15.0
 graphene==2.1.8
 graphql-core==2.3.2
 graphql-relay==2.0.1
+gunicorn==20.1.0; python_version >= "3.5"
 idna==2.10; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 iniconfig==1.1.1; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
 ipykernel==5.5.3; python_version >= "3.6"
