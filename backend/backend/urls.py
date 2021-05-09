@@ -25,6 +25,7 @@ from graphene_django.views import GraphQLView
 
 
 urlpatterns = [
+    path("api/", include("apps.core.urls")),
     path(
         "api/swagger-ui/",
         TemplateView.as_view(

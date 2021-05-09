@@ -29,6 +29,7 @@ django-graphql-jwt = "^0.3.1"
 # https://github.com/flavors/django-graphql-jwt/issues/241
 PyJWT = "<2"
 gunicorn = "^20.1.0"
+psycopg2-binary = "^2.8.6"
 
 [tool.poetry.dev-dependencies]
 

@@ -15,11 +15,13 @@ class RequestLogMiddleware:
         response = self.get_response(request)
         duration = time.time() - start_time
         response_ms = duration * 1000
+        path = request.path
+        if "health-check" in path:
+            return response
 
         user = None
         if request.user.is_authenticated:
             user = request.user
-        path = request.path
         full_path = request.get_full_path()
         method = str(getattr(request, "method", "")).upper()
         remote_address = self.get_client_ip(request)
