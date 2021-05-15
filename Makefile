@@ -154,6 +154,14 @@ make-gql-schema-sdl:
 	python3 backend/manage.py graphql_schema --schema backend.schema.schema --out schema.graphql
 
 
+## -- microk8s Targets --
+
+cdk8s_check_deps:
+	npm list -g cdk8s-cli
+
+cdk8s_synth: cdk8s_check_deps
+	cd k8s/cdk8s && cdk8s synth
+
 ## -- Misc Targets --
 
 ## Check to see if the local postgres service is running
