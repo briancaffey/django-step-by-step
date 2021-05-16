@@ -1,0 +1,62 @@
+version: "2.4"
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:11.5
+    networks:
+      - main
+    ports:
+      - "5434:5432"
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=postgres
+
+  redis:
+    image: redis:alpine
+    volumes:
+      - redis-data:/data
+    container_name: redis
+    networks:
+      - main
+
+  backend: &backend
+    container_name: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.dev
+    command:
+      - "watchmedo"
+      - "auto-restart"
+      - "--directory=./"
+      - "--pattern=*.py"
+      - "--recursive"
+      - "--"
+      - "python3"
+      - "manage.py"
+      - "runserver_plus"
+      - "0.0.0.0:8000"
+    volumes:
+      - ./backend:/code
+    ports:
+      - "8000:8000"
+      - "8888:8888"
+    networks:
+      - main
+    environment:
+      - DEBUG=1
+      - POSTGRES_SERVICE_HOST=postgres
+      - REDIS_SERVICE_HOST=redis
+      - DJANGO_SETTINGS_MODULE=backend.settings.development
+    depends_on:
+      - postgres
+      - redis
+
+volumes:
+  pg-data:
+  redis-data:
+
+networks:
+  main:
+    driver: bridge

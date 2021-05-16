@@ -154,6 +154,38 @@ make-gql-schema-sdl:
 	python3 backend/manage.py graphql_schema --schema backend.schema.schema --out schema.graphql
 
 
+## -- microk8s Targets --
+
+cdk8s_project_install:
+	cd k8s/cdk8s && npm i
+
+cdk8s_check_deps:
+	npm list -g cdk8s-cli
+
+cdk8s_synth: cdk8s_check_deps
+	cd k8s/cdk8s && cdk8s synth
+
+cdk8s_watch:
+	cd k8s/cdk8s && npm run watch
+
+## -- docker Targets --
+
+## make migrations in backend container
+docker-compose-backend-migrate:
+	@docker compose run backend python3 manage.py migrate
+
+## backend shell
+docker-compose-backend-shell:
+	@docker compose run backend python3 manage.py shell
+
+## jupyter notebook
+docker-compose-backend-jupyter:
+	@docker compose run backend bash -c "cd notebooks && ../manage.py shell_plus --notebook"
+
+## docker-compose up
+docker-compose-up: docker-compose-backend-migrate
+	@docker compose up
+
 ## -- Misc Targets --
 
 ## Check to see if the local postgres service is running

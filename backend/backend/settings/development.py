@@ -18,3 +18,10 @@ MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware"]
 INTERNAL_IPS = ["127.0.0.1"]
 
 ADMIN_EMAIL = "user@email.com"
+
+NOTEBOOK_ARGUMENTS = [
+    "--ip",
+    "0.0.0.0",
+    "--allow-root",
+    "--no-browser",
+]

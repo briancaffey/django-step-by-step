@@ -2535,9 +2535,9 @@ definitions:
     postgres:
       image: postgres
       variables:
-        POSTGRES_DB: 'postgres'
-        POSTGRES_USER: 'postgres'
-        POSTGRES_PASSWORD: 'postgres'
+        POSTGRES_DB: "postgres"
+        POSTGRES_USER: "postgres"
+        POSTGRES_PASSWORD: "postgres"
 ```
 
 ## Generic Class Based Views
@@ -3082,7 +3082,6 @@ Do you confirm generation? (yes/no) [yes]
 
 ## Add `make` command to export `requirements.txt` and `requirements_dev.txt` from poetry
 
-
 ```
 poetry-export:
 	cd backend && poetry export --without-hashes -f requirements.txt -o requirements.txt && poetry export --without-hashes -f requirements.txt -o requirements_dev.txt --dev
@@ -3094,6 +3093,72 @@ For example:
 
 ```
 poetry add requests
+```
+
+## microk8s setup
+
+## Install `cdk8s-cli`
+
+Install the cdk8s npm package globally:
+
+```
+npm i -g cdk8s-cli
+```
+
+## Start a cdk8s project in the k8s directory
+
+```
+mkdir -p k8s/cdk8s && cd k8s/cdk8s
+cdk8s init typescript-app
+```
+
+Synthesize the application:
+
+```
+cdk8s synth --app='./k8s/cdk8s'
+```
+
+```
+/bin/sh: 1: ./k8s/cdk8s: Permission denied
+Error: command "./k8s/cdk8s " at /home/brian/gitlab/django-step-by-step returned a non-zero exit code 126
+    at ChildProcess.<anonymous> (/home/brian/.nvm/versions/node/v15.3.0/lib/node_modules/cdk8s-cli/lib/util.js:24:27)
+    at Object.onceWrapper (node:events:483:26)
+    at ChildProcess.emit (node:events:376:20)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:277:12)
+make: *** [Makefile:163: cdk8s_synth] Error 1
+```
+
+To fix the permissions issues, run the following:
+
+```
+sudo chmod -R +x ./k8s/cdk8s
+```
+
+## WSL
+
+## Update kubectl
+
+```
+##  Step1: Run the below command to download the latest version of kubectl
+curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+
+##  Step2: Make kubectl executable
+chmod +x kubectl
+
+##  Step3: Move it to the directory where kubectl is already installed
+sudo mv kubectl $(which kubectl)
+```
+
+[https://gist.github.com/QaiserAli/18926b5bd9ca7a0551195d449bf31eb6](https://gist.github.com/QaiserAli/18926b5bd9ca7a0551195d449bf31eb6)
+
+## doctl
+
+[https://github.com/digitalocean/doctl#downloading-a-release-from-github](https://github.com/digitalocean/doctl#downloading-a-release-from-github)
+
+```
+cd ~
+wget https://github.com/digitalocean/doctl/releases/download/v<version>/doctl-<version>-linux-amd64.tar.gz
+
 ```
 
 Optional/Extra steps
