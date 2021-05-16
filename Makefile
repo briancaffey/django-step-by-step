@@ -89,11 +89,7 @@ runserver:
 
 ## Install python dependencies in a local virtual environment (.local-env)
 pip-local:
-	# install pip dependencies locally in virtual env
-	python3 -m pip install --upgrade pip
-	pip install -r backend/requirements/base.txt
-	pip install -r backend/requirements/dev.txt
-	pip install -r backend/requirements/test.txt
+	pip3 install -r backend/requirements_dev.txt
 
 ## Run pytest
 pytest:
