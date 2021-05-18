@@ -13,11 +13,41 @@ services:
     environment:
       - POSTGRES_PASSWORD=postgres
 
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin:/root/.pgadmin
+    ports:
+      - "5050:80"
+    depends_on:
+      - "postgres"
+    networks:
+      - main
+    restart: unless-stopped
+
   redis:
     image: redis:alpine
     volumes:
       - redis-data:/data
     container_name: redis
+    networks:
+      - main
+
+  redis-commander:
+    container_name: redis-commander
+    hostname: redis-commander
+    image: rediscommander/redis-commander:latest
+    restart: always
+    environment:
+      - REDIS_HOST=redis
+    ports:
+      - "8085:8081"
+    depends_on:
+      - "redis"
     networks:
       - main
 
@@ -53,9 +83,60 @@ services:
       - postgres
       - redis
 
+  celery_default:
+    <<: *backend
+    container_name: celery_default
+    command:
+      - "watchmedo"
+      - "auto-restart"
+      - "--directory=./"
+      - "--pattern=*.py"
+      - "--recursive"
+      - "--"
+      - "celery"
+      - "--app=backend.celery_app:app"
+      - "worker"
+      - "-Q"
+      - "default"
+      - "--concurrency=1"
+      - "--loglevel=INFO"
+    ports: []
+
+  beat:
+    <<: *backend
+    container_name: beat
+    command:
+      - "sh"
+      - "-c"
+      - |
+        # remove celerybeat.pid and celerybeat-schedule if they exist
+        rm -f /code/celerybeat*;
+        watchmedo \
+          auto-restart \
+          --directory=./ \
+          --pattern=*.py \
+          --recursive \
+          -- \
+          celery \
+          --app=backend.celery_app:app \
+          beat \
+          --loglevel=INFO \
+          --pidfile=/code/celerybeat.pid
+    ports: []
+  
+  mailhog:
+    container_name: mailhog
+    image: mailhog/mailhog
+    ports:
+      - 1025:1025
+      - 8025:8025
+    networks:
+      - main
+
 volumes:
   pg-data:
   redis-data:
+  pgadmin:
 
 networks:
   main:

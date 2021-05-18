@@ -135,6 +135,8 @@ CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 
+CELERY_TASK_DEFAULT_QUEUE = "default"
+
 
 CELERY_BEAT_SCHEDULE = {
     "celery-beat-debug-task": {
