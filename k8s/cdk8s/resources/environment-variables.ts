@@ -4,9 +4,13 @@ export const env: k8s.EnvVar[] = [
   {
     name: 'DJANGO_SETTINGS_MODULE',
     value: 'backend.settings.development',
-  }
+  },
+  {
+    name: "POSTGRES_PASSWORD",
+    value: "postgres",
+  },
 ]
 
-const baseImage = 'localhost:32000/'
+const baseImage = 'localhost:5000/'
 const TAG = process.env.TAG || 'latest';
-export const backendImage = `${baseImage}api-backend:${TAG}`;
+export const backendImage = `${baseImage}backend:${TAG}`;

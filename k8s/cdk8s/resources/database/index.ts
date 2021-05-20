@@ -1,6 +1,5 @@
 import { Construct } from 'constructs';
 import * as k8s from '../../imports/k8s';
-import { env } from '../environment-variables';
 
 
 export class DatabaseResources extends Construct {
@@ -8,8 +7,11 @@ export class DatabaseResources extends Construct {
     super(scope, id);
 
     const selector = { app: 'database' };
-    
+
     new k8s.KubeService(this, 'PostgresService', {
+      metadata: {
+        name: "postgres",
+      },
       spec: {
         selector,
         ports: [
@@ -27,7 +29,7 @@ export class DatabaseResources extends Construct {
         name: 'postgres-deployment',
       },
       spec: {
-        replicas: 1, 
+        replicas: 1,
         selector: {
           matchLabels: selector,
         },
@@ -39,8 +41,13 @@ export class DatabaseResources extends Construct {
             containers: [
               {
                 name: 'database-deployment',
-                image: 'postgres:13.3',
-                env,
+                image: 'postgres:13-alpine',
+                env: [
+                  {
+                    name: "POSTGRES_PASSWORD",
+                    value: "postgres"
+                  }
+                ],
                 ports: [
                   {
                     containerPort: 5432
@@ -66,6 +73,27 @@ export class DatabaseResources extends Construct {
         }
       }
     });
+
+    new k8s.KubePersistentVolume(this, 'PostgresPV', {
+      metadata: {
+        name: "postgres-pv",
+        labels: {
+          type: "local"
+        },
+      },
+      spec: {
+        storageClassName: "manual",
+        capacity: {
+          storage: "2Gi",
+        },
+        accessModes: [
+          "ReadWriteOnce"
+        ],
+        hostPath: {
+          path: "/data/postgres-pv1"
+        }
+      }
+    })
 
     new k8s.KubePersistentVolumeClaim(this, 'PostgresPVC', {
       metadata: {
