@@ -12,7 +12,7 @@ const NAMESPACE = process.env.NAMESPACE || 'app';
 
 export class AppChart extends Chart {
   constructor(scope: Construct, id: string) {
-    super(scope, id, {namespace: NAMESPACE});
+    super(scope, id, { namespace: NAMESPACE });
 
     new k8s.KubeNamespace(this, 'AppNamespace', {
       metadata: {

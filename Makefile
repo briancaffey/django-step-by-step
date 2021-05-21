@@ -186,9 +186,11 @@ minikube_synthesize_manifests:
 minikube_apply_manifests:
 	@k8s/scripts/apply_manifests.sh
 
+## delete all k8s resources in minikube
 minikube_destroy_resources:
 	kubectl delete all --all -n app
 
+## open a shell in the backend django container
 minikube_backend_shell:
 	@k8s/scripts/backend_shell.sh
 

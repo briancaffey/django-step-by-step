@@ -11,6 +11,5 @@ export const env: k8s.EnvVar[] = [
   },
 ]
 
-const baseImage = 'localhost:5000/'
 const TAG = process.env.TAG || 'latest';
-export const backendImage = `${baseImage}backend:${TAG}`;
+export const backendImage = `backend:${TAG}`;
