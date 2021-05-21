@@ -40,7 +40,7 @@ export class BackendApi extends Construct {
           spec: {
             containers: [
               {
-                name: 'django-migrate',
+                name: 'migrate',
                 image: backendImage,
                 env,
                 args: ['python3', 'manage.py', 'migrate']
@@ -51,7 +51,7 @@ export class BackendApi extends Construct {
         },
         backoffLimit: 5,
       }
-    })
+    });
 
     new k8s.KubeDeployment(this, 'ApiDeployment', {
       spec: {
