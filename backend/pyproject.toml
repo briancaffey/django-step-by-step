@@ -68,7 +68,7 @@ argh = "^0.26.2"
 # flower = "^0.9.7"
 
 # faker
-faker = "^5.0.2"
+faker = "^8.0.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
