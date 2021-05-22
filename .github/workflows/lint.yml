@@ -63,7 +63,9 @@ jobs:
 
       # run pytest tests
       - name: Run pytest tests
-        run: pytest backend
+        run: |
+          python -V
+          pytest backend
 
 
   # reference: https://github.com/ciaranevans/pretzel
