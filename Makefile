@@ -150,6 +150,18 @@ make-gql-schema-sdl:
 	python3 backend/manage.py graphql_schema --schema backend.schema.schema --out schema.graphql
 
 
+## -- vue frontend Targets --
+## create the frontend (use this if you delete the frontend directory and want to regenerte it)
+frontend_create_from_vue_ts_template:
+	yarn create @vitejs/app frontend --template vue-ts
+
+## install frontend deps
+frontend_install_deps:
+	cd frontend && npm i
+
+frontend_dev:
+	cd frontend && npm run dev
+
 ## -- microk8s Targets --
 
 cdk8s_project_install:
