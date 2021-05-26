@@ -224,6 +224,31 @@ docker-compose-backend-jupyter:
 docker-compose-up: docker-compose-backend-migrate
 	@docker compose up
 
+## -- Pulumi (minikube) Targets
+
+## Start a new pulumi k8s project in a new directory
+pulumi_minikube_init:
+	@mkdir pulumi && cd pulumi && pulumi new kubernetes-typescript
+
+pulumi_watch:
+	@cd pulumi && tsc . --watch
+
+## build container, load it into minikube and run pulumi up
+pulumi_deploy:
+	@pulumi/scripts/deploy.sh
+
+## deploy pulumi app
+pulumi_up:
+	@cd pulumi && pulumi up
+
+## destroy pulumi resources
+pulumi_destroy:
+	@cd pulumi && pulumi destroy
+
+## remove pulumi stack (dev environment)
+pulumi_rm_stack:
+	@cd pulumi && pulumi stack rm dev --force
+
 ## -- Misc Targets --
 
 ## Check to see if the local postgres service is running
