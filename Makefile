@@ -150,6 +150,18 @@ make-gql-schema-sdl:
 	python3 backend/manage.py graphql_schema --schema backend.schema.schema --out schema.graphql
 
 
+## -- vue frontend Targets --
+## create the frontend (use this if you delete the frontend directory and want to regenerte it)
+frontend_create_from_vue_ts_template:
+	yarn create @vitejs/app frontend --template vue-ts
+
+## install frontend deps
+frontend_install_deps:
+	cd frontend && npm i
+
+frontend_dev:
+	cd frontend && npm run dev
+
 ## -- microk8s Targets --
 
 cdk8s_project_install:
@@ -211,6 +223,31 @@ docker-compose-backend-jupyter:
 ## docker-compose up
 docker-compose-up: docker-compose-backend-migrate
 	@docker compose up
+
+## -- Pulumi (minikube) Targets
+
+## Start a new pulumi k8s project in a new directory
+pulumi_minikube_init:
+	@mkdir pulumi && cd pulumi && pulumi new kubernetes-typescript
+
+pulumi_watch:
+	@cd pulumi && tsc . --watch
+
+## build container, load it into minikube and run pulumi up
+pulumi_deploy:
+	@pulumi/scripts/deploy.sh
+
+## deploy pulumi app
+pulumi_up:
+	@cd pulumi && pulumi up
+
+## destroy pulumi resources
+pulumi_destroy:
+	@cd pulumi && pulumi destroy
+
+## remove pulumi stack (dev environment)
+pulumi_rm_stack:
+	@cd pulumi && pulumi stack rm dev --force
 
 ## -- Misc Targets --
 

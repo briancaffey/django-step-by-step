@@ -1,0 +1,3 @@
+name: pulumi-minikube
+runtime: nodejs
+description: A minimal Kubernetes TypeScript Pulumi program
