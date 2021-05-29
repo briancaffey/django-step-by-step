@@ -69,7 +69,7 @@ poetry-flake8:
 
 ## check code formatting with black
 poetry-black:
-	cd backend && poetry run black .
+	cd backend && poetry run black -l 79
 
 ## run flake8 and black
 poetry-format: poetry-flake8	poetry-black

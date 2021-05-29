@@ -118,7 +118,9 @@ def test_edit_post(client):
         reverse("update-post", kwargs={"id": anonymous_post.id}), follow=True
     )
 
-    assert "You cannot edit an anonymous post" in response.content.decode("utf-8")
+    assert "You cannot edit an anonymous post" in response.content.decode(
+        "utf-8"
+    )
 
     # go to the page where the post can be edited
     response = client.get(
@@ -163,7 +165,9 @@ def test_edit_other_user_post(client):
     client.force_login(user2)
 
     # go to the page where the post can be edited
-    response = client.post(reverse("update-post", kwargs={"id": post.id}), follow=True)
+    response = client.post(
+        reverse("update-post", kwargs={"id": post.id}), follow=True
+    )
 
     assert "You cannot edit this post" in response.content.decode("utf-8")
 
@@ -212,9 +216,13 @@ def test_delete_anonymous_post(client):
     # create a post by that user
     post = PostFactory(body="Random post")
 
-    response = client.post(reverse("delete-post", kwargs={"id": post.id}), follow=True)
+    response = client.post(
+        reverse("delete-post", kwargs={"id": post.id}), follow=True
+    )
 
-    assert "You cannot delete an anonymous post" in response.content.decode("utf-8")
+    assert "You cannot delete an anonymous post" in response.content.decode(
+        "utf-8"
+    )
 
 
 @pytest.mark.django_db(transaction=True)
@@ -239,7 +247,9 @@ def test_like_post(client):
     assert post.likes.all().count() == 0
 
     # user likes their own post
-    response = client.post(reverse("like-post", kwargs={"id": post.id}), follow=True)
+    response = client.post(
+        reverse("like-post", kwargs={"id": post.id}), follow=True
+    )
 
     assert response.status_code == 200
 
@@ -247,6 +257,8 @@ def test_like_post(client):
     assert post.likes.all().count() == 1
 
     # user unlikes their own post
-    response = client.post(reverse("like-post", kwargs={"id": post.id}), follow=True)
+    response = client.post(
+        reverse("like-post", kwargs={"id": post.id}), follow=True
+    )
 
     assert post.likes.all().count() == 0
