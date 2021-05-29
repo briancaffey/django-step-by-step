@@ -1,6 +1,7 @@
 <div id="counter-{{ post.id }}">
   {% if request.user.is_authenticated %} [[ counter ]]
   <i
+    id="like-post-{{ post.id }}"
     @click.prevent="toggleLike"
     class="bi bi-heart"
     :style="{ 'color': liked ? 'red' : 'black' }"

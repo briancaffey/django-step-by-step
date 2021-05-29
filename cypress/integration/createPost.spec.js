@@ -1,14 +1,13 @@
 describe("Test visit homepage", function () {
   it("can visit the homepage", function () {
     cy.visit("/posts");
-    cy.contains("Microblog");
+    cy.contains("μblog");
   });
 
   it("can create a post anonymously using fbv", function () {
     cy.visit("/posts/new");
-    cy.contains("Microblog");
     cy.get("#post-body").type(
-      "New post from Cypress using a function-based view."
+      "an anonymous post using a function-based view"
     );
     cy.get("#submit-post").click();
     cy.contains("Your post was created!");
@@ -17,11 +16,10 @@ describe("Test visit homepage", function () {
 
   it("can create a post anonymously using cbv", function () {
     cy.visit("/cbv/posts/new");
-    cy.contains("Microblog");
     cy.get("#post-body").type(
-      "New post from Cypress using a class-based views."
+      "an anonymous post using a class-based view"
     );
     cy.get("#submit-post").click();
-    cy.contains("class-based views");
+    cy.contains("class-based view");
   });
 });

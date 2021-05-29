@@ -10,10 +10,10 @@ class PostForm(ModelForm):
             attrs={
                 "class": "form-control",
                 "placeholder": "Write your post here",
-                "id": "email",
+                "id": "post-body",
                 "rows": 5,
                 "autofocus": True,
-                "type": "email",
+                "type": "text",
             }
         )
     )

@@ -267,6 +267,12 @@ mailhog:
 pgadmin4:
 	pgadmin4
 
+## -- Cypress Targets --
+
+## install cypress dependencies
+cypress_install:
+	npm install cypress --save-dev
+
 ## Open Cypress. Note: this command does not work on WSL
 cypress:
 	npx cypress open

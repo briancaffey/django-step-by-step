@@ -23,3 +23,45 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+// -- This command will recuresively search the mailhog API for an email that matches a search term --
+// https://humble.dev/testing-an-email-workflow-from-end-to-end-with-cypress
+Cypress.Commands.add('getConfirmationEmail', email => {
+  function getEmail() {
+    return cy
+      .request({
+        method: 'GET',
+        url: `http://localhost:8025/api/v2/search?kind=containing&query=${email}`,
+        headers: {
+          'content-type': 'application/json',
+        },
+        json: true,
+      })
+      .then(({ body }) => {
+        if (body) {
+          const { items } = body;
+          const email = items[0];
+          const emailBody = email["Content"]["Body"];
+          console.log(emailBody);
+          return emailBody;
+        }
+
+        // If body is null, it means that no email was fetched for this address.
+        // We call requestEmail recursively until an email is fetched.
+        // We also wait for 300ms between each call to avoid spamming our server with requests
+        cy.wait(300);
+
+        return getEmail();
+      });
+  }
+
+  return getEmail();
+});
+
+// -- Login a user with a username and password using the login form --
+Cypress.Commands.add('login', (emailAddress, password) => {
+  cy.visit("/login");
+  cy.get("#email").type(emailAddress);
+  cy.get("#password").type(password);
+  cy.get("#login-button").click();
+});

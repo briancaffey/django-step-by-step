@@ -75,6 +75,7 @@ services:
     networks:
       - main
     environment:
+      - DJANGO_EMAIL_HOST=mailhog
       - DEBUG=1
       - POSTGRES_SERVICE_HOST=postgres
       - REDIS_SERVICE_HOST=redis
