@@ -12,7 +12,7 @@ all: migrate	runserver
 ## -- Poetry Targets --
 
 ## Check poetry installation
-check-poetry:
+poetry-version:
 	poetry --version
 
 ## Export requirements from poetry to requirements.txt and requirements_dev.txt
@@ -63,94 +63,105 @@ poetry-pytest:
 poetry-pytest-cov:
 	cd backend && poetry run pytest --cov-report html --cov=backend
 
+## start the celery default worker
 poetry-celery-default-worker:
 	cd backend && poetry run watchmedo auto-restart --directory=./ --pattern=*.py --recursive -- celery -A backend.celery_app:app worker -l INFO
 
+## Generate data for post model
 poetry-generate-posts:
 	cd backend && poetry run python3 manage.py generate_posts
+
+## Generate graphviz diagram of database tables
+poetry-graphviz-models:
+	cd backend && poetry run python3 manage.py graph_models -a -o models.png
 
 ## -- Virtual Environment Targets --
 
 ## Apply migration files to the database
-migrate:
+venv-migrate:
 	backend/manage.py migrate
 
 ## Make database migration files
-migrations:
+venv-make-migrations:
 	backend/manage.py makemigrations
 
 ## Create a super user to access the Django admin locally
-createsuperuser:
+venv-createsuperuser:
 	DJANGO_SUPERUSER_PASSWORD=password DJANGO_SUPERUSER_USERNAME=brian DJANGO_SUPERUSER_EMAIL=user@email.com backend/manage.py createsuperuser --no-input
 
 # Start the Django application locally using runserver_plus and Werkzeug
-runserver:
+venv-runserver:
 	backend/manage.py runserver_plus
 
 ## Install python dependencies in a local virtual environment (.local-env)
-pip-local:
+venv-pip-install:
 	pip3 install -r backend/requirements_dev.txt
 
 ## Run pytest
-pytest:
+venv-pytest:
 	pytest backend
 
 ## Run pytest and generate a code coverage report
-pytest-cov:
+venv-pytest-cov:
 	pytest backend --cov-report html --cov=backend
 
 ## HTTP server for viewing python code coverage results
-pytest-cov-report:
+venv-pytest-cov-report:
 	python3 -m http.server 8002 -d htmlcov
 
 ## Open a jupyter notebook session
-notebook:
+venv-notebook:
 	backend/manage.py shell_plus --notebook
 
 ## Lint python code using flake8
-flake8:
+venv-flake8:
 	flake8 backend
 
 ## Format code using black
-black:
+venv-black:
 	black -l 79 backend
 
 ## Formate code using flake8 and black
-format: flake8	black
+venv-format: venv-flake8	venv-black
 
 ## Start celery worker that will reload on code changes
-celery-default-worker:
+venv-celery-default-worker:
 	cd backend && watchmedo auto-restart --directory=./ --pattern=*.py --recursive -- celery -A backend.celery_app:app worker -l INFO
 
 ## Start flower for debugging and monitoring celery tasks and workers
-flower:
+venv-flower:
 	cd backend && celery flower -A backend.celery_app:app --address=127.0.0.1 --port=5555
 
 ## Generate posts
-generate-posts:
+venv-generate-posts:
 	backend/manage.py generate_posts
 
 ## Delete database
-flush:
+venv-flush:
 	backend/manage.py flush
 
 ## Generate OpenAPI schema
-openapi:
+venv-openapi:
 	python3 backend/manage.py generateschema > backend/static/openapi/schema.yml
 
 ## Show all URLs
-show_urls:
+venv-show_urls:
 	python3 backend/manage.py show_urls
 
-# output graphql schema as JSON and SDL
-make-gql-schema-json:
+# output graphql schema as JSON
+venv-make-gql-schema-json:
 	python3 backend/manage.py graphql_schema --schema backend.schema.schema --out schema.json
 
-make-gql-schema-sdl:
+## output graphql schema as SDL
+venv-make-gql-schema-sdl:
 	python3 backend/manage.py graphql_schema --schema backend.schema.schema --out schema.graphql
 
+## output graphviz diagram of database table relationships
+venv-graphviz-models:
+	python3 backend/manage.py graph_models -o my_project_subsystem.png
 
 ## -- vue frontend Targets --
+
 ## create the frontend (use this if you delete the frontend directory and want to regenerte it)
 frontend_create_from_vue_ts_template:
 	yarn create @vitejs/app frontend --template vue-ts
@@ -164,15 +175,19 @@ frontend_dev:
 
 ## -- microk8s Targets --
 
+## install cdk8s deps
 cdk8s_project_install:
 	cd k8s/cdk8s && npm i
 
+## check cdk8s installation
 cdk8s_check_deps:
 	npm list -g cdk8s-cli
 
+## synthesize manifests to cdk8s
 cdk8s_synth: cdk8s_check_deps
 	cd k8s/cdk8s && cdk8s synth
 
+## watch cdk8s for development
 cdk8s_watch:
 	cd k8s/cdk8s && npm run watch
 
@@ -230,6 +245,7 @@ docker-compose-up: docker-compose-backend-migrate
 pulumi_minikube_init:
 	@mkdir pulumi && cd pulumi && pulumi new kubernetes-typescript
 
+## watch pulumi for typescript development
 pulumi_watch:
 	@cd pulumi && tsc . --watch
 
