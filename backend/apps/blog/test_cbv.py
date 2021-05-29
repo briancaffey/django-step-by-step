@@ -54,9 +54,7 @@ def test_post_create_and_update_cbv(client):
     client.force_login(user)
 
     form_data = {"body": POST_TEXT}
-    response = client.post(
-        reverse("post-create-cbv"), data=form_data, follow=True
-    )
+    response = client.post(reverse("post-create-cbv"), data=form_data, follow=True)
 
     assert response.status_code == 200
 
@@ -134,9 +132,8 @@ def test_delete_post_cbv(client):
 
     response = client.get(reverse("post-delete-cbv", kwargs={"pk": post.id}))
 
-    assert (
-        "Are you sure you want to delete this post?"
-        in response.content.decode("utf-8")
+    assert "Are you sure you want to delete this post?" in response.content.decode(
+        "utf-8"
     )
 
     response = client.post(reverse("post-delete-cbv", kwargs={"pk": post.id}))

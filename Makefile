@@ -63,6 +63,17 @@ poetry-pytest:
 poetry-pytest-cov:
 	cd backend && poetry run pytest --cov-report html --cov=backend
 
+## check code formatting with flake8
+poetry-flake8:
+	cd backend && poetry run flake8
+
+## check code formatting with black
+poetry-black:
+	cd backend && poetry run black .
+
+## run flake8 and black
+poetry-format: poetry-flake8	poetry-black
+
 ## start the celery default worker
 poetry-celery-default-worker:
 	cd backend && poetry run watchmedo auto-restart --directory=./ --pattern=*.py --recursive -- celery -A backend.celery_app:app worker -l INFO

@@ -46,5 +46,4 @@ def send_confirmation_email(*, user_id, domain):
         [settings.ADMIN_EMAIL],
     )
     email.content_subtype = "html"
-    
     email.send()

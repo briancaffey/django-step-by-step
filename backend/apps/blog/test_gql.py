@@ -60,9 +60,7 @@ class GqlPostTests(JSONWebTokenTestCase):
     def setUp(self):
         self.EMAIL = "user@email.com"
         self.PASSWORD = "Abcd1234!"
-        self.user = User.objects.create_user(
-            email=self.EMAIL, password=self.PASSWORD
-        )
+        self.user = User.objects.create_user(email=self.EMAIL, password=self.PASSWORD)
 
     def test_get_post(self):
         post = PostFactory(body="This is a post")
@@ -136,9 +134,7 @@ class GqlPostTests(JSONWebTokenTestCase):
 
         resp = self.client.execute(query)
 
-        self.assertEqual(
-            resp.data["paginatedPosts"]["objects"][0]["likeCount"], 1
-        )
+        self.assertEqual(resp.data["paginatedPosts"]["objects"][0]["likeCount"], 1)
 
     def test_create_post_mutation(self):
 
@@ -253,9 +249,7 @@ class GqlPostTests(JSONWebTokenTestCase):
 
     def test_delete_post_mutation(self):
 
-        anonymous_post = PostFactory(
-            body="Anonymous post that cannot be deleted."
-        )
+        anonymous_post = PostFactory(body="Anonymous post that cannot be deleted.")
         user_post = PostFactory(
             body="Post owned by a user that can be deleted.",
             created_by=self.user,

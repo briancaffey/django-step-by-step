@@ -16,9 +16,7 @@ User = get_user_model()
 
 class UsersManagersTests(TestCase):
     def test_create_user(self):
-        user = User.objects.create_user(
-            email="normal@user.com", password="foo"
-        )
+        user = User.objects.create_user(email="normal@user.com", password="foo")
         self.assertEqual(user.email, "normal@user.com")
         self.assertTrue(user.is_active)
         self.assertFalse(user.is_staff)
@@ -73,9 +71,7 @@ class EmailConfirmationTest(TestCase):
             follow=True,
         )
 
-        assert "The confirmation link was invalid." in response.content.decode(
-            "utf-8"
-        )
+        assert "The confirmation link was invalid." in response.content.decode("utf-8")
 
     def test_email_confirmation(self):
         domain = "http://localhost:8000"
@@ -93,9 +89,7 @@ class EmailConfirmationTest(TestCase):
 
         response = self.client.get(confirmation_link, follow=True)
 
-        assert "Your email has been confirmed." in response.content.decode(
-            "utf-8"
-        )
+        assert "Your email has been confirmed." in response.content.decode("utf-8")
 
 
 @pytest.mark.django_db(transaction=True)
@@ -183,9 +177,7 @@ def test_login_view(client):
 def test_logout(client):
     username = "user@email.com"
     password = "bar"
-    user = User.objects.create_user(
-        email=username, password=password, is_active=True
-    )
+    user = User.objects.create_user(email=username, password=password, is_active=True)
 
     client.force_login(user)
 
@@ -198,9 +190,7 @@ def test_logout(client):
 def test_profile_view(client):
     username = "user@email.com"
     password = "bar"
-    user = User.objects.create_user(
-        email=username, password=password, is_active=True
-    )
+    user = User.objects.create_user(email=username, password=password, is_active=True)
 
     client.force_login(user)
 
