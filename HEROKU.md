@@ -51,3 +51,4 @@ But this would fail due to the fact that our Django project is not in the root d
 ```
 ln -s backend/requirements.txt requirements.txt
 ```
+
