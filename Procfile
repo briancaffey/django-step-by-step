@@ -1,1 +1,1 @@
-web: cd backend && ./start_prod.sh
+web: cd backend && ./scripts/start_prod.sh
