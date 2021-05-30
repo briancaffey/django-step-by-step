@@ -40,6 +40,18 @@ origin  git@github.com:briancaffey/django-step-by-step.git (fetch)
 origin  git@github.com:briancaffey/django-step-by-step.git (push)
 ```
 
+## Create a Procfile
+
+```
+web: cd backend && ./scripts/start_prod.sh
+```
+
+## Create a `runtime.txt` in the root directory
+
+```
+python-3.9.5
+```
+
 To deploy our application, we would simply run:
 
 ```
@@ -52,3 +64,25 @@ But this would fail due to the fact that our Django project is not in the root d
 ln -s backend/requirements.txt requirements.txt
 ```
 
+## Enable postgres addon
+
+```
+heroku addons:create heroku-postgresql:hobby-dev
+```
+
+```
+Creating heroku-postgresql:hobby-dev on ⬢ polar-reaches-72024... free
+Database has been created and is available
+ ! This database is empty. If upgrading, you can transfer
+ ! data from another database with pg:copy
+Created postgresql-transparent-19918 as DATABASE_URL
+Use heroku addons:docs heroku-postgresql to view documentation
+```
+
+## Environment Variables
+
+Next we will need to set environment variables for our Heroku project:
+
+```
+heroku config:set DEBUG=0
+```
