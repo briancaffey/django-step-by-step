@@ -1,0 +1,72 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Placeholder Empty 1`] = `
+Array [
+  Object {
+    "apiVersion": "apps/v1",
+    "kind": "Deployment",
+    "metadata": Object {
+      "name": "test-chart-apideployment-c8d07176",
+      "namespace": "my-app",
+    },
+    "spec": Object {
+      "replicas": 1,
+      "selector": Object {
+        "matchLabels": Object {
+          "app": "api",
+        },
+      },
+      "template": Object {
+        "metadata": Object {
+          "labels": Object {
+            "app": "api",
+          },
+        },
+        "spec": Object {
+          "containers": Array [
+            Object {
+              "args": Array [
+                "bash",
+                "-c",
+                "python3 manage.py runserver_plus 0.0.0.0:8000",
+              ],
+              "env": Array [
+                Object {
+                  "name": "DJANGO_SETTINGS_MODULE",
+                  "value": "backend.settings.development",
+                },
+              ],
+              "imagePullPolicy": "",
+              "name": "api",
+              "ports": Array [
+                Object {
+                  "containerPort": 8000,
+                  "name": "http",
+                },
+              ],
+            },
+          ],
+          "initContainers": Array [
+            Object {
+              "command": Array [
+                "bash",
+                "-c",
+                "python3 manage.py migrate",
+              ],
+              "env": Array [
+                Object {
+                  "name": "DJANGO_SETTINGS_MODULE",
+                  "value": "backend.settings.development",
+                },
+              ],
+              "image": "localhost:3200/backend:latest",
+              "name": "migrate",
+            },
+          ],
+          "restartPolicy": "Always",
+        },
+      },
+    },
+  },
+]
+`;
