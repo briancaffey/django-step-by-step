@@ -298,11 +298,11 @@ pgadmin4:
 
 ## install cypress dependencies
 cypress_install:
-	npm install cypress --save-dev
+	cd cypress && npm install cypress --save-dev
 
 ## Open Cypress. Note: this command does not work on WSL
-cypress:
-	npx cypress open
+cypress_open:
+	cd cypress && npx cypress open
 
 ## Open a psql shell
 psql:
