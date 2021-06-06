@@ -1,7 +1,7 @@
 # flake8: noqa
 
 from .base import *
-
+from apps.core.utils import from_secret
 
 DEBUG = 0
 
