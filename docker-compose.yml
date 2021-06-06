@@ -80,6 +80,8 @@ services:
       - POSTGRES_SERVICE_HOST=postgres
       - REDIS_SERVICE_HOST=redis
       - DJANGO_SETTINGS_MODULE=backend.settings.development
+      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
     depends_on:
       - postgres
       - redis

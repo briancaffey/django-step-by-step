@@ -30,6 +30,7 @@ django-graphql-jwt = "^0.3.1"
 PyJWT = "<2"
 gunicorn = "^20.1.0"
 psycopg2-binary = "^2.8.6"
+aws-secretsmanager-caching = "^1.1.1"
 
 [tool.poetry.dev-dependencies]
 
