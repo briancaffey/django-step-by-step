@@ -8,6 +8,7 @@ Pytest:
     - postgres:13.3
     - redis:6.2.4
   variables:
+    POSTGRES_HOST_AUTH_METHOD: "trust"
     POSTGRES_SERVICE_HOST: "postgres"
     REDIS_SERVICE_HOST: "redis"
     SECRET_KEY: "secret"
