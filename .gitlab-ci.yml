@@ -11,7 +11,7 @@ Pytest:
     POSTGRES_SERVICE_HOST: "postgres"
     REDIS_SERVICE_HOST: "redis"
     SECRET_KEY: "secret"
-    DEBUG: "True"
+    DEBUG: "1"
   before_script:
     - cd backend
     - pip install -r requirements_dev.txt
