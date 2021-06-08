@@ -1,0 +1,24 @@
+stages:
+  - test
+
+.Pytest:
+  image: python:3.9
+  stage: test
+  services:
+    - postgres:13.3
+    - redis:6.2.4
+  variables:
+    POSTGRES_SERVICE_HOST: "postgres"
+    REDIS_SERVICE_HOST: "redis"
+    SECRET_KEY: "secret"
+    DEBUG: "True"
+  before_script:
+    - cd backend
+    - pip install -r requirements_dev.txt
+  script:
+    - flake8
+    - black -l 79 -S --check .
+    - pytest --cov
+  after_script:
+    - echo "Pytest tests complete"
+  coverage: "/TOTAL.+ ([0-9]{1,3}%)/"
