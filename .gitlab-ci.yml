@@ -1,7 +1,7 @@
 stages:
   - test
 
-.Pytest:
+Pytest:
   image: python:3.9
   stage: test
   services:
