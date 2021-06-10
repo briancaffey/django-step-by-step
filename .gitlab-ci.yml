@@ -8,6 +8,10 @@ Pytest:
     - postgres:13.3
     - redis:6.2.4
   variables:
+    # https://docs.gitlab.com/ee/ci/services/postgres.html#use-postgresql-with-the-docker-executor
+    POSTGRES_DB: postgres
+    POSTGRES_USER: postgres
+    POSTGRES_PASSWORD: ""
     POSTGRES_HOST_AUTH_METHOD: "trust"
     POSTGRES_SERVICE_HOST: "postgres"
     REDIS_SERVICE_HOST: "redis"
