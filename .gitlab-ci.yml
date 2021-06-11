@@ -5,7 +5,7 @@ Pytest:
   image: python:3.9
   stage: test
   services:
-    - postgres:13.3
+    - postgres:12.2-alpine
     - redis:6.2.4
   variables:
     # https://docs.gitlab.com/ee/ci/services/postgres.html#use-postgresql-with-the-docker-executor
