@@ -57,15 +57,9 @@ services:
       context: ./backend
       dockerfile: Dockerfile.dev
     command:
-      - "watchmedo"
-      - "auto-restart"
-      - "--directory=./"
-      - "--pattern=*.py"
-      - "--recursive"
-      - "--"
       - "python3"
       - "manage.py"
-      - "runserver_plus"
+      - "runserver"
       - "0.0.0.0:8000"
     volumes:
       - ./backend:/code
@@ -90,43 +84,20 @@ services:
     <<: *backend
     container_name: celery_default
     command:
-      - "watchmedo"
-      - "auto-restart"
-      - "--directory=./"
-      - "--pattern=*.py"
-      - "--recursive"
-      - "--"
-      - "celery"
-      - "--app=backend.celery_app:app"
-      - "worker"
-      - "-Q"
-      - "default"
-      - "--concurrency=1"
-      - "--loglevel=INFO"
+      - "python3"
+      - "manage.py"
+      - "start_worker"
     ports: []
 
   beat:
     <<: *backend
     container_name: beat
     command:
-      - "sh"
-      - "-c"
-      - |
-        # remove celerybeat.pid and celerybeat-schedule if they exist
-        rm -f /code/celerybeat*;
-        watchmedo \
-          auto-restart \
-          --directory=./ \
-          --pattern=*.py \
-          --recursive \
-          -- \
-          celery \
-          --app=backend.celery_app:app \
-          beat \
-          --loglevel=INFO \
-          --pidfile=/code/celerybeat.pid
+      - python3
+      - manage.py
+      - start_beat
     ports: []
-  
+
   mailhog:
     container_name: mailhog
     image: mailhog/mailhog
