@@ -102,7 +102,6 @@ paramiko==2.7.2
 parso==0.8.2; python_version >= "3.7"
 passlib==1.7.4; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 pathspec==0.8.1; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
-pathtools==0.1.2
 pexpect==4.8.0; sys_platform != "win32" and python_version >= "3.7"
 pgadmin4==5.3
 pickleshare==0.7.5; python_version >= "3.7"
@@ -159,7 +158,6 @@ typing-extensions==3.10.0.0; python_version >= "3.6"
 uritemplate==3.0.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.4.0")
 urllib3==1.26.5; python_version > "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version < "4" and python_version > "3.5"
 vine==5.0.0; python_version >= "3.6"
-watchdog==0.10.4
 wcwidth==0.2.5; python_full_version >= "3.6.1" and python_version >= "3.7"
 webencodings==0.5.1; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
 werkzeug==1.0.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
