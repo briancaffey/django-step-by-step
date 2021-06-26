@@ -9,22 +9,21 @@ import subprocess
 from django.core.management.base import BaseCommand
 from django.utils import autoreload
 
-PIDFILE = '/code/celerybeat.pid'
+PIDFILE = "/code/celerybeat.pid"
 
 
 def restart_celery_beat():
-    cmd = 'pkill -9 celery'
+    cmd = "pkill -9 celery"
     subprocess.call(shlex.split(cmd))
-    cmd = f'celery --app=backend.celery_app:app beat --loglevel=info --pidfile={PIDFILE}' # noqa
+    cmd = f"celery --app=backend.celery_app:app beat --loglevel=info --pidfile={PIDFILE}"  # noqa
     subprocess.call(shlex.split(cmd))
 
 
 class Command(BaseCommand):
-
     def handle(self, *args, **options):
-        print('Starting celery worker with autoreload...') # noqa
+        print("Starting celery worker with autoreload...")  # noqa
         try:
-            os.remove('celerybeat.pid')
+            os.remove("celerybeat.pid")
         except FileNotFoundError as e:
-            print(e) # noqa
+            print(e)  # noqa
         autoreload.run_with_reloader(restart_celery_beat)
