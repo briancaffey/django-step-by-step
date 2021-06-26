@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "backend"
 version = "0.1.0"
-description = ""
-authors = ["Your Name <you@example.com>"]
+description = "Dependencies for django-step-by-step"
+authors = ["Brian Caffey <briancaffey2010@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "==3.9.5"
@@ -55,10 +55,8 @@ Werkzeug = "^1.0.1"
 
 # for Jupyter notebooks
 ipython = "^7.20.0"
-jupyter = "^1.0.0"
-
-# pgadmin
-pgadmin4 = "*"
+# jupyter's dependency on argon2-cffi can't be installed on Apple M1
+jupyter = { version = "^1.0.0", markers = "platform_machine == 'x86_64'" }
 
 # OpenAPI
 pyyaml = "^5.3.1"
