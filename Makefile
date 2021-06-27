@@ -323,6 +323,9 @@ cdk-watch:
 cdk-synth:
 	cdk synth --app="./cdk/bin/cdk.js"
 
+cdk-build:
+	cd cdk && npm run build
+
 cdk-deploy:
 	cdk deploy --app='./cdk/bin/cdk.js'
 

@@ -93,4 +93,5 @@ jobs:
       - name: CDK Deploy
         run: |
           # cdk bootstrap --app awscdk/app.py aws://$AWS_ACCOUNT_ID/$AWS_DEFAULT_REGION
+          make cdk-build
           make cdk-deploy
