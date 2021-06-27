@@ -70,7 +70,7 @@ jobs:
     name: Deploy Stack with CDK
     runs-on: ubuntu-latest
     needs: [lint-and-test-python]
-    if: github.ref == 'refs/heads/feature/cdk'
+    # if: github.ref == 'refs/heads/feature/cdk'
     steps:
       - uses: actions/checkout@v2
 
