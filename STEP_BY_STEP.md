@@ -3158,6 +3158,123 @@ sudo mv kubectl $(which kubectl)
 ```
 cd ~
 wget https://github.com/digitalocean/doctl/releases/download/v<version>/doctl-<version>-linux-amd64.tar.gz
+```
+
+## CDK
+
+### About CDK
+
+CDK allows you to define AWS infrastructure using high-level programming languages such as TypeScript, Python, Java, etc. You define each part of your application such as VPC, databases, servers, DNS records, IAM roles, etc. These can all be defined using constructs that CDK provides. You can also create your own high-level constructs that use other CDK constructs. This example will use a third-party library that provides a high-level CDK construct for deploying Django applications using Elastic Container Service (ECS). The library is called [django-cdk](https://www.npmjs.com/package/django-cdk).
+
+### Install CDK
+
+This section will show how to deploy the application on AWS using Elastic Container Service (ECS) and CDK (Cloud Development Kit). First you will need to install the CDK CLI globally with npm:
+
+```
+npm i -g aws-cdk
+```
+
+Check the version of CDK:
+
+```
+cdk --version
+1.109.0 (build c647e38)
+```
+
+### Start the CDK project
+
+To start, create a directory called `cdk` in the root directory and `cd` into that directory and then initialize a new CDK typescript project. From the root directory of the project, run:
+
+```
+mkdir cdk && cd cdk && cdk init app --language typescript
+```
+
+You should see the following output:
+
+```
+Applying project template app for typescript
+# Welcome to your CDK TypeScript project!
+
+This is a blank project for TypeScript development with CDK.
+
+The `cdk.json` file tells the CDK Toolkit how to execute your app.
+
+## Useful commands
+
+ * `npm run build`   compile typescript to js
+ * `npm run watch`   watch for changes and compile
+ * `npm run test`    perform the jest unit tests
+ * `cdk deploy`      deploy this stack to your default AWS account/region
+ * `cdk diff`        compare deployed stack with current state
+ * `cdk synth`       emits the synthesized CloudFormation template
+
+Executing npm install...
+npm WARN deprecated urix@0.1.0: Please see https://github.com/lydell/urix#deprecated
+npm WARN deprecated resolve-url@0.2.1: https://github.com/lydell/resolve-url#deprecated
+✅ All done!
+```
+
+### Install `django-cdk`
+
+Now that the CDK project has been initialized, we can install the [`django-cdk`](https://www.npmjs.com/package/django-cdk) package. Add the following to the `dependencies` section of `cdk/package.json`:
+
+```json
+  "dependencies": {
+    "@aws-cdk/core": "1.109.0",
+    "source-map-support": "^0.5.16",
+    "django-cdk": "^0.0.16" // add this line
+  }
+```
+
+Now do `npm install` in the `cdk` directory:
+
+```
+npm install
+```
+
+You might need to run `npm install --force`.
+
+Next we can import the `DjangoEcs` construct in our project. In `cdk/lib/cdk-stack.ts` add the following import:
+
+```typescript
+import { DjangoEcs } from 'django-cdk';
+```
+
+and then make a new instance of `DjangoEcs`. `cdk-stack.ts` should look like this:
+
+```typescript
+import * as cdk from '@aws-cdk/core';
+import { DjangoEcs } from 'django-cdk';
+
+export class CdkStack extends cdk.Stack {
+  constructor(scope: cdk.Construct, id: string, props?: cdk.StackProps) {
+    super(scope, id, props);
+
+    new DjangoEcs(scope, 'DjangoEcs', {
+      imageDirectory: './backend',
+      webCommand: [
+        './scripts/start_prod.sh',
+      ],
+      useCeleryBeat: true,
+      domainName: process.env.DOMAIN_NAME,
+    });
+  }
+}
+```
+
+### npm run watch
+
+Let's start the local Typescript server to watch for changes in our CDK app code:
+
+```
+npm run watch
+```
+
+### Synthesize the stack
+
+CDK is used to generate CloudFormation templates. These are YAML files that are essentially the "bytecode of AWS". We can see the CloudFormation templates that our CDK app will generate by running:
+
+```
 
 ```
 

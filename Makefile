@@ -316,6 +316,16 @@ cypress_open:
 psql:
 	sudo -u postgres psql
 
+## -- CDK Targets --
+cdk-watch:
+	cd cdk && npm run watch
+
+cdk-synth:
+	cdk synth --app="./cdk/bin/cdk.js"
+
+cdk-deploy:
+	cdk deploy --app='./cdk/bin/cdk.js'
+
 # Credit: https://gist.github.com/prwhite/8168133#gistcomment-2749866
 ## Show this help menu
 help:
