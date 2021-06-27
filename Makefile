@@ -323,11 +323,14 @@ cdk-watch:
 cdk-synth:
 	cdk synth --app="./cdk/bin/cdk.js"
 
+cdk-install:
+	cd cdk && npm install
+
 cdk-build:
 	cd cdk && npm run build
 
-cdk-deploy:
-	cdk deploy --app='./cdk/bin/cdk.js'
+cdk-deploy: cdk-install	cdk-build
+	cdk deploy --app='./cdk/bin/cdk.js' --require-approval never
 
 # Credit: https://gist.github.com/prwhite/8168133#gistcomment-2749866
 ## Show this help menu
