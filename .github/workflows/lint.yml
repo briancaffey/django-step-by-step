@@ -94,6 +94,8 @@ jobs:
       - name: CDK Deploy
         env:
           DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
         run: |
           # cdk bootstrap --app awscdk/app.py aws://$AWS_ACCOUNT_ID/$AWS_DEFAULT_REGION
           make cdk-deploy
