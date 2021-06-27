@@ -4,7 +4,7 @@ name: lint-and-test-python
 on:
   push:
     branches:
-      - main
+      - feature/cdk
 
 jobs:
   # Set the job key. The key is displayed as the job name
