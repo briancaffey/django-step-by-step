@@ -10,6 +10,7 @@ jobs:
   # Set the job key. The key is displayed as the job name
   # when a job name is not provided
   lint-and-test-python:
+    if: 1 == 0
     # Name the Job
     name: Lint and test python code
     # Set the type of machine to run on
