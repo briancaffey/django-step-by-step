@@ -15,6 +15,7 @@ class Post(BaseModel):
         ordering = ("-modified_on",)
 
     body = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='images', blank=True)
     modified_by = None
     likes = models.ManyToManyField(User, through="PostLike")
 
