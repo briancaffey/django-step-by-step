@@ -3095,6 +3095,29 @@ For example:
 poetry add requests
 ```
 
+## Configure VSCode to use Poetry environment
+
+[StackOverflow Question](https://stackoverflow.com/questions/59882884/vscode-doesnt-show-poetry-virtualenvs-in-select-interpreter-option)
+
+Answer:
+
+```bash
+# run these commands from the backend/ directory
+cd backend
+
+poetry env list # copy env name
+poetry env remove <env name>
+poetry install
+
+poetry config virtualenvs.in-project true
+```
+
+You can also remove the poetry environment with:
+
+```bash
+poetry env list | awk '{print $1}' | xargs poetry env remove
+```
+
 ## microk8s setup
 
 ## Install `cdk8s-cli`
