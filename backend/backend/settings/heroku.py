@@ -20,8 +20,8 @@ STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 AWS_PRELOAD_METADATA = True
 S3_BUCKET_NAME = os.environ["S3_BUCKET_NAME"]
 AWS_S3_CUSTOM_DOMAIN = f"{S3_BUCKET_NAME}.s3.amazonaws.com"
-STATIC_URL = f"https://{S3_BUCKET_NAME}.s3.amazonaws.com/static/"
-MEDIA_URL = f"https://{S3_BUCKET_NAME}.s3.amazonaws.com/media/"
+STATIC_ROOT = f"https://{S3_BUCKET_NAME}.s3.amazonaws.com/static/"
+MEDIA_ROOT = f"https://{S3_BUCKET_NAME}.s3.amazonaws.com/media/"
 
 LOGGING = {
     "version": 1,
