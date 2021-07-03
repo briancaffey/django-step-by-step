@@ -10,6 +10,9 @@ if settings.DEBUG:
 
 else:
 
+    class StaticStorage(S3Boto3Storage):
+        location = settings.AWS_STATIC_LOCATION
+
     class PrivateMediaStorage(S3Boto3Storage):
         location = settings.AWS_PRIVATE_MEDIA_LOCATION
         default_acl = "private"
