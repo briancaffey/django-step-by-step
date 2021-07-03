@@ -11,6 +11,7 @@ DATABASES["default"] = dj_database_url.config()
 # https://stackoverflow.com/questions/11569144/proper-way-to-handle-static-files-and-templates-for-django-on-heroku
 
 # when deploying to heroku, pull in env vars for AWS access
+AWS_DEFAULT_ACL = None
 AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
 AWS_SECRET_ACCESS_KEY = os.environ["AWS_SECRET_ACCESS_KEY"]
 STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
@@ -18,7 +19,9 @@ STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
 # necessary to fix manage.py collectstatic command to only upload changed files instead of all files
 AWS_PRELOAD_METADATA = True
 S3_BUCKET_NAME = os.environ["S3_BUCKET_NAME"]
-STATIC_URL = f"https://{S3_BUCKET_NAME}.s3.amazonaws.com/static/"
+AWS_S3_CUSTOM_DOMAIN = f"{S3_BUCKET_NAME}.s3.amazonaws.com"
+STATIC_URL = f"https://{S3_BUCKET_NAME}.s3.amazonaws.com/"
+MEDIA_URL = STATIC_URL + "media/"
 
 LOGGING = {
     "version": 1,
