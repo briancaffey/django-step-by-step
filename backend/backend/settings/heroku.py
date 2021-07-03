@@ -14,15 +14,16 @@ DATABASES["default"] = dj_database_url.config()
 AWS_DEFAULT_ACL = None
 AWS_ACCESS_KEY_ID = os.environ["AWS_ACCESS_KEY_ID"]
 AWS_SECRET_ACCESS_KEY = os.environ["AWS_SECRET_ACCESS_KEY"]
-# STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-STATICFILES_STORAGE = "backend.storage_backends.StaticStorage"
+STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+# STATICFILES_STORAGE = "backend.storage_backends.StaticStorage"
 
 # necessary to fix manage.py collectstatic command to only upload changed files instead of all files
 AWS_PRELOAD_METADATA = True
 S3_BUCKET_NAME = os.environ["S3_BUCKET_NAME"]
 AWS_S3_CUSTOM_DOMAIN = f"{S3_BUCKET_NAME}.s3.amazonaws.com"
-STATIC_ROOT = f"https://{S3_BUCKET_NAME}.s3.amazonaws.com/static/"
-MEDIA_ROOT = f"https://{S3_BUCKET_NAME}.s3.amazonaws.com/media/"
+STATIC_URL = f"https://{S3_BUCKET_NAME}.s3.amazonaws.com/static/"
+# STATIC_ROOT = f"https://{S3_BUCKET_NAME}.s3.amazonaws.com/static/"
+# MEDIA_ROOT = f"https://{S3_BUCKET_NAME}.s3.amazonaws.com/media/"
 
 LOGGING = {
     "version": 1,
