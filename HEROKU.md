@@ -112,6 +112,12 @@ heroku config:set DJANGO_SETTINGS_MODULE=backend.settings.heroku
 heroku config:set DISABLE_COLLECTSTATIC=1
 ```
 
+### Configure SECRET_KEY
+
+```
+heroku config:set SECRET_KEY=$SECRET_KEY
+```
+
 ## Push to Heroku on a non-`main` branch
 
 ```

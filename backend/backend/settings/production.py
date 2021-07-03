@@ -7,7 +7,7 @@ DEBUG = 0
 # add django-storages to INSTALLED_APPS
 INSTALLED_APPS += ("storages",)
 
-STATIC_ROOT = "staticfiles/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # media files
 DEFAULT_FILE_STORAGE = "storages.backends.s3boto.S3BotoStorage"
