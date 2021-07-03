@@ -17,6 +17,7 @@ STATICFILES_STORAGE = "storages.backends.s3boto.S3BotoStorage"
 
 # necessary to fix manage.py collectstatic command to only upload changed files instead of all files
 AWS_PRELOAD_METADATA = True
+S3_BUCKET_NAME = os.environ["S3_BUCKET_NAME"]
 STATIC_URL = f"https://{S3_BUCKET_NAME}.s3.amazonaws.com/static/"
 
 LOGGING = {
