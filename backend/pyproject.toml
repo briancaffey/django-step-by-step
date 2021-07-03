@@ -34,9 +34,9 @@ aws-secretsmanager-caching = "^1.1.1"
 Pillow = "^8.2.0"
 graphene-file-upload = "^1.3.0"
 django-storages = "^1.11.1"
-boto = "^2.49.0"
 dj-database-url = "^0.5.0"
 whitenoise = "^5.2.0"
+boto3 = "^1.17.105"
 
 [tool.poetry.dev-dependencies]
 

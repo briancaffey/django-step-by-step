@@ -13,8 +13,8 @@ backcall==0.2.0; python_version >= "3.7" and platform_machine == "x86_64"
 billiard==3.6.4.0; python_version >= "3.6"
 black==20.8b1; platform_machine == "x86_64"
 bleach==3.3.0; python_version >= "3.7" and python_full_version < "3.0.0" and platform_machine == "x86_64" or python_version >= "3.7" and platform_machine == "x86_64" and python_full_version >= "3.5.0"
-boto==2.49.0
-botocore==1.20.104; python_version > "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version > "3.5"
+boto3==1.17.105; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.6.0")
+botocore==1.20.105; python_version > "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version > "3.5"
 celery==5.1.2; python_version >= "3.6"
 certifi==2021.5.30; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 cffi==1.14.5; python_version >= "3.6" and platform_machine == "x86_64" and implementation_name == "pypy"
@@ -111,6 +111,7 @@ redis==3.5.3; (python_version >= "2.7" and python_full_version < "3.0.0") or (py
 regex==2021.7.1; python_version >= "3.6" and platform_machine == "x86_64"
 requests==2.25.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 rx==1.6.1
+s3transfer==0.4.2; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0"
 send2trash==1.7.1; python_version >= "3.6" and platform_machine == "x86_64"
 singledispatch==3.6.2; python_version >= "2.6"
 six==1.16.0; python_version >= "3.7" and python_full_version < "3.0.0" and platform_machine == "x86_64" or python_full_version >= "3.5.0" and python_version >= "3.7" and platform_machine == "x86_64"
