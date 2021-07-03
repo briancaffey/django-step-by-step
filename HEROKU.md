@@ -86,3 +86,34 @@ Next we will need to set environment variables for our Heroku project:
 ```
 heroku config:set DEBUG=0
 ```
+
+### AWS Access Keys for S3
+
+```
+heroku config:set AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
+heroku config:set AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
+```
+
+### S3 Bucket name
+
+```
+heroku config:set S3_BUCKET_NAME=$S3_BUCKET_NAME
+```
+
+### Django Settings Module
+
+```
+heroku config:set DJANGO_SETTINGS_MODULE=backend.settings.heroku
+```
+
+### Disable collectstatic
+
+```
+heroku config:set DISABLE_COLLECTSTATIC=1
+```
+
+## Push to Heroku on a non-`main` branch
+
+```
+git push heroku feature/post-images:main
+```
