@@ -24,6 +24,8 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
 
+import 'cypress-file-upload';
+
 // -- This command will recuresively search the mailhog API for an email that matches a search term --
 // https://humble.dev/testing-an-email-workflow-from-end-to-end-with-cypress
 Cypress.Commands.add('getConfirmationEmail', email => {

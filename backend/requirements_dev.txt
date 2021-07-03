@@ -1,10 +1,10 @@
 amqp==5.0.6; python_version >= "3.6"
 aniso8601==7.0.0
 appdirs==1.4.4; python_version >= "3.6" and platform_machine == "x86_64"
-appnope==0.1.2; sys_platform == "darwin" and python_version >= "3.7" and platform_machine == "x86_64" and platform_system == "Darwin"
+appnope==0.1.2; sys_platform == "darwin" and python_version >= "3.7" and platform_machine == "x86_64"
 argh==0.26.2
 argon2-cffi==20.1.0; python_version >= "3.6" and platform_machine == "x86_64"
-asgiref==3.4.0; python_version >= "3.6"
+asgiref==3.4.1; python_version >= "3.6"
 async-generator==1.10; python_version >= "3.7" and platform_machine == "x86_64" and python_full_version >= "3.6.1"
 atomicwrites==1.4.0; python_version >= "3.6" and python_full_version < "3.0.0" and sys_platform == "win32" and (python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6") or sys_platform == "win32" and python_version >= "3.6" and python_full_version >= "3.4.0" and (python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6")
 attrs==21.2.0; python_version >= "3.6" and python_full_version < "3.0.0" and platform_machine == "x86_64" or python_full_version >= "3.5.0" and python_version >= "3.6" and platform_machine == "x86_64"
@@ -13,7 +13,8 @@ backcall==0.2.0; python_version >= "3.7" and platform_machine == "x86_64"
 billiard==3.6.4.0; python_version >= "3.6"
 black==20.8b1; platform_machine == "x86_64"
 bleach==3.3.0; python_version >= "3.7" and python_full_version < "3.0.0" and platform_machine == "x86_64" or python_version >= "3.7" and platform_machine == "x86_64" and python_full_version >= "3.5.0"
-botocore==1.20.102; python_version > "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version > "3.5"
+boto==2.49.0
+botocore==1.20.104; python_version > "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version > "3.5"
 celery==5.1.2; python_version >= "3.6"
 certifi==2021.5.30; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 cffi==1.14.5; python_version >= "3.6" and platform_machine == "x86_64" and implementation_name == "pypy"
@@ -26,25 +27,29 @@ colorama==0.4.4; python_version >= "3.7" and python_full_version < "3.0.0" and s
 coreapi==2.3.3
 coreschema==0.0.4
 coverage==5.5; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version < "4"
+debugpy==1.3.0; python_version >= "3.7" and python_full_version < "3.0.0" and platform_machine == "x86_64" or python_version >= "3.7" and platform_machine == "x86_64" and python_full_version >= "3.5.0"
 decorator==5.0.9; python_version >= "3.7" and platform_machine == "x86_64"
 defusedxml==0.7.1; python_version >= "3.7" and python_full_version < "3.0.0" and platform_machine == "x86_64" or python_version >= "3.7" and platform_machine == "x86_64" and python_full_version >= "3.5.0"
+dj-database-url==0.5.0
 django-debug-toolbar==3.2.1; python_version >= "3.6"
 django-extensions==3.1.3; python_version >= "3.6"
 django-graphql-jwt==0.3.1
-django==3.1.12; python_version >= "3.6"
+django-storages==1.11.1; python_version >= "3.5"
+django==3.1.13; python_version >= "3.6"
 djangorestframework==3.12.4; python_version >= "3.5"
 entrypoints==0.3; python_version >= "3.7" and platform_machine == "x86_64"
 factory-boy==3.2.0; python_version >= "3.6"
-faker==8.8.2; python_version >= "3.6"
+faker==8.9.0; python_version >= "3.6"
 flake8==3.9.2; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
 graphene-django==2.15.0
+graphene-file-upload==1.3.0
 graphene==2.1.8
 graphql-core==2.3.2
 graphql-relay==2.0.1
 gunicorn==20.1.0; python_version >= "3.5"
 idna==2.10; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 iniconfig==1.1.1; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
-ipykernel==5.5.5; python_version >= "3.6" and platform_machine == "x86_64"
+ipykernel==6.0.0; python_version >= "3.7" and platform_machine == "x86_64"
 ipython-genutils==0.2.0; python_version >= "3.7" and platform_machine == "x86_64"
 ipython==7.25.0; python_version >= "3.7"
 ipywidgets==7.6.3; platform_machine == "x86_64"
@@ -61,7 +66,7 @@ jupyterlab-pygments==0.1.2; python_version >= "3.7" and platform_machine == "x86
 jupyterlab-widgets==1.0.0; python_version >= "3.6" and platform_machine == "x86_64"
 kombu==5.1.0; python_version >= "3.6"
 markupsafe==2.0.1; python_version >= "3.6"
-matplotlib-inline==0.1.2; python_version >= "3.7" and platform_machine == "x86_64"
+matplotlib-inline==0.1.2; python_version >= "3.7" and platform_machine == "x86_64" and platform_system == "Darwin"
 mccabe==0.6.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 mistune==0.8.4; python_version >= "3.7" and platform_machine == "x86_64"
 mypy-extensions==0.4.3; python_version >= "3.6" and platform_machine == "x86_64"
@@ -76,12 +81,12 @@ parso==0.8.2; python_version >= "3.7"
 pathspec==0.8.1; python_version >= "3.6" and python_full_version < "3.0.0" and platform_machine == "x86_64" or python_version >= "3.6" and platform_machine == "x86_64" and python_full_version >= "3.5.0"
 pexpect==4.8.0; sys_platform != "win32" and python_version >= "3.7" and platform_machine == "x86_64"
 pickleshare==0.7.5; python_version >= "3.7" and platform_machine == "x86_64"
-pillow==8.2.0; python_version >= "3.6"
+pillow==8.3.0; python_version >= "3.6"
 pluggy==0.13.1; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
 prometheus-client==0.11.0; python_version >= "3.6" and python_full_version < "3.0.0" and platform_machine == "x86_64" or python_version >= "3.6" and platform_machine == "x86_64" and python_full_version >= "3.4.0"
 promise==2.3
 prompt-toolkit==3.0.19; python_full_version >= "3.6.1" and python_version >= "3.7" and platform_machine == "x86_64"
-psycopg2-binary==2.9.1; python_version >= "3.6"
+psycopg2-binary==2.9.1; platform_machine == "x86_64"
 ptyprocess==0.7.0; sys_platform != "win32" and python_version >= "3.7" and platform_machine == "x86_64" and os_name != "nt"
 py==1.10.0; python_version >= "3.6" and python_full_version < "3.0.0" and platform_machine == "x86_64" and implementation_name == "pypy" or python_full_version >= "3.5.0" and python_version >= "3.6" and platform_machine == "x86_64" and implementation_name == "pypy"
 pycodestyle==2.7.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
@@ -94,16 +99,16 @@ pyrsistent==0.18.0; python_version >= "3.6" and platform_machine == "x86_64"
 pytest-cov==2.12.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
 pytest-django==4.4.0; python_version >= "3.5"
 pytest==6.2.4; python_version >= "3.6"
-python-dateutil==2.8.1; python_full_version >= "3.6.1" and python_version >= "3.6" and platform_machine == "x86_64"
+python-dateutil==2.8.1; python_full_version >= "3.6.1" and python_version >= "3.7" and platform_machine == "x86_64"
 pytz==2021.1; python_version >= "3.6"
 pywin32==301; python_version >= "3.7" and platform_machine == "x86_64" and sys_platform == "win32"
 pywinpty==1.1.3; python_version >= "3.6" and platform_machine == "x86_64" and os_name == "nt"
 pyyaml==5.4.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.6.0")
-pyzmq==22.1.0; python_version >= "3.6" and platform_machine == "x86_64" and python_full_version >= "3.6.1"
+pyzmq==22.1.0; python_version >= "3.7" and platform_machine == "x86_64" and python_full_version >= "3.6.1"
 qtconsole==5.1.1; python_version >= "3.6" and platform_machine == "x86_64"
 qtpy==1.9.0; python_version >= "3.6" and platform_machine == "x86_64"
 redis==3.5.3; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
-regex==2021.4.4; python_version >= "3.6" and platform_machine == "x86_64"
+regex==2021.7.1; python_version >= "3.6" and platform_machine == "x86_64"
 requests==2.25.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 rx==1.6.1
 send2trash==1.7.1; python_version >= "3.6" and platform_machine == "x86_64"
@@ -114,7 +119,7 @@ terminado==0.10.1; python_version >= "3.6" and platform_machine == "x86_64"
 testpath==0.5.0; python_version >= "3.7" and platform_machine == "x86_64"
 text-unidecode==1.3; python_version >= "3.6"
 toml==0.10.2; python_version >= "3.6" and python_full_version < "3.0.0" and platform_machine == "x86_64" or python_version >= "3.6" and platform_machine == "x86_64" and python_full_version >= "3.5.0"
-tornado==6.1; python_version >= "3.6" and platform_machine == "x86_64" and python_full_version >= "3.6.1"
+tornado==6.1; python_version >= "3.7" and platform_machine == "x86_64" and python_full_version >= "3.6.1"
 traitlets==5.0.5; python_version >= "3.7" and platform_machine == "x86_64" and python_full_version >= "3.6.1"
 typed-ast==1.4.3; python_version >= "3.6" and platform_machine == "x86_64"
 typing-extensions==3.10.0.0; python_version >= "3.6" and platform_machine == "x86_64"

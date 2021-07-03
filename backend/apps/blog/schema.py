@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 
 import graphene
 from graphene_django import DjangoObjectType
+from graphene_file_upload.scalars import Upload
 
 from apps.accounts.schema import UserType
 from apps.blog.models import Post, PostLike
@@ -124,12 +125,15 @@ class CreatePost(graphene.Mutation):
 
     class Arguments:
         body = graphene.String()
+        file = Upload(required=False)
 
-    def mutate(self, info, body):
+    def mutate(self, info, body, file):
         user = info.context.user
         if user.is_anonymous:
             user = None
         post = Post(body=body, created_by=user)
+        if file is not None:
+            post.image = file
         post.save()
 
         return CreatePost(

@@ -1,4 +1,10 @@
-from django.forms import ModelForm, CharField, Textarea
+from django.forms import (
+    ModelForm,
+    CharField,
+    Textarea,
+    ImageField,
+    FileInput,
+)
 
 from apps.blog.models import Post
 
@@ -18,6 +24,17 @@ class PostForm(ModelForm):
         )
     )
 
+    image = ImageField(
+        required=False,
+        widget=FileInput(
+            attrs={
+                # add the bootstrap class in the form
+                "class": "form-control",
+                "data-cy": "file-input"
+            }
+        )
+    )
+
     class Meta:
         model = Post
-        fields = ["body"]
+        fields = ["body", "image"]

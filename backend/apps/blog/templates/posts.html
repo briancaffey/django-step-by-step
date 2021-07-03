@@ -29,6 +29,9 @@
   {% for post in page_obj %}
   <a href="/posts/{{ post.id }}" style="text-decoration: none; color: #000">
     <div class="card p-4 mb-2">
+      {% if post.image %}
+      <img src={{ post.image.url }} alt="{{ post.body }}" class="post-image" />
+      {% endif %}
       <div class="">{{ post.body }}</div>
       <div class="">{{ post.created_on }}</div>
       {% if post.created_by %}

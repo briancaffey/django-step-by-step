@@ -1,4 +1,5 @@
 from apps.core.models import BaseModel
+from django.conf import settings
 from django.db import models
 from django.contrib.auth import get_user_model
 
@@ -15,7 +16,9 @@ class Post(BaseModel):
         ordering = ("-modified_on",)
 
     body = models.CharField(max_length=200)
-    image = models.ImageField(upload_to='images', blank=True)
+    image = models.ImageField(
+        storage=settings.PRIVATE_FILE_STORAGE, upload_to="images", blank=True
+    )
     modified_by = None
     likes = models.ManyToManyField(User, through="PostLike")
 

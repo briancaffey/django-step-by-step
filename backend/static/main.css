@@ -8,4 +8,14 @@ ul {
     max-width: 330px;
     padding: 15px;
     margin: auto;
-  }
+}
+
+.post-image {
+    max-height: 200px;
+    margin: auto;
+    padding: 15px;
+}
+
+.fieldWrapper {
+    padding-bottom: 15px;
+}

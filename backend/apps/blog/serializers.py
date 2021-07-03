@@ -19,4 +19,5 @@ class PostSerializer(serializers.ModelSerializer):
             "modified_on",
             "liked",
             "like_count",
+            "image",
         )

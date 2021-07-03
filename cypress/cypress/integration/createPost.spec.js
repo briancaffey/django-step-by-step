@@ -22,4 +22,24 @@ describe("Test visit homepage", function () {
     cy.get("#submit-post").click();
     cy.contains("class-based view");
   });
+
+  it("can create a post with an image using fbv", function() {
+    cy.visit("/posts/new");
+    cy.get("#post-body").type(
+      "this post contains an image and was created using fbv"
+    );
+    cy.get('[data-cy="file-input"]').attachFile('redis.png');
+    cy.get("#submit-post").click();
+    cy.get("#post").find("img").should("have.attr", "src").should("include", "/media/images/redis")
+  });
+
+  it("can create a post with an image using cbv", function() {
+    cy.visit("/cbv/posts/new");
+    cy.get("#post-body").type(
+      "this contains an image and was created using cbv"
+    );
+    cy.get('[data-cy="file-input"]').attachFile('redis.png');
+    cy.get("#submit-post").click();
+    cy.get("#post").find("img").should("have.attr", "src").should("include", "/media/images/redis")
+  });
 });

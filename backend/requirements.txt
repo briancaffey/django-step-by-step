@@ -1,9 +1,10 @@
 amqp==5.0.6; python_version >= "3.6"
 aniso8601==7.0.0
-asgiref==3.4.0; python_version >= "3.6"
+asgiref==3.4.1; python_version >= "3.6"
 aws-secretsmanager-caching==1.1.1.5; python_version > "3.5"
 billiard==3.6.4.0; python_version >= "3.6"
-botocore==1.20.102; python_version > "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version > "3.5"
+boto==2.49.0
+botocore==1.20.104; python_version > "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version > "3.5"
 celery==5.1.2; python_version >= "3.6"
 certifi==2021.5.30; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 chardet==4.0.0; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
@@ -13,10 +14,13 @@ click-repl==0.2.0; python_version >= "3.6"
 click==7.1.2; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
 coreapi==2.3.3
 coreschema==0.0.4
+dj-database-url==0.5.0
 django-graphql-jwt==0.3.1
-django==3.1.12; python_version >= "3.6"
+django-storages==1.11.1; python_version >= "3.5"
+django==3.1.13; python_version >= "3.6"
 djangorestframework==3.12.4; python_version >= "3.5"
 graphene-django==2.15.0
+graphene-file-upload==1.3.0
 graphene==2.1.8
 graphql-core==2.3.2
 graphql-relay==2.0.1
@@ -27,10 +31,10 @@ jinja2==3.0.1; python_version >= "3.6"
 jmespath==0.10.0; python_version > "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version > "3.5"
 kombu==5.1.0; python_version >= "3.6"
 markupsafe==2.0.1; python_version >= "3.6"
-pillow==8.2.0; python_version >= "3.6"
+pillow==8.3.0; python_version >= "3.6"
 promise==2.3
 prompt-toolkit==3.0.19; python_full_version >= "3.6.1" and python_version >= "3.6"
-psycopg2-binary==2.9.1; python_version >= "3.6"
+psycopg2-binary==2.9.1; platform_machine == "x86_64"
 pyjwt==1.7.1
 python-dateutil==2.8.1; python_version > "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version > "3.5"
 pytz==2021.1; python_version >= "3.6"

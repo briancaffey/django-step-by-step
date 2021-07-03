@@ -27,8 +27,15 @@
 {% if post.created_by %}
 <p>{{ post.created_by }}</p>
 {% endif %}
-<div>
-  <div class="card p-4 mb-2" style="font-size: 1.75em">{{ post.body }}</div>
+<div id="post">
+  <div class="card p-4 mb-2" style="font-size: 1.75em">
+
+  {% if post.image %}
+  <img src={{ post.image.url }} alt="{{ post.body }}" class="post-image" id="post-image"/>
+  {% endif %}
+
+  {{ post.body }}
+  </div>
     <a style="text-decoration: none; color: black" href="#">
       {% include "post_likes.html" with post=post %}
     </a>

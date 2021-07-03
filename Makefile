@@ -35,9 +35,10 @@ poetry-migrate:
 poetry-createsuperuser:
 	DJANGO_SUPERUSER_PASSWORD=password DJANGO_SUPERUSER_USERNAME=brian DJANGO_SUPERUSER_EMAIL=user@email.com cd backend && poetry run python3 manage.py createsuperuser --no-input
 
+# TODO: add runserver_plus
 ## Start local development server using poetry virtual environment
 poetry-runserver:
-	cd backend && poetry run python3 manage.py runserver_plus
+	cd backend && poetry run python3 manage.py runserver
 
 ## Generate GraphQL schema as JSON using poetry schema
 poetry-make-schema:
@@ -79,7 +80,7 @@ poetry-celery-default-worker:
 	cd backend && poetry run python3 manage.py start_worker
 
 ## start celery beat
-poetry-celery-default-worker:
+poetry-celery-beat:
 	cd backend && poetry run python3 manage.py start_beat
 
 ## Generate data for post model
@@ -144,7 +145,7 @@ venv-celery-default-worker:
 	cd backend && python3 manage.py start_worker
 
 ## Start celery beat that will reload on code changes
-venv-celery-default-worker:
+venv-celery-beat:
 	cd backend && python3 manage.py start_beat
 
 ## Start flower for debugging and monitoring celery tasks and workers

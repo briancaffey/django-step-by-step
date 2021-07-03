@@ -1,6 +1,6 @@
 /**
  * This tests the authentication flow using the mailhog API
- * 
+ *
  * https://humble.dev/testing-an-email-workflow-from-end-to-end-with-cypress
  */
 describe("Test registration", function () {

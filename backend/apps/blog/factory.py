@@ -1,5 +1,7 @@
 import factory
 
+from pathlib import Path
+
 from django.contrib.auth import get_user_model
 from factory.django import DjangoModelFactory
 
@@ -22,3 +24,6 @@ class PostFactory(DjangoModelFactory):
         model = Post
 
     body = factory.Faker("text")
+    image = factory.django.FileField(
+        from_path=Path(__file__).parent.parent.parent / 'assets/postgres.png'
+    )

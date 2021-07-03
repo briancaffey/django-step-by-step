@@ -3301,6 +3301,197 @@ CDK is used to generate CloudFormation templates. These are YAML files that are 
 
 ```
 
+## Add image to blog post
+
+### Install dependencies
+
+This section will describe changes needed to make in order to add an image to the blog post model.
+
+Add `Pillow`:
+
+```
+poetry add Pillow
+```
+
+If you are using docker, run `make poetry-export` and restart docker-compose with:
+
+```
+docker-compose down --remove-orphans
+docker-compose up --build
+```
+
+### Add `image` field to Post model
+
+Add the following field to `blog/models.py`:
+
+```py
+    image = models.ImageField(upload_to='images', blank=True)
+```
+
+### Make and run migrations
+
+Once you add this code, run the following management commands:
+
+```
+python3 manage.py makemigrations
+python3 manage.py migrate
+```
+
+Add the following to the base settings:
+
+```py
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+```
+
+### Create backend media directory
+
+Next, create the following directory:
+
+```
+mkdir backend/media
+```
+
+### Add .gitignore to media directory
+
+Add a file to the `media` directory called `.gitignore`:
+
+```
+*
+!.gitignore
+```
+
+In the main `.gitignore` file in the backend directory, we need to make one small change. Comment out the line that contains:
+
+```
+media
+```
+
+This directory is needed for local development, so we will ignore everything inside of this directory, except for the .gitignore file.
+
+### Add URL patterns for serving media locally
+
+In order to view the media files in our application locally, we need to add the following to `backend/urls.py`:
+
+```
+if settings.DEBUG:  # pragma: no cover
+
+    # add this part
+    urlpatterns += static(
+        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
+    )
+```
+
+This will allow Django to serve the media files so we can view them in the templates where blog posts are defined.
+
+Go to the Django admin and add some blog posts with images. You can then click the image link that the Django admin displays to make sure that your application is correctly configured to save and store images.
+
+### Add image to Django template
+
+Now that there is an image field on the post model and there is a post with a media file attached, this image should be displayed in both list and detail views.
+
+Add the following to `posts.html` and `post.html`:
+
+```
+      {% if post.image %}
+      <img src={{ post.image.url }} alt="{{ post.body }}" class="post-image" />
+      {% endif %}
+```
+
+### Add styling to the image
+
+In `main.css`, add the following:
+
+```css
+.post-image {
+    max-width: 200px;
+    margin: auto;
+    padding: 15px;
+}
+```
+
+### Add image upload button for HTML form
+
+First, the `<form>` element in `new_post.html` needs to be updated to:
+
+```html
+<form action="/posts/new" method="post" enctype="multipart/form-data">
+```
+
+### Update PostForm
+
+Add an `image` field to the `PostForm`:
+
+```py
+from django.forms import (
+    ModelForm,
+    CharField,
+    Textarea,
+    ImageField, # add this line
+    FileInput, # add this line
+)
+
+...
+
+class PostForm(ModelForm):
+
+...
+
+    # add this field
+    image = ImageField(
+        required=False,
+        widget=FileInput(
+            attrs={
+                # add the bootstrap class in the form
+                "class": "form-control",
+            }
+        )
+    )
+
+    class Meta:
+        model = Post
+        fields = ["body", "image"] # add "image"
+```
+
+### Add image URL to PostSerializer
+
+Add `"image",` to the end of the `fields` list under `Class Meta:`.
+
+### Add images for test
+
+Add a few images that can be used in local tests
+
+```
+ls backend/assets/
+postgres.png redis.png
+```
+
+### Add a field to the Post Model Factory
+
+```py
+    image = factory.django.FileField(
+        from_path=Path(__file__).parent.parent.parent / 'assets/postgres.png'
+    )
+```
+
+### Add `cypress-file-upload`
+
+- Add `import 'cypress-file-upload';` to `cypress/cypress/support/commands.js`
+- Add `data-cy` to file input
+
+Follow these steps: [https://www.npmjs.com/package/cypress-file-upload](https://www.npmjs.com/package/cypress-file-upload)
+
+### Install Graphene extension for image support in GrpahQL
+
+https://github.com/lmcgartland/graphene-file-upload
+https://pypi.org/project/graphene-file-upload/1.3.0/
+
+```
+cd backend && poetry add graphene-file-upload
+```
+
+### Add images to test case logic
+
 Optional/Extra steps
 
 ## GraphQL (together with or replacing DRF/REST)

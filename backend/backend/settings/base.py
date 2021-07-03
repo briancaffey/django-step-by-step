@@ -150,7 +150,7 @@ CELERY_BEAT_SCHEDULE = {
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "US/Eastern"
 
 USE_I18N = True
 
@@ -167,6 +167,12 @@ STATIC_URL = "/static/"
 STATICFILES_DIRS = [
     str(BASE_DIR / "static"),
 ]
+
+# static files storage
+PRIVATE_FILE_STORAGE = "backend.storage_backends.PrivateMediaStorage"
+
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 # Custom user model
 AUTH_USER_MODEL = "accounts.CustomUser"
@@ -208,3 +214,7 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "graphql_jwt.backends.JSONWebTokenBackend",
 ]
+
+# timezone
+USE_TZ = True
+TIME_ZONE = "UTC"
