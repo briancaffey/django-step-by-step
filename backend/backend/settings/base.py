@@ -217,7 +217,3 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "graphql_jwt.backends.JSONWebTokenBackend",
 ]
-
-# timezone
-USE_TZ = True
-TIME_ZONE = "UTC"

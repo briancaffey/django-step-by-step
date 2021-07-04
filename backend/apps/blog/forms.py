@@ -30,9 +30,9 @@ class PostForm(ModelForm):
             attrs={
                 # add the bootstrap class in the form
                 "class": "form-control",
-                "data-cy": "file-input"
+                "data-cy": "file-input",
             }
-        )
+        ),
     )
 
     class Meta:

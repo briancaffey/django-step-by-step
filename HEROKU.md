@@ -124,6 +124,20 @@ heroku config:set SECRET_KEY=$SECRET_KEY
 git push heroku feature/post-images:main
 ```
 
+## Management Commands
+
+To open a shell in the Django application:
+
+```
+heroku run bash
+```
+
+Then you can run the following command:
+
+```
+python3 backend/manage.py shell
+```
+
 ## LOGGING
 
 [https://stackoverflow.com/questions/18920428/django-logging-on-heroku](https://stackoverflow.com/questions/18920428/django-logging-on-heroku)
