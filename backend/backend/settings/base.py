@@ -217,3 +217,6 @@ AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "graphql_jwt.backends.JSONWebTokenBackend",
 ]
+
+AWS_STATIC_LOCATION = "static"
+AWS_PRIVATE_MEDIA_LOCATION = "media/private"
