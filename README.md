@@ -114,7 +114,7 @@ The creation of the S3 bucket and the IAM user can be automated using Infrasturc
 
 ### AWS ECS
 
-ECS is my preferred way of running containerized web applications on AWS. To help document best practices for deploying Django applications on ECS, I wrote a reusable CDK construct library that handles infrastructure provisioning for typical deployment scenarios.
+ECS is my preferred way of running containerized web applications on AWS. To help document best practices for deploying Django applications on ECS, I wrote a reusable CDK construct library that handles infrastructure provisioning for typical deployment scenarios. This project can be found [here](https://github.com/briancaffey/django-cdk).
 
 The Django ECS construct included in the library creates the following AWS resources:
 
