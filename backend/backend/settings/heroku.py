@@ -22,7 +22,7 @@ AWS_PRELOAD_METADATA = True
 S3_BUCKET_NAME = os.environ["S3_BUCKET_NAME"]
 AWS_S3_CUSTOM_DOMAIN = f"{S3_BUCKET_NAME}.s3.amazonaws.com"
 STATIC_URL = "static"
-# STATIC_ROOT = f"https://{S3_BUCKET_NAME}.s3.amazonaws.com/static/"
+STATIC_ROOT = f"https://{S3_BUCKET_NAME}.s3.amazonaws.com/static/"
 # MEDIA_ROOT = f"https://{S3_BUCKET_NAME}.s3.amazonaws.com/media/"
 
 LOGGING = {
