@@ -25,5 +25,5 @@ class PostFactory(DjangoModelFactory):
 
     body = factory.Faker("text")
     image = factory.django.FileField(
-        from_path=Path(__file__).parent.parent.parent / 'assets/postgres.png'
+        from_path=Path(__file__).parent.parent.parent / "assets/postgres.png"
     )
