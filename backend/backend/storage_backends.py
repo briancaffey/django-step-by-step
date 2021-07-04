@@ -2,6 +2,11 @@ from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from storages.backends.s3boto3 import S3Boto3Storage
 
+
+class StaticStorage(S3Boto3Storage):
+    location = settings.AWS_STATIC_LOCATION
+
+
 if settings.DEBUG:
 
     class PrivateMediaStorage(FileSystemStorage):
@@ -9,9 +14,6 @@ if settings.DEBUG:
 
 
 else:
-
-    class StaticStorage(S3Boto3Storage):
-        location = settings.AWS_STATIC_LOCATION
 
     class PrivateMediaStorage(S3Boto3Storage):
         location = settings.AWS_PRIVATE_MEDIA_LOCATION
