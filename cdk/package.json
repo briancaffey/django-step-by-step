@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@aws-cdk/core": "1.111.0",
-    "django-cdk": "=0.0.20",
+    "django-cdk": "=0.0.22",
     "source-map-support": "^0.5.16"
   }
 }
