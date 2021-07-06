@@ -27,7 +27,7 @@ graphene-django = "^2.15.0"
 django-graphql-jwt = "^0.3.1"
 # TODO: watch this issue
 # https://github.com/flavors/django-graphql-jwt/issues/241
-PyJWT = "<2"
+PyJWT = ">2"
 gunicorn = "^20.1.0"
 psycopg2-binary = { version = "^2.8.6", markers = "platform_machine == 'x86_64'" }
 aws-secretsmanager-caching = "^1.1.1"
@@ -38,6 +38,7 @@ dj-database-url = "^0.5.0"
 whitenoise = "^5.2.0"
 boto3 = "^1.17.105"
 django-cors-headers = "^3.7.0"
+djangorestframework-simplejwt = "^4.7.1"
 
 [tool.poetry.dev-dependencies]
 

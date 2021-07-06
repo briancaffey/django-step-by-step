@@ -199,6 +199,7 @@ REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework.authentication.SessionAuthentication",
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
 }
 
@@ -219,4 +220,9 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 AWS_STATIC_LOCATION = "static"
-AWS_PRIVATE_MEDIA_LOCATION = "media/private"
+
+# TODO: see why this is needed and possibly change to something else
+# in production this value is media/private
+
+# could be related to S3Boto3Storage behavior?
+AWS_PRIVATE_MEDIA_LOCATION = "media"

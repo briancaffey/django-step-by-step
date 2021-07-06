@@ -336,6 +336,11 @@ cdk-deploy: cdk-install	cdk-build
 cdk-destroy: cdk-install	cdk-build
 	cdk destroy --app='./cdk/bin/cdk.js' --require-approval never
 
+## -- Quasar Targets --
+
+## start quasar project locally
+quasar-dev:
+	cd quasar-app && quasar dev
 # Credit: https://gist.github.com/prwhite/8168133#gistcomment-2749866
 ## Show this help menu
 help:

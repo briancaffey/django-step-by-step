@@ -19,6 +19,7 @@ django-cors-headers==3.7.0; python_version >= "3.6"
 django-graphql-jwt==0.3.1
 django-storages==1.11.1; python_version >= "3.5"
 django==3.1.13; python_version >= "3.6"
+djangorestframework-simplejwt==4.7.1; python_version >= "3.7"
 djangorestframework==3.12.4; python_version >= "3.5"
 graphene-django==2.15.0
 graphene-file-upload==1.3.0
@@ -36,7 +37,7 @@ pillow==8.3.0; python_version >= "3.6"
 promise==2.3
 prompt-toolkit==3.0.19; python_full_version >= "3.6.1" and python_version >= "3.6"
 psycopg2-binary==2.9.1; platform_machine == "x86_64"
-pyjwt==1.7.1
+pyjwt==2.1.0; python_version >= "3.6"
 python-dateutil==2.8.1; python_version > "3.5" and python_full_version < "3.0.0" or python_full_version >= "3.6.0" and python_version > "3.5"
 pytz==2021.1; python_version >= "3.6"
 pyyaml==5.4.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.6.0")

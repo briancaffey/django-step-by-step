@@ -37,10 +37,11 @@ django-extensions==3.1.3; python_version >= "3.6"
 django-graphql-jwt==0.3.1
 django-storages==1.11.1; python_version >= "3.5"
 django==3.1.13; python_version >= "3.6"
+djangorestframework-simplejwt==4.7.1; python_version >= "3.7"
 djangorestframework==3.12.4; python_version >= "3.5"
 entrypoints==0.3; python_version >= "3.7" and platform_machine == "x86_64"
 factory-boy==3.2.0; python_version >= "3.6"
-faker==8.9.0; python_version >= "3.6"
+faker==8.9.1; python_version >= "3.6"
 flake8==3.9.2; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
 graphene-django==2.15.0
 graphene-file-upload==1.3.0
@@ -50,7 +51,7 @@ graphql-relay==2.0.1
 gunicorn==20.1.0; python_version >= "3.5"
 idna==2.10; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 iniconfig==1.1.1; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.5.0" and python_version >= "3.6"
-ipykernel==6.0.0; python_version >= "3.7" and platform_machine == "x86_64"
+ipykernel==6.0.1; python_version >= "3.7" and platform_machine == "x86_64"
 ipython-genutils==0.2.0; python_version >= "3.7" and platform_machine == "x86_64"
 ipython==7.25.0; python_version >= "3.7"
 ipywidgets==7.6.3; platform_machine == "x86_64"
@@ -76,7 +77,7 @@ nbconvert==6.1.0; python_version >= "3.7" and platform_machine == "x86_64"
 nbformat==5.1.3; python_version >= "3.7" and platform_machine == "x86_64" and python_full_version >= "3.6.1"
 nest-asyncio==1.5.1; python_version >= "3.7" and platform_machine == "x86_64" and python_full_version >= "3.6.1"
 notebook==6.4.0; python_version >= "3.6" and platform_machine == "x86_64"
-packaging==20.9; python_version >= "3.7" and python_full_version < "3.0.0" and platform_machine == "x86_64" or python_full_version >= "3.5.0" and python_version >= "3.7" and platform_machine == "x86_64"
+packaging==21.0; python_version >= "3.7" and python_full_version < "3.0.0" and platform_machine == "x86_64" or python_full_version >= "3.5.0" and python_version >= "3.7" and platform_machine == "x86_64"
 pandocfilters==1.4.3; python_version >= "3.7" and python_full_version < "3.0.0" and platform_machine == "x86_64" or python_version >= "3.7" and platform_machine == "x86_64" and python_full_version >= "3.4.0"
 parso==0.8.2; python_version >= "3.7"
 pathspec==0.8.1; python_version >= "3.6" and python_full_version < "3.0.0" and platform_machine == "x86_64" or python_version >= "3.6" and platform_machine == "x86_64" and python_full_version >= "3.5.0"
@@ -94,8 +95,8 @@ pycodestyle==2.7.0; python_version >= "2.7" and python_full_version < "3.0.0" or
 pycparser==2.20; python_version >= "3.6" and python_full_version < "3.0.0" and platform_machine == "x86_64" or python_version >= "3.6" and platform_machine == "x86_64" and python_full_version >= "3.4.0"
 pyflakes==2.3.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 pygments==2.9.0; python_version >= "3.7" and platform_machine == "x86_64"
-pyjwt==1.7.1
-pyparsing==2.4.7; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.4.0" and python_version >= "3.6"
+pyjwt==2.1.0; python_version >= "3.6"
+pyparsing==2.4.7; python_version >= "3.6" and python_full_version < "3.0.0" or python_full_version >= "3.3.0" and python_version >= "3.6"
 pyrsistent==0.18.0; python_version >= "3.6" and platform_machine == "x86_64"
 pytest-cov==2.12.1; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
 pytest-django==4.4.0; python_version >= "3.5"
@@ -109,7 +110,7 @@ pyzmq==22.1.0; python_version >= "3.7" and platform_machine == "x86_64" and pyth
 qtconsole==5.1.1; python_version >= "3.6" and platform_machine == "x86_64"
 qtpy==1.9.0; python_version >= "3.6" and platform_machine == "x86_64"
 redis==3.5.3; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.5.0")
-regex==2021.7.1; python_version >= "3.6" and platform_machine == "x86_64"
+regex==2021.7.6; python_version >= "3.6" and platform_machine == "x86_64"
 requests==2.25.1; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.5.0"
 rx==1.6.1
 s3transfer==0.4.2; python_version >= "2.7" and python_full_version < "3.0.0" or python_full_version >= "3.6.0"
