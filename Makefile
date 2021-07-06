@@ -333,6 +333,9 @@ cdk-build:
 cdk-deploy: cdk-install	cdk-build
 	cdk deploy --app='./cdk/bin/cdk.js' --require-approval never
 
+cdk-destroy: cdk-install	cdk-build
+	cdk destroy --app='./cdk/bin/cdk.js' --require-approval never
+
 # Credit: https://gist.github.com/prwhite/8168133#gistcomment-2749866
 ## Show this help menu
 help:
