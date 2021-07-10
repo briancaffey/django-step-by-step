@@ -132,20 +132,45 @@ First, let's add a page that will list our blog posts by making an HTTP request 
 - [x] Fix local image upload path issue
 - [x] CORS
 - [x] JWT / Token Authentication on backend
+- [ ] Registration page for new users
 
 #### Frontend
 
-- [ ] Login / Logout
+- [x] Login / Logout
+- [ ] Refresh token
+- [ ] DRF Token Authentication vs Simple JWT
 - [ ] Register
 
 #### Application
 
-- [ ] Post Lists
-- [ ] Post Detail
-- [ ] Post Create Form
+- [x] Use Post intefrace for Post Listing and Post Detail
+- [x] Add date to posts
+- [x] Format dates with filters (Vue 3 removes template filters, us functions instead)
+- [x] Add username to posts / anon posts
+- [x] Post Lists
+- [x] Post Detail
+- [x] Post Create Form
 - [ ] Post Edit Form
 - [ ] Post Delete Option
 
-- [ ] Like Button
+- [x] Post Pagination
+- [x] Fix post pagination
+
+- [x] Like Button
+- [ ] Fix like button on list page
+- [ ] Fix Dark mode syncing
+- [ ] Add i18n switcher
+
+- [ ] Remove eslint-disabled markers
 
 - [ ] Optional: Configure nginx to serve the Quasar and API on the same port
+
+## SSR mode
+
+- [ ] Build with SSR mode
+- [ ] Fix axios boot file to work with SSR
+
+## Tests
+
+- [ ] Add Jest tests
+- [ ] Complete Cypress tests

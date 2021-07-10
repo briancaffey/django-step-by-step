@@ -1,5 +1,11 @@
 from django.contrib.auth import get_user_model
-from rest_framework.decorators import api_view
+from rest_framework.decorators import (
+    api_view,
+    permission_classes,
+)
+
+from rest_framework.permissions import IsAuthenticated
+
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework import status
@@ -35,3 +41,14 @@ def get_users(request):
 
     return_data = paginator.get_paginated_response(serializer.data)
     return return_data
+
+
+@api_view(["GET"])
+@permission_classes((IsAuthenticated,))
+def get_profile(request):
+    """
+    Get profile for a single user
+    """
+    serializer = CustomUserSerializer(request.user)
+
+    return Response(serializer.data)

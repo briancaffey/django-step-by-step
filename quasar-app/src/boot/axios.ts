@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-floating-promises */
+
 import { boot } from 'quasar/wrappers';
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosError, AxiosInstance } from 'axios';
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -15,6 +18,21 @@ declare module '@vue/runtime-core' {
 // for each client)
 const api = axios.create({ baseURL: process.env.API_URL });
 
+api.interceptors.request.use(
+  (config) => {
+    const c = config;
+
+    const token = localStorage.getItem('accessToken');
+
+    if (token) {
+      c.headers.Authorization = `Bearer ${token}`;
+    }
+
+    return c
+  }, (error: AxiosError) => {
+    Promise.reject(error);
+  }
+);
 export default boot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
 

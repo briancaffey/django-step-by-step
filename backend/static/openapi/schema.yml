@@ -3,7 +3,7 @@ info:
   title: ''
   version: ''
 paths:
-  /api/posts/{id}/:
+  /api/drf/fbv/posts/{id}/:
     get:
       operationId: retrieveget_post
       description: Retrieve a single post
@@ -22,7 +22,7 @@ paths:
           description: ''
       tags:
       - api
-  /api/posts/:
+  /api/drf/fbv/posts/:
     get:
       operationId: listlist_posts
       description: Retrieve a paginated list of posts with like info
@@ -37,7 +37,7 @@ paths:
           description: ''
       tags:
       - api
-  /api/cbv/posts/:
+  /api/drf/cbv/posts/:
     get:
       operationId: listPosts
       description: ''
@@ -105,7 +105,7 @@ paths:
           description: ''
       tags:
       - api
-  /api/cbv/posts/{id}/:
+  /api/drf/cbv/posts/{id}/:
     get:
       operationId: retrievePost
       description: ''
@@ -219,7 +219,93 @@ paths:
           description: ''
       tags:
       - api
-  /api/posts/new/:
+  /api/users/:
+    get:
+      operationId: listget_users
+      description: Get list of users
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {}
+          description: ''
+      tags:
+      - api
+  /api/profile/:
+    get:
+      operationId: listget_profiles
+      description: Get profile for a single user
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {}
+          description: ''
+      tags:
+      - api
+  /api/token/:
+    post:
+      operationId: createTokenObtainPair
+      description: 'Takes a set of user credentials and returns an access and refresh
+        JSON web
+
+        token pair to prove the authentication of those credentials.'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+      tags:
+      - api
+  /api/token/refresh/:
+    post:
+      operationId: createTokenRefresh
+      description: 'Takes a refresh type JSON web token and returns an access type
+        JSON web
+
+        token if the refresh token is valid.'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+      tags:
+      - api
+  /api/drf/fbv/posts/new/:
     post:
       operationId: createcreate_post
       description: Create a single post
@@ -240,7 +326,7 @@ paths:
           description: ''
       tags:
       - api
-  /api/posts/{id}/like/:
+  /api/drf/fbv/posts/{id}/like/:
     post:
       operationId: createlike_post
       description: Like a post. Returns the post with like info.
@@ -267,9 +353,9 @@ paths:
           description: ''
       tags:
       - api
-  /api/cbv/posts/{id}/like/:
+  /api/drf/cbv/posts/{id}/like/:
     post:
-      operationId: likePostPost
+      operationId: likePost
       description: Like a post. Returns the post with like info.
       parameters:
       - name: id
@@ -298,7 +384,7 @@ paths:
           description: ''
       tags:
       - api
-  /api/posts/{id}/update/:
+  /api/drf/fbv/posts/{id}/update/:
     put:
       operationId: updateupdate_post
       description: Update a post
@@ -325,7 +411,7 @@ paths:
           description: ''
       tags:
       - api
-  /api/posts/{id}/delete/:
+  /api/drf/fbv/posts/{id}/delete/:
     delete:
       operationId: destroydelete_post
       description: Delete a post
@@ -375,5 +461,26 @@ components:
         like_count:
           type: integer
           readOnly: true
+        image:
+          type: string
+          format: binary
       required:
       - body
+    TokenObtainPair:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+          writeOnly: true
+      required:
+      - email
+      - password
+    TokenRefresh:
+      type: object
+      properties:
+        refresh:
+          type: string
+      required:
+      - refresh
