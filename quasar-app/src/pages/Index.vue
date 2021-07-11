@@ -1,59 +1,237 @@
 <template>
   <q-page padding class="">
-    <q-page-header>
-
-      <q-carousel
-        v-model="slide"
-        transition-prev="scale"
-        transition-next="scale"
-        swipeable
-        animated
-        control-color="white"
-        navigation
-        padding
-        arrows
-        height="300px"
-        class="bg-primary text-white shadow-1 rounded-borders"
-      >
-        <q-carousel-slide name="style" class="column no-wrap flex-center">
-          <q-icon name="style" size="56px" />
-          <div class="q-mt-md text-center">
-            {{ lorem }}
-          </div>
-        </q-carousel-slide>
-        <q-carousel-slide name="tv" class="column no-wrap flex-center">
-          <q-icon name="live_tv" size="56px" />
-          <div class="q-mt-md text-center">
-            {{ lorem }}
-          </div>
-        </q-carousel-slide>
-        <q-carousel-slide name="layers" class="column no-wrap flex-center">
-          <q-icon name="layers" size="56px" />
-          <div class="q-mt-md text-center">
-            {{ lorem }}
-          </div>
-        </q-carousel-slide>
-        <q-carousel-slide name="map" class="column no-wrap flex-center">
-          <q-icon name="terrain" size="56px" />
-          <div class="q-mt-md text-center">
-            {{ lorem }}
-          </div>
-        </q-carousel-slide>
-      </q-carousel>
-
-    </q-page-header>
+    <div class="q-pa-md row items-start q-gutter-md">
+      <tech-card v-for="item in content" :key="item.title" :item="item" />
+    </div>
   </q-page>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+// import TechCard from '../TechCard.vue';
+import TechCard from '../components/TechCard/index.vue';
 
 export default defineComponent({
+  components: {
+    TechCard,
+  },
   name: 'PageIndex',
   data() {
     return {
-      lorem: 'value',
-      slide: 'layers'
+      content: [
+        {
+          title: 'Vue 3',
+          description: 'The latest Version of Vue.js',
+          detail: 'Used to build the frontend',
+          image: 'vue3.png',
+          documentationLink: 'https://vuejs.org/',
+        },
+        {
+          title: 'Quasar',
+          description: 'A Vue.js Framework for building web apps',
+          detail: 'A Framework',
+          image: 'quasar.png',
+          documentationLink: 'https://quasar.dev/',
+        },
+        {
+          title: 'Django',
+          description: 'Python web framework',
+          detail: 'Used to web applications and APIs',
+          image: 'django.jpeg',
+          documentationLink: 'https://www.djangoproject.com/',
+        },
+        {
+          title: 'Postgres',
+          description: 'This is postgres',
+          detail: 'This is more about postgres',
+          image: 'elephant.png',
+          documentationLink: 'https://www.postgresql.org/',
+        },
+        {
+          title: 'Django REST Framework',
+          description: 'API Framework for Django',
+          detail: 'Used for building APIs with Django',
+          image: 'drf.png',
+          documentationLink: 'https://www.django-rest-framework.org/',
+        },
+        {
+          title: 'Redis',
+          description: 'An in memory database',
+          detail: 'Used for caching and message brokering',
+          image: 'redis.png',
+          documentationLink: 'https://redis.io',
+        },
+        {
+          title: 'GitHub Actions',
+          description: 'GitHubs\'s CI/CD tool',
+          detail: 'Used for test automation and deployment',
+          image: 'ghactions.png',
+          documentationLink: 'https://github.com/features/actions',
+        },
+        {
+          title: 'CDK',
+          description: 'AWS Cloud Development Kit',
+          detail: 'Used for defining AWS infrastructure in code',
+          image: 'cdk.png',
+          documentationLink: 'https://aws.amazon.com/cdk/',
+        },
+        {
+          title: 'Heroku',
+          description: 'Platform as a Service',
+          detail: 'An easy way to deploy web applications',
+          image: 'heroku.png',
+          documentationLink: 'https://heroku.com',
+        },
+        {
+          title: 'Bootstrap 4',
+          description: 'A UI Framework',
+          detail: 'Used for styling Django templates',
+          image: 'bootstrap.png',
+          documentationLink: 'https://getbootstrap.com',
+        },
+        {
+          title: 'TypeScript',
+          description: 'A superset of TypeScript',
+          detail: 'Used in several parts of the project tech stack',
+          image: 'ts.png',
+          documentationLink: 'https://www.typescriptlang.org/',
+        },
+        {
+          title: 'Python',
+          description: 'A general-purpose programming language',
+          detail: 'The language used for programming the web backend',
+          image: 'python.png',
+          documentationLink: 'https://www.python.org/',
+        },
+        {
+          title: 'Poetry',
+          description: 'Python dependency management and packaging made easy',
+          detail: 'A tool used to manage python dependencies',
+          image: 'poetry.png',
+          documentationLink: 'https://python-poetry.org/',
+        },
+        {
+          title: 'Black',
+          description: 'The uncompromising Python code formatter',
+          detail: 'A tool used for formatting Python code',
+          image: 'black.png',
+          documentationLink: 'https://github.com/psf/black',
+        },
+        {
+          title: 'Cypress',
+          description: 'An end-to-end testing framework',
+          detail: 'A framework used to test the application',
+          image: 'cypress.png',
+          documentationLink: 'https://www.cypress.io',
+        },
+        {
+          title: 'ECS',
+          description: 'A container orchestration tool for AWS',
+          detail: 'A tool used to run the application containers in AWS',
+          image: 'ecs.png',
+          documentationLink: 'https://aws.amazon.com/ecs/',
+        },
+        {
+          title: 'EKS',
+          description: 'A container orchestration tool for AWS based on Kubernetes',
+          detail: 'A tool used to run the application containers in AWS using Kubernetes',
+          image: 'eks.png',
+          documentationLink: 'https://aws.amazon.com/eks/',
+        },
+        {
+          title: 'Projen',
+          description: 'Define and maintain complex project configuration through code',
+          detail: 'Used for maintaining the CDK construct library',
+          image: 'projen.png',
+          documentationLink: 'https://github.com/projen/projen#readme',
+        },
+        {
+          title: 'pytest',
+          description: 'helps you write better programs',
+          detail: 'used for unit-testing backend python code',
+          image: 'pytest.png',
+          documentationLink: 'https://docs.pytest.org/en/latest/index.html',
+        },
+        {
+          title: 'Kubernetes',
+          description: 'Open-source container orchestration tool',
+          detail: 'Used to run containers on AWS',
+          image: 'k8s.png',
+          documentationLink: 'https://kubernetes.io',
+        },
+        {
+          title: 'minikube',
+          description: 'a tool for running kubernetes locally',
+          detail: 'Used for local development',
+          image: 'minikube.png',
+          documentationLink: 'https://minikube.sigs.k8s.io/docs/start/',
+        },
+        {
+          title: 'docker',
+          description: 'a tool for building and running containers',
+          detail: 'used for local development, CI/CD and production',
+          image: 'docker.png',
+          documentationLink: 'https://www.docker.com/',
+        },
+        {
+          title: 'diagrams.net',
+          description: 'an open source diagramming tool',
+          detail: 'used for generating diagrams for this project',
+          image: 'diagrams.png',
+          documentationLink: 'https://www.diagrams.net/',
+        },
+        {
+          title: 'GraphQL',
+          description: 'A query language for your API',
+          detail: 'used for querying data in the application',
+          image: 'graphql.png',
+          documentationLink: 'https://graphql.org/',
+        },
+        {
+          title: 'Graphene',
+          description: 'GraphQL in Python Made Easy',
+          detail: 'a library for using GraphQl in Django',
+          image: 'graphene.png',
+          documentationLink: 'https://graphene-python.org/',
+        },
+        {
+          title: 'Celery',
+          description: 'an open source asynchronous task queue based on distributed message passing',
+          detail: 'a library used for processing tasks',
+          image: 'celery.png',
+          documentationLink: 'https://docs.celeryproject.org/en/stable/getting-started/introduction.html',
+        },
+        {
+          title: 'OpenAPI',
+          description: 'defines a standard, language-agnostic interface to RESTful APIs',
+          detail: 'used for documenting the REST API for this project',
+          image: 'openapi.png',
+          documentationLink: 'https://swagger.io/specification/',
+        },
+        {
+          title: 'CircleCI',
+          description: 'Automate your development process quickly, safely, and at scale',
+          detail: 'A CI/CD tool that integrates with GitHub in this project',
+          image: 'circleci.jpeg',
+          documentationLink: 'https://circleci.com/',
+        },
+        {
+          title: 'Pulumi',
+          description: 'Modern Infrastructure as Code',
+          detail: 'Used to deploy an application to the local minikube cluster',
+          image: 'pulumi.png',
+          documentationLink: 'https://www.pulumi.com',
+        },
+        {
+          title: 'jsii',
+          description: 'jsii allows code in any language to naturally interact with JavaScript classes',
+          detail: 'used to publish the CDK construct to npm and PyPI',
+          image: 'jsii.png',
+          documentationLink: 'https://aws.github.io/jsii/',
+        },
+
+
+      ]
     }
   },
 });

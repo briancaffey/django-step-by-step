@@ -4,25 +4,28 @@
       <q-card class="m-4">
         <q-card-section v-if="post.image">
         <img
-            style="max-height: 200px; margin: auto;"
+            style="max-height: 200px; max-width: 200px; margin: auto;"
             :src="`http://localhost:8000${post.image}`"
             :alt="post.body"
             v-if="post.image"
         >
         </q-card-section>
         <q-card-section>
-        <div class="text-body1">
-            {{ post.body }}
-        <div v-if="post.created_by">
-            {{ post.created_by.email }}
-        </div>
-        <div v-else><em>anonymous</em>
-        </div>
-        <div>{{ formatDate(post.modified_on) }}</div>
-        <div>{{ post.id }}</div>
-        <q-icon @click.prevent="togglePostLike(post.id)" :name="post.liked ? 'favorite' : 'favorite_border'" color="red" />
-          | {{ post.like_count }}
-        </div>
+          <div class="text-body1">
+              {{ post.body }}
+          </div>
+          <br/>
+          <div>
+          <span v-if="post.created_by">
+              posted by <strong>{{ post.created_by.email }}</strong>
+          </span>
+          <span v-else><em>posted anonymously</em>
+          </span> on
+          <span> {{ formatDate(post.modified_on) }}</span>
+          </div>
+
+          <q-icon @click.prevent="togglePostLike(post.id)" :name="post.liked ? 'favorite' : 'favorite_border'" color="red" />
+         {{ post.like_count }}
         </q-card-section>
         <!-- TODO: add a section for edit/delete buttons -->
         <!-- <q-card-section v-if="isOwnPost">
