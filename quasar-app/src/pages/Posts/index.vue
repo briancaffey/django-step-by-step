@@ -15,7 +15,7 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { defineComponent } from 'vue';
-import Post from '../../components/Post';
+import Post from '../../components/Post/index.vue';
 
 import usePosts from '../../modules/posts';
 

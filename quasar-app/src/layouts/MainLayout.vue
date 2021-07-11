@@ -10,9 +10,8 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
-
         <q-toolbar-title> μblog </q-toolbar-title>
-        <q-toggle color="white" v-model="darkMode" />
+        <q-toggle color="white" v-model="darkMode" @click="toggleDarkMode" />
         <q-btn
           v-if="isAuthenticated"
           id="logout-btn"
@@ -53,7 +52,7 @@
 </template>
 
 <script lang="ts">
-import EssentialLink from 'components/EssentialLink.vue';
+import EssentialLink from '../components/EssentialLink.vue';
 import useAuth from '../modules/auth';
 import useProfile from '../modules/profile';
 
@@ -95,6 +94,12 @@ const linksList = [
     link: 'http://localhost:8000/my-admin-portal/',
   },
   {
+    title: 'Django Views',
+    caption: 'Server-rendered Django Templates',
+    icon: 'dns',
+    link: 'http://localhost:8000/posts',
+  },
+  {
     title: 'GitHub',
     caption: 'View this project on GitHub',
     icon: 'code',
@@ -102,7 +107,7 @@ const linksList = [
   },
 ];
 
-import { defineComponent, ref, computed } from 'vue';
+import { defineComponent, ref } from 'vue';
 import useDarkMode from '../modules/darkMode';
 
 export default defineComponent({
@@ -116,13 +121,11 @@ export default defineComponent({
     const { isAuthenticated, logout } = useAuth();
     const { email } = useProfile();
     const leftDrawerOpen = ref(false);
-    const { darkMode } = useDarkMode();
-
-
-
+    const { darkMode, toggleDarkMode } = useDarkMode();
 
     return {
       isAuthenticated,
+      toggleDarkMode,
       darkMode,
       email,
       logout,

@@ -52,8 +52,8 @@ export default defineComponent({
   name: 'PageIndex',
   data() {
     return {
-      lorem: "value",
-      slide: "layers"
+      lorem: 'value',
+      slide: 'layers'
     }
   },
 });
