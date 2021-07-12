@@ -30,9 +30,6 @@ export default defineComponent({
   props: {
     item: Object,
   },
-  setup(props) {
-    return { item: props.item }
-  }
 })
 </script>
 
