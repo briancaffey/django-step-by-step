@@ -153,6 +153,13 @@ export default defineComponent({
           documentationLink: 'https://docs.pytest.org/en/latest/index.html',
         },
         {
+          title: 'Jupyter',
+          description: 'interactive python environment',
+          detail: 'used for prototyping',
+          image: 'jupyter.png',
+          documentationLink: 'https://jupyter.org/',
+        },
+        {
           title: 'Kubernetes',
           description: 'Open-source container orchestration tool',
           detail: 'Used to run containers on AWS',
@@ -216,6 +223,13 @@ export default defineComponent({
           documentationLink: 'https://circleci.com/',
         },
         {
+          title: 'GitLab',
+          description: 'Accelerate modern DevOps',
+          detail: 'An all-in one DevOps tool',
+          image: 'gitlab.png',
+          documentationLink: 'https://about.gitlab.com/',
+        },
+        {
           title: 'Pulumi',
           description: 'Modern Infrastructure as Code',
           detail: 'Used to deploy an application to the local minikube cluster',
@@ -228,6 +242,34 @@ export default defineComponent({
           detail: 'used to publish the CDK construct to npm and PyPI',
           image: 'jsii.png',
           documentationLink: 'https://aws.github.io/jsii/',
+        },
+        {
+          title: 'MailHog',
+          description: 'Web and API based SMTP testing',
+          detail: 'used locally for testing that involves sending emails to users',
+          image: 'mailhog.png',
+          documentationLink: '',
+        },
+        {
+          title: 'VSCode',
+          description: 'A code editor redefined and optimized for building and debugging modern web and cloud applications',
+          detail: 'my editor of choice for working on this project',
+          image: 'vscode.png',
+          documentationLink: 'https://code.visualstudio.com/',
+        },
+        {
+          title: 'Copilot',
+          description: 'AI pair programmer',
+          detail: 'a VSCode extension that helps you write code',
+          image: 'copilot.png',
+          documentationLink: 'https://copilot.github.com/',
+        },
+        {
+          title: 'Netlify',
+          description: 'An intuitive Git-based workflow and powerful serverless platform to build, deploy, and collaborate on web apps',
+          detail: 'used to deploy the Quasar application',
+          image: 'netlify.png',
+          documentationLink: 'https://www.netlify.com/',
         },
 
 

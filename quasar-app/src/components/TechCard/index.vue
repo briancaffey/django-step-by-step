@@ -13,7 +13,7 @@
         <div class="text-subtitle2" style="width: 250px;">{{ item.description }}</div>
       </q-card-section>
 
-      <q-card-section class="q-pt-none">
+      <q-card-section class="q-pt-none" style="width: 250px;">
         {{ item.detail }}
       </q-card-section>
       <q-card-section>
