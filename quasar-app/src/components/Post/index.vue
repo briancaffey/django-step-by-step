@@ -5,7 +5,7 @@
         <q-card-section v-if="post.image">
         <img
             style="max-height: 200px; max-width: 200px; margin: auto;"
-            :src="`http://localhost:8000${post.image}`"
+            :src="post.image"
             :alt="post.body"
             v-if="post.image"
         >
@@ -56,8 +56,9 @@ export default defineComponent({
     }
   },
   setup() {
+    const apiUrl = process.env.API_URL;
     const { togglePostLike } = usePost();
-    return { togglePostLike  };
+    return { togglePostLike, apiUrl  };
   }
 });
 </script>
