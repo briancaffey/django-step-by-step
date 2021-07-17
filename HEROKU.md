@@ -138,6 +138,18 @@ Then you can run the following command:
 python3 backend/manage.py shell
 ```
 
+## Heroku Config
+
+Set the `FRONTEND_URL` environment variable in Heroku to the Netlify URL.
+
+This will allow the Heroku app to link to the Netlify URL correctly.
+
+For example:
+
+```
+heroku config:set FRONTEND_URL=https://mystifying-ardinghelli-30e1a3.netlify.app/
+```
+
 ## LOGGING
 
 [https://stackoverflow.com/questions/18920428/django-logging-on-heroku](https://stackoverflow.com/questions/18920428/django-logging-on-heroku)

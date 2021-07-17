@@ -35,3 +35,15 @@ Add a file called `_redirects` to the `public` folder.
 ```
 
 It is also possible to configure redirects with a `netlify.toml` file.
+
+## Heroku Config
+
+Set the `FRONTEND_URL` environment variable in Heroku to the Netlify URL.
+
+This will allow the Heroku app to link to the Netlify URL correctly.
+
+For example:
+
+```
+heroku config:set FRONTEND_URL=https://mystifying-ardinghelli-30e1a3.netlify.app/
+```
