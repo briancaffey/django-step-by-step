@@ -16,6 +16,14 @@ These settings will tell Netlify how to build the application.
 
 Add an environment variable called `NODE_VERSION` to project's `Environment` settings under the `Build & deploy` tab. Set this variable to `12.22.1`.
 
+## `API_URL`
+
+Add another environment variable called `API_URL` set to the Heroku URL. For example:
+
+```
+https://fathomless-shelf-16475.herokuapp.com
+```
+
 ## Redirect file
 
 Link: [https://www.netlify.com/blog/2019/01/16/redirect-rules-for-all-how-to-configure-redirects-for-your-static-site/](https://www.netlify.com/blog/2019/01/16/redirect-rules-for-all-how-to-configure-redirects-for-your-static-site/)

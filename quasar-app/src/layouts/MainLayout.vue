@@ -102,13 +102,13 @@ const linksList = [
     title: 'Django Admin',
     caption: 'μblog Administration',
     icon: 'admin_panel_settings',
-    link: 'http://localhost:8000/my-admin-portal/',
+    link: `${process.env.API_URL}/my-admin-portal/`,
   },
   {
     title: 'Django Views',
     caption: 'Server-rendered Django Templates',
     icon: 'dns',
-    link: 'http://localhost:8000/posts',
+    link: `${process.env.API_URL}/posts`,
   },
   {
     title: 'GitHub',
