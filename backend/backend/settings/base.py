@@ -150,6 +150,8 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
+CELERY_TASK_ALWAYS_EAGER = bool(os.environ.get("CELERY_TASK_ALWAYS_EAGER", ""))
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
@@ -232,3 +234,5 @@ AWS_STATIC_LOCATION = "static"
 
 # could be related to S3Boto3Storage behavior?
 AWS_PRIVATE_MEDIA_LOCATION = "media"
+
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:8080")

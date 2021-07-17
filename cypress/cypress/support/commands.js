@@ -40,19 +40,23 @@ Cypress.Commands.add('getConfirmationEmail', email => {
         json: true,
       })
       .then(({ body }) => {
-        if (body) {
+        if (body && body['items'].length > 0) {
           const { items } = body;
           const email = items[0];
           const emailBody = email["Content"]["Body"];
-          console.log(emailBody);
-          return emailBody;
-        }
 
+          // get the account activation link
+          const regex = /http[s]?:\/\/[a-zA-Z0-9:.]+\/activate\/[a-zA-Z0-9-]+\/[a-zA-Z0-9-\/]+/g;
+          const link = emailBody.match(regex)[0];
+
+          cy.visit(link);
+          return
+        }
+        console.log("no email found...")
         // If body is null, it means that no email was fetched for this address.
         // We call requestEmail recursively until an email is fetched.
         // We also wait for 300ms between each call to avoid spamming our server with requests
-        cy.wait(300);
-
+        cy.wait(600);
         return getEmail();
       });
   }
@@ -66,4 +70,36 @@ Cypress.Commands.add('login', (emailAddress, password) => {
   cy.get("#email").type(emailAddress);
   cy.get("#password").type(password);
   cy.get("#login-button").click();
+});
+
+// -- Register a new user --
+Cypress.Commands.add('registerUser', (email) => {
+  // if email is undefined, generate an email based on a timestamped uuid
+  let emailAddress;
+  if (email === undefined) {
+    const timeStamp = Math.floor(Date.now() / 1000);
+    emailAddress = `cypress${timeStamp}@email.com`;
+  } else {
+    emailAddress = email;
+  }
+  cy.visit(Cypress.config("frontendUrl") + "/register");
+  cy.get('[data-cy="email-input"]').type(emailAddress);
+  cy.get('[data-cy="password-input"]').type(Cypress.config("defaultPassword"));
+  cy.get('[data-cy="register-btn"]').click();
+
+  cy.getConfirmationEmail(emailAddress).then(() => {
+    cy.visit(Cypress.config("frontendUrl") + "/login");
+    cy.get('[data-cy="email-input"]').type(emailAddress);
+    cy.get('[data-cy="password-input"]').type(Cypress.config("defaultPassword"));
+    cy.get('[data-cy="login-btn"]').click();
+  });
+});
+
+
+Cypress.Commands.add("createPost", (content) => {
+  cy.visit(Cypress.config("frontendUrl") + "/new-post");
+  const text = 'This post was created on the Quasar app.';
+  cy.get('[data-cy="post-textarea"]').type(text);
+  cy.get('[data-cy="post-submit-btn"]').click();
+  cy.contains(text);
 });

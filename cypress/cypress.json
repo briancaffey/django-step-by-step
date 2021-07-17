@@ -1,4 +1,5 @@
 {
   "baseUrl": "http://localhost:8000",
-  "frontendUrl": "http://localhost:8080"
+  "frontendUrl": "http://localhost:8080",
+  "defaultPassword": "Foobar123!"
 }

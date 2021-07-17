@@ -161,6 +161,9 @@ First, let's add a page that will list our blog posts by making an HTTP request 
 - [ ] Fix Dark mode syncing
 - [ ] Add i18n switcher
 
+- [ ] Fix MainLayout Menu
+- [ ] Add Route Guards
+
 - [ ] Remove eslint-disabled markers
 
 - [ ] Optional: Configure nginx to serve the Quasar and API on the same port

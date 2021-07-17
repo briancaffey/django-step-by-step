@@ -12,9 +12,7 @@
 </template>
 
 <script lang="ts">
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { defineComponent } from 'vue';
+import { defineComponent, onMounted } from 'vue';
 import Post from '../../components/Post/index.vue';
 
 import usePosts from '../../modules/posts';
@@ -24,7 +22,10 @@ export default defineComponent({
   setup () {
     const { getPosts, posts, currentPage, postCount, limit, offset } = usePosts();
 
-    getPosts();
+    // doing this to avoid floating promises
+    onMounted(async () => {
+      await getPosts();
+    })
 
     return { posts, currentPage, postCount, limit, offset }
   }

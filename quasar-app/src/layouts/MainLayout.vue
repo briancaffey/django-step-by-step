@@ -12,21 +12,32 @@
         />
         <q-toolbar-title> μblog </q-toolbar-title>
         <q-toggle color="white" v-model="darkMode" @click="toggleDarkMode" />
-        <q-btn
-          v-if="isAuthenticated"
-          id="logout-btn"
-          flat
-          label="Logout"
-          @click.prevent="logout"
-        />
-        <q-btn
-          v-else
-          id="login-btn"
-          flat
-          label="Login"
-          type="submit"
-          to="/login"
-        />
+        <q-btn-group v-if="isAuthenticated">
+          <q-btn
+
+            id="logout-btn"
+            flat
+            label="Logout"
+            @click.prevent="logout"
+          />
+        </q-btn-group>
+        <q-btn-group v-else>
+          <q-btn
+
+            id="login-btn"
+            flat
+            label="Login"
+            type="submit"
+            to="/login"
+          />
+          <q-btn
+            id="register-btn"
+            flat
+            label="Register"
+            type="submit"
+            to="/register"
+          />
+        </q-btn-group>
         {{ email }}
       </q-toolbar>
     </q-header>

@@ -69,6 +69,7 @@ services:
     networks:
       - main
     environment:
+      - CELERY_TASK_ALWAYS_EAGER=$CELERY_TASK_ALWAYS_EAGER
       - DJANGO_EMAIL_HOST=mailhog
       - DEBUG=1
       - POSTGRES_SERVICE_HOST=postgres

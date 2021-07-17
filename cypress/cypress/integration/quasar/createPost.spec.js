@@ -1,14 +1,14 @@
+import { NewEmail } from '../../support/utils';
+
 describe("Test Quasar CRUD functionality", function () {
-  it("can visit the homepage", function () {
-    cy.visit(Cypress.config("frontendUrl") + "/posts");
-    cy.contains("μblog");
+
+  it("can create a new post as an anonymous user", function () {
+    cy.createPost("Quasar test post content");
   });
 
-  it("can create a new post", function () {
-    cy.visit(Cypress.config("frontendUrl") + "/new-post");
-    const text = 'This post was created on the Quasar app.';
-    cy.get('[data-cy="post-textarea"]').type(text);
-    cy.get('[data-cy="post-submit-btn"]').click();
-    cy.contains(text);
+  it("can create a new post as a logged-in user", function () {
+    const emailAddress = new NewEmail().getEmail();
+    cy.registerUser(emailAddress);
+    cy.createPost("This post was created by a logged-in user");
   });
 });

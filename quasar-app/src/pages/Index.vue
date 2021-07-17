@@ -271,8 +271,34 @@ export default defineComponent({
           image: 'netlify.png',
           documentationLink: 'https://www.netlify.com/',
         },
-
-
+        {
+          title: 'Focal Fossa',
+          description: 'Ubuntu 20.04',
+          detail: 'one of the preferred operating systems for developing this project',
+          image: 'focalfossa.png',
+          documentationLink: 'https://releases.ubuntu.com/20.04/',
+        },
+        {
+          title: 'Windows 10',
+          description: 'Microsoft Operation System',
+          detail: 'one of the preferred operating systems for developing this project',
+          image: 'windows10.png',
+          documentationLink: 'https://www.microsoft.com/en-us/windows/get-windows-10',
+        },
+        {
+          title: 'macOS Big Sur',
+          description: 'macOS version 11.4',
+          detail: 'one of the preferred operating systems for developing this project',
+          image: 'bigsur.png',
+          documentationLink: 'https://www.apple.com/macos/big-sur/',
+        },
+        {
+          title: 'Apple Silicon',
+          description: 'Apple M1 Chip',
+          detail: 'This project can be developed on Apple\'s latest hardware',
+          image: 'm1.jpeg',
+          documentationLink: 'https://www.apple.com/mac/',
+        },
       ]
     }
   },

@@ -3,7 +3,7 @@
     <q-card style="margin: auto;" class="my-card">
       <q-card-section class="flex-center">
         <img
-          style="max-width: 200px; margin: auto;"
+          class="image"
           :src="item.image"
         >
       </q-card-section>
@@ -34,5 +34,11 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
+.image {
+  display: flex;
+  justify-content: center;
+  max-width: 200px;
+  margin: auto;
+  max-height: 200px;
+}
 </style>
