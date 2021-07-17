@@ -55,7 +55,7 @@ urlpatterns = [
     path("", RedirectView.as_view(url="/posts")),
     path(
         "graphql/",
-        csrf_exempt(GraphQLView.as_view(graphiql=settings.DEBUG)),
+        csrf_exempt(GraphQLView.as_view(graphiql=True)),
         name="graphql",
     ),
 ]

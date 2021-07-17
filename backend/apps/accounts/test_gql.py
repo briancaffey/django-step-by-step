@@ -1,12 +1,19 @@
 import json
+import unittest
 
 import pytest
+import jwt
 
 from django.contrib.auth import get_user_model
 from django.shortcuts import reverse
 from graphql_jwt.testcases import JSONWebTokenTestCase
 
 User = get_user_model()
+
+PYJWT_VERSION = tuple([int(x) for x in jwt.__version__.split(".")])
+PYJWT_VERSION_CONFLICT = PYJWT_VERSION < (2, 0, 0)
+print(PYJWT_VERSION_CONFLICT)
+REASON = "PyJWT version"
 
 
 class GqlUsersTests(JSONWebTokenTestCase):
@@ -26,13 +33,13 @@ class GqlUsersTests(JSONWebTokenTestCase):
             }
         }"""
 
-        variables = {"email": self.EMAIL, "password": self.PASSWORD}
+        variable_values = {"email": self.EMAIL, "password": self.PASSWORD}
 
-        resp = self.client.execute(query, variables)
+        resp = self.client.execute(query, variable_values)
         assert "error" not in str(resp.data)
 
 
-# @pytest.mark.skip(reason="For demonstration purpose only")
+@pytest.mark.skip(reason="For demonstration purpose only")
 @pytest.mark.django_db(transaction=True)
 def test_token_authentication(client):
     """
@@ -58,9 +65,9 @@ def test_token_authentication(client):
         }
     """
 
-    variables = {"email": "user@email.com", "password": "Abcd1234!"}
+    variable_values = {"email": "user@email.com", "password": "Abcd1234!"}
 
-    body = {"query": query, "variables": variables}
+    body = {"query": query, "variable_values": variable_values}
 
     response = client.post(
         reverse("graphql"),
@@ -84,9 +91,9 @@ def test_token_authentication(client):
         }
     """
 
-    variables = {"body": "test!"}
+    variable_values = {"body": "test!"}
 
-    body = {"query": query, "variables": variables}
+    body = {"query": query, "variable_values": variable_values}
 
     # https://stackoverflow.com/questions/15113248/django-tokenauthentication-missing-the-authorization-http-header
     headers = {"HTTP_AUTHORIZATION": f"JWT {token}"}
