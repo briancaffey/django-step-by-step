@@ -67,6 +67,8 @@ import EssentialLink from '../components/EssentialLink.vue';
 import useAuth from '../modules/auth';
 import useProfile from '../modules/profile';
 
+const baseUrl = process.env.API_URL || 'http://localhost:8000';
+
 const linksList = [
   {
     title: 'Home',
@@ -102,13 +104,13 @@ const linksList = [
     title: 'Django Admin',
     caption: 'μblog Administration',
     icon: 'admin_panel_settings',
-    link: `${process.env.API_URL}/my-admin-portal/`,
+    link: `${baseUrl}/my-admin-portal/`,
   },
   {
     title: 'Django Views',
     caption: 'Server-rendered Django Templates',
     icon: 'dns',
-    link: `${process.env.API_URL}/posts`,
+    link: `${baseUrl}/posts`,
   },
   {
     title: 'GitHub',
