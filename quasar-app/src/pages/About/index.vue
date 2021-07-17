@@ -9,6 +9,9 @@
       <q-card-section>
         This is a Quasar Framework application. It is a frontend application that consumes the μblog API.
       </q-card-section>
+      <q-card-section>
+        {{ apiUrl }}
+      </q-card-section>
     </q-card>
   </q-page>
 </template>
@@ -19,8 +22,8 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   setup () {
 
-
-    return {}
+    const apiUrl = process.env.API_URL;
+    return { apiUrl }
   }
 })
 </script>
