@@ -67,7 +67,7 @@ import EssentialLink from '../components/EssentialLink.vue';
 import useAuth from '../modules/auth';
 import useProfile from '../modules/profile';
 
-const baseUrl = process.env.API_URL || 'http://localhost:8000';
+const baseUrl = process.env.API_URL || 'http://localhost:8000`';
 
 const linksList = [
   {
