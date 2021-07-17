@@ -1,3 +1,7 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/45943233-efa7-4e83-bd8c-fffb28f8a6c1/deploy-status)](https://app.netlify.com/sites/mystifying-ardinghelli-30e1a3/deploys)
+
+
+
 # Django Step by Step
 
 This is a Django reference project showing how to develop and deploy Django applications using multiple tools and methodologies with best practices and consice examples.
