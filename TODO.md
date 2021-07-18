@@ -1,9 +1,9 @@
 ## General
 
-- [ ] Add view types to Django templates
-- [ ] Add an index route to the Django app
+- [x] Add view types to Django templates
+- [x] Add an index route to the Django app
 - [ ] Fix OpenAPI "Failed to load API definition."
-- [ ] Add frontend URL to Django/Heroku app and Link Quasar app to it
+- [x] Add frontend URL to Django/Heroku app and Link Quasar app to it
 - [ ] Add load animation to Quasar posts list
 - [ ] Add a page that lists environment variables
 
@@ -15,3 +15,8 @@
 ## Docs
 
 - [ ] Move markdown files to a documentation folder or VuePress or similar
+
+
+## API
+
+- [x] Figure out why FBV does not have full image URL but CBV does

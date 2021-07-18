@@ -52,7 +52,7 @@ urlpatterns = [
     path("cbv/", include("apps.blog.cbv_urls")),
     path("", include("apps.accounts.urls")),
     path("my-admin-portal/", admin.site.urls),
-    path("", RedirectView.as_view(url="/posts")),
+    path("", include("apps.core.urls")),
     path(
         "graphql/",
         csrf_exempt(GraphQLView.as_view(graphiql=True)),

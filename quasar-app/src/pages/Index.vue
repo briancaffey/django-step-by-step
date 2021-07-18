@@ -244,6 +244,13 @@ export default defineComponent({
           documentationLink: 'https://aws.github.io/jsii/',
         },
         {
+          title: 'GNU Make',
+          description: 'Make is a build automation tool that automatically builds executable programs and libraries from source code',
+          detail: 'used to simplify local development and provide aliases for long commands',
+          image: 'gnu.png',
+          documentationLink: 'https://www.gnu.org/software/make/',
+        },
+        {
           title: 'MailHog',
           description: 'Web and API based SMTP testing',
           detail: 'used locally for testing that involves sending emails to users',

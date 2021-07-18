@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load static %}
+
+<!-- Title -->
+
+{% block title %}All Posts{% endblock %}
+
+<!-- Nav -->
+
+{% block nav_title %}All Posts{% endblock %}
+
+<!-- Content -->
+
+{% block content %}
+      <section class="jumbotron text-center pt-4">
+        <div class="container">
+          <h1 class="jumbotron-heading">welcome to μblog!</h1>
+          <p class="lead text-muted">
+            μblog is an example application built with Django and Vue.js.
+            It is a reference project that implements a simple microblogging application.
+          </p>
+          <p>
+            <a href="/posts" class="btn btn-primary my-2">Write your first μblog post</a>
+            <a href="https://github.com/briancaffey/django-step-by-step" class="btn btn-secondary my-2">Read more about μblog</a>
+          </p>
+        </div>
+      </section>
+
+
+
+      <section>
+      <div class="py-5 bg-light">
+        <div class="container">
+
+          <h2 class="text-center pb-4">μblog is built with open-source technologies</h2>
+          <div class="row">
+            <div class="col-sm-6 col-md-3">
+              <div class="card mb-4">
+                <img class="card-img-top p-2" src="{% static 'img/django.jpeg' %}" alt="Card image cap">
+                <div class="card-body">
+                  <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3">
+              <div class="card mb-4">
+                <img class="card-img-top p-2" src="{% static 'img/vue3.png' %}" alt="Card image cap">
+                <div class="card-body">
+                  <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3">
+              <div class="card mb-4">
+                <img
+                  class="card-img-top p-2"
+                  src="{% static 'img/drf_square.png' %}"
+                  alt="Card image cap"
+                >
+                <div class="card-body">
+                  <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-sm-6 col-md-3">
+              <div class="card mb-4">
+                <img class="card-img-top p-2" src="{% static 'img/quasar.png' %}" alt="Card image cap">
+                <div class="card-body">
+                  <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      <section class="text-center">
+          <p>
+            <a href="{{ FRONTEND_URL }}" class="btn btn-primary my-2">View all technologies</a>
+          </p>
+      </section>
+      </section>
+
+{% endblock %}

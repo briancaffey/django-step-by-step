@@ -21,7 +21,7 @@ def get_post(request, pk):
         post = Post.objects.with_like_info(user=request.user).get(id=pk)
     except Post.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    serializer = PostSerializer(post)
+    serializer = PostSerializer(post, context={"request": request})
     return Response(serializer.data)
 
 
@@ -33,7 +33,9 @@ def list_posts(request):
     paginator = LimitOffsetPagination()
     posts = Post.objects.with_like_info(user=request.user).all()
     result_page = paginator.paginate_queryset(posts, request)
-    serializer = PostSerializer(result_page, many=True)
+    serializer = PostSerializer(
+        result_page, many=True, context={"request": request}
+    )
     return_data = paginator.get_paginated_response(serializer.data)
     return return_data
 
