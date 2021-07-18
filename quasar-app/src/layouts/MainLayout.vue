@@ -10,7 +10,7 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
-        <q-toolbar-title> μblog </q-toolbar-title>
+        <q-toolbar-title> <router-link style="color: white; text-decoration: none;" to="/">μblog</router-link> </q-toolbar-title>
         <q-toggle color="white" v-model="darkMode" @click="toggleDarkMode" />
         <q-btn-group v-if="isAuthenticated">
           <q-btn
@@ -151,3 +151,10 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.router-link {
+  color: white;
+  text-decoration: none;
+}
+</style>
