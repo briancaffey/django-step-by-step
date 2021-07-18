@@ -4,7 +4,7 @@
       <q-card class="m-4">
         <q-card-section v-if="post.image">
         <img
-            style="max-height: 200px; max-width: 200px; margin: auto;"
+            style="max-height: 200px; max-width: 200px; display:block; margin: auto;"
             :src="post.image"
             :alt="post.body"
             v-if="post.image"

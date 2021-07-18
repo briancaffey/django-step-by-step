@@ -23,10 +23,14 @@
 </div>
 {% endif %}
 
-<p>{{ post.created_on }}</p>
 {% if post.created_by %}
-<p>{{ post.created_by }}</p>
+<span>posted by {{ post.created_by }}</span>
+{% else %}
+<span>posted anonymously</span>
 {% endif %}
+
+<span>on {{ post.created_on }}</span>
+
 <div id="post">
   <div class="card p-4 mb-2" style="font-size: 1.75em">
 

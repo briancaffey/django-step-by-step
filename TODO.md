@@ -6,6 +6,7 @@
 - [x] Add frontend URL to Django/Heroku app and Link Quasar app to it
 - [ ] Add load animation to Quasar posts list
 - [ ] Add a page that lists environment variables
+- [ ] Move technologies array to a separate file from pages/Index.vue
 
 ## Auth
 
