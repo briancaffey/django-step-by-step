@@ -30,6 +30,7 @@
       </q-card-actions>
     </q-form>
   </q-card>
+  <div class="q-py-lg text-center">If you don't have an account, <router-link class="router-link" to="/login">sign in.</router-link></div>
 </template>
 
 <script lang="ts">
@@ -46,5 +47,7 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
+.router-link {
+  color: grey;
+}
 </style>

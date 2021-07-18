@@ -1,6 +1,6 @@
 <template>
   <q-page padding>
-    <div class="text-center q-pa-md q-pa-xl">
+    <div class="text-center q-pa-md q-pa-lg">
       <div class="text-h2 ">
         welcome to μblog!
       </div>
@@ -8,17 +8,17 @@
       <div class="text-subtitle1 q-pa-md">
         μblog is a reference application built with Django and Vue.js. It is a simple microblogging application.
       </div>
-      <div class="q-pa-md row items-start q-gutter-md justify-center">
+      <div class="q-pa-md row items-start justify-center ">
         <!-- center button that links to all technologies -->
-        <q-btn to="/about" color="primary">All technologies</q-btn>
-        <q-btn to="/new-post" color="info">Write a post</q-btn>
-        <q-btn to="/posts" color="purple">View all posts</q-btn>
+        <q-btn to="/about" color="primary" class="q-ma-sm">All technologies</q-btn>
+        <q-btn to="/new-post" color="info" class="q-ma-sm">Write a post</q-btn>
+        <q-btn to="/posts" color="purple" class="q-ma-sm">View all posts</q-btn>
       </div>
     </div>
-    <div class="q-pa-md row q-gutter-md fit row wrap justify-center items-start content-start text-center">
+    <div class="q-pa-md row wrap justify-center items-start content-center text-center">
       <tech-card v-for="item in coreTechnologies" :key="item.title" :item="item" />
     </div>
-    <div class="q-pa-md row items-start q-gutter-md justify-center">
+    <div class="q-pa-md row items-start justify-center">
       <!-- center button that links to all technologies -->
       <q-btn color="primary">All technologies</q-btn>
     </div>
