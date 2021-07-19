@@ -15,6 +15,9 @@
         <q-btn to="/posts" color="purple" class="q-ma-sm">View all posts</q-btn>
       </div>
     </div>
+    <div class="text-h5 q-pa-md text-center">
+      μblog is built with open-source technologies
+    </div>
     <div class="q-pa-md row wrap justify-center items-start content-center text-center">
       <tech-card v-for="item in coreTechnologies" :key="item.title" :item="item" />
     </div>

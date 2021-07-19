@@ -1,5 +1,5 @@
 <template>
-  <div class="justify-center content-center q-ma-sm fit col">
+  <div class="justify-center content-center q-ma-sm col-xs-12 col-sm-4 col-md-4 col-lg-2">
     <q-card class="justify-center content-center">
       <q-card-section class="flex-center">
         <img
@@ -43,10 +43,9 @@ export default defineComponent({
 
 <style scoped>
 .image {
-  display: flex;
   justify-content: center;
-  max-width: 200px;
+  max-width: 100%;
   margin: auto;
-  max-height: 200px;
+  max-height: 100%;
 }
 </style>
