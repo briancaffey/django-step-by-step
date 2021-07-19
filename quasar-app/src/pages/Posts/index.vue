@@ -1,7 +1,14 @@
 <template>
   <q-page padding>
-    <div class="q-pa-sm">
+    <div class="q-pa-sm" v-if="!loadingPosts">
       <post v-for="post in posts" :post="post" :key="post.id" />
+    </div>
+    <div v-else class="content-center text-center">
+      <q-spinner-oval
+        class="q-ma-xl"
+        color="primary"
+        size="2em"
+      />
     </div>
     <q-pagination
       class="justify-center"
@@ -21,14 +28,24 @@ import usePosts from '../../modules/posts';
 export default defineComponent({
   components: { Post },
   setup () {
-    const { getPosts, posts, currentPage, postCount, limit, offset } = usePosts();
+    const {
+      getPosts,
+      posts,
+      currentPage,
+      postCount,
+      limit,
+      offset,
+      loadingPosts,
+    } = usePosts();
 
     // doing this to avoid floating promises
+    // rather then just writing:
+    // await getPosts();
     onMounted(async () => {
       await getPosts();
     })
 
-    return { posts, currentPage, postCount, limit, offset }
+    return { posts, currentPage, postCount, limit, offset, loadingPosts }
   }
 })
 </script>

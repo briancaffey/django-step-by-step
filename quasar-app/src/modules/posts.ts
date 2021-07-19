@@ -24,6 +24,7 @@ interface Post {
 
 const postList = ref<Post[]>([]);
 const postCount = ref(0);
+const loadingPosts = ref(false);
 
 const post = reactive<Post>({
   body: '',
@@ -68,9 +69,11 @@ export default function usePosts() {
   const { currentPage, limit, offset } = usePagination();
 
   const getPosts = async (): Promise<void> => {
+    loadingPosts.value = true;
     const res = await api.get('/api/drf/fbv/posts/', { params: { offset: offset.value * limit.value, limit: limit.value } });
     postList.value = res.data?.results;
     postCount.value = res.data?.count;
+    loadingPosts.value = false;
   };
 
   watch(currentPage, getPosts);
@@ -84,5 +87,6 @@ export default function usePosts() {
     currentPage,
     limit,
     offset,
+    loadingPosts,
   };
 }
