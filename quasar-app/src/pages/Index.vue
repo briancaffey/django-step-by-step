@@ -10,7 +10,7 @@
       </div>
       <div class="q-pa-md row items-start justify-center ">
         <!-- center button that links to all technologies -->
-        <q-btn to="/about" color="primary" class="q-ma-sm">All technologies</q-btn>
+        <q-btn to="/technologies" color="primary" class="q-ma-sm">All technologies</q-btn>
         <q-btn to="/new-post" color="info" class="q-ma-sm">Write a post</q-btn>
         <q-btn to="/posts" color="purple" class="q-ma-sm">View all posts</q-btn>
       </div>
@@ -23,7 +23,7 @@
     </div>
     <div class="q-pa-md row items-start justify-center">
       <!-- center button that links to all technologies -->
-      <q-btn color="primary">All technologies</q-btn>
+      <q-btn to="/technologies" color="primary">All technologies</q-btn>
     </div>
   </q-page>
 </template>
