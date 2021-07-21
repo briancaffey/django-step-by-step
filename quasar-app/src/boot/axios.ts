@@ -3,6 +3,7 @@
 
 import { boot } from 'quasar/wrappers';
 import axios, { AxiosError, AxiosInstance } from 'axios';
+import useAuth from '../modules/auth';
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
@@ -21,8 +22,8 @@ const api = axios.create({ baseURL: process.env.API_URL });
 api.interceptors.request.use(
   (config) => {
     const c = config;
-
-    const token = localStorage.getItem('accessToken');
+    const { accessToken } = useAuth();
+    const token = accessToken.value;
 
     if (token) {
       c.headers.Authorization = `Bearer ${token}`;

@@ -4,6 +4,11 @@ from django.urls import path
 from apps.accounts import views
 from apps.accounts.forms import UserLoginForm
 
+from .auth_views import (
+    CookieTokenRefreshView,
+    CookieTokenObtainPairView,
+)
+
 urlpatterns = [
     path(
         "login",
@@ -18,4 +23,15 @@ urlpatterns = [
         name="activate",
     ),
     path("profile", views.profile_view, name="profile"),
+    # JWT authentication with HttpOnly cookies
+    path(
+        "auth/jwt/token/",
+        CookieTokenObtainPairView.as_view(),
+        name="jwt_token_obtain_pair",
+    ),
+    path(
+        "auth/jwt/token/refresh/",
+        CookieTokenRefreshView.as_view(),
+        name="jwt_token_refresh",
+    ),
 ]

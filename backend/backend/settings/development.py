@@ -25,3 +25,7 @@ NOTEBOOK_ARGUMENTS = [
     "--allow-root",
     "--no-browser",
 ]
+
+SESSION_COOKIE_SAMESITE = "None"
+CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_SAMESITE = None
