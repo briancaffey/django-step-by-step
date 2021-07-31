@@ -236,4 +236,4 @@ AWS_STATIC_LOCATION = "static"
 # could be related to S3Boto3Storage behavior?
 AWS_PRIVATE_MEDIA_LOCATION = "media"
 
-FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost:8080")
+FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost")

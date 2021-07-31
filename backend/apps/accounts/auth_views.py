@@ -1,3 +1,10 @@
+from rest_framework.decorators import (
+    api_view,
+    permission_classes,
+)
+from django.contrib.auth import logout
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenObtainPairView,
@@ -29,7 +36,6 @@ class CookieTokenObtainPairView(TokenObtainPairView):
                 response.data["refresh"],
                 max_age=cookie_max_age,
                 httponly=True,
-                domain=settings.FRONTEND_URL,
             )
             del response.data["refresh"]
         return super().finalize_response(request, response, *args, **kwargs)
@@ -44,9 +50,19 @@ class CookieTokenRefreshView(TokenRefreshView):
                 response.data["refresh"],
                 max_age=cookie_max_age,
                 httponly=True,
-                domain=settings.FRONTEND_URL,
             )
             del response.data["refresh"]
         return super().finalize_response(request, response, *args, **kwargs)
 
     serializer_class = CookieTokenRefreshSerializer
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def logout(request):
+    """
+    This view is called from the frontend to remove the refresh token
+    This effectively logs out the user
+    """
+    response = Response({"message": "logout successful"})
+    response.delete_cookie("refresh_token")
+    return response

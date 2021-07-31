@@ -7,6 +7,7 @@ import { ref, computed } from 'vue';
 import { api } from 'boot/axios';
 import { useRouter } from 'vue-router';
 import useProfile from './profile';
+import { access } from 'fs';
 
 const email = ref('');
 const password = ref('');
@@ -20,7 +21,8 @@ export default function useAuth() {
 
   const router = useRouter();
 
-  const logout = () => {
+  const logout = async (): Promise<void> => {
+    const resp = await api.post('/api/auth/jwt/token/logout/');
     accessToken.value = '';
     clearProfile();
     router.push('/');
@@ -31,13 +33,32 @@ export default function useAuth() {
     return !!authenticated;
   });
 
-  const refreshToken = async (): Promise<any> => {
-    await api.post('/auth/jwt/token/refresh/');
+
+  const refreshToken = async (initial: boolean): Promise<any> => {
+
+    try {
+      const resp = await api.post('/api/auth/jwt/token/refresh/');
+      accessToken.value = resp.data?.access;
+
+      // only load the profile and set interval when initial is true
+      // this is used in App.vue
+      if (initial) {
+
+        getProfile();
+
+        setInterval(function () {
+          refreshToken(false);
+        }, 1000 * 10);
+      }
+    } catch (err) {
+      return
+    }
+
   };
 
   const login = async (): Promise<any> => {
 
-    const resp = await api.post('/auth/jwt/token/', {
+    const resp = await api.post('/api/auth/jwt/token/', {
       email: email.value, password: password.value,
     }, { withCredentials: true });
 
@@ -46,7 +67,7 @@ export default function useAuth() {
     getProfile();
 
     setInterval(function () {
-      refreshToken();
+      refreshToken(false);
     }, 1000 * 10);
 
     router.push('/');

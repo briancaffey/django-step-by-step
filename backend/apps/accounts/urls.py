@@ -7,6 +7,7 @@ from apps.accounts.forms import UserLoginForm
 from .auth_views import (
     CookieTokenRefreshView,
     CookieTokenObtainPairView,
+    logout
 )
 
 urlpatterns = [
@@ -25,13 +26,18 @@ urlpatterns = [
     path("profile", views.profile_view, name="profile"),
     # JWT authentication with HttpOnly cookies
     path(
-        "auth/jwt/token/",
+        "api/auth/jwt/token/",
         CookieTokenObtainPairView.as_view(),
         name="jwt_token_obtain_pair",
     ),
     path(
-        "auth/jwt/token/refresh/",
+        "api/auth/jwt/token/refresh/",
         CookieTokenRefreshView.as_view(),
         name="jwt_token_refresh",
+    ),
+    path(
+        "api/auth/jwt/token/logout/",
+        logout,
+        name="jwt_token_logout",
     ),
 ]

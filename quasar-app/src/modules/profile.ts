@@ -7,18 +7,14 @@
 import { ref } from 'vue';
 import { api } from 'boot/axios';
 
-const email = ref(localStorage.getItem('userEmail') || '');
-const userId = ref(localStorage.getItem('userId') || '');
+const email = ref('');
+const userId = ref('');
 
 export default function useProfile() {
 
   const clearProfile = () => {
     email.value = '';
     userId.value = '';
-
-    // remove profile from localStorage
-    localStorage.removeItem('userEmail');
-    localStorage.removeItem('userId');
   };
 
   const getProfile = async (): Promise<any> => {
@@ -26,11 +22,6 @@ export default function useProfile() {
 
     email.value = resp.data?.email;
     userId.value = resp.data?.id;
-
-    // set the user's profile to local storage
-    localStorage.setItem('userEmail', resp.data?.email);
-    localStorage.setItem('userId', resp.data?.id);
-
   };
 
   return { getProfile, email, userId, clearProfile };
