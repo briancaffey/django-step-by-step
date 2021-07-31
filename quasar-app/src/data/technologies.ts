@@ -171,6 +171,13 @@ const otherTechnologies = [
     documentationLink: 'https://www.diagrams.net/',
   },
   {
+    title: 'JWT',
+    description: 'JSON Web Tokens',
+    detail: 'JSON Web Tokens are an open, industry standard RFC 7519 method for representing claims securely between two parties',
+    image: 'jwt.svg',
+    documentationLink: 'https://jwt.io/',
+  },
+  {
     title: 'GraphQL',
     description: 'A query language for your API',
     detail: 'used for querying data in the application',
