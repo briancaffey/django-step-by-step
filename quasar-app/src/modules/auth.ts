@@ -7,7 +7,6 @@ import { ref, computed } from 'vue';
 import { api } from 'boot/axios';
 import { useRouter } from 'vue-router';
 import useProfile from './profile';
-import { access } from 'fs';
 
 const email = ref('');
 const password = ref('');
@@ -22,7 +21,7 @@ export default function useAuth() {
   const router = useRouter();
 
   const logout = async (): Promise<void> => {
-    const resp = await api.post('/api/auth/jwt/token/logout/');
+    await api.post('/api/auth/jwt/token/logout/');
     accessToken.value = '';
     clearProfile();
     router.push('/');
