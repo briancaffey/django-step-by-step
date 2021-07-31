@@ -6,12 +6,12 @@
 - [x] Add frontend URL to Django/Heroku app and Link Quasar app to it
 - [x] Add load animation to Quasar posts list
 - [ ] Add a page that lists environment variables
-- [ ] Move technologies array to a separate file from pages/Index.vue
+- [x] Move technologies array to a separate file from pages/Index.vue
 
 ## Auth
 
-- [ ] Implement the fix described here: https://github.com/jazzband/djangorestframework-simplejwt/issues/71
-- [ ] Try setting CSRF_COOKIE_SAMESITE to string 'None': https://docs.djangoproject.com/en/3.2/ref/settings/#csrf-cookie-samesite
+- [x] Implement the fix described here: https://github.com/jazzband/djangorestframework-simplejwt/issues/71
+- [x] Try setting CSRF_COOKIE_SAMESITE to string 'None': https://docs.djangoproject.com/en/3.2/ref/settings/#csrf-cookie-samesite
 
 ## Docs
 

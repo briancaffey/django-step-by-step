@@ -132,14 +132,14 @@ First, let's add a page that will list our blog posts by making an HTTP request 
 - [x] Fix local image upload path issue
 - [x] CORS
 - [x] JWT / Token Authentication on backend
-- [ ] Registration page for new users
+- [x] Registration page for new users
 
 #### Frontend
 
 - [x] Login / Logout
-- [ ] Refresh token
-- [ ] DRF Token Authentication vs Simple JWT
-- [ ] Register
+- [x] Refresh token
+- [x] DRF Token Authentication vs Simple JWT
+- [x] Register
 
 #### Application
 
@@ -158,15 +158,15 @@ First, let's add a page that will list our blog posts by making an HTTP request 
 
 - [x] Like Button
 - [ ] Fix like button on list page
-- [ ] Fix Dark mode syncing
+- [x] Fix Dark mode syncing
 - [ ] Add i18n switcher
 
 - [ ] Fix MainLayout Menu
 - [ ] Add Route Guards
 
-- [ ] Remove eslint-disabled markers
+- [x] Remove eslint-disabled markers
 
-- [ ] Optional: Configure nginx to serve the Quasar and API on the same port
+- [x] Optional: Configure nginx to serve the Quasar and API on the same port
 
 ## SSR mode
 
