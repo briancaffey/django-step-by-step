@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-
 import { ref, computed } from 'vue';
 import { api } from 'boot/axios';
 import { useRouter } from 'vue-router';
 import useProfile from './profile';
+
+type TokenResponse = {
+  access: string;
+}
 
 const email = ref('');
 const password = ref('');
@@ -24,7 +23,7 @@ export default function useAuth() {
     await api.post('/api/auth/jwt/token/logout/');
     accessToken.value = '';
     clearProfile();
-    router.push('/');
+    await router.push('/');
   }
 
   const isAuthenticated = computed(() => {
@@ -33,20 +32,20 @@ export default function useAuth() {
   });
 
 
-  const refreshToken = async (initial: boolean): Promise<any> => {
+  const refreshToken = async (initial: boolean): Promise<void> => {
 
     try {
-      const resp = await api.post('/api/auth/jwt/token/refresh/');
-      accessToken.value = resp.data?.access;
+      const resp = await api.post<TokenResponse>('/api/auth/jwt/token/refresh/');
+      accessToken.value = resp.data.access;
 
       // only load the profile and set interval when initial is true
       // this is used in App.vue
       if (initial) {
 
-        getProfile();
+        await getProfile();
 
         setInterval(function () {
-          refreshToken(false);
+          void refreshToken(false);
         }, 1000 * 10);
       }
     } catch (err) {
@@ -55,21 +54,21 @@ export default function useAuth() {
 
   };
 
-  const login = async (): Promise<any> => {
+  const login = async (): Promise<void> => {
 
-    const resp = await api.post('/api/auth/jwt/token/', {
+    const resp = await api.post<TokenResponse>('/api/auth/jwt/token/', {
       email: email.value, password: password.value,
     }, { withCredentials: true });
 
-    accessToken.value = resp.data?.access;
+    accessToken.value = resp.data.access;
 
-    getProfile();
+    await getProfile();
 
     setInterval(function () {
-      refreshToken(false);
+      void refreshToken(false);
     }, 1000 * 10);
 
-    router.push('/');
+    await router.push('/');
 
   };
 
