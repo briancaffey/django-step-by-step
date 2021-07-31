@@ -9,14 +9,6 @@ class PostSerializer(serializers.ModelSerializer):
     liked = serializers.BooleanField(read_only=True)
     like_count = serializers.IntegerField(read_only=True)
     created_by = CustomUserSerializer(read_only=True)
-    image = serializers.SerializerMethodField()
-
-    def get_image(self, obj):
-        try:
-            image = self.context["request"].build_absolute_uri(obj.image.url)
-        except ValueError:
-            image = None
-        return image
 
     class Meta:
         model = Post
