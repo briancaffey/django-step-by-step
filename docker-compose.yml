@@ -1,6 +1,21 @@
 version: "2.4"
 
 services:
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ./nginx
+      dockerfile: dev/Dockerfile
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    volumes:
+      - ./nginx/dev/dev.conf:/etc/nginx/nginx.conf:ro
+    networks:
+      - main
+
   postgres:
     container_name: postgres
     image: postgres:11.5
