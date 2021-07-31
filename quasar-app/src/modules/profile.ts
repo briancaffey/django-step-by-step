@@ -1,27 +1,26 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-
-
 import { ref } from 'vue';
 import { api } from 'boot/axios';
 
+interface Profile {
+  email: string;
+  id: number;
+}
+
 const email = ref('');
-const userId = ref('');
+const userId = ref(0);
 
 export default function useProfile() {
 
   const clearProfile = () => {
     email.value = '';
-    userId.value = '';
+    userId.value = 0;
   };
 
-  const getProfile = async (): Promise<any> => {
-    const resp = await api.get('/api/profile/');
+  const getProfile = async (): Promise<void> => {
+    const resp = await api.get<Profile>('/api/profile/');
 
-    email.value = resp.data?.email;
-    userId.value = resp.data?.id;
+    email.value = resp.data.email;
+    userId.value = resp.data.id;
   };
 
   return { getProfile, email, userId, clearProfile };

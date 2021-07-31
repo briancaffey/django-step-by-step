@@ -1,14 +1,16 @@
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-
 import { boot } from 'quasar/wrappers';
-import axios, { AxiosError, AxiosInstance } from 'axios';
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
 import useAuth from '../modules/auth';
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $axios: AxiosInstance;
   }
+}
+
+// https://stackoverflow.com/questions/62915124/eslint-error-unsafe-member-access-content-type-on-an-any-value
+interface RequestHeaders {
+  [key: string]: string,
 }
 
 // Be careful when using SSR for cross-request state pollution
@@ -21,17 +23,18 @@ const api = axios.create({ baseURL: process.env.API_URL });
 
 api.interceptors.request.use(
   (config) => {
-    const c = config;
+    const c: AxiosRequestConfig = config;
     const { accessToken } = useAuth();
     const token = accessToken.value;
 
     if (token) {
-      c.headers.Authorization = `Bearer ${token}`;
+      const headers = c.headers as RequestHeaders;
+      headers.Authorization = `Bearer ${token}`;
     }
 
     return c
   }, (error: AxiosError) => {
-    Promise.reject(error);
+    void Promise.reject(error);
   }
 );
 export default boot(({ app }) => {

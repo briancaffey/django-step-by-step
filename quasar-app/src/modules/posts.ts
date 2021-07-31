@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-
 import { ref, computed, watch, reactive } from 'vue';
 import { api } from 'boot/axios';
 import usePagination from '../modules/pagination';
@@ -22,6 +17,11 @@ interface Post {
   modified_on: string;
 }
 
+interface Posts {
+  results: Post[];
+  count: number;
+}
+
 const postList = ref<Post[]>([]);
 const postCount = ref(0);
 const loadingPosts = ref(false);
@@ -38,15 +38,15 @@ const post = reactive<Post>({
 
 export function usePost() {
   const togglePostLike = async (postId: number): Promise<void> => {
-    const resp = await api.post(`/api/drf/fbv/posts/${postId}/like/`);
+    const resp = await api.post<Post>(`/api/drf/fbv/posts/${postId}/like/`);
     post.liked = resp.data.liked;
     post.like_count = resp.data.like_count;
   };
 
-  // is there a more consise way to do this?
+  // use this for a single post
   const getPost = async (postId: number): Promise<void> => {
-    const res = await api.get(`/api/drf/fbv/posts/${postId}/`);
-    const postJson = await res.data;
+    const res = await api.get<Post>(`/api/drf/fbv/posts/${postId}/`);
+    const postJson = res.data;
     post.body = postJson.body;
     post.id = postJson.id;
     post.image = postJson.image;
@@ -64,13 +64,14 @@ export function usePost() {
   return { post, getPost, deletePost, togglePostLike };
 }
 
+// use this for a list of posts
 export default function usePosts() {
 
   const { currentPage, limit, offset } = usePagination();
 
   const getPosts = async (): Promise<void> => {
     loadingPosts.value = true;
-    const res = await api.get('/api/drf/fbv/posts/', { params: { offset: offset.value * limit.value, limit: limit.value } });
+    const res = await api.get<Posts>('/api/drf/fbv/posts/', { params: { offset: offset.value * limit.value, limit: limit.value } });
     postList.value = res.data?.results;
     postCount.value = res.data?.count;
     loadingPosts.value = false;

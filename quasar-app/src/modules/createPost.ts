@@ -1,10 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-
-
 import { ref } from 'vue';
 import { api } from 'boot/axios';
 import { useRouter } from 'vue-router';
+
+interface Post {
+  id: number;
+}
 
 export default function useCreatePost() {
 
@@ -21,7 +21,7 @@ export default function useCreatePost() {
       if (image.value) {
         formData.append('image', image.value);
       };
-      const resp = await api.post('/api/drf/fbv/posts/new/', formData);
+      const resp = await api.post<Post>('/api/drf/fbv/posts/new/', formData);
       const id: number = resp.data.id;
 
       await router.push(`/posts/${id}`);

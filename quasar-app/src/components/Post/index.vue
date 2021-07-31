@@ -38,9 +38,6 @@
   </div>
 </template>
 <script lang="ts">
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/restrict-template-expressions */
 import { defineComponent } from 'vue';
 import { usePost } from '../../modules/posts';
 
@@ -56,9 +53,8 @@ export default defineComponent({
     }
   },
   setup() {
-    const apiUrl = process.env.API_URL;
     const { togglePostLike } = usePost();
-    return { togglePostLike, apiUrl  };
+    return { togglePostLike  };
   }
 });
 </script>

@@ -40,9 +40,6 @@
 </template>
 
 <script lang="ts">
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-floating-promises */
 import { defineComponent } from 'vue';
 import useAuth from '../../modules/auth';
 
