@@ -7,7 +7,7 @@ from apps.accounts.forms import UserLoginForm
 from .auth_views import (
     CookieTokenRefreshView,
     CookieTokenObtainPairView,
-    logout
+    logout,
 )
 
 urlpatterns = [

@@ -2,7 +2,6 @@ from rest_framework.decorators import (
     api_view,
     permission_classes,
 )
-from django.contrib.auth import logout
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.views import (
@@ -11,7 +10,6 @@ from rest_framework_simplejwt.views import (
 )
 from rest_framework_simplejwt.serializers import TokenRefreshSerializer
 from rest_framework_simplejwt.exceptions import InvalidToken
-from django.conf import settings
 
 
 class CookieTokenRefreshSerializer(TokenRefreshSerializer):
@@ -55,6 +53,7 @@ class CookieTokenRefreshView(TokenRefreshView):
         return super().finalize_response(request, response, *args, **kwargs)
 
     serializer_class = CookieTokenRefreshSerializer
+
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
