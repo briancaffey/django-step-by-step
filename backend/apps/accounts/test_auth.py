@@ -35,5 +35,4 @@ def test_obtain_jwt_token(client):
     # THEN has a JWT in the response body and a refresh HttpOnly cookie
     assert response.status_code == status.HTTP_200_OK
     assert "access" in json.loads(response.content).keys()
-    assert "refresh" in json.loads(response.content).keys()
     assert "HttpOnly;" in str(response.client.cookies.get("refresh_token"))

@@ -37,7 +37,7 @@ def test_post_not_found(client):
 @pytest.mark.django_db(transaction=True)
 def test_homepage(client):
     response = client.get("/")
-    assert response.status_code == 302
+    assert response.status_code == 200
 
 
 @pytest.mark.django_db(transaction=True)

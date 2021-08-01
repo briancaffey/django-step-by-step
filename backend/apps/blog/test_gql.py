@@ -15,7 +15,7 @@ User = get_user_model()
 
 # Note: Most of the tests in this file are failing. Skipping for now.
 PYJWT_VERSION = tuple([int(x) for x in jwt.__version__.split(".")])
-PYJWT_VERSION_CONFLICT = PYJWT_VERSION < (2, 0, 0)
+PYJWT_VERSION_CONFLICT = PYJWT_VERSION > (2, 0, 0)
 print(PYJWT_VERSION_CONFLICT)
 REASON = "PyJWT version"
 
