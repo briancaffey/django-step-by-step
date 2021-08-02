@@ -341,6 +341,16 @@ cdk-destroy: cdk-install	cdk-build
 ## start quasar project locally
 quasar-dev:
 	cd quasar-app && quasar dev
+
+## -- VuePress Targets --
+vuepress-build:
+	cd vuepress-docs && yarn docs:build
+
+vuepress-copy:
+	cp -R vuepress-docs/docs/.vuepress/dist/ docs/
+
+vuepress-build-docs: vuepress-build	vuepress-copy
+
 # Credit: https://gist.github.com/prwhite/8168133#gistcomment-2749866
 ## Show this help menu
 help:
