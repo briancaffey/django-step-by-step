@@ -4,6 +4,8 @@ import { navbar } from './configs';
 
 export default defineUserConfig<DefaultThemeOptions>({
   head: [
+    ['link', { rel: 'manifest', href: '/manifest.webmanifest' }],
+    ['meta', { name: 'theme-color', content: '#3eaf7c' }],
     [
       'link',
       {
