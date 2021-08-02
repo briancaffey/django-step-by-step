@@ -1,0 +1,17 @@
+{
+  "name": "vuepress-docs",
+  "version": "1.0.0",
+  "description": "Documentation",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "docs:dev": "vuepress dev docs",
+    "docs:build": "vuepress build docs"
+  },
+  "devDependencies": {
+    "vuepress": "^2.0.0-beta.23"
+  },
+  "dependencies": {
+    "@vuepress/plugin-search": "^2.0.0-beta.23"
+  }
+}
