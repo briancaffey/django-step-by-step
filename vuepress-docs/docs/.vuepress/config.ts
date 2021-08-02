@@ -19,6 +19,12 @@ export default defineUserConfig<DefaultThemeOptions>({
   ],
   plugins: [
     [
+      '@vuepress/pwa',
+      {
+        skipWaiting: true,
+      },
+    ],
+    [
       '@vuepress/plugin-search',
       {
         locales: {
