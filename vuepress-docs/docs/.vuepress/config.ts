@@ -3,6 +3,7 @@ import type { DefaultThemeOptions } from 'vuepress'
 import { navbar } from './configs';
 
 export default defineUserConfig<DefaultThemeOptions>({
+  base: '/django-step-by-step/',
   head: [
     ['link', { rel: 'manifest', href: '/manifest.webmanifest' }],
     ['meta', { name: 'theme-color', content: '#3eaf7c' }],
