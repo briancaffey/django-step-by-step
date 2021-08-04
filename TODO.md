@@ -5,7 +5,7 @@
 - [ ] Fix OpenAPI "Failed to load API definition."
 - [x] Add frontend URL to Django/Heroku app and Link Quasar app to it
 - [x] Add load animation to Quasar posts list
-- [ ] Add a page that lists environment variables
+- [x] Add a page that lists environment variables
 - [x] Move technologies array to a separate file from pages/Index.vue
 
 ## Auth
@@ -15,8 +15,7 @@
 
 ## Docs
 
-- [ ] Move markdown files to a documentation folder or VuePress or similar
-
+- [x] Move markdown files to a documentation folder or VuePress or similar
 
 ## API
 
