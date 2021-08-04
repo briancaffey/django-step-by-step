@@ -10,7 +10,11 @@
           aria-label="Menu"
           @click="toggleLeftDrawer"
         />
-        <q-toolbar-title> <router-link style="color: white; text-decoration: none;" to="/">μblog</router-link> </q-toolbar-title>
+        <q-toolbar-title>
+          <router-link style="color: white; text-decoration: none" to="/"
+            >μblog</router-link
+          >
+        </q-toolbar-title>
         <q-toggle color="white" v-model="darkMode" @click="toggleDarkMode" />
         <q-btn-group v-if="isAuthenticated">
           <q-btn
@@ -31,7 +35,6 @@
             to="/login"
           />
         </q-btn-group>
-        {{ email }}
       </q-toolbar>
     </q-header>
 
@@ -40,7 +43,14 @@
         <q-item-label header class="text-grey-8">
           Essential Links
         </q-item-label>
-
+        <nav-link
+          v-for="link in linksList"
+          :key="link.link"
+          :title="link.title"
+          :caption="link.caption"
+          :link="link.link"
+          :icon="link.icon"
+        />
         <EssentialLink
           v-for="link in essentialLinks"
           :key="link.title"
@@ -50,17 +60,25 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <router-view v-slot="{ Component }">
+        <transition
+          enter-active-class="animated fadeIn"
+          leave-active-class="animated fadeOut"
+          appear
+          :duration="250"
+        >
+          <component :is="Component" />
+        </transition>
+      </router-view>
     </q-page-container>
   </q-layout>
 </template>
 
 <script lang="ts">
 import EssentialLink from '../components/EssentialLink.vue';
+import NavLink from '../components/NavLink/index.vue';
 import useAuth from '../modules/auth';
 import useProfile from '../modules/profile';
-
-const baseUrl = process.env.API_URL || 'http://localhost:8000`';
 
 const linksList = [
   {
@@ -93,18 +111,9 @@ const linksList = [
     icon: 'info',
     link: '/about',
   },
-  {
-    title: 'Django Admin',
-    caption: 'μblog Administration',
-    icon: 'admin_panel_settings',
-    link: `${baseUrl}/my-admin-portal/`,
-  },
-  {
-    title: 'Django Views',
-    caption: 'Server-rendered Django Templates',
-    icon: 'dns',
-    link: `${baseUrl}/posts`,
-  },
+];
+
+const essentialLinks = [
   {
     title: 'GitHub',
     caption: 'View this project on GitHub',
@@ -121,6 +130,7 @@ export default defineComponent({
 
   components: {
     EssentialLink,
+    NavLink,
   },
 
   setup() {
@@ -130,12 +140,13 @@ export default defineComponent({
     const { darkMode, toggleDarkMode } = useDarkMode();
 
     return {
+      linksList,
       isAuthenticated,
       toggleDarkMode,
       darkMode,
       email,
       logout,
-      essentialLinks: linksList,
+      essentialLinks,
       leftDrawerOpen,
       toggleLeftDrawer() {
         leftDrawerOpen.value = !leftDrawerOpen.value;
