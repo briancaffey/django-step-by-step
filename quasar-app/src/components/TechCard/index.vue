@@ -1,19 +1,23 @@
 <template>
-  <div class="justify-center content-center q-ma-sm col-xs-12 col-sm-4 col-md-4 col-lg-2">
+  <div
+    class="
+      justify-center
+      content-center
+      q-ma-sm
+      col-xs-12 col-sm-4 col-md-4 col-lg-2
+    "
+  >
     <q-card class="justify-center content-center">
       <q-card-section class="flex-center">
-        <img
-          class="image"
-          :src="item.image"
-        >
+        <img class="image" :src="item.image" />
       </q-card-section>
 
       <q-card-section>
-        <div class="text-h6" >{{ item.title }}</div>
-        <div class="text-subtitle2" >{{ item.description }}</div>
+        <div class="text-h6">{{ item.title }}</div>
+        <div class="text-subtitle2">{{ item.description }}</div>
       </q-card-section>
 
-      <q-card-section class="q-pt-none fit" >
+      <q-card-section class="q-pt-none fit">
         {{ item.detail }}
       </q-card-section>
       <q-card-section>
@@ -21,7 +25,8 @@
           class="q-btn"
           color="white"
           text-color="black"
-          tag="a"
+          type="a"
+          target="_blank"
           :href="item.documentationLink"
         >
           Documentation
@@ -32,13 +37,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   props: {
     item: Object,
   },
-})
+});
 </script>
 
 <style scoped>

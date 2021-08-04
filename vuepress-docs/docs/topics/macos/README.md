@@ -48,7 +48,6 @@ Type "help" for help.
 postgres=# alter user postgres createdb;
 ```
 
-
 ## Python 3.9
 
 Commands for using x86_64 architecture (Rosetta 2):
