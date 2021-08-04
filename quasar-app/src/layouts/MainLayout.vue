@@ -91,7 +91,7 @@ const linksList = [
     title: 'New Post',
     caption: 'new μblog post',
     icon: 'edit',
-    link: 'new-post',
+    link: '/new-post',
   },
   {
     title: 'Posts',
