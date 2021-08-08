@@ -1,0 +1,16 @@
+media
+.local-env
+.circleci
+.github
+.pytest_cache
+.vscode
+cdk
+cdk.out
+cypress
+docs
+k8s
+notes
+pulumi
+vuepress-docs
+quasar-app/node_modules
+quasar-app/dist

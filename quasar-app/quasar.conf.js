@@ -60,7 +60,7 @@ module.exports = configure(function (ctx) {
             API_URL: 'http://localhost',
           }
         : {
-            API_URL: `https://${process.env.API_URL}`,
+            API_URL: process.env.BACKEND_API_URL,
         },
 
       // transpile: false,

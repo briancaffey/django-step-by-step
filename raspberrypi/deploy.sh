@@ -7,6 +7,11 @@ if [[ -z "${DOCKER_HOST}" ]]; then
   exit 1;
 fi
 
+if [[ -z "${API_URL}" ]]; then
+  echo "API_URL not set. Please set this to your Raspberry Pi IP address."
+  exit 1;
+fi
+
 
 RED='\033[0;31m'
 NC='\033[0m'
@@ -26,7 +31,10 @@ fi
 
 echo "Building and tagging backend container\n"
 
-docker build \
+docker \
+    -l "debug" \
+    build \
+    --platform linux/arm64 \
     -t $REGISTRY/backend:$VERSION \
     -f backend/Dockerfile \
     ./backend/
@@ -34,6 +42,7 @@ docker build \
 echo "Building and tagging frontend container"
 
 docker build \
+    --build-arg BACKEND_API_URL=$BACKEND_API_URL \
     -t $REGISTRY/nginx:$VERSION \
     -f nginx/prod/Dockerfile \
     .
@@ -47,4 +56,4 @@ if [[ -z "${POSTGRES_PASSWORD}" ]]; then
   echo "WARNING: ${RED}POSTGRES_PASSWORD not set, exiting.${NC}"
 fi
 
-docker stack deploy -c raspi.yml form13-stack
+docker stack deploy -c raspberrypi/stack.yml my-stack

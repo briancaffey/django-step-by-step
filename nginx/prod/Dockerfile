@@ -1,0 +1,18 @@
+FROM node:12 as build-stage
+ARG BACKEND_API_URL
+ENV BACKEND_API_URL=$BACKEND_API_URL
+WORKDIR /app/
+COPY quasar-app/package.json /app/
+RUN npm cache verify
+RUN npm rebuild node-sass
+RUN npm install -g @quasar/cli
+RUN npm install --progress=false
+COPY quasar-app /app/
+RUN quasar build -m pwa
+
+# ci stage
+FROM nginx:1.13.12-alpine as production
+COPY nginx/prod/prod.conf /etc/nginx/nginx.conf
+COPY --from=build-stage /app/dist/pwa /dist/
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
