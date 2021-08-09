@@ -35,7 +35,7 @@ services:
     ports:
       - "8000:8000"
     env_file:
-      - .env
+      - .raspberrypi.env
     volumes:
       - backendassets:/code/assets
     depends_on:
