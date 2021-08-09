@@ -7,7 +7,7 @@ if [[ -z "${DOCKER_HOST}" ]]; then
   exit 1;
 fi
 
-if [[ -z "${API_URL}" ]]; then
+if [[ -z "${BACKEND_API_URL}" ]]; then
   echo "API_URL not set. Please set this to your Raspberry Pi IP address."
   exit 1;
 fi

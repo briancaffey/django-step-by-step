@@ -8,7 +8,7 @@ services:
     networks:
       - main
     env_file:
-      - .env
+      - .raspberrypi.env
     volumes:
       - pgdata:/var/lib/postgresql/data
 
@@ -55,7 +55,7 @@ services:
     networks:
       - main
     env_file:
-      - .env
+      - .raspberrypi.env
     volumes:
       - backendassets:/code/assets
     depends_on:

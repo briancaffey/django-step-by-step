@@ -6,7 +6,6 @@ This folder contains files that will allow us to deploy this project to a Raspbe
 - [`stack.yaml`](stack.yaml) is a YAML file that describes the deployment stack that will be used to deploy the project.
 - [`README.md`](README.md) is this file.
 
-
 ## Generate a Key on you computer
 
 ```
@@ -59,4 +58,3 @@ my-stack_backend.1.tk1bl5j63kxn@ubuntu    | ModuleNotFoundError: No module named
 ```
 
 This indicates that the `DEBUG` value has probably not been set.
-
