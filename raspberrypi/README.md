@@ -58,3 +58,15 @@ my-stack_backend.1.tk1bl5j63kxn@ubuntu    | ModuleNotFoundError: No module named
 ```
 
 This indicates that the `DEBUG` value has probably not been set.
+
+## Remove any old images
+
+```
+docker rmi -f $(docker image ls -q)
+```
+
+## Run DB migration command on service container
+
+```
+docker exec $(docker ps -q -f name="backend") python3 manage.py migrate --no-input
+```

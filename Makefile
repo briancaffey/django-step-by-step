@@ -343,6 +343,9 @@ quasar-dev:
 	cd quasar-app && quasar dev
 
 ## -- VuePress Targets --
+vuepress-dev:
+	cd vuepress-docs && yarn docs:dev
+
 vuepress-build:
 	cd vuepress-docs && yarn docs:build
 
