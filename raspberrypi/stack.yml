@@ -37,7 +37,8 @@ services:
     env_file:
       - .raspberrypi.env
     volumes:
-      - backendassets:/code/assets
+      - backendstatic:/code/staticfiles
+      - backendmedia:/code/media
     depends_on:
       - postgres
       - redis
@@ -85,7 +86,8 @@ services:
     ports:
       - "8080:80"
     volumes:
-      - backendassets:/usr/src/app/assets
+      - backendstatic:/usr/src/app/static
+      - backendmedia:/usr/src/app/media
 
 networks:
   main:
