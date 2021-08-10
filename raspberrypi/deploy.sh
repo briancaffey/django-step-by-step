@@ -41,7 +41,7 @@ docker \
     build \
     --platform linux/arm64 \
     -t $REGISTRY/backend:$VERSION \
-    -f backend/Dockerfile.dev \
+    -f backend/Dockerfile \
     ./backend/
 
 echo "Building and tagging frontend container"
