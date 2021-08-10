@@ -57,7 +57,8 @@ services:
     env_file:
       - .raspberrypi.env
     volumes:
-      - backendassets:/code/assets
+      - backendstatic:/code/staticfiles
+      - backendmedia:/code/media
     depends_on:
       - postgres
       - redis
@@ -93,6 +94,8 @@ networks:
 volumes:
   backendassets:
     name: backendassets
+  backendmedia:
+    name: backendmedia
   redisdata:
     name: redisdata
   pgdata:
