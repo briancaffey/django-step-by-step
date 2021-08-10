@@ -92,8 +92,8 @@ networks:
     driver: overlay
 
 volumes:
-  backendassets:
-    name: backendassets
+  backendstatic:
+    name: backendstatic
   backendmedia:
     name: backendmedia
   redisdata:
