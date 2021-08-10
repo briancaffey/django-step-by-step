@@ -51,7 +51,7 @@ urlpatterns = [
     path("api/", include("apps.accounts.urls")),
     path("cbv/", include("apps.blog.cbv_urls")),
     path("", include("apps.accounts.urls")),
-    path("my-admin-portal/", admin.site.urls),
+    path("admin/", admin.site.urls),
     path("", include("apps.core.urls")),
     path(
         "graphql/",

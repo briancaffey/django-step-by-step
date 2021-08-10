@@ -24,6 +24,6 @@ def test_request_log_middleware(client):
 
     client.force_login(user)
 
-    client.get("my-admin-portal/core/requestlog/")
+    client.get("admin/core/requestlog/")
 
     assert RequestLog.objects.all().count() == 2

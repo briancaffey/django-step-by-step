@@ -312,7 +312,7 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path('my-admin-portal/', admin.site.urls),
+    path('admin/', admin.site.urls),
 ]
 
 if settings.DEBUG:
@@ -350,7 +350,7 @@ Superuser created successfully.
 
 This command will create the necessary environment variables for the username, email and password for the superuser and create that user without prompting you to type these in the terminal. Try logging in with these credentials to make sure that everything works.
 
-## Rename the `/admin` URL
+## Rename the `/admin` URL (Optional)
 
 To prevent bots from trying to login to our admin, it is a good idea change the default URL path that Django sets for the Django admin. Let's change `admin/` to `my-admin-portal/`:
 
