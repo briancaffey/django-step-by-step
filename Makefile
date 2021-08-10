@@ -354,6 +354,12 @@ vuepress-copy:
 
 vuepress-build-docs: vuepress-build	vuepress-copy
 
+## -- Raspbery Pi Targets --
+
+## Deploy the application to rasberry pi
+raspi-deploy:
+	@./raspberrypi/deploy.sh
+
 # Credit: https://gist.github.com/prwhite/8168133#gistcomment-2749866
 ## Show this help menu
 help:

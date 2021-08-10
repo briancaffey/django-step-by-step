@@ -2,9 +2,6 @@
 
 from .base import *
 
-DEBUG = 0
-
-
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
