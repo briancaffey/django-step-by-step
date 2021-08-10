@@ -12,9 +12,9 @@ if [[ -z "${BACKEND_API_URL}" ]]; then
   exit 1;
 fi
 
-if [ ! -f .raspberrypi.env ]; then
+if [ ! -f raspberrypi/.raspberrypi.env ]; then
     echo
-    echo "please create .raspberrypi.env";
+    echo "please create raspberrypi/.raspberrypi.env";
     echo
     exit 1;
 fi
