@@ -3,13 +3,20 @@ set -e
 # https://stackoverflow.com/questions/39296472/how-to-check-if-an-environment-variable-exists-and-get-its-value
 
 if [[ -z "${DOCKER_HOST}" ]]; then
-  echo "DOCKER_HOST not set, exiting."
+  echo "DOCKER_HOST not set, exiting. Run `source env_vars.sh`"
   exit 1;
 fi
 
 if [[ -z "${BACKEND_API_URL}" ]]; then
   echo "API_URL not set. Please set this to your Raspberry Pi IP address."
   exit 1;
+fi
+
+if [ ! -f .raspberrypi.env ]; then
+    echo
+    echo "please create .raspberrypi.env";
+    echo
+    exit 1;
 fi
 
 

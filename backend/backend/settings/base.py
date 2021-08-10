@@ -126,7 +126,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Celery
+# Celery Settings
 
 REDIS_SERVICE_HOST = os.environ.get("REDIS_SERVICE_HOST", "127.0.0.1")
 REDIS_PORT = 6379
