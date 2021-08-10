@@ -20,8 +20,6 @@ if [ ! -f raspberrypi/.raspberrypi.env ]; then
 fi
 
 
-RED='\033[0;31m'
-NC='\033[0m'
 REGISTRY=localhost:5000
 
 echo "Building docker images for backend and frontend"
@@ -60,7 +58,7 @@ export CI_COMMIT_SHORT_SHA=$VERSION
 echo "Checking environment variables for swarm"
 
 if [[ -z "${POSTGRES_PASSWORD}" ]]; then
-  echo "WARNING: ${RED}POSTGRES_PASSWORD not set, exiting.${NC}"
+  echo "WARNING: POSTGRES_PASSWORD not set, exiting."
 fi
 
 docker stack deploy -c raspberrypi/stack.yml my-stack
