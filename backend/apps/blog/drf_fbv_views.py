@@ -45,6 +45,7 @@ def create_post(request):
     """
     Create a single post
     """
+    print("OK - create post")
     serializer = PostSerializer(data=request.data)
     if serializer.is_valid():
         if request.user.is_authenticated:

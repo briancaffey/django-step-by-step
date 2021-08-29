@@ -38,3 +38,5 @@ LOGGING = {
 STATIC_ROOT = "/code/staticfiles"
 
 MEDIA_ROOT = "/code/media"
+
+DEFAULT_FILE_STORAGE = "backend.storage_backends.PrivateVolumeMediaStorage"

@@ -181,6 +181,7 @@ PRIVATE_FILE_STORAGE = "backend.storage_backends.PrivateMediaStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+PRIVATE_MEDIA_STORAGE = "backend.storage_backends.PrivateMediaStorage"
 
 # Custom user model
 AUTH_USER_MODEL = "accounts.CustomUser"

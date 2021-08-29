@@ -21,3 +21,7 @@ else:
         default_acl = "private"
         file_overwrite = False
         custom_domain = False
+
+
+class PrivateVolumeMediaStorage(FileSystemStorage):
+    location = settings.AWS_PRIVATE_MEDIA_LOCATION
