@@ -63,6 +63,10 @@ export const en: NavbarConfig = [
     link: '/deploy/',
     children: [
       {
+        text: 'Overview',
+        link: '/deploy/overview/',
+      },
+      {
         text: 'AWS',
         link: '/deploy/aws/',
       },
