@@ -18,5 +18,12 @@ class PostAdmin(admin.ModelAdmin):
     )
 
 
+class PostLikeAdmin(admin.ModelAdmin):
+    class Meta:
+        model = PostLike
+
+    list_display = ("liked_by", "post", "liked_on")
+
+
 admin.site.register(Post, PostAdmin)
-admin.site.register(PostLike)
+admin.site.register(PostLike, PostLikeAdmin)
