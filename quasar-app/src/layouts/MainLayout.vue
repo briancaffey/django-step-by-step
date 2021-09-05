@@ -40,9 +40,9 @@
 
     <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
-        <q-item-label header class="text-grey-8">
-          Essential Links
-        </q-item-label>
+        <div class="fit row wrap justify-center items-start content-start">
+        <img src="ublog.png" alt="Quasar" style="max-width: 150px;" class="q-ma-md q-my-lg"/>
+        </div>
         <nav-link
           v-for="link in linksList"
           :key="link.link"
