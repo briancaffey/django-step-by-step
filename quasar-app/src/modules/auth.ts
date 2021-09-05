@@ -1,3 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+
+
 import { ref, computed } from 'vue';
 import { api } from 'boot/axios';
 import { AxiosError } from 'axios';
@@ -8,10 +12,6 @@ import useProfile from './profile';
 
 type TokenResponse = {
   access: string;
-}
-
-type ErrorResponse = {
-  detail: string;
 }
 
 const email = ref('');
@@ -61,6 +61,7 @@ export default function useAuth() {
 
   };
 
+  // TODO: remove eslint-disable rules around error handling
   const login = async (): Promise<void> => {
     try {
       const resp = await api.post<TokenResponse>('/api/auth/jwt/token/', {
@@ -82,22 +83,24 @@ export default function useAuth() {
       await router.push('/');
 
       Notify.create({
-        type: "positive",
-        message: "Welcome to μblog!",
+        type: 'positive',
+        message: 'Welcome to μblog!',
       });
 
-    } catch (err: any) {
-      // how do I type the error? AxiosError? any?
-      // https://github.com/axios/axios/blob/master/test/typescript/axios.ts
+    } catch (exception) {
 
-      // this currently works but there is an unsafe access warning
-      // console.log(err.response.data.detail);
-      Notify.create({
-        type: 'warning',
-        message: err.response.data.detail,
-      });
+      if (exception.isAxiosError && exception.response) {
+
+        const e = exception as AxiosError;
+
+        if (e.response?.status === 401) {
+          Notify.create({
+            type: 'warning',
+            message: e.response.data.detail,
+          });
+        }
+      }
     }
-  };
-
+  }
   return { login, refreshToken, email, password, accessToken, isAuthenticated, logout }
-}
+};

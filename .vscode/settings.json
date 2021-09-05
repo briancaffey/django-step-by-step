@@ -21,6 +21,7 @@
     "[typescript]": {
         "editor.insertSpaces": true,
         "editor.tabSize": 2
+
     },
     "[javascript]": {
         "editor.insertSpaces": true,
@@ -29,6 +30,6 @@
     "vetur.validation.template": false,
     "vetur.format.enable": false,
     "eslint.validate": ["javascript", "javascriptreact", "typescript", "vue"],
-    "typescript.tsdk": "node_modules/typescript/lib",
+    "typescript.tsdk": "quasar-app/node_modules/typescript/lib",
     "vetur.experimental.templateInterpolationService": true
 }
