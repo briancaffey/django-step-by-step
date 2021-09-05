@@ -2,12 +2,9 @@
 home: true
 
 actions:
-  - text: Get Started
-    link: /guide/step-by-step/
-    type: primary
   - text: Introduction
     link: /intro
-    type: secondary
+    type: primary
 
 heroImage: /images/ublog.png
 
