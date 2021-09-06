@@ -115,6 +115,12 @@ const linksList = [
 
 const essentialLinks = [
   {
+    title: 'Documentation',
+    caption: 'Project Documentation',
+    icon: 'description',
+    link: 'https://briancaffey.github.io/django-step-by-step/',
+  },
+  {
     title: 'GitHub',
     caption: 'View this project on GitHub',
     icon: 'code',
