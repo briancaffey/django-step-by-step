@@ -15,6 +15,20 @@
             >μblog</router-link
           >
         </q-toolbar-title>
+        <q-select
+          v-model="locale"
+          :options="localeOptions"
+          dense
+          color="white"
+          label-color="orange"
+          rounded
+          emit-value
+          map-options
+        >
+          <template v-slot:prepend>
+            <q-icon name="language" />
+          </template>
+        </q-select>
         <q-toggle color="white" v-model="darkMode" @click="toggleDarkMode" />
         <q-btn-group v-if="isAuthenticated">
           <q-btn
@@ -130,6 +144,7 @@ const essentialLinks = [
 
 import { defineComponent, ref } from 'vue';
 import useDarkMode from '../modules/darkMode';
+import i18n from '../modules/i18n';
 
 export default defineComponent({
   name: 'MainLayout',
@@ -144,12 +159,15 @@ export default defineComponent({
     const { email } = useProfile();
     const leftDrawerOpen = ref(false);
     const { darkMode, toggleDarkMode } = useDarkMode();
+    const { locale, localeOptions } = i18n();
 
     return {
       linksList,
       isAuthenticated,
       toggleDarkMode,
       darkMode,
+      locale,
+      localeOptions,
       email,
       logout,
       essentialLinks,

@@ -2,5 +2,5 @@
 // so you can safely delete all default props below
 
 export default {
-  welcome: 'welcome to μblog!',
+  welcome: '欢迎使用μblog！',
 };
