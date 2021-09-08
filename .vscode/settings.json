@@ -31,5 +31,15 @@
     "vetur.format.enable": false,
     "eslint.validate": ["javascript", "javascriptreact", "typescript", "vue"],
     "typescript.tsdk": "quasar-app/node_modules/typescript/lib",
-    "vetur.experimental.templateInterpolationService": true
+    "vetur.experimental.templateInterpolationService": true,
+    "cSpell.words": [
+        "djangorestframework",
+        "Graphene",
+        "gunicorn",
+        "pyproject",
+        "pytest",
+        "queryset",
+        "simplejwt",
+        "μblog"
+    ]
 }

@@ -14,6 +14,10 @@ export const en: NavbarConfig = [
         link: '/topics/twelve-factor-app',
       },
       {
+        text: 'Django',
+        link: '/topics/django/',
+      },
+      {
         text: 'Quasar',
         link: '/topics/quasar/',
       },
