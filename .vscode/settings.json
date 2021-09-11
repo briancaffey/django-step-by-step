@@ -41,5 +41,9 @@
         "queryset",
         "simplejwt",
         "μblog"
-    ]
+    ],
+    "workbench.colorCustomizations": {
+        "activityBar.background": "#0c2d86",
+        "statusBar.background": "#333"
+    }
 }
