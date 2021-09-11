@@ -146,6 +146,10 @@ This project can deploy ECS from the command line (using `make cdk-deploy`) or f
 
 Additional [ECS Exec](https://aws.amazon.com/blogs/containers/new-using-amazon-ecs-exec-access-your-containers-fargate-ec2/) is used to run management commands and open shells inside of the containers running on Fargate.
 
+### AWS EKS
+
+AWS Elastic Kubernetes Service (EKS)
+
 ## This project is open source and MIT Licensed
 
 See [LICENSE.md](/LICENSE.md)
