@@ -1,6 +1,6 @@
 # Quasar Setup
 
-![png](/images/screenshots/ublog-screenshot.png)
+<img :src="$withBase('/images/screenshots/ublog-screenshot.png')" alt="ublog">
 
 ## New Quasar Project
 
@@ -161,7 +161,7 @@ First, let's add a page that will list our blog posts by making an HTTP request 
 - [x] Like Button
 - [ ] Fix like button on list page
 - [x] Fix Dark mode syncing
-- [ ] Add i18n switcher
+- [x] Add i18n switcher
 
 - [ ] Fix MainLayout Menu
 - [ ] Add Route Guards

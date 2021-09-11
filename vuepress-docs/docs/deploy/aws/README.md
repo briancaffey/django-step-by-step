@@ -7,19 +7,19 @@ High-level constructs are available for deploying applications with the followin
 - ECS (near complete)
 - EKS (in progress)
 - Lambda (planned)
-- S3 bucket and IAM user* (complete)
+- S3 bucket and IAM user\* (complete)
 
 To use one of the constructs you need to provide:
 
 - A path to the root of your Django project
 - The location of the `Dockerfile` used to build your application's image (for EKS and ECS) relative to your Django project's root directory
 - The commands used to start the process that run your application:
-    - web server process (required)
-    - celery (optional)
-    - celery beat (optional)
+  - web server process (required)
+  - celery (optional)
+  - celery beat (optional)
 - Options for how to run the application and which additional services your application requires
 
-* If you are hosting your application outside of AWS, there is also a construct that can be used for provisioning a new S3 bucket along with an IAM user with the necessary permissions to access it. This can be used for hosting static files as well as media files.*
+* If you are hosting your application outside of AWS, there is also a construct that can be used for provisioning a new S3 bucket along with an IAM user with the necessary permissions to access it. This can be used for hosting static files as well as media files.\*
 
 This project uses the AWS CDK and is written in TypeScript, so the options for each construct are defined by TypeScript Interfaces. See [API.md](/API.md) for automatically-generated documentation on the interfaces for each construct.
 
@@ -44,7 +44,7 @@ This repository includes sample CDK applications that use the libraries.
 
 Overview of the EKS construct:
 
-![png](/diagrams/django-cdk.png)
+<img :src="$withBase('/diagrams/django-cdk.png')" alt="django cdk ecs">
 
 1 - Resource in this diagram are defined by a CDK construct library called `django-eks` which is written in TypeScript and published to PyPi and npmjs.org. The project is managed by projen.
 
@@ -101,28 +101,26 @@ Overview of the EKS construct:
 Here's an example from `src/integ.django-eks.ts`:
 
 ```ts
-import * as cdk from '@aws-cdk/core';
-import { DjangoEks } from './index';
+import * as cdk from "@aws-cdk/core";
+import { DjangoEks } from "./index";
 
 const env = {
-  region: process.env.AWS_DEFAULT_REGION || 'us-east-1',
+  region: process.env.AWS_DEFAULT_REGION || "us-east-1",
   account: process.env.AWS_ACCOUNT_ID,
 };
 
 const app = new cdk.App();
-const stack = new cdk.Stack(app, 'DjangoEks', { env });
+const stack = new cdk.Stack(app, "DjangoEks", { env });
 
-const construct = new DjangoEks(stack, 'Cdk-Sample-Lib', {
-  imageDirectory: './test/django-step-by-step/backend',
-  webCommand: [
-    './scripts/start_prod.sh',
-  ],
+const construct = new DjangoEks(stack, "Cdk-Sample-Lib", {
+  imageDirectory: "./test/django-step-by-step/backend",
+  webCommand: ["./scripts/start_prod.sh"],
 });
 
 /**
  * Add tagging for this construct and all child constructs
  */
-cdk.Tags.of(construct).add('stack', 'MyStack');
+cdk.Tags.of(construct).add("stack", "MyStack");
 ```
 
 This sample application (and others defined in the `integ.*.ts` files in this repo) can be easily deployed for testing purposes with targets defined in the `Makefile`. To deploy the above application, you can run:
@@ -142,7 +140,7 @@ This assumes that you have credentials configured in your AWS CLI with sufficien
 
 ### ECS
 
-![png](/diagrams/django-ecs.png)
+<img :src="$withBase('/diagrams/django-ecs.png')" alt="docker-compose">
 
 The ECS construct uses the `ApplicationLoadBalancedFargateService` construct from `@aws-cdk/aws-ecs-patterns`. This is a powerful abstraction that handles a lot of the networking requirements for the construct.
 

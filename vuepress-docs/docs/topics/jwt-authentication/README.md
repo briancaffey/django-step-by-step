@@ -1,3 +1,3 @@
 # JWT Authentication
 
-![png](/diagrams/jwt-authentication.png)
+<img :src="$withBase('/diagrams/jwt-authentication.png')" alt="jwt authentication">

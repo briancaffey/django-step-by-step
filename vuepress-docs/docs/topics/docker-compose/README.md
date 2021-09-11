@@ -1,3 +1,3 @@
 # Using docker-compose
 
-![png](/diagrams/docker-compose.png)
+<img :src="$withBase('/diagrams/docker-compose.png')" alt="docker-compose">
