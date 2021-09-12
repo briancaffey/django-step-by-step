@@ -1,4 +1,4 @@
-FROM python:3.8
+FROM --platform=linux/amd64 python:3.8
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 RUN mkdir /code
