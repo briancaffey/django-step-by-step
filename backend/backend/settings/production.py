@@ -16,5 +16,8 @@ AWS_PRIVATE_MEDIA_LOCATION = "media/private"
 PRIVATE_FILE_STORAGE = "backend.storage_backends.PrivateMediaStorage"
 AWS_STATIC_LOCATION = "static"
 
+## Django CORS settings
+# If True, cookies will be allowed to be included in cross-site HTTP requests. Defaults to False.
+CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = False
 CORS_ALLOWED_ORIGINS = [os.environ.get("FRONTEND_URL")]
