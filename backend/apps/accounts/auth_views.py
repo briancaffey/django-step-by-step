@@ -38,6 +38,7 @@ class CookieTokenObtainPairView(TokenObtainPairView):
                 max_age=cookie_max_age,
                 httponly=True,
                 samesite="None",
+                secure=True,
                 domain=os.environ.get("ZONE_NAME"),
             )
             del response.data["refresh"]
@@ -54,6 +55,7 @@ class CookieTokenRefreshView(TokenRefreshView):
                 max_age=cookie_max_age,
                 samesite="None",
                 httponly=True,
+                secure=True,
                 domain=os.environ.get("ZONE_NAME"),
             )
             del response.data["refresh"]
