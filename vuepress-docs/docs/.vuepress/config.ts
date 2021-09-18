@@ -3,6 +3,7 @@ import type { DefaultThemeOptions } from 'vuepress'
 import { navbar } from './configs';
 
 export default defineUserConfig<DefaultThemeOptions>({
+  port: 8089,
   base: '/django-step-by-step/',
   head: [
     ['link', { rel: 'manifest', href: '/manifest.webmanifest' }],
