@@ -27,7 +27,7 @@ jobs:
             ${{ runner.os }}-node-
 
       - run: cd vuepress-docs && yarn
-      - run: yarn docs:build
+      - run: cd vuepress-docs && yarn docs:build
 
       - name: deploy
         uses: peaceiris/actions-gh-pages@v3
