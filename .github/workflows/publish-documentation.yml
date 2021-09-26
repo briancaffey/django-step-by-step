@@ -26,7 +26,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-node-
 
-      - run: yarn
+      - run: cd vuepress-docs && yarn
       - run: yarn docs:build
 
       - name: deploy
