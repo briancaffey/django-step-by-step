@@ -28,6 +28,7 @@ jobs:
 
       - run: cd vuepress-docs && yarn
       - run: cd vuepress-docs && yarn docs:build
+      - run: ls vuepress-docs/.vuepress/dist
 
       - name: deploy
         uses: peaceiris/actions-gh-pages@v3
