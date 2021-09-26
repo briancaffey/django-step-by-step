@@ -29,6 +29,7 @@ jobs:
       - run: cd vuepress-docs && yarn
       - run: cd vuepress-docs && yarn docs:build
       - run: pwd
+      - run: ls
       # - run: ls vuepress-docs/.vuepress/dist
 
       - name: deploy
