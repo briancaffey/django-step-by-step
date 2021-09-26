@@ -1,12 +1,12 @@
 # Overview of options for deploying μblog
 
-This article will give an overview of the different ways that μblog can be deployed using different tools.
+This page will provide an overview of the different ways that μblog can be deployed using different services and tools.
 
-This project demonstrates how to deploy the μblog application to several different deployment targets:
+Here are some of the different ways that you can deploy the μblog application, from simple to complex:
 
 - docker swarm running on a Raspberry Pi on your local network
 - Kubernetes cluster running locally on minikube
-- Heroku (for Django app) & Netlify (for Vue/Quasar app)
+- Heroku (for Django app) & Netlify (for the Vue/Quasar app)
 - DigitalOcean using docker swarm pre-installed on a droplet from the DigitalOcean marketplace
 - AWS ECS cluster running on Fargate compute instances
 - AWS EKS cluster running on EC2 instances
@@ -22,7 +22,7 @@ Heroku uses the `git push` git command to deploy changes when new commits are pu
 
 When the application runs on docker swarm on DigitalOcean, it is updated using `docker stack deploy` from a GitLab CI/CD pipeline that remotely connects to the docker daemon runnong on the DigitalOcean droplet using SSH.
 
-### `django-cdk`
+### [`django-cdk`](/deploy/aws)
 
 The ECS and EKS deployments use the Cloud Development Kit (CDK) to both create AWS infrastructure and deploy μblog. The CDK code (Infrastructure as Code) is written in TypeScript and it references a npm package called `django-cdk` which was developed together with μblog. `django-cdk` is a library containing high-level CDK constructs for deploying secure and scalable Django applications on AWS.
 

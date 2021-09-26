@@ -1,3 +1,8 @@
+---
+next: /deploy/aws
+prev: /deploy/heroku
+---
+
 # DigitalOcean Deployment Guide
 
 This is a short walkthrough of how to deploy this project on DigitalOcean. There are some manual steps, but everything is automated through GitLab CI as much as possible.

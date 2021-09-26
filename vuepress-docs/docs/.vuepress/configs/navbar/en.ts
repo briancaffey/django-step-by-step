@@ -71,20 +71,20 @@ export const en: NavbarConfig = [
         link: '/deploy/overview/',
       },
       {
-        text: 'AWS',
-        link: '/deploy/aws/',
-      },
-      {
         text: 'Raspberry Pi',
         link: '/deploy/raspi/',
+      },
+      {
+        text: 'Heroku',
+        link: '/deploy/heroku/',
       },
       {
         text: 'DigitalOcean',
         link: '/deploy/digital-ocean/',
       },
       {
-        text: 'Heroku',
-        link: '/deploy/heroku/',
+        text: 'AWS',
+        link: '/deploy/aws/',
       },
     ],
   },

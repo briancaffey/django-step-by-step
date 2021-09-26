@@ -1,3 +1,8 @@
+---
+next: /deploy/digital-ocean
+prev: /deploy/raspi
+---
+
 # Deploying this application to Heroku
 
 This page will document the process for deploying the application to Heroku. You will need:
