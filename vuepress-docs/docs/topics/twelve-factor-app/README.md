@@ -1,3 +1,7 @@
+---
+next: /topics/django/
+---
+
 # 12 Factor App
 
 This project tries to follow the [12 Factor App](https://12factor.net/) principles. Here are the 12 factors of the 12 Factor app with a brief description of how they are achived in this project across multiple deployment environments.

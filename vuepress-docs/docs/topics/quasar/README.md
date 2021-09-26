@@ -1,3 +1,8 @@
+---
+next: /topics/docker-compose
+prev: /topics/django
+---
+
 # Quasar Setup
 
 <img :src="$withBase('/images/screenshots/ublog-screenshot.png')" alt="ublog">
@@ -127,55 +132,29 @@ In `quasar.conf.js`, set the default router mode:
 
 First, let's add a page that will list our blog posts by making an HTTP request to our API.
 
-### TODO
 
-#### Backend
+## Starting work on the existing Quasar project
 
-- [x] Fix local image upload path issue
-- [x] CORS
-- [x] JWT / Token Authentication on backend
-- [x] Registration page for new users
+If you cloned this repo and want to make some changes to the Quasar applications, you will need to run the following commands:
 
-#### Frontend
+```
+npm i -g @quasar/cli
+cd quasar-app
+yarn
+```
 
-- [x] Login / Logout
-- [x] Refresh token
-- [x] DRF Token Authentication vs Simple JWT
-- [x] Register
+Then, from the parent directory, you can run:
 
-#### Application
+```
+make quasar-dev
+```
 
-- [x] Use Post intefrace for Post Listing and Post Detail
-- [x] Add date to posts
-- [x] Format dates with filters (Vue 3 removes template filters, us functions instead)
-- [x] Add username to posts / anon posts
-- [x] Post Lists
-- [x] Post Detail
-- [x] Post Create Form
-- [ ] Post Edit Form
-- [ ] Post Delete Option
+## TODO
 
-- [x] Post Pagination
-- [x] Fix post pagination
+### Application
 
-- [x] Like Button
-- [ ] Fix like button on list page
-- [x] Fix Dark mode syncing
-- [x] Add i18n switcher
+- Fix like button on list page
 
-- [ ] Fix MainLayout Menu
-- [ ] Add Route Guards
+- Fix MainLayout Menu
+- Add Route Guards
 
-- [x] Remove eslint-disabled markers
-
-- [x] Optional: Configure nginx to serve the Quasar and API on the same port
-
-## SSR mode
-
-- [ ] Build with SSR mode
-- [ ] Fix axios boot file to work with SSR
-
-## Tests
-
-- [ ] Add Jest tests
-- [ ] Complete Cypress tests

@@ -1,3 +1,8 @@
+---
+next: /topics/quasar
+prev: /topics/twelve-factor-app
+---
+
 # About the Django Application
 
 The Django application is the main component of the backend and handles the following:
