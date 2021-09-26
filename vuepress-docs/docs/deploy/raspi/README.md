@@ -1,5 +1,5 @@
 ---
-next: /deploy/heroku
+next: /deploy/heroku-and-netlify/
 ---
 
 # Deploying to a Raspberry Pi

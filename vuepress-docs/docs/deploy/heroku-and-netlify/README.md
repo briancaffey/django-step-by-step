@@ -3,12 +3,17 @@ next: /deploy/digital-ocean
 prev: /deploy/raspi
 ---
 
-# Deploying this application to Heroku
+# Deploying this application to with Heroku and Netlify
 
-This page will document the process for deploying the application to Heroku. You will need:
+[[toc]]
+
+This page will document the process for deploying the application with Heroku and Netlify. You will need:
 
 - A Heroku account
+- A Netlify account
 - Install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli)
+
+## Configuring Heroku
 
 ```
 brew tap heroku/brew && brew install heroku
@@ -45,13 +50,13 @@ origin  git@github.com:briancaffey/django-step-by-step.git (fetch)
 origin  git@github.com:briancaffey/django-step-by-step.git (push)
 ```
 
-## Create a Procfile
+### Create a Procfile
 
 ```
 web: cd backend && ./scripts/start_prod.sh
 ```
 
-## Create a `runtime.txt` in the root directory
+### Create a `runtime.txt` in the root directory
 
 ```
 python-3.9.5
@@ -69,7 +74,7 @@ But this would fail due to the fact that our Django project is not in the root d
 ln -s backend/requirements.txt requirements.txt
 ```
 
-## Enable postgres addon
+### Enable postgres addon
 
 ```
 heroku addons:create heroku-postgresql:hobby-dev
@@ -84,7 +89,7 @@ Created postgresql-transparent-19918 as DATABASE_URL
 Use heroku addons:docs heroku-postgresql to view documentation
 ```
 
-## Environment Variables
+### Environment Variables
 
 Next we will need to set environment variables for our Heroku project:
 
@@ -92,44 +97,44 @@ Next we will need to set environment variables for our Heroku project:
 heroku config:set DEBUG=0
 ```
 
-### AWS Access Keys for S3
+#### AWS Access Keys for S3
 
 ```
 heroku config:set AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
 heroku config:set AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 ```
 
-### S3 Bucket name
+#### S3 Bucket name
 
 ```
 heroku config:set S3_BUCKET_NAME=$S3_BUCKET_NAME
 ```
 
-### Django Settings Module
+#### Django Settings Module
 
 ```
 heroku config:set DJANGO_SETTINGS_MODULE=backend.settings.heroku
 ```
 
-### Disable collectstatic
+#### Disable collectstatic
 
 ```
 heroku config:set DISABLE_COLLECTSTATIC=1
 ```
 
-### Configure SECRET_KEY
+#### Configure SECRET_KEY
 
 ```
 heroku config:set SECRET_KEY=$SECRET_KEY
 ```
 
-## Push to Heroku on a non-`main` branch
+### Push to Heroku on a non-`main` branch
 
 ```
 git push heroku feature/post-images:main
 ```
 
-## Management Commands
+### Management Commands
 
 To open a shell in the Django application:
 
@@ -143,7 +148,7 @@ Then you can run the following command:
 python3 backend/manage.py shell
 ```
 
-## Heroku Config
+### Heroku Config
 
 Set the `FRONTEND_URL` environment variable in Heroku to the Netlify URL.
 
@@ -155,7 +160,7 @@ For example:
 heroku config:set FRONTEND_URL=https://mystifying-ardinghelli-30e1a3.netlify.app/
 ```
 
-## LOGGING
+### LOGGING
 
 [https://stackoverflow.com/questions/18920428/django-logging-on-heroku](https://stackoverflow.com/questions/18920428/django-logging-on-heroku)
 
@@ -192,4 +197,52 @@ LOGGING = {
         }
     }
 }
+```
+
+## Configuring Netlify
+
+Add the following to the project's deploy settings:
+
+```
+Base directory: quasar-app
+Build command: quasar build -m pwa
+Publish directory: quasar-app/dist/pwa
+```
+
+These settings will tell Netlify how to build the application.
+
+### `NODE_VERSION`
+
+Add an environment variable called `NODE_VERSION` to project's `Environment` settings under the `Build & deploy` tab. Set this variable to `12.22.1`.
+
+### `API_URL`
+
+Add another environment variable called `API_URL` set to the Heroku URL. For example:
+
+```
+https://fathomless-shelf-16475.herokuapp.com
+```
+
+### Redirect file
+
+Link: [https://www.netlify.com/blog/2019/01/16/redirect-rules-for-all-how-to-configure-redirects-for-your-static-site/](https://www.netlify.com/blog/2019/01/16/redirect-rules-for-all-how-to-configure-redirects-for-your-static-site/)
+
+Add a file called `_redirects` to the `public` folder.
+
+```
+/* /index.html 200
+```
+
+It is also possible to configure redirects with a `netlify.toml` file.
+
+### Heroku Config
+
+Set the `FRONTEND_URL` environment variable in Heroku to the Netlify URL.
+
+This will allow the Heroku app to link to the Netlify URL correctly.
+
+For example:
+
+```
+heroku config:set FRONTEND_URL=https://mystifying-ardinghelli-30e1a3.netlify.app/
 ```

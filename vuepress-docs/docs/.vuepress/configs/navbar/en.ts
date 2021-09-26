@@ -14,27 +14,23 @@ export const en: NavbarConfig = [
         link: '/topics/twelve-factor-app',
       },
       {
-        text: 'Django',
+        text: 'Django Application',
         link: '/topics/django/',
       },
       {
-        text: 'Quasar',
+        text: 'Quasar Application',
         link: '/topics/quasar/',
-      },
-      {
-        text: 'Netlify',
-        link: '/topics/netlify/',
       },
       {
         text: 'Docker Compose',
         link: '/topics/docker-compose/',
       },
       {
-        text: 'JWT Authentication',
+        text: 'Authentication',
         link: '/topics/jwt-authentication/',
       },
       {
-        text: 'VuePress',
+        text: 'VuePress Documentation',
         link: '/topics/vuepress/',
       }
     ],
@@ -69,22 +65,24 @@ export const en: NavbarConfig = [
       {
         text: 'Overview',
         link: '/deploy/overview/',
-      },
-      {
-        text: 'Raspberry Pi',
-        link: '/deploy/raspi/',
-      },
-      {
-        text: 'Heroku',
-        link: '/deploy/heroku/',
-      },
-      {
-        text: 'DigitalOcean',
-        link: '/deploy/digital-ocean/',
-      },
-      {
-        text: 'AWS',
-        link: '/deploy/aws/',
+        children: [
+          {
+            text: 'Raspberry Pi',
+            link: '/deploy/raspi/',
+          },
+          {
+            text: 'Heroku and Netlify',
+            link: '/deploy/heroku-and-netlify/',
+          },
+          {
+            text: 'DigitalOcean',
+            link: '/deploy/digital-ocean/',
+          },
+          {
+            text: 'AWS',
+            link: '/deploy/aws/',
+          },
+        ],
       },
     ],
   },
