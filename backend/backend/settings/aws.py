@@ -15,3 +15,12 @@ DATABASES = {
         "PORT": os.environ.get("POSTGRES_SERVICE_PORT", 5432),
     }
 }
+
+## Email settings
+
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "user@email.com")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "password")
+EMAIL_PORT = os.environ.get("EMAIL_PORT", '587')
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
