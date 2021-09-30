@@ -24,3 +24,4 @@ EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "password")
 EMAIL_PORT = os.environ.get("EMAIL_PORT", '587')
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+ADMINS = [("Admin", os.environ.get("ADMINS", "")]
