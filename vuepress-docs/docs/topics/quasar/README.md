@@ -5,6 +5,12 @@ prev: /topics/django
 
 # Quasar Setup
 
+[[toc]]
+
+## μblog Application
+
+Here's a screenshot of the μblog front-end application that uses Quasar. Quasar is a framework for building high-performance & high-quality Vue.js apps.
+
 <img :src="$withBase('/images/screenshots/ublog-screenshot.png')" alt="ublog">
 
 ## New Quasar Project
@@ -128,10 +134,20 @@ In `quasar.conf.js`, set the default router mode:
         }
 ```
 
-### Add page for listing posts
+### Workbox Settings
 
-First, let's add a page that will list our blog posts by making an HTTP request to our API.
+If you are building the application in PWA mode, then you will want to configure the following settings in the `quasar.conf.js` file for `workboxOptions`:
 
+```js
+    pwa: {
+      workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
+
+      // Add this option
+      workboxOptions: {
+        navigateFallback: '/index.html',
+        navigateFallbackBlacklist: [/[admin,api]+\/.*/]
+      }, // only for GenerateSW
+```
 
 ## Starting work on the existing Quasar project
 
