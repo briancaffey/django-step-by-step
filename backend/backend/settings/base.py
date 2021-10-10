@@ -191,6 +191,8 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 EMAIL_HOST = os.environ.get("DJANGO_EMAIL_HOST", "localhost")
 EMAIL_PORT = os.environ.get("DJANGO_EMAIL_PORT", "1025")
 
+ADMINS = [('Local Admin', 'admin@dev.local')]
+
 # Login Redirect
 
 LOGIN_URL = "/login"

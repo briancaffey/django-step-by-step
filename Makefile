@@ -259,6 +259,13 @@ docker-compose-backend-jupyter:
 docker-compose-up: docker-compose-backend-migrate
 	@docker compose up
 
+## run pytest-cov with backend container
+docker-compose-pytest-cov:
+	docker compose run backend pytest --cov-report html --cov=backend
+
+docker-compose-generate-openapi-schema:
+	docker exec backend python manage.py generateschema > backend/static/openapi/schema.yml
+
 ## -- Pulumi (minikube) Targets
 
 ## Start a new pulumi k8s project in a new directory
@@ -341,6 +348,10 @@ cdk-destroy: cdk-install	cdk-build
 ## start quasar project locally
 quasar-dev:
 	cd quasar-app && quasar dev
+
+## build quasar project in SPA mode
+quasar-build:
+	cd quasar-app && quasar build -m spa
 
 ## -- VuePress Targets --
 vuepress-dev:

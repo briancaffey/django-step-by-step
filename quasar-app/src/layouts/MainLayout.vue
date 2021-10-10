@@ -125,6 +125,12 @@ const linksList = [
     icon: 'info',
     link: '/about',
   },
+  {
+    title: 'Debug',
+    caption: 'Debugging μblog',
+    icon: 'bug_report',
+    link: '/debug',
+  },
 ];
 
 const essentialLinks = [
