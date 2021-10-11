@@ -57,3 +57,5 @@ LOGGING = {
         }
     },
 }
+
+SESSION_COOKIE_DOMAIN =  os.environ.get("ROOT_DOMAIN")
