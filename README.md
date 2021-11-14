@@ -10,6 +10,8 @@
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
+Project Documentation: [https://briancaffey.github.io/django-step-by-step/](https://briancaffey.github.io/django-step-by-step/)
+
 # Django Step by Step
 
 This is a Django reference project showing how to develop and deploy Django applications using multiple tools and methodologies with best practices and consice examples.
