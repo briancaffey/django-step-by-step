@@ -371,6 +371,9 @@ vuepress-build-docs: vuepress-build	vuepress-copy
 raspi-deploy:
 	@./raspberrypi/deploy.sh
 
+raspi-destroy:
+	@./raspberrypi/destroy.sh
+
 # Credit: https://gist.github.com/prwhite/8168133#gistcomment-2749866
 ## Show this help menu
 help:

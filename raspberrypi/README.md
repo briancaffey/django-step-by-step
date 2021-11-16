@@ -36,7 +36,7 @@ $
 ## Deploy the Project to the Raspberry Pi
 
 ```
-
+make raspi-deploy
 ```
 
 ## How to debug a container that doesn't start
