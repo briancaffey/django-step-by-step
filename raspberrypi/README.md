@@ -18,6 +18,27 @@ Copy the key to the Rasberry Pi:
 ssh-copy-id ubuntu@<raspberry pi id>
 ```
 
+## Test SSH Connection to Raspberry Pi
+
+To test that we can connect to the Raspberry Pi over using SSH, we can run `telnet <raspberry pi IP> 22`:
+
+```
+$ telnet 192.168.1.11 22
+Trying 192.168.1.11...
+Connected to 192.168.1.11.
+Escape character is '^]'.
+SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.3
+^]
+telnet> ^C
+$
+```
+
+## Deploy the Project to the Raspberry Pi
+
+```
+
+```
+
 ## How to debug a container that doesn't start
 
 List services:
@@ -69,4 +90,26 @@ docker rmi -f $(docker image ls -q)
 
 ```
 docker exec $(docker ps -q -f name="backend") python3 manage.py migrate --no-input
+```
+
+## Remove the application
+
+To remove the application from your Raspberry Pi, run the following commands:
+
+### Remove the stack
+
+```
+docker stack rm my-stack
+```
+
+### Remove the volumes that were created
+
+```
+
+```
+
+### Prune
+
+```
+docker system prune
 ```
