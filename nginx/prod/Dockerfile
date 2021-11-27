@@ -11,8 +11,8 @@ COPY quasar-app /app/
 RUN quasar build -m spa
 
 # ci stage
-FROM nginx:1.13.12-alpine as production
+FROM --platform=linux/amd64 nginx:1.13.12-alpine as production
 COPY nginx/prod/prod.conf /etc/nginx/nginx.conf
-COPY --from=build-stage /app/dist/pwa /dist/
+COPY --from=build-stage /app/dist/spa /dist/
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

@@ -17,6 +17,13 @@ type TokenResponse = {
 const email = ref('');
 const password = ref('');
 
+// ignore unsafe return of any
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function isAxiosError<T>(error: AxiosError | any): error is AxiosError<T> {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  return error && error.isAxiosError
+}
+
 
 const { getProfile, clearProfile } = useProfile();
 
@@ -88,8 +95,7 @@ export default function useAuth() {
       });
 
     } catch (exception) {
-
-      if (exception.isAxiosError && exception.response) {
+      if (isAxiosError(exception) && exception.response) {
 
         const e = exception as AxiosError;
 
