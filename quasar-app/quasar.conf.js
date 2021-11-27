@@ -145,7 +145,7 @@ module.exports = configure(function (ctx) {
       workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {
         navigateFallback: '/index.html',
-        navigateFallbackBlacklist: [/[admin,api]+\/.*/]
+        navigateFallbackAllowlist: [/[admin,api,graphql]+\/.*/]
       }, // only for GenerateSW
 
       // for the custom service worker ONLY (/src-pwa/custom-service-worker.[js|ts])

@@ -1,4 +1,4 @@
-FROM node:12 as build-stage
+FROM node:14 as build-stage
 ARG BACKEND_API_URL
 ENV BACKEND_API_URL=$BACKEND_API_URL
 WORKDIR /app/
@@ -8,7 +8,7 @@ RUN npm rebuild node-sass
 RUN npm install -g @quasar/cli
 RUN npm install --progress=false
 COPY quasar-app /app/
-RUN quasar build -m pwa
+RUN quasar build -m spa
 
 # ci stage
 FROM nginx:1.13.12-alpine as production
