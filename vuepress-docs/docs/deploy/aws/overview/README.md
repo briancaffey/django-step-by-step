@@ -22,6 +22,7 @@ This page will describe how to deploy μblog on AWS using an Infrastructure as C
 - `DjangoEks` (almost complete)
 - `StaticSite` (Vue, React, etc.)
 - `DjangoVue` (combines the `Django ECS` and `Static Site` constructs, the easiest way to deploy all components of μblog)
+- `DockerEc2` (complete)
 - `S3BucketResources` S3 bucket and IAM user (useful if you are hosting your Django application outside of AWS, such as on Heroku or DigitalOcean)
 
 ## About CDK constructs

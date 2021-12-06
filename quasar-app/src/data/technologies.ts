@@ -262,6 +262,35 @@ const otherTechnologies = [
     documentationLink: 'https://copilot.github.com/',
   },
   {
+    title: 'K6',
+    description: 'A load testing framework for JavaScript',
+    detail: 'used for load testing the API',
+    image: 'k6.png',
+    documentationLink: 'https://k6.io/',
+  },
+  {
+    title: 'Docker swarm',
+    description: 'A distributed container orchestration platform',
+    detail: 'used for running containers on any machine',
+    image: 'swarm.png',
+    documentationLink: 'https://www.docker.com/products/swarm',
+  },
+  {
+    title: 'Portainer',
+    description: 'A Docker management platform',
+    detail: 'used for managing docker swarm clusters',
+    image: 'portainer.svg',
+    documentationLink: 'https://portainer.io/',
+
+  },
+  {
+    title: 'Raspberry Pi',
+    description: 'A low-cost, open-source, and easy-to-use computer',
+    detail: 'used for running the application',
+    image: 'raspberrypi.png',
+    documentationLink: 'https://www.raspberrypi.org/',
+  },
+  {
     title: 'Netlify',
     description: 'An intuitive Git-based workflow and powerful serverless platform to build, deploy, and collaborate on web apps',
     detail: 'used to deploy the Quasar application',
