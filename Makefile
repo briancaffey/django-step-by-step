@@ -371,6 +371,13 @@ vuepress-build-docs: vuepress-build	vuepress-copy
 raspi-deploy:
 	@./raspberrypi/deploy.sh
 
+raspi-destroy:
+	@./raspberrypi/destroy.sh
+
+## -- K6 Targets --
+k6-run-docker:
+	@docker run -i loadimpact/k6 run - <k6/script.js
+
 # Credit: https://gist.github.com/prwhite/8168133#gistcomment-2749866
 ## Show this help menu
 help:

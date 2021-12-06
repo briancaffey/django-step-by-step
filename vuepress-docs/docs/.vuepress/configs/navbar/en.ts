@@ -79,8 +79,12 @@ export const en: NavbarConfig = [
             link: '/deploy/digital-ocean/',
           },
           {
-            text: 'AWS',
-            link: '/deploy/aws/',
+            text: 'AWS Overview',
+            link: '/deploy/aws/overview',
+          },
+          {
+            text: 'Docker Swarm on EC2',
+            link: '/deploy/aws/docker-swarm-ec2/',
           },
         ],
       },
