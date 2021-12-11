@@ -54,12 +54,12 @@ jobs:
           echo ::set-output name=SWARM_LEADER_PUBLIC_IP::$SWARM_LEADER_PUBLIC_IP
           echo ::set-output name=KEY_PAIR_NAME::$KEY_PAIR_NAME
 
-      - name: "Install SSH Key"
-        uses: shimataro/ssh-key-action@v2
-        with:
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          name: id_rsa
-          known_hosts: ${{ steps.get_instance_data.outputs.SWARM_LEADER_PUBLIC_IP }}
+      # - name: "Install SSH Key"
+      #   uses: shimataro/ssh-key-action@v2
+      #   with:
+      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
+      #     name: id_rsa
+      #     known_hosts: ${{ steps.get_instance_data.outputs.SWARM_LEADER_PUBLIC_IP }}
 
       - name: "Build Backend Docker Container"
         env:
@@ -92,6 +92,14 @@ jobs:
           docker tag $ECR_REPOSITORY_URI $ECR_REPOSITORY_URI:$SOURCE_TAG
 
           docker push $ECR_REPOSITORY_URI:$SOURCE_TAG
+
+
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_rsa
+          ssh-keyscan -H $SWARM_HOST_IP >> ~/.ssh/known_hosts
 
           # set the docker host to use ssh
           export DOCKER_HOST=ssh://ec2-user@$SWARM_HOST_IP
