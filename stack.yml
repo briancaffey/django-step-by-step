@@ -1,0 +1,161 @@
+version: "3.9"
+
+services:
+
+  postgres:
+    image: postgres:13.1
+    networks:
+      - main
+    environment:
+      POSTGRES_PASSWORD: /run/secret/potgres_password
+    volumes:
+      - /data/postgres:/var/lib/postgresql/data
+    secrets:
+      - postgres_password
+
+  redis:
+    image: redis:alpine
+    volumes:
+      - /data/redis:/data
+    networks:
+      - main
+
+  traefik:
+    image: traefik:v2.3.4
+    ports:
+      - "80:80"
+      - "443:443"
+    command:
+      - "--providers.docker.endpoint=unix:///var/run/docker.sock"
+      - "--providers.docker.swarmMode=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--providers.docker.network=traefik-public"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.letsencryptresolver.acme.httpchallenge=true"
+      - "--certificatesresolvers.letsencryptresolver.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.letsencryptresolver.acme.email=your@email.com"
+      - "--certificatesresolvers.letsencryptresolver.acme.storage=/letsencrypt/acme.json"
+    volumes:
+      - /data/traefik:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - traefik-public
+      - main
+    dns:
+      # this may not be needed
+      - "8.8.8.8"
+      - "8.8.4.4"
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
+        - "traefik.http.routers.http-catchall.entrypoints=web,websecure"
+        - "traefik.http.routers.http-catchall.middlewares=redirect-to-https@docker"
+        - "traefik.http.routers.http-catchall.service=redirect-service"
+        - "traefik.http.services.redirect-service.loadbalancer.server.port=80"
+        - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+  backend: &backend
+    image: ${IMAGE_URI}
+    command:
+      - "gunicorn"
+      - "-t"
+      - "1000"
+      - "-b"
+      - "0.0.0.0:8000"
+      - "--log-level"
+      - "debug"
+      - "backend.wsgi"
+    networks:
+      - main
+    environment:
+      POSTGRES_PASSWORD: /run/secret/potgres_password
+      DEBUG: "0"
+      DJANGO_SETTINGS_MODULE: backend.settings.swarm_ec2
+      REDIS_SERVICE_HOST: redis
+      POSTGRES_SERVICE_HOST: postgres
+    secrets:
+      - postgres_password
+
+
+  celery:
+    <<: *backend
+    command:
+      - "celery"
+      - "--app=backend.celery_app:app"
+      - "worker"
+      - "-Q"
+      - "default"
+      - "--concurrency=1"
+      - "--loglevel=INFO"
+
+  web:
+    image: ${FRONTEND_IMAGE_URI}
+    networks:
+      - traefik-public
+      - main
+    ports:
+      - "8080:80"
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.nginx-web.rule=Host(`${DOMAIN_NAME}`)"
+        - "traefik.http.routers.nginx-web.entrypoints=websecure"
+        - "traefik.http.routers.nginx-web.tls.certresolver=letsencryptresolver"
+        - "traefik.http.services.nginx-web.loadbalancer.server.port=80"
+
+  agent:
+    image: portainer/agent
+    environment:
+      # REQUIRED: Should be equal to the service name prefixed by "tasks." when
+      # deployed inside an overlay network
+      AGENT_CLUSTER_ADDR: tasks.agent
+      # AGENT_PORT: 9001
+      # LOG_LEVEL: debug
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/lib/docker/volumes:/var/lib/docker/volumes
+    networks:
+      - agent_network
+    deploy:
+      mode: global
+      placement:
+        constraints: [node.platform.os == linux]
+
+  portainer:
+    image: portainer/portainer-ce:2.9.2
+    command: -H tcp://tasks.agent:9001 --tlsskipverify
+    volumes:
+      - /data/portainer:/data
+    networks:
+      - traefik-public
+      - agent_network
+    deploy:
+      mode: replicated
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.portainer.rule=Host(`${PORTAINER_DOMAIN_NAME}`)"
+        - "traefik.http.routers.portainer.entrypoints=websecure"
+        - "traefik.http.routers.portainer.tls=true"
+        - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+        - "traefik.http.routers.portainer.service=portainer"
+
+networks:
+  traefik-public:
+    external: true
+  main:
+    driver: overlay
+  agent_network:
+    driver: overlay
+    attachable: true
+
+secrets:
+  postgres_password:
+    external: true

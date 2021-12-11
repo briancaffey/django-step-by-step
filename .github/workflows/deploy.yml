@@ -21,6 +21,16 @@ jobs:
         run: |
           echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
 
+      - name: "Get swarm leader public IP address"
+        id: get_swarm_leader_public_ip
+        run: |
+          SWARM_LEADER_PUBLIC_IP=$(aws ec2 describe-instances \
+            --query 'Reservations[0].Instances[0].PublicIpAddress' \
+            --filters "Name=tag:stack,Values=DockerEc2Stack"
+            --output text
+          )
+          echo ::set-output name=SWARM_LEADER_PUBLIC_IP::$SWARM_LEADER_PUBLIC_IP
+
       - name: "Install SSH Key"
         uses: shimataro/ssh-key-action@v2
         with:
@@ -31,6 +41,7 @@ jobs:
       - name: "Build Backend Docker Container"
         env:
           SOURCE_TAG: ${{ steps.git_version_info.outputs.SOURCE_TAG }}
+          SWARM_HOST_IP: ${{ steps.get_swarm_leader_public_ip.outputs.SWARM_LEADER_PUBLIC_IP }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
@@ -62,6 +73,11 @@ jobs:
           docker tag $ECR_REPOSITORY_URI $ECR_REPOSITORY_URI:$SOURCE_TAG
 
           docker push $ECR_REPOSITORY_URI:$SOURCE_TAG
+
+          # set the docker host to use ssh
+          export DOCKER_HOST=ssh://root@$SWARM_HOST_IP
+
+          docker stack deploy --with-registry-auth -c stack.yml stack
 
       # - name: "Test Backend Docker Container"
       #   run: |
