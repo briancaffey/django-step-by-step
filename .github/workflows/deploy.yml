@@ -1,0 +1,64 @@
+# a github action that builds and deploys the project using docker commands and ssh
+name: build, test, push and deploy to docker swarm
+
+on:
+  push:
+    tags:
+      - 'v*'
+jobs:
+  deploy:
+    name: "Deploy to docker swarm"
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: "Git version info"
+        id: git_version_info
+        run: |
+          echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
+
+      - name: "Install SSH Key"
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          name: id_rsa
+
+      - name: "Build Backend Docker Container"
+        env:
+          SOURCE_TAG: ${{ steps.git_version_info.outputs.SOURCE_TAG }}
+        run: |
+          # get ECR repository by tag
+
+          ## get ARN of ECR repository
+          ECR_REPOSITORY_ARN=$(aws resourcegroupstaggingapi get-resources \
+            --tag-filters Key=stack,Values=DockerEc2Stack \
+            --resource-type-filters ecr:repository \
+            --query 'ResourceTagMappingList[0].ResourceARN' \
+            --output text
+          )
+
+          ## get ECR repository URI
+          ECR_REPOSITORY_URI=$(aws ecr describe-repositories | jq -r --arg ECR_REPOSITORY_ARN "$ECR_REPOSITORY_ARN" -c '.repositories[] | select(.repositoryArn | contains($ECR_REPOSITORY_ARN)) | .repositoryUri')
+
+          # do a docker login for ECR repository
+          aws ecr get-login-password \
+            --region us-east-1 \
+            | docker login \
+            --username AWS \
+            --password-stdin $ECR_REPOSITORY_URI
+
+          docker build -t $ECR_REPOSITORY_URI backend
+          docker tag $ECR_REPOSITORY_URI $ECR_REPOSITORY_URI:$SOURCE_TAG
+
+          docker push $ECR_REPOSITORY_URI:$SOURCE_TAG
+
+      # - name: "Test Backend Docker Container"
+      #   run: |
+      #     docker run --rm -it ${{ secrets.DOCKER_IMAGE_NAME }}_latest /bin/bash
+
+      # - name: "Push Backend Docker Container"
+      #   run: |
+      #     docker push ${{ secrets.DOCKER_IMAGE_NAME }}_latest
+
+      # - name: "docker stack deploy"
+      #   run: |
+      #     docker stack deploy -c docker-compose.yml --prune --with-registry-auth ${{ secrets.DOCKER_STACK_NAME }}
