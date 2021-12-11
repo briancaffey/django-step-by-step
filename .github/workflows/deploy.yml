@@ -31,8 +31,8 @@ jobs:
         run: |
           SWARM_LEADER_PUBLIC_IP=$(aws ec2 describe-instances \
             --query 'Reservations[0].Instances[0].PublicIpAddress' \
-            --filters "Name=tag:stack,Values=DockerEc2Stack"
-            --output text
+            --filters "Name=tag:stack,Values=DockerEc2Stack" \
+            --output text \
           )
           echo ::set-output name=SWARM_LEADER_PUBLIC_IP::$SWARM_LEADER_PUBLIC_IP
 
