@@ -8,6 +8,7 @@ on:
 jobs:
   deploy:
     name: "Deploy to docker swarm"
+    environment: docker-swarm-ec2
     runs-on: ubuntu-latest
     steps:
 
