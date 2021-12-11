@@ -5,52 +5,66 @@ on:
   push:
     tags:
       - 'v*'
+
 jobs:
   deploy:
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
     name: "Deploy to docker swarm"
     environment: docker-swarm-ec2
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [3.8]
+
     steps:
 
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
+      # Setup python version
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
       - name: "Git version info"
         id: git_version_info
         run: |
           echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
 
-      - name: "Get swarm leader public IP address"
-        id: get_swarm_leader_public_ip
-        env:
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+      - name: "Get Instance Data"
+        id: get_instance_data
         run: |
-          SWARM_LEADER_PUBLIC_IP=$(aws ec2 describe-instances \
-            --query 'Reservations[0].Instances[0].PublicIpAddress' \
+
+          # save instance json data to temp file
+          aws ec2 describe-instances \
+            --query 'Reservations[0].Instances[0]' \
             --filters "Name=tag:stack,Values=DockerEc2Stack" \
-            --output text \
-          )
+            --output json > /tmp/instance_data.json
+
+          SWARM_LEADER_PUBLIC_IP=$(cat /tmp/instance_data.json | jq -r '.PublicIpAddress')
+          KEY_PAIR_NAME=$(cat /tmp/instance_data.json | jq -r '.KeyName')
+
           echo ::set-output name=SWARM_LEADER_PUBLIC_IP::$SWARM_LEADER_PUBLIC_IP
+          echo ::set-output name=KEY_PAIR_NAME::$KEY_PAIR_NAME
 
       - name: "Install SSH Key"
         uses: shimataro/ssh-key-action@v2
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           name: id_rsa
-          known_hosts: ${{ steps.get_swarm_leader_public_ip.outputs.SWARM_LEADER_PUBLIC_IP }}
+          known_hosts: ${{ steps.get_instance_data.outputs.SWARM_LEADER_PUBLIC_IP }}
 
       - name: "Build Backend Docker Container"
         env:
           SOURCE_TAG: ${{ steps.git_version_info.outputs.SOURCE_TAG }}
-          SWARM_HOST_IP: ${{ steps.get_swarm_leader_public_ip.outputs.SWARM_LEADER_PUBLIC_IP }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          SWARM_HOST_IP: ${{ steps.get_instance_data.outputs.SWARM_LEADER_PUBLIC_IP }}
 
         run: |
           # get ECR repository by tag
@@ -80,9 +94,11 @@ jobs:
           docker push $ECR_REPOSITORY_URI:$SOURCE_TAG
 
           # set the docker host to use ssh
-          export DOCKER_HOST=ssh://root@$SWARM_HOST_IP
+          export DOCKER_HOST=ssh://ec2-user@$SWARM_HOST_IP
 
           docker ps
+
+          # export BACKEND_IMAGE_URI and FRONTEND_IMAGE_URI, and domain name for docker stack deploy command
 
           # docker stack deploy --with-registry-auth -c stack.yml stack
 
