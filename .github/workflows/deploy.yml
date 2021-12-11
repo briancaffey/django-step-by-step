@@ -27,6 +27,11 @@ jobs:
       - name: "Build Backend Docker Container"
         env:
           SOURCE_TAG: ${{ steps.git_version_info.outputs.SOURCE_TAG }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+
         run: |
           # get ECR repository by tag
 
