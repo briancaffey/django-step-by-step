@@ -53,7 +53,8 @@ jobs:
             --username AWS \
             --password-stdin $ECR_REPOSITORY_URI
 
-          docker build -t $ECR_REPOSITORY_URI backend
+          ls -al
+          docker build -t $ECR_REPOSITORY_URI ./backend
           docker tag $ECR_REPOSITORY_URI $ECR_REPOSITORY_URI:$SOURCE_TAG
 
           docker push $ECR_REPOSITORY_URI:$SOURCE_TAG
