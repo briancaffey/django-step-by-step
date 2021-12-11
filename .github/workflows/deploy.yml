@@ -41,7 +41,7 @@ jobs:
         with:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           name: id_rsa
-          known_hosts: unnecessary
+          known_hosts: ${{ steps.get_swarm_leader_public_ip.outputs.SWARM_LEADER_PUBLIC_IP }}
 
       - name: "Build Backend Docker Container"
         env:
