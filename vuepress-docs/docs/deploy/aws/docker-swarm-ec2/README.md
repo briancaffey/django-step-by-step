@@ -4,16 +4,16 @@ meta:
   - name: description
     content: This article describes how to build a CI/CD pipeline for a Django project using Docker Swarm and AWS EC2.
 
-  - property: 'og:title',
+  - property: 'og:title'
     content: 'Docker Swarm, AWS EC2, CDK and GitHub Actions'
 
-  - property: 'og:description',
+  - property: 'og:description'
     content: This article describes how to build a CI/CD pipeline for a Django project using Docker Swarm and AWS EC2.
 
-  - property: 'og:image',
+  - property: 'og:image'
     content: https://briancaffey.github.io/django-step-by-step/images/docker-swarm-ec2-hero.png
 
-  - property: 'twitter:card',
+  - property: 'twitter:card'
     content: https://briancaffey.github.io/django-step-by-step/images/docker-swarm-ec2-hero.png
 
 ---
