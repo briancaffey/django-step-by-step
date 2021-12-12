@@ -1,10 +1,28 @@
 ---
 prev: /deploy/digital-ocean
+meta:
+  - name: description
+    content: This article describes how to build a CI/CD pipeline for a Django project using Docker Swarm and AWS EC2.
+
+  - property: 'og:title',
+    content: 'Docker Swarm, AWS EC2, CDK and GitHub Actions'
+
+  - property: 'og:description',
+    content: This article describes how to build a CI/CD pipeline for a Django project using Docker Swarm and AWS EC2.
+
+  - property: 'og:image',
+    content: https://briancaffey.github.io/django-step-by-step/images/docker-swarm-ec2-hero.png
+
+  - property: 'twitter:card',
+    content: https://briancaffey.github.io/django-step-by-step/images/docker-swarm-ec2-hero.png
+
 ---
 
 <img :src="$withBase('/images/docker-swarm-ec2-hero.png')" alt="docker swarm on ec2">
 
 # Docker Swarm on EC2
+
+[[toc]]
 
 This article will describe a deployment scenario for Django applications that uses a single-node docker swarm cluster running on an EC2 instance.
 
@@ -82,7 +100,7 @@ V. `docker stack deploy` is the command that is used to deploy the application i
 
 W. The source code for this construct is available here: [https://github.com/briancaffey/django-cdk](https://github.com/briancaffey/django-cdk)
 
-## Prerequisits for using this construct
+## Prerequisites for using this construct
 
 This construct tries to automate as much of the cloud infrastructure as possible, but some parts of your cloud infrastructure can't be automated through IaC. In order to use this construct, you will need to do the following:
 
@@ -90,6 +108,52 @@ This construct tries to automate as much of the cloud infrastructure as possible
 - aws-cli installed locally configured with the credentials of the administrator user mentioned above
 - A domain name purchased through Route 53 (you can use an external domain name, but that won't be covered in this article)
 - A `key-pair` that you have stored locally in your `~/.ssh` folder that has appropriate permissions (400)
+
+## Preparing for Deployment
+
+### Creating a GitHub Environment
+
+We can create a new GitHub Environment that we can use for testing the deployment of our `DockerEc2` construct and the deployment of our application to the docker swarm cluster that the `DockerEc2` construct sets up.
+
+### Adding Environment Secrets to GitHub for use in GitHub Actions
+
+- **`SSH_PRIVATE_KEY`** - This is the private key used to connect to the EC2 instance for securely communicating to the swarm cluster on EC2 from our GitHub Actions environment.
+- **`STACK_NAME`** - this will be used to name our stack. It defines the environment of the application being deployed.
+- **`HOST_NAME`** - this will be used to request the Route 53 A Record
+- **`ZONE_NAME`** - this will be used to lookup an existing Hosted Zone
+
+You can add other environment variables that you want to use in backend services (gunicorn, celery, etc), and you must add these to the `environmentVariables` property of the `DockerEc2` construct as a mapping.
+
+### Adding Repository secrets to our GitHub project
+
+For the `django-step-by-step` repository, we can add the following repository secrets that will be available in all environments that we create in this repository:
+
+- **`AWS_ACCESS_KEY_ID`**
+- **`AWS_ACCOUNT_ID`**
+- **`AWS_DEFAULT_REGION`**
+- **`AWS_SECRET_ACCESS_KEY`**
+
+## Deploying the Application
+
+Once all of the GitHub secret values are set, you can deploy the application by pushing a git tag with the format: `v#.#.#`. This will trigger a deployment using the `.github/workflows/deploy.yml` GitHub Actions workflow. This workflow does the following:
+
+- Deploys a CloudFormation stack named with the `STACK_NAME` environment variable
+- Deploys an EC2 instance
+- The EC2 instance `UserData` scripts sets up the instance to run our application by installing docker and running `docker stack deploy`
+
+This deploys both the infrastructure and the application in the same operation.
+
+## Updating the application
+
+To update the application, there are two options. You can rerun the same infrastructure pipeline that was used to initially create the stack, or you can run the application update pipeline.
+
+Running the infrastructure pipeline may replace the EC2 instance and recreate the swarm cluster (depending on what values in the CDK construct have been changed), but the application will all be persisted since everything is stored in EFS.
+
+The application update pipeline updates the application by running `docker stack deploy` and also recreates docker secrets in case those have changed. Secret values are updated by changing the value of the GitHub environment secrets in the GitHub UI.
+
+## Debugging and deploying from your local machine
+
+
 
 ## [12 Factor App](https://12factor.net/)
 
@@ -113,7 +177,7 @@ VI. **Processes** - *Execute the app as one or more stateless processes* - This 
 
 VII. **Port binding** - *Export services via port binding* - Traefik is the only swarm service that exposes ports 80 and 443. All application traffic goes to the `nginx` container, and is then routed to either the frontend app, the backend app or possibly static files as well (unless the application is using S3 for static and media file storage).
 
-VIII. **Concurrency** - *Scale out via the process model* - This is one point where the construct does abide by the 12 Factor App. While docker swarm is designed to work with multiple nodes in a cluster, the application infrastructure deployed by this construct.
+VIII. **Concurrency** - *Scale out via the process model* - This is one point where the construct does abide by the 12 Factor App. While docker swarm is designed to work with multiple nodes in a cluster, the application infrastructure deployed by this construct uses a single-node swarm cluster.
 
 IX. **Disposability** - *Maximize robustness with fast startup and graceful shutdown* -
 This construct really embraces disposability. Each time your run `make docker-ec2-deploy` with changes to either application code or infrastructure code, the EC2 instance and swarm cluster will be completely deleted and completely recreated. Data is stored in EFS and is persisted between deploys. It might be possible to use EBS (Elastic Block Storage) to store application data, but EFS is better suited or this type of application since it can be used by multiple EC2 instances at the same time (the existing EC2 instance and the new EC2 instance that is replacing the old instance). It is not necessary to completely delete the EC2 instance, and this does make the process longer since docker needs to be reinstalled on each deploy. The big downside is that you are having to wait around for the EC2 instances to start. There may also be extra data costs associated with downloading packages and files in the CloudFormationInit metadata.
@@ -151,5 +215,5 @@ Sometimes the same words are used in different contexts, and it might be confusi
 
 ## Next steps
 
-- Update application with separate pipeline
-- Use GitLab CI/CD
+- [x] Update application with separate pipeline
+- [x] Use GitHub Actions CI/CD

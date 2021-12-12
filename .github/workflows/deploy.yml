@@ -166,15 +166,3 @@ jobs:
           export PORTAINER_HOST_NAME=$PORTAINER_HOST_NAME
 
           docker stack deploy --with-registry-auth -c stack.yml stack
-
-      # - name: "Test Backend Docker Container"
-      #   run: |
-      #     docker run --rm -it ${{ secrets.DOCKER_IMAGE_NAME }}_latest /bin/bash
-
-      # - name: "Push Backend Docker Container"
-      #   run: |
-      #     docker push ${{ secrets.DOCKER_IMAGE_NAME }}_latest
-
-      # - name: "docker stack deploy"
-      #   run: |
-      #     docker stack deploy -c docker-compose.yml --prune --with-registry-auth ${{ secrets.DOCKER_STACK_NAME }}
