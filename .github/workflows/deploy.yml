@@ -125,10 +125,6 @@ jobs:
             --username AWS \
             --password-stdin $FRONTEND_IMAGE_URI
 
-          docker build -t $FRONTEND_IMAGE_URI .
-
-          echo "Building and tagging frontend container"
-
           docker build \
               --build-arg BACKEND_API_URL=https://$APPLICATION_HOST_NAME \
               -t $FRONTEND_IMAGE_URI \
