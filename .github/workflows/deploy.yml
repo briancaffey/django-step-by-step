@@ -146,6 +146,20 @@ jobs:
         run: |
           export DOCKER_HOST=ssh://ec2-user@$SWARM_HOST_IP
 
+          # login to ECR backend image repository
+          aws ecr get-login-password \
+            --region us-east-1 \
+            | docker login \
+            --username AWS \
+            --password-stdin $FRONTEND_IMAGE_URI
+
+          # login to ECR backend image repository
+          aws ecr get-login-password \
+            --region us-east-1 \
+            | docker login \
+            --username AWS \
+            --password-stdin $BACKEND_IMAGE_URI
+
           export BACKEND_IMAGE_URI=$BACKEND_IMAGE_URI:$SOURCE_TAG
           export FRONTEND_IMAGE_URI=$FRONTEND_IMAGE_URI:$SOURCE_TAG
           export APPLICATION_HOST_NAME=$APPLICATION_HOST_NAME
