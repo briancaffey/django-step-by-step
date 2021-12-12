@@ -1,0 +1,166 @@
+# a github action that builds and deploys the project using docker commands and ssh
+name: build, test, push images and docker stack deploy to docker swarm
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  deploy:
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+    name: "Deploy to docker swarm"
+    environment: docker-swarm-ec2
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        python-version: [3.8]
+
+    steps:
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      # Setup python version
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: "Git version info"
+        id: git_version_info
+        run: |
+          echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags/}
+
+      - name: "Get CloudFormation Stack Outputs"
+        id: stack_outputs
+        env:
+          STACK_NAME: ${{ secrets.STACK_NAME }}
+        run: |
+          aws cloudformation describe-stacks \
+            --stack-name $STACK_NAME \
+            --query 'Stacks[0].Outputs' \
+            --output json > /tmp/stack_outputs.json
+
+          SWARM_LEADER_PUBLIC_IP=$(cat /tmp/stack_outputs.json | jq -r '.[] | select(.ExportName == "Ec2PublicIpAddress") | .OutputValue')
+          KEY_PAIR_NAME=$(cat /tmp/stack_outputs.json | jq -r '.[] | select(.ExportName == "Ec2KeyName") | .OutputValue')
+          PORTAINER_HOST_NAME=$(cat /tmp/stack_outputs.json | jq -r '.[] | select(.ExportName == "PortainerHostName") | .OutputValue')
+          APPLICATION_HOST_NAME=$(cat /tmp/stack_outputs.json | jq -r '.[] | select(.ExportName == "ApplicationHostName") | .OutputValue')
+          FRONTEND_REPOSITORY_URI=$(cat /tmp/stack_outputs.json | jq -r '.[] | select(.ExportName == "FrontendRepositoryUri") | .OutputValue')
+          BACKEND_REPOSITORY_URI=$(cat /tmp/stack_outputs.json | jq -r '.[] | select(.ExportName == "BackendRepositoryUri") | .OutputValue')
+
+          echo ::set-output name=SWARM_LEADER_PUBLIC_IP::$SWARM_LEADER_PUBLIC_IP
+          echo ::set-output name=KEY_PAIR_NAME::$KEY_PAIR_NAME
+          echo ::set-output name=PORTAINER_HOST_NAME::$PORTAINER_HOST_NAME
+          echo ::set-output name=APPLICATION_HOST_NAME::$APPLICATION_HOST_NAME
+          echo ::set-output name=FRONTEND_REPOSITORY_URI::$FRONTEND_REPOSITORY_URI
+          echo ::set-output name=BACKEND_REPOSITORY_URI::$BACKEND_REPOSITORY_URI
+
+      # ⚠️ this did not work when trying to establish an ssh connection to the ec2 host ⚠️
+      # - name: "Install SSH Key"
+      #   uses: shimataro/ssh-key-action@v2
+      #   with:
+      #     key: ${{ secrets.SSH_PRIVATE_KEY }}
+      #     name: id_rsa
+      #     known_hosts: ${{ steps.get_instance_data.outputs.SWARM_LEADER_PUBLIC_IP }}
+
+      - name: "Setup SSH Key"
+        id: setup_ssh_key
+        env:
+          SWARM_HOST_IP: ${{ steps.stack_outputs.outputs.SWARM_LEADER_PUBLIC_IP }}
+        run: |
+          # setup key pair for SSH access
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_rsa
+          ssh-keyscan -H $SWARM_HOST_IP >> ~/.ssh/known_hosts
+
+      - name: "Build Backend Docker Container"
+        env:
+          SOURCE_TAG: ${{ steps.git_version_info.outputs.SOURCE_TAG }}
+          BACKEND_IMAGE_URI: ${{ steps.stack_outputs.outputs.BACKEND_REPOSITORY_URI }}
+          FRONTEND_IMAGE_URI: ${{ steps.stack_outputs.outputs.FRONTEND_REPOSITORY_URI }}
+          APPLICATION_HOST_NAME: ${{ steps.stack_outputs.outputs.APPLICATION_HOST_NAME }}
+
+        run: |
+          ## get ECR repository URI
+
+          # login to ECR backend image repository
+          aws ecr get-login-password \
+            --region us-east-1 \
+            | docker login \
+            --username AWS \
+            --password-stdin $BACKEND_IMAGE_URI
+
+          docker build \
+            --build-arg SOURCE_TAG=$SOURCE_TAG \
+            -t $BACKEND_IMAGE_URI \
+            ./backend
+
+          docker tag $BACKEND_IMAGE_URI $BACKEND_IMAGE_URI:$SOURCE_TAG
+
+          docker push $BACKEND_IMAGE_URI:$SOURCE_TAG
+
+      - name: "Build and Push Frontend Docker Container"
+        env:
+          SOURCE_TAG: ${{ steps.git_version_info.outputs.SOURCE_TAG }}
+          FRONTEND_IMAGE_URI: ${{ steps.stack_outputs.outputs.FRONTEND_REPOSITORY_URI }}
+          APPLICATION_HOST_NAME: ${{ steps.stack_outputs.outputs.APPLICATION_HOST_NAME }}
+
+        run: |
+          ## get ECR repository URI
+
+          # login to ECR backend image repository
+          aws ecr get-login-password \
+            --region us-east-1 \
+            | docker login \
+            --username AWS \
+            --password-stdin $FRONTEND_IMAGE_URI
+
+          docker build \
+              --build-arg BACKEND_API_URL=https://$APPLICATION_HOST_NAME \
+              -t $FRONTEND_IMAGE_URI \
+              -f nginx/prod/Dockerfile \
+              .
+
+          docker tag $FRONTEND_IMAGE_URI $FRONTEND_IMAGE_URI:$SOURCE_TAG
+          docker push $FRONTEND_IMAGE_URI:$SOURCE_TAG
+
+      - name: "docker stack deploy"
+        env:
+          SWARM_HOST_IP: ${{ steps.stack_outputs.outputs.SWARM_LEADER_PUBLIC_IP }}
+          SOURCE_TAG: ${{ steps.git_version_info.outputs.SOURCE_TAG }}
+          BACKEND_IMAGE_URI: ${{ steps.stack_outputs.outputs.BACKEND_REPOSITORY_URI }}
+          FRONTEND_IMAGE_URI: ${{ steps.stack_outputs.outputs.FRONTEND_REPOSITORY_URI }}
+          APPLICATION_HOST_NAME: ${{ steps.stack_outputs.outputs.APPLICATION_HOST_NAME }}
+          PORTAINER_HOST_NAME: ${{ steps.stack_outputs.outputs.PORTAINER_HOST_NAME }}
+          # set the docker host to use ssh
+        run: |
+          export DOCKER_HOST=ssh://ec2-user@$SWARM_HOST_IP
+
+          export BACKEND_IMAGE_URI=$BACKEND_IMAGE_URI:$SOURCE_TAG
+          export FRONTEND_IMAGE_URI=$FRONTEND_IMAGE_URI:$SOURCE_TAG
+          export APPLICATION_HOST_NAME=$APPLICATION_HOST_NAME
+          export PORTAINER_HOST_NAME=$PORTAINER_HOST_NAME
+
+          docker stack deploy --with-registry-auth -c stack.yml stack
+
+      # - name: "Test Backend Docker Container"
+      #   run: |
+      #     docker run --rm -it ${{ secrets.DOCKER_IMAGE_NAME }}_latest /bin/bash
+
+      # - name: "Push Backend Docker Container"
+      #   run: |
+      #     docker push ${{ secrets.DOCKER_IMAGE_NAME }}_latest
+
+      # - name: "docker stack deploy"
+      #   run: |
+      #     docker stack deploy -c docker-compose.yml --prune --with-registry-auth ${{ secrets.DOCKER_STACK_NAME }}

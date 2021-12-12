@@ -2,22 +2,33 @@
 prev: /deploy/digital-ocean
 ---
 
+<img :src="$withBase('/images/docker-swarm-ec2-hero.png')" alt="docker swarm on ec2">
+
 # Docker Swarm on EC2
 
 This article will describe a deployment scenario for Django applications that uses a single-node docker swarm cluster running on an EC2 instance.
 
 - First we will take a look at a detailed application architecture diagram that shows the infrastructure components that are provisioned when the construct is deployed in a CloudFormation stack
-- Second we will discuss how you can use this construct to deploy your own Django application on AWS.
+- Second, we will discuss how you can use this construct to deploy your own Django application on AWS.
 - Third, I will discuss some of the pros and cons of this application architecture compared to some of the other application architectures that I have written CDK constructs for in my `django-cdk` construct library.
 - Finally, I'll discuss the process I used to develop and debug this construct as well as some of the open questions that I have about this project.
 
-## Docker swarm vs docker compose
+## Pros and Cons
 
-Docker swarm is a **container orchestration tool** that is built into docker. It is similar to docker compose, but there are some important differences. Applications running in docker swarm clusters are defined by "stack files". Stack files are YAML files that use the docker compose file format, but there are some differences. For example, docker compose lets you reference a Dockerfile in the `image` key, but stack files require that an image URI is specified.
+### Pros
 
-Docker compose was originally developed as a tool for local development, and docker swarm was designed for running container workloads in production. Docker compose can be used to run applications in production, however.
+- **Inexpensive** - This construct keeps costs low by using a single-node Docker swarm cluster in a public subnet and Elastic File Sytem (EFS) for persistent storage rather than managed database services. Other expensive, always-on managed AWS services such as Application Load Balancers and NAT Gateways are not used to save costs
+- **Simple deployments** - the infrastructure, configuration and application processes are all deployed with a single command (`make docker-ec2-deploy`)
+- **Easy to use** - This construct includes the Portainer container management tool which makes it easy to view logs, open shells, scale processes and more through a web interface. The construct provides a number of other conveniences, such as outputting commonly used commands and values such as the command to access the EC2 instance over SSH and the URL to access the web frontend and other URLs for utility services such as Portainer
+- **Open source** - the tools used to develop this construct are all open source. Other constructs in the `django-cdk` construct library use tools that are not open source (such as Elastic Container Service)
+- **Thoroughly documented** - the construct includes lots of code comments and in-depth documentation that explains why certain architectural decisions were made and what the tradeoffs are when compared to other options
 
-This deployment scenario is similar to the one described in the <a :href="$withBase('/deploy/digital-ocean/')">DigitalOcean</a> section.
+### Cons
+
+- **Less secure** - applications run in public subnets that are directly exposed to the internet
+- **Vertically scalable** (not horizontally scalable) - the only way to easily scale up is to use a larger/optimized EC2 instance type. Docker swarm is designed to work with multiple hosts, but this deployment scenario is limited in that it can only use a single node cluster. If you need to add additional hosts, you will need to set these up manually
+- **Opinionated** - This construct is opinionated and has a simple interface that does not expose many different options for how the infrastructure is deployed
+- **Not Production-ready** - This construct is not recommended for critical production workloads. It is ideal for running side projects and perhaps staging environments that are not heavily used. Running databases on EFS is possible but generally not recommended. It is better (but more expensive) to use a managed database service such as RDS or Aurora for production environments
 
 ## Diagram
 
@@ -71,12 +82,6 @@ V. `docker stack deploy` is the command that is used to deploy the application i
 
 W. The source code for this construct is available here: [https://github.com/briancaffey/django-cdk](https://github.com/briancaffey/django-cdk)
 
-## About this construct
-
-Compared with ECS and EKS, this construct is simpler, more portable and less expensive to run. It does not use managed AWS services like RDS, ElastiCache, Application Load Balancers or NAT Gateways (for network address translation). This deployment scenario is more suited for demos, toy projects and experimentation. docker swarm can be installed on an cloud provider, but running docker swarm in the AWS ecosystem allows you to easily take advantage of the other AWS services if your application requires them.
-
-On the other hand, this construct does not do autoscaling and does not follow AWS security best practices since the application workloads runs in a public subnet.
-
 ## Prerequisits for using this construct
 
 This construct tries to automate as much of the cloud infrastructure as possible, but some parts of your cloud infrastructure can't be automated through IaC. In order to use this construct, you will need to do the following:
@@ -86,71 +91,63 @@ This construct tries to automate as much of the cloud infrastructure as possible
 - A domain name purchased through Route 53 (you can use an external domain name, but that won't be covered in this article)
 - A `key-pair` that you have stored locally in your `~/.ssh` folder that has appropriate permissions (400)
 
-## `DockerEc2Props`
+## [12 Factor App](https://12factor.net/)
 
-Once you have set up each of the above, we can start thinking about the parameters that the `DockerEc2` takes. This is called `DockerEc2Props`:
+This construct tries to adhere to the [12 Factor App](https://12factor.net/) model, but it does not do so completely. Here is the 12 Factor App scorecard for this construct:
 
-```ts
-export interface DockerEc2Props {
+I. **Codebase** - *One codebase tracked in revision control, many deploys* - This first factor of the 12 Factor app deserves some clarification. There are **two** codebases in use here. The first is `django-cdk`. This repo is an AWS CDK construct library that is written in TypeScript and published to NPM and PyPI. It includes several different constructs that help developers and teams deploy Django applications on AWS using different tools (such as docker swarm, ECS and EKS).
 
-  /**
-   * Path to the Dockerfile
-   */
-  readonly imageDirectory: string;
+  The second codebase is `django-step-by-step`. This project is a reference application that several applications in a monorepo structure. It includes a Django project built with Django REST Framework and a Vue.js frontend application built with Quasar, TypeScript, Vue 3 and the Composition API. It is a simple micro-blogging application called μblog. The `django-step-by-step` repo also includes a `cdk` directory that includes the `django-cdk` library as a dependency.
 
-  /**
-   * Frontend Image directory (nginx, quasar-app)
-   */
-  readonly frontendImageDirectory: string;
+  The `django-cdk` application incudes `django-step-by-step` as a git submodule. The reason for doing this is to make it easier to test deploying an application with the `django-cdk` library without having to redeploy a new version of the `django-cdk` library with each change. You can find the `django-step-by-step` project code referenced in the `django-cdk` project's `integ` files (such as `src/integ/integ.docker-ec2.ts`). These files are used for integration testing (`integ` is short for `integration`).
 
-  /**
-   * Frontend Image Dockerfile
-   */
-  readonly frontendImageDockerfile: string;
+II. **Dependencies** - *Explicitly declare and isolate dependencies* - The project does this pretty well. Both `django-cdk` and `django-step-by-step` use tools to manage dependencies. `django-cdk` uses `projen` and `django-step-by-step` uses `poetry` for the backend and `yarn` for the frontend. Versions are specified in lots of different files, including swarm stack files, Dockerfiles and construct files.
 
-  /*
-   * Route 53 Zone Name, for example my-zone.com
-   */
-  readonly zoneName: string;
+III. **Config** - *Store config in the environment* - Config for this `DockerEc2` construct is either simple or complex depending on how you look at it. The `DockerEc2` construct is a simple interface where all config values are passed in through an interface called `DockerEc2Props`. These values are then passed into the EC2 metadata service (`UserData` and `CloudFormationInit`) that is used to create the EC2 instance that runs our application. The EC2 metadata sets up the docker swarm cluster, creates secrets that are read from environment variables and deploys the swarm stack with tagged versions of container images that are built and pushed to ECR by CDK (building and pushing images is the first things that happens when you run `cdk deploy` or `make docker-ec2-deploy`). I have gone back and forth on some of the decision around what to include in the `DockerEc2Props` interface and how to structure the EC2 metadata using `cfn-init`.
 
-  /**
-   * The domain name to use, such as example.my-zone.com
-   */
-  readonly domainName: string;
+IV. **Backing services** - *Treat backing services as attached resources* - The postgres database used in this construct runs in a docker container has its data stored in EFS. This is not ideal for a production environment, but it is an OK fit for testing and staging environments.
 
-  /**
-   * Key pair name used for SSH to the EC2 instance
-   */
-  readonly keyName: string;
+V. **Build, release, run** - *Strictly separate build and run stages* - CDK does each of these steps in the `make docker-ec2-deploy` command. CDK builds the docker images, pushes them to the ECR registry and then runs the `docker stack deploy` command to run the application in the swarm cluster.
 
-  /**
-   * Extra Environment Variables to set in the backend container
-   */
-  readonly environmentVariables?: { [key: string]: string };
-}
+VI. **Processes** - *Execute the app as one or more stateless processes* - This application follows this rule as well as the saying "one process per container". Routing traffic is one are of this project where there could be some room for improvement. The NGINX process is responsible for routing all application traffic, but Traefik could also do path-based routing so that API traffic would need to take once less hop.
+
+VII. **Port binding** - *Export services via port binding* - Traefik is the only swarm service that exposes ports 80 and 443. All application traffic goes to the `nginx` container, and is then routed to either the frontend app, the backend app or possibly static files as well (unless the application is using S3 for static and media file storage).
+
+VIII. **Concurrency** - *Scale out via the process model* - This is one point where the construct does abide by the 12 Factor App. While docker swarm is designed to work with multiple nodes in a cluster, the application infrastructure deployed by this construct.
+
+IX. **Disposability** - *Maximize robustness with fast startup and graceful shutdown* -
+This construct really embraces disposability. Each time your run `make docker-ec2-deploy` with changes to either application code or infrastructure code, the EC2 instance and swarm cluster will be completely deleted and completely recreated. Data is stored in EFS and is persisted between deploys. It might be possible to use EBS (Elastic Block Storage) to store application data, but EFS is better suited or this type of application since it can be used by multiple EC2 instances at the same time (the existing EC2 instance and the new EC2 instance that is replacing the old instance). It is not necessary to completely delete the EC2 instance, and this does make the process longer since docker needs to be reinstalled on each deploy. The big downside is that you are having to wait around for the EC2 instances to start. There may also be extra data costs associated with downloading packages and files in the CloudFormationInit metadata.
+
+X. **Dev/prod parity** - *Keep development, staging, and production as similar as possible* - If your production environment uses ECS, your test and staging environments should also use ECS. This construct is not ideal for production workloads, but it might be useful for prototyping and side projects that you don't want to spend a lot of money on.
+
+XI. **Logs** - *Treat logs as event streams* - This application does not do anything special with logs. Logs can be be access easily through the Portainer interface.
+
+XII. **Admin processes** - *Run admin/management tasks as one-off processes* - This construct makes it easy to run one-off processes. The construct uses CloudFormation Outputs so that you can easily access a shell in the EC2 instance or a container, or access the application website or admin dashboard. Here are some of the CloudFormation Outputs:
+
+```
+Outputs:
+DockerEc2Stack.DockerEc2SampleEc2InstanceSshCommand44C8616E = ssh -i "~/.ssh/my-key.pem" ec2-user@ec2-12-345-678-910.compute-1.amazonaws.com
+DockerEc2Stack.DockerEc2SampleEfsFileSystemArnC86E9170 = arn:aws:elasticfilesystem:us-east-1:12345678910:file-system/fs-abc123
+DockerEc2Stack.DockerEc2SampleEfsFileSystemId945B74CE = fs-abc123
+DockerEc2Stack.DockerEc2SamplePortainerUrl209DBD88 = https://portainer.domain.com
+DockerEc2Stack.DockerEc2SampleSiteUrlEA704659 = https://app.domain.com
 ```
 
-## Lessons learned
+## Disambiguation
 
-When deploying on AWS I usually use ECS with other managed services such as RDS and ElastiCache. Before completing this project, I had some experience setting up and deploying to docker swarm, but mostly with either DigitalOcean Droplets or a Raspberry Pi in my home network.
+Sometimes the same words are used in different contexts, and it might be confusing, so here is some clarification and disambiguation.
 
-### `AWS::CloudFormation::Init`
+- **deployment** - Deployment is a term that has at least three different meanings in the context of this project. First, a deployment is the name of a Kubernetes resource that is similar to a docker swarm service. A deployment is typically used to refer to the act of creating or updating a new version of the application. This constructs uses CDK to combine the deployment of infrastructure and the deployment of the application. The infrastructure configures and executes the deployment of the application with CloudFormationInit metadata.
 
-Using CDK and EC2 pushed me out of my comfort zone and forced me to dig into [CloudFormationInit](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-init.html), something I was not very familiar with before working with it.
+- **stack** - stack is the term used by CloudFormation to describe a set of resources that are deployed together. stack is also a term used in docker swarm where it means a collection of services that make up an application.
 
-I still don't completely understand how `AWS::CloudFormation:Init` works. To make it in my application, I combined a few different examples from other repos that
+- **docker swarm vs docker compose** - Docker swarm is a **container orchestration tool** that is built into docker. It is similar to docker compose, but there are some important differences. Applications running in docker swarm clusters are defined by "stack files". Stack files are YAML files that use the docker compose file format, but there are some differences. For example, docker compose lets you reference a Dockerfile in the `image` key, but stack files require that an image URI is specified.
 
-- [https://github.com/chhatbarjignesh/reportportal-aws-cfn](https://github.com/chhatbarjignesh/reportportal-aws-cfn) this is a CloudFormation script that runs a i
--
+  Docker compose was originally developed as a tool for local development, and docker swarm was designed for running container workloads in production. Docker compose can be used to run applications in production, however.
 
-### Traefik
+  This deployment scenario is similar to the one described in the <a :href="$withBase('/deploy/digital-ocean/')">DigitalOcean</a> section.
 
-Traefik is a useful tool and it works very well as a way to request SSL certificates for securing your application. When debugging this application I came across some rate-limiting issues. You are not able to
-
-### no such image found
-
-
-## [12 Factor App](https://12factor.net/)
+- **application, project, construct** - These words may be confusing. `construct` refers to the `DockerEc2` construct that spins up the infrastructure and the application. `application` refers to the application that is running in the docker swarm cluster. `project` refers to the application, construct and infrastructure as whole.
 
 ## Next steps
 

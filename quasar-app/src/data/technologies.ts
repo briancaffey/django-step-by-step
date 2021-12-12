@@ -276,6 +276,13 @@ const otherTechnologies = [
     documentationLink: 'https://www.docker.com/products/swarm',
   },
   {
+    title: 'Traefik',
+    description: 'A reverse proxy and load balancer',
+    detail: 'used for routing traffic to the API',
+    image: 'traefik.png',
+    documentationLink: 'https://traefik.io/',
+  },
+  {
     title: 'Portainer',
     description: 'A Docker management platform',
     detail: 'used for managing docker swarm clusters',
