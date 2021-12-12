@@ -60,7 +60,7 @@ services:
         - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
 
   backend: &backend
-    image: ${IMAGE_URI}
+    image: ${BACKEND_IMAGE_URI}
     command:
       - "gunicorn"
       - "-t"
@@ -103,7 +103,7 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.nginx-web.rule=Host(`${DOMAIN_NAME}`)"
+        - "traefik.http.routers.nginx-web.rule=Host(`${APPLICATION_HOST_NAME}`)"
         - "traefik.http.routers.nginx-web.entrypoints=websecure"
         - "traefik.http.routers.nginx-web.tls.certresolver=letsencryptresolver"
         - "traefik.http.services.nginx-web.loadbalancer.server.port=80"
@@ -141,7 +141,7 @@ services:
         constraints: [node.role == manager]
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.portainer.rule=Host(`${PORTAINER_DOMAIN_NAME}`)"
+        - "traefik.http.routers.portainer.rule=Host(`${PORTAINER_HOST_NAME}`)"
         - "traefik.http.routers.portainer.entrypoints=websecure"
         - "traefik.http.routers.portainer.tls=true"
         - "traefik.http.services.portainer.loadbalancer.server.port=9000"
