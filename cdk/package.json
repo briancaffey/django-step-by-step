@@ -21,8 +21,8 @@
     "typescript": "~3.9.7"
   },
   "dependencies": {
-    "@aws-cdk/core": "1.111.0",
-    "django-cdk": "=0.0.24",
+    "@aws-cdk/core": "1.134.0",
+    "django-cdk": "=0.0.28",
     "source-map-support": "^0.5.16"
   }
 }

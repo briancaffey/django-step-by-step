@@ -17,21 +17,33 @@ jobs:
     environment: docker-swarm-ec2
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        python-version: [3.8]
-
     steps:
 
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
 
-      # Setup python version
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+      - name: Use Node.js
+        uses: actions/setup-node@v1
         with:
-          python-version: ${{ matrix.python-version }}
+          node-version: '14.x'
+
+      - name: Install CDK and Gatsby
+        run: |
+          npm install -g aws-cdk@1.134.0
+
+      - name: Diff CDK Stack
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+          KEY_PAIR_NAME: ${{ secrets.KEY_PAIR_NAME }}
+          ZONE_NAME: ${{ secrets.ZONE_NAME }}
+          STACK_NAME: ${{ secrets.STACK_NAME }}
+        run: |
+          make cdk-diff-docker-ec2
 
       - name: "Git version info"
         id: git_version_info

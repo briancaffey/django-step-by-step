@@ -31,7 +31,7 @@ This article will describe a deployment scenario for Django applications that us
 - Third, I will discuss some of the pros and cons of this application architecture compared to some of the other application architectures that I have written CDK constructs for in my `django-cdk` construct library.
 - Finally, I'll discuss the process I used to develop and debug this construct as well as some of the open questions that I have about this project.
 
-## Pros and Cons
+## Pros and Cons of this Application Architecture
 
 ### Pros
 
@@ -53,6 +53,8 @@ This article will describe a deployment scenario for Django applications that us
 <img :src="$withBase('/diagrams/docker-swarm-ec2.png')" alt="docker swarm on ec2">
 
 ## Diagram Legend
+
+### Main Components
 
 A. AWS Cloud Development Kit (CDK) - CDK is a tool that will deploy all of the infrastructure outlined in this diagram to an AWS account. CDK is written in TypeScript and can be transpiled to Python and other languages
 
@@ -99,6 +101,29 @@ U. Redis is the key-value store that is used for caching and message broker for 
 V. `docker stack deploy` is the command that is used to deploy the application into the swarm cluster.
 
 W. The source code for this construct is available here: [https://github.com/briancaffey/django-cdk](https://github.com/briancaffey/django-cdk)
+
+AA. GitHub Repository
+
+### Deployment Pipelines
+
+1. When you push a git tag to GitHub with the pattern `v*`, a GitHub Actions pipeline will be triggered. This pipeline is defined in `.github/workflows/deploy.yml` and it either deploys the application infrastructure with CDK, or it builds and pushes new container images to existing ECR repositories and updates the docker stack with `docker swarm update` in an existing CloudFormation stack.
+
+  Two jobs are defined in the `deploy.yml` workflow. To determine which job runs, the workflow
+
+2. If the condition for deploying with CDK is met, then the CDK stack is either created or updated with `cdk deploy`.
+
+3. CDK creates or updates the stack using the `STACK_NAME` variable that is set in environment secrets.
+
+4. The `DockerEc2` CDK construct provisions an EC2 instance that includes cloud init scripts that creates a docker swarm cluster and deploys our docker stack application.
+
+5. If the CDK stack already exists, then the GitHub Actions deploy workflow only updates the *docker swarm stack* and does not update the *CloudFormation stack* created by CDK. In order to set the correct environment variables that are required by the `docker stack deploy` (to provide environment variables to the `stack.yml` file), the GitHub Action workflow includes a step that calls to `aws cloudformation describe-stacks --stack-name $STACK_NAME` and sets environment variables based on the stack outputs. The following values are collected from the stack outputs:
+
+  - **`Ec2PublicIpAddress`**
+  - **`BackendRepositoryUri`**
+  - **`FrontendRepositoryUri`**
+  - **`ApplicationHostName`**
+  - **`PortainerHostName`**
+
 
 ## Prerequisites for using this construct
 

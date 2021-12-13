@@ -328,20 +328,24 @@ psql:
 cdk-watch:
 	cd cdk && npm run watch
 
-cdk-synth:
-	cdk synth --app="./cdk/bin/cdk.js"
-
 cdk-install:
 	cd cdk && npm install
 
 cdk-build:
 	cd cdk && npm run build
 
-cdk-deploy: cdk-install	cdk-build
-	cdk deploy --app='./cdk/bin/cdk.js' --require-approval never
+## -- CDK - Docker EC2 Targets --
+cdk-deploy-docker-ec2: cdk-install	cdk-build
+	cdk deploy --app='./cdk/bin/docker-ec2.js' --require-approval never
+
+cdk-synth-docker-ec2: cdk-install	cdk-build
+	cdk synth --app='./cdk/bin/docker-ec2.js' --require-approval never
+
+cdk-diff-docker-ec2: cdk-install	cdk-build
+	cdk diff --app='./cdk/bin/docker-ec2.js' --require-approval never
 
 cdk-destroy: cdk-install	cdk-build
-	cdk destroy --app='./cdk/bin/cdk.js' --require-approval never
+	cdk destroy --app='./cdk/bin/docker-ec2.js' --require-approval never
 
 ## -- Quasar Targets --
 
