@@ -7,3 +7,4 @@ notes
 .env
 cdk.out
 .raspberrypi.env
+cdk.context.json
