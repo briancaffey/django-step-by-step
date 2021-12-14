@@ -38,18 +38,18 @@ jobs:
           echo ::set-output name=RUN_CDK_DEPLOY::$RUN_CDK_DEPLOY
 
       - name: Use Node.js
-        if: ${{ steps.cfn_stack_check.outputs.RUN_CDK_DEPLOY }} == "true"
+        if: ${{ steps.cfn_stack_check.outputs.RUN_CDK_DEPLOY == "true" }}
         uses: actions/setup-node@v1
         with:
           node-version: '14.x'
 
       - name: Install CDK
-        if: ${{ steps.cfn_stack_check.outputs.RUN_CDK_DEPLOY }} == "true"
+        if: ${{ steps.cfn_stack_check.outputs.RUN_CDK_DEPLOY == "true" }}
         run: |
           npm install -g aws-cdk@1.134.0
 
       - name: Diff CDK Stack
-        if: ${{ steps.cfn_stack_check.outputs.RUN_CDK_DEPLOY }} == "true"
+        if: ${{ steps.cfn_stack_check.outputs.RUN_CDK_DEPLOY == "true" }}
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -63,7 +63,7 @@ jobs:
           make cdk-diff-docker-ec2
 
       - name: "Get CloudFormation Stack Outputs"
-        if: ${{ steps.cfn_stack_check.outputs.RUN_CDK_DEPLOY }} == "false"
+        if: ${{ steps.cfn_stack_check.outputs.RUN_CDK_DEPLOY == "false" }}
         id: stack_outputs
         env:
           STACK_NAME: ${{ secrets.STACK_NAME }}
@@ -96,7 +96,7 @@ jobs:
       #     known_hosts: ${{ steps.get_instance_data.outputs.SWARM_LEADER_PUBLIC_IP }}
 
       - name: "Setup SSH Key"
-        if: ${{ steps.cfn_stack_check.outputs.RUN_CDK_DEPLOY }} == "false"
+        if: ${{ steps.cfn_stack_check.outputs.RUN_CDK_DEPLOY == "false" }}
         id: setup_ssh_key
         env:
           SWARM_HOST_IP: ${{ steps.stack_outputs.outputs.SWARM_LEADER_PUBLIC_IP }}
@@ -110,7 +110,7 @@ jobs:
           ssh-keyscan -H $SWARM_HOST_IP >> ~/.ssh/known_hosts
 
       - name: "Build Backend Docker Container"
-        if: ${{ steps.cfn_stack_check.outputs.RUN_CDK_DEPLOY }} == "false"
+        if: ${{ steps.cfn_stack_check.outputs.RUN_CDK_DEPLOY == "false" }}
         env:
           SOURCE_TAG: ${{ steps.git_version_info.outputs.SOURCE_TAG }}
           BACKEND_IMAGE_URI: ${{ steps.stack_outputs.outputs.BACKEND_REPOSITORY_URI }}
@@ -163,7 +163,7 @@ jobs:
           docker push $FRONTEND_IMAGE_URI:$SOURCE_TAG
 
       - name: "docker stack deploy"
-        if: ${{ steps.cfn_stack_check.outputs.RUN_CDK_DEPLOY }} == "false"
+        if: ${{ steps.cfn_stack_check.outputs.RUN_CDK_DEPLOY == "false" }}
         env:
           SWARM_HOST_IP: ${{ steps.stack_outputs.outputs.SWARM_LEADER_PUBLIC_IP }}
           SOURCE_TAG: ${{ steps.git_version_info.outputs.SOURCE_TAG }}
