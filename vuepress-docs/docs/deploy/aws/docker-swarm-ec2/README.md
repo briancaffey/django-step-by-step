@@ -52,9 +52,7 @@ This article will describe a deployment scenario for Django applications that us
 
 <img :src="$withBase('/diagrams/docker-swarm-ec2.png')" alt="docker swarm on ec2">
 
-## Diagram Legend
-
-### Main Components
+## Main Infrastructure Components
 
 A. AWS Cloud Development Kit (CDK) - CDK is a tool that will deploy all of the infrastructure outlined in this diagram to an AWS account. CDK is written in TypeScript and can be transpiled to Python and other languages
 
@@ -124,6 +122,19 @@ AA. GitHub Repository
   - **`ApplicationHostName`**
   - **`PortainerHostName`**
 
+6. If the stack exists, the GitHub Action workflow will update the docker stack with the new container images for the frontend and backend.
+
+7. In addition to using GitHub Actions to deploy the infrastructure, you can also deploy the infrastructure with `make docker-ec2-deploy`. The same Makefile command is used in the GitHub Action workflow.
+
+8. For convenience, the the `cdk deploy` command outputs CloudFormation stack outputs to the console. These outputs provide full commands that can be used to SSH to the EC2 machine or run Django management commands in a running container. The CloudFormation Outputs are also used when updating the application in the GitHub Actions workflow.
+
+### `django-cdk` project workflow
+
+a. projen is a project configuration tool that is used to generate and update different types of software projects including CDK construct libraries written in TypeScript.
+
+b. The `django-cdk` repo is configured to use GitHub Actions to publish the CDK construct library to NPM.
+
+c. The npm package is used in the other repository that contains the application code  called `django-step-by-step`.
 
 ## Prerequisites for using this construct
 
@@ -172,7 +183,7 @@ This deploys both the infrastructure and the application in the same operation.
 
 To update the application, there are two options. You can rerun the same infrastructure pipeline that was used to initially create the stack, or you can run the application update pipeline.
 
-Running the infrastructure pipeline may replace the EC2 instance and recreate the swarm cluster (depending on what values in the CDK construct have been changed), but the application will all be persisted since everything is stored in EFS.
+Running the infrastructure pipeline may replace the EC2 instance and recreate the swarm cluster (depending on what values in the CDK construct have been changed), but the application data will all be persisted since everything is stored in EFS.
 
 The application update pipeline updates the application by running `docker stack deploy` and also recreates docker secrets in case those have changed. Secret values are updated by changing the value of the GitHub environment secrets in the GitHub UI.
 
@@ -184,7 +195,9 @@ The application update pipeline updates the application by running `docker stack
 
 This construct tries to adhere to the [12 Factor App](https://12factor.net/) model, but it does not do so completely. Here is the 12 Factor App scorecard for this construct:
 
-I. **Codebase** - *One codebase tracked in revision control, many deploys* - This first factor of the 12 Factor app deserves some clarification. There are **two** codebases in use here. The first is `django-cdk`. This repo is an AWS CDK construct library that is written in TypeScript and published to NPM and PyPI. It includes several different constructs that help developers and teams deploy Django applications on AWS using different tools (such as docker swarm, ECS and EKS).
+### I. **Codebase** - *One codebase tracked in revision control, many deploys*
+
+This first factor of the 12 Factor app deserves some clarification. There are **two** code repositories in use here. The first is `django-cdk`. This repo is an AWS CDK construct library that is written in TypeScript and published to NPM and PyPI. It includes several different constructs that help developers and teams deploy Django applications on AWS using different tools (such ECS, EKS and docker swarm).
 
   The second codebase is `django-step-by-step`. This project is a reference application that several applications in a monorepo structure. It includes a Django project built with Django REST Framework and a Vue.js frontend application built with Quasar, TypeScript, Vue 3 and the Composition API. It is a simple micro-blogging application called μblog. The `django-step-by-step` repo also includes a `cdk` directory that includes the `django-cdk` library as a dependency.
 
@@ -222,13 +235,13 @@ DockerEc2Stack.DockerEc2SamplePortainerUrl209DBD88 = https://portainer.domain.co
 DockerEc2Stack.DockerEc2SampleSiteUrlEA704659 = https://app.domain.com
 ```
 
-## Disambiguation
+## Terminology disambiguation
 
-Sometimes the same words are used in different contexts, and it might be confusing, so here is some clarification and disambiguation.
+Sometimes the same terms are used in different contexts, and it might be confusing, so here is some clarification and disambiguation.
 
 - **deployment** - Deployment is a term that has at least three different meanings in the context of this project. First, a deployment is the name of a Kubernetes resource that is similar to a docker swarm service. A deployment is typically used to refer to the act of creating or updating a new version of the application. This constructs uses CDK to combine the deployment of infrastructure and the deployment of the application. The infrastructure configures and executes the deployment of the application with CloudFormationInit metadata.
 
-- **stack** - stack is the term used by CloudFormation to describe a set of resources that are deployed together. stack is also a term used in docker swarm where it means a collection of services that make up an application.
+- **stack** - stack is the term used by CloudFormation to describe a set of resources that are deployed together. `stack` is also a term used in docker swarm where it means a collection of services that make up an application.
 
 - **docker swarm vs docker compose** - Docker swarm is a **container orchestration tool** that is built into docker. It is similar to docker compose, but there are some important differences. Applications running in docker swarm clusters are defined by "stack files". Stack files are YAML files that use the docker compose file format, but there are some differences. For example, docker compose lets you reference a Dockerfile in the `image` key, but stack files require that an image URI is specified.
 
@@ -238,7 +251,36 @@ Sometimes the same words are used in different contexts, and it might be confusi
 
 - **application, project, construct** - These words may be confusing. `construct` refers to the `DockerEc2` construct that spins up the infrastructure and the application. `application` refers to the application that is running in the docker swarm cluster. `project` refers to the application, construct and infrastructure as whole.
 
+## Discussion
+
+Some of the important topics I wanted to address with this project include:
+
+### Combined and dynamic infra and app deployment
+- how to do combined deployment of infrastructure and application
+- how to do application deployments without updating infrastructure
+- how write reusable infrastructure code that is sufficiently decoupled from application code and also not too opinionated
+
+### Speeding up feedback loop
+- how to speed up the iterative process of "spinning up" and "tearing down" infrastructure
+- how to develop low cost, quasi-production-grade environments for experimenting with app development and CI/CD tooling
+- Getting a better understanding of EC2, CloudFormationInit and UserData
+- NFS vs EBS for providing persistent storage to docker swarm
+
+### Library design
+- Balancing ease of use with complexity
+- Use minimal inputs (secrets entered to GitHub, stack name)
+
 ## Next steps
 
-- [x] Update application with separate pipeline
-- [x] Use GitHub Actions CI/CD
+My next goal is to improve `django-cdk` and apply my learnings from working on the `DockerEc2` construct to other constructs I have written for ECS and EKS.
+
+### Using the `DockerEc2` construct for testing
+
+- Trying different python base images
+- Quickly testing dependency version updates
+- Measure costs of running an instance of the application
+
+### Additional work
+
+- Add tests for the `DockerEc2` construct
+- Cache images in GitHub Actions

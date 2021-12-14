@@ -93,6 +93,17 @@ services:
       - "--concurrency=1"
       - "--loglevel=INFO"
 
+  migrate:
+    <<: *backend
+    command:
+      - "python"
+      - "manage.py"
+      - "migrate"
+      - "--no-input"
+    deploy:
+      restart_policy:
+        condition: on-failure
+
   web:
     image: ${FRONTEND_IMAGE_URI}
     networks:
