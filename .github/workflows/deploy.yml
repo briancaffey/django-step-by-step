@@ -79,6 +79,7 @@ jobs:
           APPLICATION_HOST_NAME=$(cat /tmp/stack_outputs.json | jq -r '.[] | select(.ExportName == "ApplicationHostName") | .OutputValue')
           FRONTEND_REPOSITORY_URI=$(cat /tmp/stack_outputs.json | jq -r '.[] | select(.ExportName == "FrontendRepositoryUri") | .OutputValue')
           BACKEND_REPOSITORY_URI=$(cat /tmp/stack_outputs.json | jq -r '.[] | select(.ExportName == "BackendRepositoryUri") | .OutputValue')
+          S3_BUCKET_NAME=$(cat /tmp/stack_outputs.json | jq -r '.[] | select(.ExportName == "S3BucketName") | .OutputValue')
 
           echo ::set-output name=SWARM_LEADER_PUBLIC_IP::$SWARM_LEADER_PUBLIC_IP
           echo ::set-output name=KEY_PAIR_NAME::$KEY_PAIR_NAME
@@ -86,6 +87,7 @@ jobs:
           echo ::set-output name=APPLICATION_HOST_NAME::$APPLICATION_HOST_NAME
           echo ::set-output name=FRONTEND_REPOSITORY_URI::$FRONTEND_REPOSITORY_URI
           echo ::set-output name=BACKEND_REPOSITORY_URI::$BACKEND_REPOSITORY_URI
+          echo ::set-output name=S3_BUCKET_NAME::$S3_BUCKET_NAME
 
       # ⚠️ this did not work when trying to establish an ssh connection to the ec2 host ⚠️
       # - name: "Install SSH Key"
@@ -171,7 +173,7 @@ jobs:
           FRONTEND_IMAGE_URI: ${{ steps.stack_outputs.outputs.FRONTEND_REPOSITORY_URI }}
           APPLICATION_HOST_NAME: ${{ steps.stack_outputs.outputs.APPLICATION_HOST_NAME }}
           PORTAINER_HOST_NAME: ${{ steps.stack_outputs.outputs.PORTAINER_HOST_NAME }}
-          # set the docker host to use ssh
+          S3_BUCKET_NAME: ${{ steps.stack_outputs.outputs.S3_BUCKET_NAME }}
         run: |
           export DOCKER_HOST=ssh://ec2-user@$SWARM_HOST_IP
 
@@ -189,9 +191,12 @@ jobs:
             --username AWS \
             --password-stdin $BACKEND_IMAGE_URI
 
+          # this is probably not needed
           export BACKEND_IMAGE_URI=$BACKEND_IMAGE_URI:$SOURCE_TAG
           export FRONTEND_IMAGE_URI=$FRONTEND_IMAGE_URI:$SOURCE_TAG
           export APPLICATION_HOST_NAME=$APPLICATION_HOST_NAME
           export PORTAINER_HOST_NAME=$PORTAINER_HOST_NAME
+          export S3_BUCKET_NAME=$S3_BUCKET_NAME
 
+          # TODO: add --prune option to remove unused images
           docker stack deploy --with-registry-auth -c stack.yml stack

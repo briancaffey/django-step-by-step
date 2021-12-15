@@ -78,6 +78,7 @@ services:
       DJANGO_SETTINGS_MODULE: backend.settings.swarm_ec2
       REDIS_SERVICE_HOST: redis
       POSTGRES_SERVICE_HOST: postgres
+      S3_BUCKET_NAME: ${S3_BUCKET_NAME}
     secrets:
       - postgres_password
 
