@@ -32,9 +32,12 @@ jobs:
       # if it does not exist, run the steps for cdk deploy
       - name: Check existence of CloudFormation stack
         id: cfn_stack_check
+        env:
+          GIT_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
         run: |
           # TODO - check to see if the stack exists with aws cloudformation describe-stacks call
-          RUN_CDK_DEPLOY=false
+          if [[ "$GIT_COMMIT_MESSAGE" == *[cdk]* ]]; then RUN_CDK_DEPLOY=true; fi
+          RUN_CDK_DEPLOY=true
           echo ::set-output name=RUN_CDK_DEPLOY::$RUN_CDK_DEPLOY
 
       - name: Use Node.js
@@ -48,7 +51,7 @@ jobs:
         run: |
           npm install -g aws-cdk@1.134.0
 
-      - name: Diff CDK Stack
+      - name: Deploy CDK Stack
         if: steps.cfn_stack_check.outputs.RUN_CDK_DEPLOY == 'true'
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -60,7 +63,8 @@ jobs:
           ZONE_NAME: ${{ secrets.ZONE_NAME }}
           STACK_NAME: ${{ secrets.STACK_NAME }}
         run: |
-          make cdk-diff-docker-ec2
+          # make cdk-diff-docker-ec2
+          make cdk-deploy-docker-ec2
 
       - name: "Get CloudFormation Stack Outputs"
         if: steps.cfn_stack_check.outputs.RUN_CDK_DEPLOY == 'false'
