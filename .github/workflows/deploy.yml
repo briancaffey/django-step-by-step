@@ -36,8 +36,8 @@ jobs:
           GIT_COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
         run: |
           # TODO - check to see if the stack exists with aws cloudformation describe-stacks call
+          RUN_CDK_DEPLOY=false
           if [[ "$GIT_COMMIT_MESSAGE" == *[cdk]* ]]; then RUN_CDK_DEPLOY=true; fi
-          RUN_CDK_DEPLOY=true
           echo ::set-output name=RUN_CDK_DEPLOY::$RUN_CDK_DEPLOY
 
       - name: Use Node.js
