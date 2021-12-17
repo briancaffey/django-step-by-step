@@ -1,35 +1,14 @@
 ---
 prev: /deploy/digital-ocean
-meta:
-  - name: description
-    content: This article describes how to build a CI/CD pipeline for a Django project using Docker Swarm and AWS EC2.
-
-  - property: 'og:title'
-    content: 'Docker Swarm, AWS EC2, CDK and GitHub Actions'
-
-  - property: 'og:description'
-    content: This article describes how to build a CI/CD pipeline for a Django project using Docker Swarm and AWS EC2.
-
-  - property: 'og:image'
-    content: https://briancaffey.github.io/django-step-by-step/images/docker-swarm-ec2-hero.png
-
-  - property: 'twitter:card'
-    content: https://briancaffey.github.io/django-step-by-step/images/docker-swarm-ec2-hero.png
-
 ---
 
 <img :src="$withBase('/images/docker-swarm-ec2-hero.png')" alt="docker swarm on ec2">
 
 # Docker Swarm on EC2
 
+This article will describe a deployment scenario for Django applications that uses a single-node docker swarm cluster running on an EC2 instance. Here's an outline of the areas that will discussed:
+
 [[toc]]
-
-This article will describe a deployment scenario for Django applications that uses a single-node docker swarm cluster running on an EC2 instance.
-
-- First we will take a look at a detailed application architecture diagram that shows the infrastructure components that are provisioned when the construct is deployed in a CloudFormation stack
-- Second, we will discuss how you can use this construct to deploy your own Django application on AWS.
-- Third, I will discuss some of the pros and cons of this application architecture compared to some of the other application architectures that I have written CDK constructs for in my `django-cdk` construct library.
-- Finally, I'll discuss the process I used to develop and debug this construct as well as some of the open questions that I have about this project.
 
 ## Pros and Cons of this Application Architecture
 
@@ -52,61 +31,63 @@ This article will describe a deployment scenario for Django applications that us
 
 <img :src="$withBase('/diagrams/docker-swarm-ec2.png')" alt="docker swarm on ec2">
 
-## Main Infrastructure Components
+### Main infrastructure and application components
 
-A. AWS Cloud Development Kit (CDK) - CDK is a tool that will deploy all of the infrastructure outlined in this diagram to an AWS account. CDK is written in TypeScript and can be transpiled to Python and other languages
+A. For development I use a 2020 MacBook Pro M1 machine or WSL 2 on Windows 10. Using M1 requires indicating which `--platform` to use (`linux/amd64`) since it will try to use a different platform by default for some images. Your computer can be used to connect to the application over SSH, or through the public internet via a DNS record that points to the IP address of the EC2 instance running the docker swarm application.
 
-B. From your computer you will be able to access the application either through SSH or through a public web address that points to the IP address of the EC2 instance where or docker swarm cluster is running.
+B. This is GitHub repository that contains the application code for the Django + Vue.js reference application called μblog. It is configured to use GitHub Actions for three purposes: running code quality check and units tests, deploying and updating the infrastructure used by the μblog application, and for deploying updates to the μblog application itself.
 
-C. The Route 53 A Record is created by CDK when we run `cdk deploy` (`make docker-ec2-deploy`). It points to the public IP of the EC2 instance where out application is running.
+C. AWS Cloud Development Kit (CDK) is a tool that will deploy all of the infrastructure outlined in this diagram to an AWS account. The AWS account credentials are configured in the GitHub repository. The CDK application creates a CloudFormation stack using a construct from the `django-cdk` construct library (see steps a, b and c below).
 
-D. S3 bucket used for storing static and media assets. The EC2 instance has permission to access the bucket.
+D. The first part of our cloud infrastructure defined in the CDK construct is a VPC.
 
-E. Elastic Container Registry (ECR) is used to store the docker images that are defined by our application's Dockerfiles. There are two Dockerfiles used in the application. One is called `backendImage` which includes the Django application. The other is called `frontendImage` which includes the Vue.js application and the nginx configuration which routes requests to our application based on the request path.
+E. The VPC is configured to have only one public subnet and no NAT Gateways are used (which are provisioned by default when using the VPC construct from CDK).
 
-F. Virtual Private Cloud (VPC) that is created by CDK.
+F. Elastic File System is used to provide persistent storage for the application including database data, redis data saved to disk and certificate data used for securing traffic to the application.
 
-G. Public Subnet that is also created by the CDK. It is a partition of our VPC that will contain the docker swarm cluster.
+G. The S3 bucket is used to store both static files and media files for the Django application.
 
-H. Security Group that allows access from the internet to our application on port 22 (SSH), 80 (HTTP) and 443 (HTTPS).
+H. Elastic Container Registry (ECR) is used to store the container images for the application. The application uses a backend image for running Django and celery, as well as a frontend image that uses nginx that serves the static files for our frontend Vue.js application.
 
-I. Elastic Cloud Compute (EC2) instance that is created by CDK. This is where most of the complexity of this construct lies. The EC2 instance is configured to install docker, start a docker swarm cluster, and deploy the application to the swarm cluster. In CDK we define the `UserData` and `CloudFormationInit` scripts that are used to configure the EC2 instance so that no additional manual configuration is required.
+I. This is the security group that is used to control access to the EC2 instance that the application runs on. CDK makes it very easy to configure the security group so that all parts of the application can communicate with each other securely.
 
-J. `stack.yml` is the docker-compose file that is used to deploy the application to the docker swarm cluster. This swarm file is similar to the one used in the DigitalOcean deployment scenario. This file is referenced in the CloudFormationInit script and it is downloaded onto our EC2 instance from GitHub.
+J. The EC2 instance that runs the application. The instance is configured to use Amazon Linux 2 and it is configured to install docker and run our application on startup.
 
-K. The docker swarm cluster is started by the CloudFormationInit script. This deployment scenario uses a single-node swarm cluster. There is no automated scaling, but this would be possible if we were to join additional worker nodes to the swarm cluster.
+K. The Route 53 record that points to the public IP address of the EC2 instance. This is what allows the application to be accessed from the internet via an address such as `https://app.example.com`.
 
-L. `traefik-public` is the name of docker network that includes the `traefik` and `web` services. This network is `external`, meaning that it is created outside of the `stack.yml`. In order for traefik to function properly this network needs to be `external`.
+L. docker swarm is used as a container orchestration system. When the EC2 instance starts up it will enable swarm mode and the EC2 instance because the leader node of a single-node swarm cluster that runs our application. Since this infrastructure setup is mainly used for testing and small-scale projects on a small budget on AWS, other nodes are not joined to the swarm node, but this would be possible by changing the CDK construct to use additional EC2 instances that join the swarm cluster as worker nodes on startup.
 
-M. Traefik is the service that handles web requests coming into the EC2 instance. It handles SSL termination (HTTPS) and it routes all requests to NGINX.
+M. `stack.yml` is the main stack file that defines the components of the application. It uses the frontend and backend images that we build and push to ECR, and it also defines the networks and secrets that the services in the application require.
 
-N. `main` is the main network that includes most of the docker swarm services in out application.
+N. `traefik-public` is an external network, meaning that we create it outside of the context of the `stack.yml` file and reference it in the `stack.yml`.
 
-O. The Django application is the service that serves the API and admin backend for our application. All requests that start with `/api`, `/admin` or `/graphql` are routed to the `backend` services and are served by the Django python application.
+O. Traefik is the "front desk" of the application and it is the first service that traffic to our application is routed through. Traefik encrypts application traffic using Let's Encrypt. It routes traffic to different services based on the hostname of the incoming request.
 
-P. `gunicorn` is the webserver that passes requests to the WSGI application.
+P. Portainer is a container management tool that is used to view logs, open shells, scale processes and more through a web interface. It is a very handy tool for debugging applications that are running in docker containers and it also works very well with docker swarm.
 
-Q. NGINX serves three purposes in this deployment scenario. First, it routes all requests starting with `/api` or `/admin` to the Django backend application. Second, it routes all requests starting with `/static/` or `/media/` to the location where static and media files are stored. Third, it serves the Vue.js application frontend application for all other requests, falling back to `index.html`.
+Q. This is the `main` network that most of the application services communicate over.
 
-R. Celery worker that processes tasks outside of the request/response cycle of the main Django application server. Celery runs the same container that is used in the Django server, but it runs a different process. During the request/response cycle, long-running and compute-intensive tasks are offloaded to celery. Redis is used as a message broker. JSON messages are sent to Redis, and the celery watch Redis for any new tasks that show up and process these tasks. Examples of tasks include processing a large file or sending emails.
+R. All application traffic is routed to nginx which does path-based routing.
 
-S. Postgres is the database that is used to store the data for our application.
+S. All requests that do not start with `/api`, `/admin` or `/graphql` will be served by the index.js file of the static Vue.js application.
 
-T. Vue.js is the JavaScript framework that is used to build the frontend UI application that consumes the Django API.
+T. This is the Django application that handles the other requests that are not served by the Vue.js application.
 
-U. Redis is the key-value store that is used for caching and message broker for celery.
+U. gunicorn is the webserver that runs the Django WSGI application and it is the process that runs the application.
 
-V. `docker stack deploy` is the command that is used to deploy the application into the swarm cluster.
+V. Postgres is the relational database that stores the data for the application.
 
-W. The source code for this construct is available here: [https://github.com/briancaffey/django-cdk](https://github.com/briancaffey/django-cdk)
+W. This is a celery worker that processes asynchronous tasks that the Django web application has sent to the celery broker.
 
-AA. GitHub Repository
+X. This is the Redis cache that serves as the celery broker and also a caching layer for the Django application.
+
+Y. This is the CloudFormation service that the application calls when deploying the application through GitHub Actions. AWS CLI calls to the CloudFormation service are used to collect information from stack outputs that are configured in the CDK construct. These output values include things such as the ECR repository name or the S3 bucket name.
+
+Z. These are links to GitHub repositories for the infrastructure and application code depicted in this diagram.
 
 ### Deployment Pipelines
 
 1. When you push a git tag to GitHub with the pattern `v*`, a GitHub Actions pipeline will be triggered. This pipeline is defined in `.github/workflows/deploy.yml` and it either deploys the application infrastructure with CDK, or it builds and pushes new container images to existing ECR repositories and updates the docker stack with `docker swarm update` in an existing CloudFormation stack.
-
-  Two jobs are defined in the `deploy.yml` workflow. To determine which job runs, the workflow
 
 2. If the condition for deploying with CDK is met, then the CDK stack is either created or updated with `cdk deploy`.
 
@@ -130,20 +111,21 @@ AA. GitHub Repository
 
 ### `django-cdk` project workflow
 
-a. projen is a project configuration tool that is used to generate and update different types of software projects including CDK construct libraries written in TypeScript.
+a. `projen` is a project configuration tool that is used to generate and update different types of software projects including CDK construct libraries written in TypeScript.
 
 b. The `django-cdk` repo is configured to use GitHub Actions to publish the CDK construct library to NPM.
 
-c. The npm package is used in the other repository that contains the application code  called `django-step-by-step`.
+c. The npm package is used as a dependency in the other GitHub repository that contains the application code for `μblog` called `django-step-by-step`.
 
 ## Prerequisites for using this construct
 
-This construct tries to automate as much of the cloud infrastructure as possible, but some parts of your cloud infrastructure can't be automated through IaC. In order to use this construct, you will need to do the following:
+This construct tries to automate as much of the cloud infrastructure as possible, but some parts of your cloud infrastructure can't be automated through IaC. In order to use this construct, you will need to set up the following manually:
 
 - AWS account with user that has Administrator permissions
-- aws-cli installed locally configured with the credentials of the administrator user mentioned above
-- A domain name purchased through Route 53 (you can use an external domain name, but that won't be covered in this article)
-- A `key-pair` that you have stored locally in your `~/.ssh` folder that has appropriate permissions (400)
+- aws-cli installed locally configured with the credentials of the administrator user mentioned above (only if you want to deploy locally)
+- a GitHub account and repository configured with the secrets (see below)
+- A domain name purchased through Route 53 (you can use an external domain name, but that won't be covered here)
+- A `key-pair` that you have stored locally in your `~/.ssh` folder that has appropriate permissions (again, you only need this if you want to deploy locally or connect to the EC2 instance and docker containers from your local machine)
 
 ## Preparing for Deployment
 
@@ -189,7 +171,22 @@ The application update pipeline updates the application by running `docker stack
 
 ## Debugging and deploying from your local machine
 
+If you want to deploy the infrastructure and application from your local machine, you need to create an `.env` file based on `.env.template` and then run the following commands:
 
+```
+source .env
+make cdk-deploy-docker-ec2
+```
+
+Then you can use the CloudFormation Outputs to SSH to the EC2 instance, inspect docker resources, open a Django shell in the backend container, run Django management commands, etc.
+
+Look for the CloudFormation Output that looks like this:
+
+```
+ssh -i "~/.ssh/my-key-pair.pem" ec2-user@ec2-10-123-456-78.compute-1.amazonaws.com
+```
+
+You can also access Portainer and view all of the docker resources in a live web UI.
 
 ## [12 Factor App](https://12factor.net/)
 
@@ -220,20 +217,11 @@ VIII. **Concurrency** - *Scale out via the process model* - This is one point wh
 IX. **Disposability** - *Maximize robustness with fast startup and graceful shutdown* -
 This construct really embraces disposability. Each time your run `make docker-ec2-deploy` with changes to either application code or infrastructure code, the EC2 instance and swarm cluster will be completely deleted and completely recreated. Data is stored in EFS and is persisted between deploys. It might be possible to use EBS (Elastic Block Storage) to store application data, but EFS is better suited or this type of application since it can be used by multiple EC2 instances at the same time (the existing EC2 instance and the new EC2 instance that is replacing the old instance). It is not necessary to completely delete the EC2 instance, and this does make the process longer since docker needs to be reinstalled on each deploy. The big downside is that you are having to wait around for the EC2 instances to start. There may also be extra data costs associated with downloading packages and files in the CloudFormationInit metadata.
 
-X. **Dev/prod parity** - *Keep development, staging, and production as similar as possible* - If your production environment uses ECS, your test and staging environments should also use ECS. This construct is not ideal for production workloads, but it might be useful for prototyping and side projects that you don't want to spend a lot of money on.
+X. **Dev/prod parity** - *Keep development, staging, and production as similar as possible* - If your production environment uses ECS, your test and staging environments should also use ECS. This construct is not ideal for production workloads, but it might be useful for prototyping and side projects that you don't want to spend a lot of money on. You can create multiple identical environments by creating multiple GitHub environments, duplicating the GitHub Actions workflow and modifying the trigger to use some other custom tag (such as `v*/dev`, for example).
 
 XI. **Logs** - *Treat logs as event streams* - This application does not do anything special with logs. Logs can be be access easily through the Portainer interface.
 
-XII. **Admin processes** - *Run admin/management tasks as one-off processes* - This construct makes it easy to run one-off processes. The construct uses CloudFormation Outputs so that you can easily access a shell in the EC2 instance or a container, or access the application website or admin dashboard. Here are some of the CloudFormation Outputs:
-
-```
-Outputs:
-DockerEc2Stack.DockerEc2SampleEc2InstanceSshCommand44C8616E = ssh -i "~/.ssh/my-key.pem" ec2-user@ec2-12-345-678-910.compute-1.amazonaws.com
-DockerEc2Stack.DockerEc2SampleEfsFileSystemArnC86E9170 = arn:aws:elasticfilesystem:us-east-1:12345678910:file-system/fs-abc123
-DockerEc2Stack.DockerEc2SampleEfsFileSystemId945B74CE = fs-abc123
-DockerEc2Stack.DockerEc2SamplePortainerUrl209DBD88 = https://portainer.domain.com
-DockerEc2Stack.DockerEc2SampleSiteUrlEA704659 = https://app.domain.com
-```
+XII. **Admin processes** - *Run admin/management tasks as one-off processes* - This construct makes it easy to run one-off processes. The construct uses CloudFormation Outputs so that you can easily access a shell in the EC2 instance or a container, or access the application website or admin dashboard.
 
 ## Terminology disambiguation
 
@@ -246,8 +234,6 @@ Sometimes the same terms are used in different contexts, and it might be confusi
 - **docker swarm vs docker compose** - Docker swarm is a **container orchestration tool** that is built into docker. It is similar to docker compose, but there are some important differences. Applications running in docker swarm clusters are defined by "stack files". Stack files are YAML files that use the docker compose file format, but there are some differences. For example, docker compose lets you reference a Dockerfile in the `image` key, but stack files require that an image URI is specified.
 
   Docker compose was originally developed as a tool for local development, and docker swarm was designed for running container workloads in production. Docker compose can be used to run applications in production, however.
-
-  This deployment scenario is similar to the one described in the <a :href="$withBase('/deploy/digital-ocean/')">DigitalOcean</a> section.
 
 - **application, project, construct** - These words may be confusing. `construct` refers to the `DockerEc2` construct that spins up the infrastructure and the application. `application` refers to the application that is running in the docker swarm cluster. `project` refers to the application, construct and infrastructure as whole.
 
@@ -278,9 +264,10 @@ My next goal is to improve `django-cdk` and apply my learnings from working on t
 
 - Trying different python base images
 - Quickly testing dependency version updates
+- t3.nano instance suitability and performance for this application workload
 - Measure costs of running an instance of the application
 
 ### Additional work
 
 - Add tests for the `DockerEc2` construct
-- Cache images in GitHub Actions
+- Cache images in GitHub Actions for faster deployments
