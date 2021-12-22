@@ -380,7 +380,7 @@ raspi-destroy:
 
 ## -- K6 Targets --
 k6-run-docker:
-	@docker run -i loadimpact/k6 run - <k6/script.js
+	@docker run -i --platform=linux/amd64 loadimpact/k6 run - <k6/script.js
 
 # Credit: https://gist.github.com/prwhite/8168133#gistcomment-2749866
 ## Show this help menu

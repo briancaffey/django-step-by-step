@@ -1,5 +1,13 @@
 ---
 prev: /deploy/digital-ocean
+
+head:
+  - - meta
+    - name: description
+      content: How to deploy a Django application on AWS using Docker Swarm and EC2
+  - - link
+    - rel: canonical
+      href: https://briancaffey.github.io/django-step-by-step/deploy/aws/docker-swarm-ec2/
 ---
 
 <img :src="$withBase('/images/docker-swarm-ec2-hero.png')" alt="docker swarm on ec2">
