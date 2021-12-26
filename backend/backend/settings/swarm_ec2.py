@@ -14,7 +14,7 @@ AWS_PRIVATE_MEDIA_LOCATION = "media/private"
 PRIVATE_FILE_STORAGE = "backend.storage_backends.PrivateMediaStorage"
 
 AWS_PRELOAD_METADATA = True
-S3_BUCKET_NAME = os.environ["S3_BUCKET_NAME"]
-AWS_S3_CUSTOM_DOMAIN = f"{S3_BUCKET_NAME}.s3.amazonaws.com"
-STATIC_ROOT = f"https://{S3_BUCKET_NAME}.s3.amazonaws.com/static/"
-MEDIA_ROOT = f"https://{S3_BUCKET_NAME}.s3.amazonaws.com/media/"
+AWS_STORAGE_BUCKET_NAME = os.environ["S3_BUCKET_NAME"]
+AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+STATIC_ROOT = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/"
+MEDIA_ROOT = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/"
