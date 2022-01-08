@@ -123,6 +123,18 @@ services:
     networks:
       - main
 
+  flower:
+    container_name: flower
+    image: mher/flower
+    ports:
+      - "49555:5555"
+    networks:
+      - main
+    depends_on:
+      - celery_default
+    environment:
+      - CELERY_BROKER_URL=redis://redis:6379/1
+
 volumes:
   pg-data:
   redis-data:

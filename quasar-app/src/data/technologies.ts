@@ -158,6 +158,13 @@ const otherTechnologies = [
     documentationLink: 'https://www.pgadmin.org/',
   },
   {
+    title: 'cloud-init',
+    detail: 'Cloud-init is the industry standard multi-distribution method for cross-platform cloud instance initialization',
+    description: 'Cloud-init is used in the project to configure cloud compute instances',
+    image: 'cloud-init.png',
+    documentationLink: 'https://cloudinit.readthedocs.io/en/latest/',
+  },
+  {
     title: 'Jupyter',
     description: 'interactive python environment',
     detail: 'used for prototyping',
@@ -345,6 +352,13 @@ const otherTechnologies = [
     detail: 'one of the preferred operating systems for developing this project',
     image: 'windows10.png',
     documentationLink: 'https://www.microsoft.com/en-us/windows/get-windows-10',
+  },
+  {
+    title: 'WSL',
+    description: 'Windows Subsystem for Linux',
+    detail: 'Windows Subsystem for Linux is a compatibility layer for running Linux binary executables natively on Windows 10, Windows 11, and Windows Server 2019. In May 2019, WSL 2 was announced, introducing important changes such as a real Linux kernel, through a subset of Hyper-V features.',
+    image: 'wsl.png',
+    documentationLink: 'https://docs.microsoft.com/en-us/windows/wsl/about',
   },
   {
     title: 'macOS Big Sur',
