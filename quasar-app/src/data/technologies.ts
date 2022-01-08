@@ -136,6 +136,28 @@ const otherTechnologies = [
     documentationLink: 'https://docs.pytest.org/en/latest/index.html',
   },
   {
+    title: 'Jazzband',
+    detail: 'Jazzband is a collaborative community to share the responsibility of maintaining Python-based projects',
+    description: 'We are all part of this',
+    image: 'jazzband.png',
+    documentationLink: 'https://jazzband.co/',
+  },
+  {
+    title: 'NGINX',
+    detail: 'Advanced Load Balancer, Web Server, & Reverse Proxy',
+    description: 'NGINX is open source software for web serving, reverse proxying, caching, load balancing, media streaming, and more',
+    image: 'nginx.png',
+    documentationLink: 'https://www.nginx.com/',
+  },
+  {
+    title: 'pgadmin',
+    detail: 'Database UI for PostgreSQL',
+    description: 'pgAdmin 4 is a free open source graphical management tool for PostgreSQL and derivative relational databases such as EnterpriseDB\'s EDB Advanced Server',
+    image: 'postgres-alt.svg',
+    // image: 'pgadmin.svg',
+    documentationLink: 'https://www.pgadmin.org/',
+  },
+  {
     title: 'Jupyter',
     description: 'interactive python environment',
     detail: 'used for prototyping',
@@ -288,7 +310,13 @@ const otherTechnologies = [
     detail: 'used for managing docker swarm clusters',
     image: 'portainer.svg',
     documentationLink: 'https://portainer.io/',
-
+  },
+  {
+    title: 'systemd',
+    description: 'systemd is a software suite that provides an array of system components for Linux operating systems',
+    detail: 'systemd is a Linux initialization system and service manager',
+    image: 'systemd.png',
+    documentationLink: 'https://portainer.io/',
   },
   {
     title: 'Raspberry Pi',
