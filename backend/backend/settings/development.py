@@ -7,13 +7,17 @@ ALLOWED_HOSTS = ["*"]
 INSTALLED_APPS += [
     "debug_toolbar",
     "django_extensions",
+    "silk"
 ]
 
 DEBUG_TOOLBAR_CONFIG = {
     "SHOW_COLLAPSED": True,
 }
 
-MIDDLEWARE += ["debug_toolbar.middleware.DebugToolbarMiddleware"]
+MIDDLEWARE += [
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
+    "silk.middleware.SilkyMiddleware",
+]
 
 INTERNAL_IPS = ["127.0.0.1"]
 
@@ -33,3 +37,5 @@ DEFAULT_FILE_STORAGE = "backend.storage_backends.PrivateVolumeMediaStorage"
 SESSION_COOKIE_SAMESITE = "None"
 CORS_ALLOW_CREDENTIALS = True
 CSRF_COOKIE_SAMESITE = None
+
+# django-silk
