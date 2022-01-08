@@ -76,6 +76,9 @@ argh = "^0.26.2"
 # faker
 faker = "^8.0.2"
 
+# django-silk
+django-silk = "^4.2.0"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"

@@ -266,6 +266,14 @@ docker-compose-pytest-cov:
 docker-compose-generate-openapi-schema:
 	docker exec backend python manage.py generateschema > backend/static/openapi/schema.yml
 
+## update poetry through docker - this updates the lock file
+docker-compose-poetry-update:
+	docker compose run backend poetry update
+
+## export poetry dependencies from poetry.lock file to requirements.txt and requirements_dev.txt
+docker-compose-poetry-export: docker-compose-poetry-update
+	docker compose run backend poetry export --without-hashes -f requirements.txt -o requirements.txt && docker compose run backend poetry export --without-hashes -f requirements.txt -o requirements_dev.txt --dev
+
 ## -- Pulumi (minikube) Targets
 
 ## Start a new pulumi k8s project in a new directory

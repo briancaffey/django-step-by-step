@@ -1,135 +1,141 @@
-amqp==5.0.6
+amqp==5.0.9
 aniso8601==7.0.0
 appdirs==1.4.4; platform_machine == "x86_64"
 appnope==0.1.2; platform_machine == "x86_64" and sys_platform == "darwin" or platform_machine == "x86_64" and platform_system == "Darwin" or platform_machine == "x86_64" and python_version >= "3.3" and sys_platform == "darwin" or sys_platform == "darwin"
 argh==0.26.2
-argon2-cffi==21.1.0; platform_machine == "x86_64"
+argon2-cffi==21.3.0; platform_machine == "x86_64"
+argon2-cffi-bindings==21.2.0; platform_machine == "x86_64"
 asgiref==3.4.1
 atomicwrites==1.4.0; sys_platform == "win32"
-attrs==21.2.0
+attrs==21.4.0
+autopep8==1.5.7
 aws-secretsmanager-caching==1.1.1.5
 backcall==0.2.0
 billiard==3.6.4.0
 black==20.8b1; platform_machine == "x86_64"
 bleach==4.1.0; platform_machine == "x86_64"
-boto3==1.18.36
-botocore==1.21.36
-celery==5.1.2
-certifi==2021.5.30
-cffi==1.14.6; platform_machine == "x86_64" and implementation_name == "pypy" or platform_machine == "x86_64"
-charset-normalizer==2.0.4; python_version >= "3"
-click==7.1.2
-click-didyoumean==0.0.3
+boto3==1.20.31
+botocore==1.23.31
+celery==5.2.3
+certifi==2021.10.8
+cffi==1.15.0; platform_machine == "x86_64" and implementation_name == "pypy" or platform_machine == "x86_64"
+charset-normalizer==2.0.10; python_version >= "3"
+click==8.0.3
+click-didyoumean==0.3.0
 click-plugins==1.1.1
 click-repl==0.2.0
-colorama==0.4.4; platform_machine == "x86_64" and sys_platform == "win32" or platform_machine == "x86_64" and python_version >= "3.3" and sys_platform == "win32" or sys_platform == "win32"
+colorama==0.4.4; platform_machine == "x86_64" and platform_system == "Windows" or platform_system == "Windows" or sys_platform == "win32" or platform_machine == "x86_64" and sys_platform == "win32" or platform_machine == "x86_64" and python_version >= "3.3" and sys_platform == "win32"
 coreapi==2.3.3
 coreschema==0.0.4
-coverage==5.5
-debugpy==1.4.1; platform_machine == "x86_64"
-decorator==5.0.9
+coverage==6.2
+debugpy==1.5.1; platform_machine == "x86_64"
+decorator==5.1.1
 defusedxml==0.7.1; platform_machine == "x86_64"
 dj-database-url==0.5.0
-django==3.1.13
-django-cors-headers==3.8.0
-django-debug-toolbar==3.2.2
-django-extensions==3.1.3
+django==3.1.14
+django-cors-headers==3.10.1
+django-debug-toolbar==3.2.4
+django-extensions==3.1.5
 django-graphql-jwt==0.3.4
-django-storages==1.11.1
-djangorestframework==3.12.4
+django-silk==4.2.0
+django-storages==1.12.3
+djangorestframework==3.13.1
 djangorestframework-simplejwt==4.8.0
 entrypoints==0.3; platform_machine == "x86_64"
-factory-boy==3.2.0
-faker==8.12.1
+factory-boy==3.2.1
+faker==8.16.0
 flake8==3.9.2
+gprof2dot==2021.2.21
 graphene==2.1.9
 graphene-django==2.15.0
 graphene-file-upload==1.3.0
 graphql-core==2.3.2
 graphql-relay==2.0.1
 gunicorn==20.1.0
-idna==3.2; python_version >= "3"
+idna==3.3; python_version >= "3"
+importlib-resources==5.4.0; platform_machine == "x86_64" and python_version < "3.9"
 iniconfig==1.1.1
-ipykernel==6.3.1; platform_machine == "x86_64"
-ipython==7.27.0
+ipykernel==6.6.1; platform_machine == "x86_64"
+ipython==7.31.0
 ipython-genutils==0.2.0; platform_machine == "x86_64"
-ipywidgets==7.6.4; platform_machine == "x86_64"
+ipywidgets==7.6.5; platform_machine == "x86_64"
 itypes==1.2.0
-jedi==0.18.0
-jinja2==3.0.1
+jedi==0.18.1
+jinja2==3.0.3
 jmespath==0.10.0
-jsonschema==3.2.0; platform_machine == "x86_64"
+jsonschema==4.3.3; platform_machine == "x86_64"
 jupyter==1.0.0; platform_machine == "x86_64"
-jupyter-client==7.0.2; platform_machine == "x86_64"
+jupyter-client==7.1.0; platform_machine == "x86_64"
 jupyter-console==6.4.0; platform_machine == "x86_64"
-jupyter-core==4.7.1; platform_machine == "x86_64"
+jupyter-core==4.9.1; platform_machine == "x86_64"
 jupyterlab-pygments==0.1.2; platform_machine == "x86_64"
-jupyterlab-widgets==1.0.1; platform_machine == "x86_64" and python_version >= "3.6"
-kombu==5.1.0
+jupyterlab-widgets==1.0.2; platform_machine == "x86_64" and python_version >= "3.6"
+kombu==5.2.3
 markupsafe==2.0.1
-matplotlib-inline==0.1.2
+matplotlib-inline==0.1.3
 mccabe==0.6.1
 mistune==0.8.4; platform_machine == "x86_64"
 mypy-extensions==0.4.3; platform_machine == "x86_64"
-nbclient==0.5.4; platform_machine == "x86_64"
-nbconvert==6.1.0; platform_machine == "x86_64"
+nbclient==0.5.9; platform_machine == "x86_64"
+nbconvert==6.4.0; platform_machine == "x86_64"
 nbformat==5.1.3; platform_machine == "x86_64"
-nest-asyncio==1.5.1; platform_machine == "x86_64"
-notebook==6.4.3; platform_machine == "x86_64"
-packaging==21.0
-pandocfilters==1.4.3; platform_machine == "x86_64"
-parso==0.8.2
+nest-asyncio==1.5.4; platform_machine == "x86_64"
+notebook==6.4.6; platform_machine == "x86_64"
+packaging==21.3
+pandocfilters==1.5.0; platform_machine == "x86_64"
+parso==0.8.3
 pathspec==0.9.0; platform_machine == "x86_64"
 pexpect==4.8.0; platform_machine == "x86_64" and sys_platform != "win32" or platform_machine == "x86_64" and python_version >= "3.3" and sys_platform != "win32" or sys_platform != "win32"
 pickleshare==0.7.5
-pillow==8.3.2
+pillow==8.4.0
 pluggy==1.0.0
-prometheus-client==0.11.0; platform_machine == "x86_64"
+prometheus-client==0.12.0; platform_machine == "x86_64"
 promise==2.3
-prompt-toolkit==3.0.20
-psycopg2-binary==2.9.1
+prompt-toolkit==3.0.24
+psycopg2-binary==2.9.3
 ptyprocess==0.7.0; platform_machine == "x86_64" and sys_platform != "win32" or platform_machine == "x86_64" and os_name != "nt" or platform_machine == "x86_64" and python_version >= "3.3" and sys_platform != "win32" or sys_platform != "win32"
-py==1.10.0
+py==1.11.0
 pycodestyle==2.7.0
-pycparser==2.20; platform_machine == "x86_64" and implementation_name == "pypy" or platform_machine == "x86_64"
+pycparser==2.21; platform_machine == "x86_64" and implementation_name == "pypy" or platform_machine == "x86_64"
 pyflakes==2.3.1
-pygments==2.10.0
-pyjwt==2.1.0
-pyparsing==2.4.7
+pygments==2.11.2
+pyjwt==2.3.0
+pyparsing==3.0.6
 pyrsistent==0.18.0; platform_machine == "x86_64"
 pytest==6.2.5
 pytest-cov==2.12.1
-pytest-django==4.4.0
+pytest-django==4.5.2
 python-dateutil==2.8.2
-pytz==2021.1
-pywin32==301; platform_machine == "x86_64" and sys_platform == "win32"
-pywinpty==1.1.4; platform_machine == "x86_64" and os_name == "nt"
+pytz==2021.3
+pywin32==303; sys_platform == "win32" and platform_python_implementation != "PyPy" and platform_machine == "x86_64"
+pywinpty==1.1.6; platform_machine == "x86_64" and os_name == "nt"
 pyyaml==5.4.1
-pyzmq==22.2.1; platform_machine == "x86_64"
-qtconsole==5.1.1; platform_machine == "x86_64"
-qtpy==1.11.0; platform_machine == "x86_64"
+pyzmq==22.3.0; platform_machine == "x86_64"
+qtconsole==5.2.2; platform_machine == "x86_64"
+qtpy==2.0.0; platform_machine == "x86_64"
 redis==3.5.3
-regex==2021.8.28; platform_machine == "x86_64"
-requests==2.26.0
+regex==2021.11.10; platform_machine == "x86_64"
+requests==2.27.1
 rx==1.6.1
 s3transfer==0.5.0
 send2trash==1.8.0; platform_machine == "x86_64"
 singledispatch==3.7.0
 six==1.16.0
-sqlparse==0.4.1
-terminado==0.11.1; platform_machine == "x86_64"
+sqlparse==0.4.2
+terminado==0.12.1; platform_machine == "x86_64"
 testpath==0.5.0; platform_machine == "x86_64"
 text-unidecode==1.3
 toml==0.10.2
 tornado==6.1; platform_machine == "x86_64"
-traitlets==5.1.0
-typed-ast==1.4.3; platform_machine == "x86_64"
-typing-extensions==3.10.0.2; platform_machine == "x86_64"
+traitlets==5.1.1
+typed-ast==1.5.1; platform_machine == "x86_64"
+typing-extensions==4.0.1; platform_machine == "x86_64"
 uritemplate==3.0.1
-urllib3==1.26.6
+urllib3==1.26.8
 vine==5.0.0
 wcwidth==0.2.5
 webencodings==0.5.1; platform_machine == "x86_64"
 werkzeug==1.0.1
 whitenoise==5.3.0
-widgetsnbextension==3.5.1; platform_machine == "x86_64"
+widgetsnbextension==3.5.2; platform_machine == "x86_64"
+zipp==3.7.0; platform_machine == "x86_64" and python_version < "3.9"
