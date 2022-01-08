@@ -79,6 +79,10 @@ faker = "^8.0.2"
 # django-silk
 django-silk = "^4.2.0"
 
+# pyparsing
+# poetry 1.0.0 requires pyparsing<3.0,>=2.2 but packaging tries to install a 3.0.6 which is not compatible
+pyparsing = "^2.2.0"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
