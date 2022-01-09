@@ -124,7 +124,7 @@ venv-pytest-cov:
 ## -- Coverage Targets --
 ## HTTP server for viewing python code coverage results
 htmlcov:
-	python3 -m http.server 8002 -d htmlcov
+	python3 -m http.server 8002 -d backend/htmlcov
 
 ## Open a jupyter notebook session
 venv-notebook:
@@ -262,7 +262,7 @@ docker-compose-up: docker-compose-backend-migrate
 
 ## run pytest-cov with backend container
 docker-compose-pytest-cov:
-	docker compose run backend pytest --cov-report html --cov=backend
+	docker compose run backend pytest --cov-report html --cov=.
 
 docker-compose-generate-openapi-schema:
 	docker exec backend python manage.py generateschema > backend/static/openapi/schema.yml
