@@ -13,6 +13,26 @@
         {{ apiUrl }}
       </q-card-section>
     </q-card>
+    <q-card v-if="dev" class="q-mt-md">
+      <q-card-section>
+      <q-card-title class="text-h4">
+        Links
+      </q-card-title>
+      </q-card-section>
+      <q-card-section v-for="link in devLinks" :key="link.url">
+        <q-btn no-caps type="a" :href="link.url" target="_blank"><pre>{{ link.name }} - {{ link.url }}</pre></q-btn>
+      </q-card-section>
+    </q-card>
+    <q-card v-else class="q-mt-md">
+      <q-card-section>
+      <q-card-title class="text-h4">
+        Links
+      </q-card-title>
+      </q-card-section>
+      <q-card-section v-for="link in prodLinks" :key="link.url">
+        <q-btn no-caps type="a" :href="link.url" target="_blank"><pre>{{ link.name }} - {{ link.url }}</pre></q-btn>
+      </q-card-section>
+    </q-card>
   </q-page>
 </template>
 
@@ -22,8 +42,67 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   setup () {
 
+    const devLinks = [
+      {
+        name: 'pgadmin',
+        desc: 'PostgreSQL Admin',
+        url: 'http://localhost:5050'
+      },
+      {
+        name: 'flower',
+        desc: 'celery monitoring utility',
+        url: 'http://localhost:49555'
+      },
+      {
+        name: 'redis-commander',
+        desc: 'UI for inspecting Redis',
+        url: 'http://localhost:8085'
+      },
+      {
+        name: 'VuePress documentation',
+        desc: 'Project documentation',
+        url: 'http://localhost:8089'
+      },
+      {
+        name: 'mailhog',
+        desc: 'local SMTP server for development',
+        url: 'http://localhost:8025'
+      },
+      {
+        name: 'django-silk',
+        desc: 'request profiler for Django',
+        url: 'http://localhost/api/silk/'
+      },
+      {
+        name: 'GraphiQL',
+        desc: 'GraphQL IDE',
+        url: 'http://localhost/graphql/'
+      },
+      {
+        name: 'DRF Browsable API',
+        desc: 'UI for Django REST Framework',
+        url: 'http://localhost/api/'
+      },
+      {
+        name: 'Health check',
+        desc: 'simple endpoint to check if the server is up',
+        url: 'http://localhost/api/health-check/'
+      },
+
+    ]
+
+    const dev = process.env.NODE_ENV === 'development'
+
+    const prodLinks = [
+      {
+        name: 'VuePress documentation',
+        desc: 'Project documentation',
+        url: 'https://briancaffey.github.io/django-step-by-step/'
+      }
+    ];
+
     const apiUrl = process.env.API_URL;
-    return { apiUrl }
+    return { apiUrl, devLinks, dev, prodLinks }
   }
 })
 </script>
