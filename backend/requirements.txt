@@ -15,13 +15,14 @@ click-repl==0.2.0
 colorama==0.4.4; platform_machine == "x86_64" and platform_system == "Windows" or platform_system == "Windows" or sys_platform == "win32" or platform_machine == "x86_64" and sys_platform == "win32" or platform_machine == "x86_64" and python_version >= "3.3" and sys_platform == "win32"
 coreapi==2.3.3
 coreschema==0.0.4
+deprecated==1.2.13
 dj-database-url==0.5.0
-django==3.1.14
+django==3.2.11
 django-cors-headers==3.10.1
 django-graphql-jwt==0.3.4
 django-storages==1.12.3
 djangorestframework==3.13.1
-djangorestframework-simplejwt==4.8.0
+djangorestframework-simplejwt==5.0.0
 graphene==2.1.9
 graphene-django==2.15.0
 graphene-file-upload==1.3.0
@@ -34,15 +35,17 @@ jinja2==3.0.3
 jmespath==0.10.0
 kombu==5.2.3
 markupsafe==2.0.1
-pillow==8.4.0
+packaging==21.3
+pillow==9.0.0
 promise==2.3
 prompt-toolkit==3.0.24
 psycopg2-binary==2.9.3
 pyjwt==2.3.0
+pyparsing==2.4.7
 python-dateutil==2.8.2
 pytz==2021.3
 pyyaml==5.4.1
-redis==3.5.3
+redis==4.1.0
 requests==2.27.1
 rx==1.6.1
 s3transfer==0.5.0
@@ -55,3 +58,4 @@ urllib3==1.26.8
 vine==5.0.0
 wcwidth==0.2.5
 whitenoise==5.3.0
+wrapt==1.13.3

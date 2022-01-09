@@ -240,3 +240,5 @@ AWS_STATIC_LOCATION = "static"
 AWS_PRIVATE_MEDIA_LOCATION = "media"
 
 FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost")
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'

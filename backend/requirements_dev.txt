@@ -8,7 +8,7 @@ argon2-cffi-bindings==21.2.0; platform_machine == "x86_64"
 asgiref==3.4.1
 atomicwrites==1.4.0; sys_platform == "win32"
 attrs==21.4.0
-autopep8==1.5.7
+autopep8==1.6.0
 aws-secretsmanager-caching==1.1.1.5
 backcall==0.2.0
 billiard==3.6.4.0
@@ -31,8 +31,9 @@ coverage==6.2
 debugpy==1.5.1; platform_machine == "x86_64"
 decorator==5.1.1
 defusedxml==0.7.1; platform_machine == "x86_64"
+deprecated==1.2.13
 dj-database-url==0.5.0
-django==3.1.14
+django==3.2.11
 django-cors-headers==3.10.1
 django-debug-toolbar==3.2.4
 django-extensions==3.1.5
@@ -40,11 +41,11 @@ django-graphql-jwt==0.3.4
 django-silk==4.2.0
 django-storages==1.12.3
 djangorestframework==3.13.1
-djangorestframework-simplejwt==4.8.0
+djangorestframework-simplejwt==5.0.0
 entrypoints==0.3; platform_machine == "x86_64"
 factory-boy==3.2.1
-faker==8.16.0
-flake8==3.9.2
+faker==11.3.0
+flake8==4.0.1
 gprof2dot==2021.2.21
 graphene==2.1.9
 graphene-django==2.15.0
@@ -53,7 +54,6 @@ graphql-core==2.3.2
 graphql-relay==2.0.1
 gunicorn==20.1.0
 idna==3.3; python_version >= "3"
-importlib-resources==5.4.0; platform_machine == "x86_64" and python_version < "3.9"
 iniconfig==1.1.1
 ipykernel==6.6.1; platform_machine == "x86_64"
 ipython==7.31.0
@@ -87,7 +87,7 @@ parso==0.8.3
 pathspec==0.9.0; platform_machine == "x86_64"
 pexpect==4.8.0; platform_machine == "x86_64" and sys_platform != "win32" or platform_machine == "x86_64" and python_version >= "3.3" and sys_platform != "win32" or sys_platform != "win32"
 pickleshare==0.7.5
-pillow==8.4.0
+pillow==9.0.0
 pluggy==1.0.0
 prometheus-client==0.12.0; platform_machine == "x86_64"
 promise==2.3
@@ -95,15 +95,15 @@ prompt-toolkit==3.0.24
 psycopg2-binary==2.9.3
 ptyprocess==0.7.0; platform_machine == "x86_64" and sys_platform != "win32" or platform_machine == "x86_64" and os_name != "nt" or platform_machine == "x86_64" and python_version >= "3.3" and sys_platform != "win32" or sys_platform != "win32"
 py==1.11.0
-pycodestyle==2.7.0
+pycodestyle==2.8.0
 pycparser==2.21; platform_machine == "x86_64" and implementation_name == "pypy" or platform_machine == "x86_64"
-pyflakes==2.3.1
+pyflakes==2.4.0
 pygments==2.11.2
 pyjwt==2.3.0
 pyparsing==2.4.7
 pyrsistent==0.18.0; platform_machine == "x86_64"
 pytest==6.2.5
-pytest-cov==2.12.1
+pytest-cov==3.0.0
 pytest-django==4.5.2
 python-dateutil==2.8.2
 pytz==2021.3
@@ -113,7 +113,7 @@ pyyaml==5.4.1
 pyzmq==22.3.0; platform_machine == "x86_64"
 qtconsole==5.2.2; platform_machine == "x86_64"
 qtpy==2.0.0; platform_machine == "x86_64"
-redis==3.5.3
+redis==4.1.0
 regex==2021.11.10; platform_machine == "x86_64"
 requests==2.27.1
 rx==1.6.1
@@ -126,6 +126,7 @@ terminado==0.12.1; platform_machine == "x86_64"
 testpath==0.5.0; platform_machine == "x86_64"
 text-unidecode==1.3
 toml==0.10.2
+tomli==2.0.0
 tornado==6.1; platform_machine == "x86_64"
 traitlets==5.1.1
 typed-ast==1.5.1; platform_machine == "x86_64"
@@ -135,7 +136,7 @@ urllib3==1.26.8
 vine==5.0.0
 wcwidth==0.2.5
 webencodings==0.5.1; platform_machine == "x86_64"
-werkzeug==1.0.1
+werkzeug==2.0.2
 whitenoise==5.3.0
 widgetsnbextension==3.5.2; platform_machine == "x86_64"
-zipp==3.7.0; platform_machine == "x86_64" and python_version < "3.9"
+wrapt==1.13.3
