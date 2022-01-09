@@ -121,8 +121,9 @@ venv-pytest:
 venv-pytest-cov:
 	pytest backend --cov-report html --cov=backend
 
+## -- Coverage Targets --
 ## HTTP server for viewing python code coverage results
-venv-pytest-cov-report:
+htmlcov:
 	python3 -m http.server 8002 -d htmlcov
 
 ## Open a jupyter notebook session
