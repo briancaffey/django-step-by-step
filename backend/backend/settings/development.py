@@ -30,12 +30,5 @@ NOTEBOOK_ARGUMENTS = [
     "--no-browser",
 ]
 
-
 # PRIVATE_MEDIA_STORAGE = "backend.storage_backends"
 DEFAULT_FILE_STORAGE = "backend.storage_backends.PrivateVolumeMediaStorage"
-
-SESSION_COOKIE_SAMESITE = "None"
-CORS_ALLOW_CREDENTIALS = True
-CSRF_COOKIE_SAMESITE = None
-
-# django-silk

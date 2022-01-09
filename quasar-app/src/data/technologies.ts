@@ -108,6 +108,13 @@ const otherTechnologies = [
     documentationLink: 'https://www.cypress.io',
   },
   {
+    title: 'DigitalOcean',
+    description: 'DigitalOcean, Inc. is an American cloud infrastructure provider headquartered in New York City with data centers worldwide.',
+    detail: 'The cloud computing services you need, with the predictable pricing, developer-friendly features, and scalability you\'ll love.',
+    image: 'do.png',
+    documentationLink: 'https://www.digitalocean.com/',
+  },
+  {
     title: 'ECS',
     description: 'A container orchestration tool for AWS',
     detail: 'A tool used to run the application containers in AWS',
@@ -210,7 +217,7 @@ const otherTechnologies = [
     title: 'GraphQL',
     description: 'A query language for your API',
     detail: 'used for querying data in the application',
-    image: 'graphql.png',
+    image: 'gql.png',
     documentationLink: 'https://graphql.org/',
   },
   {
@@ -317,6 +324,13 @@ const otherTechnologies = [
     detail: 'used for managing docker swarm clusters',
     image: 'portainer.svg',
     documentationLink: 'https://portainer.io/',
+  },
+  {
+    title: 'VuePress',
+    description: 'Vue-powered Static Site Generator',
+    detail: 'used for building the documentation site for this project',
+    image: 'vuepress.png',
+    documentationLink: 'https://vuepress.vuejs.org/',
   },
   {
     title: 'systemd',
