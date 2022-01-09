@@ -1,6 +1,6 @@
 from django.urls import path
 
-from apps.accounts.drf_fbv_views import (
+from apps.accounts.views.drf_fbv_views import (
     get_user,
     get_users,
     get_profile,

@@ -1,10 +1,10 @@
 from django.contrib.auth import views as auth_views
 from django.urls import path
 
-from apps.accounts import views
+from apps.accounts.views import mtv_auth_views
 from apps.accounts.forms import UserLoginForm
 
-from .auth_views import (
+from apps.accounts.views.drf_auth_views import (
     CookieTokenRefreshView,
     CookieTokenObtainPairView,
     logout,
@@ -16,14 +16,14 @@ urlpatterns = [
         auth_views.LoginView.as_view(authentication_form=UserLoginForm),
         name="login",
     ),
-    path("logout", views.CustomLogoutView.as_view(), name="logout"),
-    path("register", views.register, name="register"),
+    path("logout", mtv_auth_views.CustomLogoutView.as_view(), name="logout"),
+    path("register", mtv_auth_views.register, name="register"),
     path(
         "activate/<uidb64>/<token>/",
-        views.ActivateAccount.as_view(),
+        mtv_auth_views.ActivateAccount.as_view(),
         name="activate",
     ),
-    path("profile", views.profile_view, name="profile"),
+    path("profile", mtv_auth_views.profile_view, name="profile"),
     # JWT authentication with HttpOnly cookies
     path(
         "api/auth/jwt/token/",

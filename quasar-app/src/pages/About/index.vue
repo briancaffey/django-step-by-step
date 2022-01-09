@@ -20,7 +20,7 @@
       </q-card-title>
       </q-card-section>
       <q-card-section v-for="link in devLinks" :key="link.url">
-        <q-btn no-caps type="a" :href="link.url" target="_blank"><pre>{{ link.name }} - {{ link.url }}</pre></q-btn>
+        <q-btn no-caps type="a" :href="link.url" target="_blank"><pre>{{ link.name }} - {{ link.url }} - {{ link.desc }}</pre></q-btn>
       </q-card-section>
     </q-card>
     <q-card v-else class="q-mt-md">
@@ -30,7 +30,7 @@
       </q-card-title>
       </q-card-section>
       <q-card-section v-for="link in prodLinks" :key="link.url">
-        <q-btn no-caps type="a" :href="link.url" target="_blank"><pre>{{ link.name }} - {{ link.url }}</pre></q-btn>
+        <q-btn no-caps type="a" :href="link.url" target="_blank"><pre>{{ link.name }} - {{ link.url }} - {{ link.desc }}</pre></q-btn>
       </q-card-section>
     </q-card>
   </q-page>
@@ -55,12 +55,12 @@ export default defineComponent({
       },
       {
         name: 'redis-commander',
-        desc: 'UI for inspecting Redis',
+        desc: 'UI for inspecting redis',
         url: 'http://localhost:8085'
       },
       {
         name: 'VuePress documentation',
-        desc: 'Project documentation',
+        desc: 'μblog project documentation',
         url: 'http://localhost:8089'
       },
       {
@@ -84,11 +84,15 @@ export default defineComponent({
         url: 'http://localhost/api/'
       },
       {
+        name: 'coverage',
+        desc: 'view backend code coverage (requires running make htmlcov)',
+        url: 'http://localhost:8002'
+      },
+      {
         name: 'Health check',
-        desc: 'simple endpoint to check if the server is up',
+        desc: 'simple endpoint to check if the API server is running',
         url: 'http://localhost/api/health-check/'
       },
-
     ]
 
     const dev = process.env.NODE_ENV === 'development'

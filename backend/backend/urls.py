@@ -47,10 +47,10 @@ urlpatterns = [
     ),
     path("api/drf/fbv/", include("apps.blog.drf_fbv_urls")),
     path("api/drf/cbv/", include("apps.blog.drf_cbv_urls")),
-    path("api/", include("apps.accounts.drf_fbv_urls")),
-    path("api/", include("apps.accounts.urls")),
+    path("api/", include("apps.accounts.urls.drf_fbv_urls")),
+    path("api/", include("apps.accounts.urls.auth_urls")),
     path("cbv/", include("apps.blog.cbv_urls")),
-    path("", include("apps.accounts.urls")),
+    path("", include("apps.accounts.urls.auth_urls")),
     path("admin/", admin.site.urls),
     path("", include("apps.core.urls")),
     path(
