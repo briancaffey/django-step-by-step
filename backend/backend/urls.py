@@ -37,7 +37,7 @@ urlpatterns = [
         ),
         name="swagger-ui",
     ),
-    path("", include("apps.blog.urls")),
+    path("", include("apps.blog.urls.fbv_urls")),
     # simple JWT routes
     path(
         "api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"
@@ -45,11 +45,11 @@ urlpatterns = [
     path(
         "api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"
     ),
-    path("api/drf/fbv/", include("apps.blog.drf_fbv_urls")),
-    path("api/drf/cbv/", include("apps.blog.drf_cbv_urls")),
+    path("api/drf/fbv/", include("apps.blog.urls.drf_fbv_urls")),
+    path("api/drf/cbv/", include("apps.blog.urls.drf_cbv_urls")),
     path("api/", include("apps.accounts.urls.drf_fbv_urls")),
     path("api/", include("apps.accounts.urls.auth_urls")),
-    path("cbv/", include("apps.blog.cbv_urls")),
+    path("cbv/", include("apps.blog.urls.cbv_urls")),
     path("", include("apps.accounts.urls.auth_urls")),
     path("admin/", admin.site.urls),
     path("", include("apps.core.urls")),

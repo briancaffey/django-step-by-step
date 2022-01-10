@@ -1,6 +1,6 @@
 # URLs for GCBVs
 from django.urls import path
-from apps.blog.class_based_views import (
+from apps.blog.views.class_based_views import (
     PostListView,
     PostDetailView,
     PostCreateView,

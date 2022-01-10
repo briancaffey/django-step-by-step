@@ -1,7 +1,7 @@
 from django.urls import include, path
 from rest_framework import routers
 
-from apps.blog.drf_cbv_views import PostViewSet
+from apps.blog.views.drf_cbv_views import PostViewSet
 
 
 router = routers.DefaultRouter()

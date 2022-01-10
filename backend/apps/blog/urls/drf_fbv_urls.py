@@ -1,7 +1,7 @@
 # URLs for DRF FBVs
 from django.urls import path
 
-from apps.blog.drf_fbv_views import (
+from apps.blog.views.drf_fbv_views import (
     get_post,
     list_posts,
     create_post,
