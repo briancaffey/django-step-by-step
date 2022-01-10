@@ -119,6 +119,7 @@ requests==2.27.1
 rx==1.6.1
 s3transfer==0.5.0
 send2trash==1.8.0; platform_machine == "x86_64"
+sentry-sdk==1.5.1
 singledispatch==3.7.0
 six==1.16.0
 sqlparse==0.4.2
