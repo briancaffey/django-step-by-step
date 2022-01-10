@@ -17,6 +17,7 @@ from datetime import timedelta
 import sentry_sdk
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.celery import CeleryIntegration
+from sentry_sdk.integrations.redis import RedisIntegration
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -253,7 +254,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 ## Sentry
 sentry_sdk.init(
     dsn=SENTRY_DSN,
-    integrations=[DjangoIntegration(), CeleryIntegration()],
+    integrations=[DjangoIntegration(), CeleryIntegration(), RedisIntegration()],
     environment=SENTRY_ENVIRONMENT,
 
     # Set traces_sample_rate to 1.0 to capture 100%
