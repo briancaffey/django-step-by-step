@@ -249,6 +249,13 @@ const otherTechnologies = [
     documentationLink: 'https://circleci.com/',
   },
   {
+    title: 'Sentry',
+    description: 'Error Monitoring - Get Started in Minutes',
+    detail: 'Open-source error tracking with full stacktraces & asynchronous context',
+    image: 'sentry.png',
+    documentationLink: 'https://sentry.io/',
+  },
+  {
     title: 'GitLab',
     description: 'Accelerate modern DevOps',
     detail: 'An all-in one DevOps tool',
