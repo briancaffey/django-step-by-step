@@ -4,11 +4,7 @@ from .base import *
 
 ALLOWED_HOSTS = ["*"]
 
-INSTALLED_APPS += [
-    "debug_toolbar",
-    "django_extensions",
-    "silk"
-]
+INSTALLED_APPS += ["debug_toolbar", "django_extensions", "silk"]
 
 DEBUG_TOOLBAR_CONFIG = {
     "SHOW_COLLAPSED": True,

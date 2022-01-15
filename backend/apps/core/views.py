@@ -17,7 +17,8 @@ def health_check(request):
 def index(request):
     return render(request, "index.html")
 
-@api_view(['POST'])
+
+@api_view(["POST"])
 @authentication_classes([])
 @permission_classes([])
 def trigger_exception(request):
@@ -26,7 +27,8 @@ def trigger_exception(request):
     """
     raise Exception("Triggering Exception...")
 
-@api_view(['POST'])
+
+@api_view(["POST"])
 @authentication_classes([])
 @permission_classes([])
 def email_admins(request):

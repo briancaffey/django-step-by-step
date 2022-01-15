@@ -79,4 +79,4 @@ if settings.DEBUG:  # pragma: no cover
     urlpatterns += [path("api-auth/", include("rest_framework.urls"))]
 
     # django-silk
-    urlpatterns += [path('api/silk/', include('silk.urls', namespace='silk'))]
+    urlpatterns += [path("api/silk/", include("silk.urls", namespace="silk"))]

@@ -23,7 +23,10 @@ from sentry_sdk.integrations.redis import RedisIntegration
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # Sentry
-SENTRY_DSN = os.environ.get("SENTRY_DSN", "https://86e4637dfe544fffb393c16ccd0c8e42@o1111915.ingest.sentry.io/6141178")
+SENTRY_DSN = os.environ.get(
+    "SENTRY_DSN",
+    "https://86e4637dfe544fffb393c16ccd0c8e42@o1111915.ingest.sentry.io/6141178",
+)
 SENTRY_ENVIRONMENT = os.environ.get("SENTRY_ENVIRONMENT", "local")
 
 # Quick-start development settings - unsuitable for production
@@ -199,7 +202,7 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 EMAIL_HOST = os.environ.get("DJANGO_EMAIL_HOST", "localhost")
 EMAIL_PORT = os.environ.get("DJANGO_EMAIL_PORT", "1025")
 
-ADMINS = [('Local Admin', 'admin@dev.local')]
+ADMINS = [("Local Admin", "admin@dev.local")]
 
 # Login Redirect
 
@@ -249,20 +252,22 @@ AWS_PRIVATE_MEDIA_LOCATION = "media"
 
 FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost")
 
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
-## Sentry
+# Sentry
 sentry_sdk.init(
     dsn=SENTRY_DSN,
-    integrations=[DjangoIntegration(), CeleryIntegration(), RedisIntegration()],
+    integrations=[
+        DjangoIntegration(),
+        CeleryIntegration(),
+        RedisIntegration(),
+    ],
     environment=SENTRY_ENVIRONMENT,
-
     # Set traces_sample_rate to 1.0 to capture 100%
     # of transactions for performance monitoring.
     # We recommend adjusting this value in production.
     traces_sample_rate=1.0,
-
     # If you wish to associate users to errors (assuming you are using
     # django.contrib.auth) you may enable sending PII data.
-    send_default_pii=True
+    send_default_pii=True,
 )
