@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # Sentry
 SENTRY_DSN = os.environ.get(
     "SENTRY_DSN",
-    "https://86e4637dfe544fffb393c16ccd0c8e42@o1111915.ingest.sentry.io/6141178",
+    "https://86e4637dfe544fffb393c16ccd0c8e42@o1111915.ingest.sentry.io/6141178",  # noqa
 )
 SENTRY_ENVIRONMENT = os.environ.get("SENTRY_ENVIRONMENT", "local")
 

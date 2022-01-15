@@ -1,5 +1,5 @@
 # defines settings for applications using the DockerEc2 construct
-from .base import *
+from .base import *  # noqa
 
 DEBUG = False
 
@@ -7,14 +7,13 @@ DEBUG = False
 AWS_DEFAULT_ACL = None
 STATICFILES_STORAGE = "backend.storage_backends.StaticStorage"
 
-# necessary to fix manage.py collectstatic command to only upload changed files instead of all files
 AWS_STATIC_LOCATION = "static"
 
 AWS_PRIVATE_MEDIA_LOCATION = "media/private"
 PRIVATE_FILE_STORAGE = "backend.storage_backends.PrivateMediaStorage"
 
 AWS_PRELOAD_METADATA = True
-AWS_STORAGE_BUCKET_NAME = os.environ["S3_BUCKET_NAME"]
+AWS_STORAGE_BUCKET_NAME = os.environ["S3_BUCKET_NAME"]  # noqa
 AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
 STATIC_ROOT = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/"
 MEDIA_ROOT = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/"
