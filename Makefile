@@ -6,6 +6,7 @@
 
 .PHONY: check-poetry	poetry-export	poetry-update	poetry-install	poetry-update
 .PHONY:	poetry-pytest	poetry-pytest-cov	poetry-celery-default-worker
+.PHONY: htmlcov
 
 all: migrate	runserver
 
