@@ -8,3 +8,6 @@ notes
 cdk.out
 .raspberrypi.env
 cdk.context.json
+
+# Redis .rdb files
+*.rdb
