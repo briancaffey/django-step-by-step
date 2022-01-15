@@ -1,6 +1,10 @@
 version: 2
 jobs:
   build:
+    filters:
+      branches:
+        only:
+          - "dev"
 
     # Primary container image where all commands run
 
