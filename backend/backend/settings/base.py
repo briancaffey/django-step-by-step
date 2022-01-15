@@ -162,7 +162,9 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
-CELERY_TASK_ALWAYS_EAGER = bool(os.environ.get("CELERY_TASK_ALWAYS_EAGER", ""))
+CELERY_TASK_ALWAYS_EAGER = bool(
+    int(os.environ.get("CELERY_TASK_ALWAYS_EAGER", 0))
+)
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
