@@ -80,7 +80,6 @@ services:
       - ./backend:/code
     ports:
       - "8000:8000"
-      - "8888:8888"
     networks:
       - main
     environment:
@@ -113,6 +112,17 @@ services:
       - manage.py
       - start_beat
     ports: []
+
+  notebook:
+    <<: *backend
+    container_name: notebook
+    command:
+      - python3
+      - manage.py
+      - shell_plus
+      - --notebook
+    ports:
+      - "8888:8888"
 
   mailhog:
     container_name: mailhog
