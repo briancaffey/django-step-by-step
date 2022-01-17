@@ -93,6 +93,16 @@ export default defineComponent({
         desc: 'simple endpoint to check if the API server is running',
         url: 'http://localhost/api/health-check/'
       },
+      {
+        name: 'Jupyter Notebook',
+        desc: 'Jupyter Notebook',
+        url: 'http://localhost:8888'
+      },
+      {
+        name: 'Swagger',
+        desc: 'Open API specification',
+        url: 'http://localhost/api/swagger-ui/'
+      },
     ]
 
     const dev = process.env.NODE_ENV === 'development'

@@ -27,12 +27,12 @@
           <ul class="dropdown-menu" aria-labelledby="dropdown04">
             <li>
               <a class="dropdown-item" href="{% url 'list-posts' %}"
-                >Posts (FBV)</a
+                >Posts (MTV FBV)</a
               >
             </li>
             <li>
               <a class="dropdown-item" href="{% url 'post-list-cbv' %}"
-                >Posts (CBV)</a
+                >Posts (MTV CBV)</a
               >
             </li>
             <li>
@@ -62,12 +62,12 @@
           <ul class="dropdown-menu" aria-labelledby="dropdown04">
             <li>
               <a class="dropdown-item" href="{% url 'new-post' %}"
-                >New Post (FBV)</a
+                >New Post (MTV FBV)</a
               >
             </li>
             <li>
               <a class="dropdown-item" href="{% url 'post-create-cbv' %}"
-                >New Post (CBV)</a
+                >New Post (MTV CBV)</a
               >
             </li>
             <li>
@@ -111,10 +111,10 @@
         </li>
         {% else %}
         <li class="nav-item">
-          <a class="nav-link" href="/login" aria-disabled="true">Login</a>
+          <a class="nav-link" href="{% url 'login' %}" aria-disabled="true">Login</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/register" aria-disabled="true">Register</a>
+          <a class="nav-link" href="{% url 'register' %}" aria-disabled="true">Register</a>
         </li>
         {% endif %}
 
@@ -145,7 +145,7 @@
 
         {% if request.user.is_staff %}
         <li class="nav-item">
-          <a class="nav-link" href="/admin/" aria-disabled="true"
+          <a class="nav-link" href="{% url 'admin:index' %}" aria-disabled="true"
             >Admin</a
           >
         </li>

@@ -28,7 +28,11 @@ from rest_framework_simplejwt.views import (
 
 
 urlpatterns = [
-    path("api/", include("apps.core.urls")),
+    # health check, exception, email-admins
+    path("api/", include("apps.core.urls.api_urls")),
+    # index template view
+    path("mtv/", include("apps.core.urls.mtv_urls")),
+    # swagger docs
     path(
         "api/swagger-ui/",
         TemplateView.as_view(
@@ -37,7 +41,12 @@ urlpatterns = [
         ),
         name="swagger-ui",
     ),
-    path("", include("apps.blog.urls.fbv_urls")),
+    # function-based views for blog
+    path("mtv/fbv/", include("apps.blog.urls.fbv_urls")),
+
+    # class-based views for mtv
+    path("mtv/cbv/", include("apps.blog.urls.cbv_urls")),
+
     # simple JWT routes
     path(
         "api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"
@@ -45,14 +54,24 @@ urlpatterns = [
     path(
         "api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"
     ),
+
+    # api views for blog app
     path("api/drf/fbv/", include("apps.blog.urls.drf_fbv_urls")),
     path("api/drf/cbv/", include("apps.blog.urls.drf_cbv_urls")),
+
+    # auth urls for api
     path("api/", include("apps.accounts.urls.drf_fbv_urls")),
-    path("api/", include("apps.accounts.urls.auth_urls")),
-    path("cbv/", include("apps.blog.urls.cbv_urls")),
-    path("", include("apps.accounts.urls.auth_urls")),
+
+    # auth urls for api
+    path("api/", include("apps.accounts.urls.auth.api_urls")),
+
+    # auth urls for mtv
+    path("mtv/", include("apps.accounts.urls.auth.mtv_urls")),
+
+    # django admin
     path("admin/", admin.site.urls),
-    path("", include("apps.core.urls")),
+
+    # graphql endpoint
     path(
         "graphql/",
         csrf_exempt(GraphQLView.as_view(graphiql=True)),
@@ -60,13 +79,13 @@ urlpatterns = [
     ),
 ]
 
-# static files / whitenoise
+# static files
 urlpatterns += static(
     settings.STATIC_URL,
     document_root=settings.STATIC_ROOT,
 )
 
-
+# urls only exposed in debug mode
 if settings.DEBUG:  # pragma: no cover
     import debug_toolbar
 

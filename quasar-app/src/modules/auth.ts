@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 
 import { ref, computed } from 'vue';
 import { api } from 'boot/axios';
+import ApiService from '../classes';
 import { AxiosError } from 'axios';
 import { Notify } from 'quasar'
 import { useRouter } from 'vue-router';
@@ -33,8 +35,9 @@ export default function useAuth() {
 
   const router = useRouter();
 
-  const logout = async (): Promise<void> => {
-    await api.post('/api/auth/jwt/token/logout/');
+  const logout = async (): Promise<any> => {
+    // await api.post('/api/auth/jwt/token/logout/');
+    await ApiService.logout();
     accessToken.value = '';
     clearProfile();
     await router.push('/');
@@ -71,6 +74,7 @@ export default function useAuth() {
   // TODO: remove eslint-disable rules around error handling
   const login = async (): Promise<void> => {
     try {
+
       const resp = await api.post<TokenResponse>('/api/auth/jwt/token/', {
         email: email.value, password: password.value,
       }, { withCredentials: true });
