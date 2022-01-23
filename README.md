@@ -20,7 +20,7 @@ This is a Django reference project showing how to develop and deploy Django appl
 
 This project implements a simple blog app using vanilla Django function-based views and class-based views as well as DRF function and class-based views. There is also an implementation of the same application using GraphQL. The application involves a simple data model including users, posts with text and image and post likes. Local development using virtual environments and docker are both covered in detail, including guidance on how to run the application on different operating systems (Linux, Intel Mac, M1 Mac, Windows, WSL). There is 100% test coverage for the project and comprehensive e2e tests using Cypress. The project can be deployed to multiple production environments including Heroku and AWS. Deployment to AWS environment on Elastic Container Service (ECS) is powered by CDK and [a CDK construct library that I wrote specifically for deploying containerized Django projects on AWS](https://github.com/briancaffey/django-cdk).
 
-This project is originally designed as a reference or example project that I can use when I need to recall common patterns, syntax and frequently-used code snippets. I have tried to carefully document each part of the development process as a guide for someone who wants to learn how this project is built and deployed from the ground up. Please see [/STEP_BY_STEP.md](STEP_BY_STEP.md) for a complete explination of the project, step-by-step. The last part of the article goes over the 12 Factor App principles and how this project conforms to those principles.
+This project is originally designed as a reference or example project that I can use when I need to recall common patterns, syntax and frequently-used code snippets. I have tried to carefully document each part of the development process as a guide for someone who wants to learn how this project is built and deployed from the ground up. Please visit the project documentation site ([briancaffey.github.io/django-step-by-step/](https://briancaffey.github.io/django-step-by-step/)) for a complete explanation of the project, step-by-step.
 
 This project is open-source and new-comers to Django and Python and welcome to create issues and pull requests.
 
@@ -45,7 +45,7 @@ This project implements a simple microblogging application called μblog. Here a
 
 Each of the implementations are tested and documented with OpenAPI (Swagger UI). GraphiQL is exposed for the GraphQL API which includes documentation for queries and mutations.
 
-Django templates and and Bootstrap are used for the function and class based Django viesw. Vue.js is used to implement the like button using AJAX (with axios).
+Django templates and and Bootstrap are used for the function and class based Django views. Vue.js is used to implement the like button using AJAX (with axios).
 
 ## Local development
 
