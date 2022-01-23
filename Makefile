@@ -110,6 +110,14 @@ venv-createsuperuser:
 venv-runserver:
 	backend/manage.py runserver_plus
 
+## Start nginx so that the backend API and frontend dev server can both be accessed on localhost:80
+venv-nginx:
+	sudo nginx -c $$(pwd)/nginx/dev/local.conf
+
+## stop nginx
+venv-nginx-stop:
+	sudo nginx -s stop
+
 ## Install python dependencies in a local virtual environment (.local-env)
 venv-pip-install:
 	pip3 install -r backend/requirements_dev.txt
@@ -152,7 +160,7 @@ venv-celery-beat:
 
 ## Start flower for debugging and monitoring celery tasks and workers
 venv-flower:
-	cd backend && celery flower -A backend.celery_app:app --address=127.0.0.1 --port=5555
+	cd backend && celery -A backend.celery_app:app flower --address=127.0.0.1 --port=5555
 
 ## Generate posts
 venv-generate-posts:
@@ -182,6 +190,14 @@ venv-make-gql-schema-sdl:
 venv-graphviz-models:
 	python3 backend/manage.py graph_models -o my_project_subsystem.png
 
+## update poetry dependencies
+venv-poetry-update:
+	cd backend && poetry update
+
+## export requirements.txt and requirements_dev.txt from poetry
+venv-poetry-export: venv-poetry-update
+	cd backend && poetry export --without-hashes -f requirements.txt -o requirements.txt && poetry export --without-hashes -f requirements.txt -o requirements_dev.txt --dev
+
 ## -- vue frontend Targets --
 
 ## create the frontend (use this if you delete the frontend directory and want to regenerte it)
@@ -192,6 +208,7 @@ frontend_create_from_vue_ts_template:
 frontend_install_deps:
 	cd frontend && npm i
 
+## run frontend dev server
 frontend_dev:
 	cd frontend && npm run dev
 
@@ -319,6 +336,11 @@ mailhog:
 ## Open pgadmin4
 pgadmin4:
 	pgadmin4
+
+## install and run redis-commander on port 8085
+redis-commander:
+	npm install -g redis-commander
+	redis-commander -p 8085
 
 ## -- Cypress Targets --
 

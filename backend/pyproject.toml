@@ -44,6 +44,9 @@ djangorestframework-simplejwt = "^5.0.0"
 # sentry SDK
 sentry-sdk = "^1.5.1"
 
+# flower
+flower = "^1.0"
+
 [tool.poetry.dev-dependencies]
 
 # test dependencies
