@@ -1,3 +1,8 @@
+---
+next: /topics/vuepress
+prev: /topics/jwt-authentication
+---
+
 # Authentication
 
 Authentication is an important part of any application. With a Django project that uses a decoupled frontend application such as μblog, authentication can be done in several different ways with different trade-offs.
