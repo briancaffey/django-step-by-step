@@ -49,3 +49,18 @@ export interface PostType {
 }
 
 export type CreatePostResponse = [null, PostType] | [Error];
+
+export interface PostsType {
+  results: PostType[];
+  count: number;
+}
+
+export type GetPostsResponse = [null, PostsType] | [Error];
+
+type Params = {
+  offset?: number;
+  limit?: number;
+}
+export type GetPostsOptionsType = {
+  params: Params;
+}

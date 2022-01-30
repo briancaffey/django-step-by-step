@@ -1,6 +1,9 @@
 import { ref, computed, watch, reactive } from 'vue';
 import { api } from 'boot/axios';
+import { apiService } from '../classes';
 import usePagination from '../modules/pagination';
+
+import { GetPostsOptionsType, PostType } from '../types';
 
 interface User {
   email: string;
@@ -17,12 +20,7 @@ interface Post {
   modified_on: string;
 }
 
-interface Posts {
-  results: Post[];
-  count: number;
-}
-
-const postList = ref<Post[]>([]);
+const postList = ref<PostType[]>([]);
 const postCount = ref(0);
 const loadingPosts = ref(false);
 
@@ -71,9 +69,21 @@ export default function usePosts() {
 
   const getPosts = async (): Promise<void> => {
     loadingPosts.value = true;
-    const res = await api.get<Posts>('/api/drf/fbv/posts/', { params: { offset: offset.value * limit.value, limit: limit.value } });
-    postList.value = res.data?.results;
-    postCount.value = res.data?.count;
+    // get posts
+    const options: GetPostsOptionsType = { params: { offset: offset.value * limit.value, limit: limit.value } }
+    const [error, data] = await apiService.getPosts(options);
+
+    if (error) {
+      console.error(error);
+      // handle error
+      return
+
+    }
+    if (data) {
+      // handle success
+      postList.value = data.results;
+      postCount.value = data.count;
+    }
     loadingPosts.value = false;
   };
 

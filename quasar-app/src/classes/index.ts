@@ -6,10 +6,13 @@ import { api } from 'boot/axios';
 
 import {
   CreatePostResponse,
+  GetPostsResponse,
+  GetPostsOptionsType,
   LoginData,
   LogoutData,
   LoginResponse,
   LogoutResponse,
+  PostsType,
   PostType,
   ProfileResponse,
   ProfileType,
@@ -98,6 +101,16 @@ export default class ApiService {
   async createPost(formData: FormData): Promise<CreatePostResponse> {
     try {
       const { data } = await api.post<PostType>('/api/drf/fbv/posts/new/', formData)
+      return [null, data]
+    } catch(error) {
+      console.error(error);
+      return [error]
+    }
+  }
+
+  async getPosts(options: GetPostsOptionsType): Promise<GetPostsResponse> {
+    try {
+      const { data } = await api.get<PostsType>('/api/drf/fbv/posts/', options)
       return [null, data]
     } catch(error) {
       console.error(error);
