@@ -37,3 +37,15 @@ export interface ProfileType {
 }
 
 export type ProfileResponse = [null, ProfileType] | [Error];
+
+export interface PostType {
+  id: number;
+  body: string;
+  created_by: ProfileType,
+  image: string;
+  modified_on: string;
+  like_count: number;
+  liked: boolean;
+}
+
+export type CreatePostResponse = [null, PostType] | [Error];
