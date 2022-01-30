@@ -1,10 +1,6 @@
 import { ref } from 'vue';
-import { api } from 'boot/axios';
+import { apiService } from '../classes'
 
-interface Profile {
-  email: string;
-  id: number;
-}
 
 const email = ref('');
 const userId = ref(0);
@@ -17,10 +13,16 @@ export default function useProfile() {
   };
 
   const getProfile = async (): Promise<void> => {
-    const resp = await api.get<Profile>('/api/profile/');
+    const [error, data] = await apiService.profile();
 
-    email.value = resp.data.email;
-    userId.value = resp.data.id;
+    if (error) {
+      console.error(error);
+      return
+    }
+    if (data) {
+      email.value = data.email;
+      userId.value = data.id;
+    }
   };
 
   return { getProfile, email, userId, clearProfile };

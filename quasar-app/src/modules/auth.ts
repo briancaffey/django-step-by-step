@@ -1,31 +1,14 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-
 import { ref, computed } from 'vue';
-import { api } from 'boot/axios';
 import ApiService from '../classes';
-import { AxiosError } from 'axios';
 import { Notify } from 'quasar'
 import { useRouter } from 'vue-router';
 import useProfile from './profile';
 
-
-type TokenResponse = {
-  access: string;
-}
+// instantiate ApiService
+const api = new ApiService();
 
 const email = ref('');
 const password = ref('');
-
-// ignore unsafe return of any
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function isAxiosError<T>(error: AxiosError | any): error is AxiosError<T> {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  return error && error.isAxiosError
-}
-
 
 const { getProfile, clearProfile } = useProfile();
 
@@ -35,12 +18,15 @@ export default function useAuth() {
 
   const router = useRouter();
 
-  const logout = async (): Promise<any> => {
-    // await api.post('/api/auth/jwt/token/logout/');
-    await ApiService.logout();
-    accessToken.value = '';
-    clearProfile();
-    await router.push('/');
+  const logout = async (): Promise<void> => {
+    const [error, data] = await api.logout();
+    if (error) console.log('error logging in');
+    else {
+      console.log(data);
+      accessToken.value = '';
+      clearProfile();
+      await router.push('/');
+    }
   }
 
   const isAuthenticated = computed(() => {
@@ -52,8 +38,10 @@ export default function useAuth() {
   const refreshToken = async (initial: boolean): Promise<void> => {
 
     try {
-      const resp = await api.post<TokenResponse>('/api/auth/jwt/token/refresh/');
-      accessToken.value = resp.data.access;
+      const [error, data] = await api.refreshToken();
+      if (error) console.log('error refreshing token');
+
+      if (data) accessToken.value = data.access;
 
       // only load the profile and set interval when initial is true
       // this is used in App.vue
@@ -75,11 +63,12 @@ export default function useAuth() {
   const login = async (): Promise<void> => {
     try {
 
-      const resp = await api.post<TokenResponse>('/api/auth/jwt/token/', {
-        email: email.value, password: password.value,
-      }, { withCredentials: true });
-
-      accessToken.value = resp.data.access;
+      const [error, data] = await api.login({ email: email.value, password: password.value });
+      if (error) {
+        console.log('handle login error');
+        return
+      }
+      if (data) accessToken.value = data.access;
 
       await getProfile();
 
@@ -98,18 +87,8 @@ export default function useAuth() {
         message: 'Welcome to μblog!',
       });
 
-    } catch (exception) {
-      if (isAxiosError(exception) && exception.response) {
-
-        const e = exception as AxiosError;
-
-        if (e.response?.status === 401) {
-          Notify.create({
-            type: 'warning',
-            message: e.response.data.detail,
-          });
-        }
-      }
+    } catch (error) {
+      console.log(error)
     }
   }
   return { login, refreshToken, email, password, accessToken, isAuthenticated, logout }

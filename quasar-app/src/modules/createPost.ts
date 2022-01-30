@@ -1,10 +1,6 @@
 import { ref } from 'vue';
-import { api } from 'boot/axios';
 import { useRouter } from 'vue-router';
-
-interface Post {
-  id: number;
-}
+import { apiService } from '../classes';
 
 export default function useCreatePost() {
 
@@ -14,19 +10,24 @@ export default function useCreatePost() {
 
   const createPost = async (): Promise<void> => {
 
+    // formData used for file upload with extra data
     const formData = new FormData();
+    formData.append('body', body.value);
+    if (image.value) {
+      formData.append('image', image.value);
+    };
 
-    try {
-      formData.append('body', body.value);
-      if (image.value) {
-        formData.append('image', image.value);
-      };
-      const resp = await api.post<Post>('/api/drf/fbv/posts/new/', formData);
-      const id: number = resp.data.id;
+    const [error, data] = await apiService.createPost(formData);
 
-      await router.push(`/posts/${id}`);
-    } catch (error) {
+    if (error) {
       console.error(error);
+      // TODO: handle error
+      return
+    }
+
+    if (data) {
+      // TODO: handle success
+      await router.push(`/posts/${data.id}`);
     }
   };
 
