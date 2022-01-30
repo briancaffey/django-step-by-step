@@ -27,3 +27,13 @@ export interface LogoutData {
 export type LogoutResponse = [null, LogoutData] | [Error];
 
 export type RefreshResponse = [null, TokenResponse] | [Error];
+
+/**
+ * Profile response and response data
+ */
+export interface ProfileType {
+  email: string;
+  id: number;
+}
+
+export type ProfileResponse = [null, ProfileType] | [Error];

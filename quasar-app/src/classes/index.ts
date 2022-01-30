@@ -4,7 +4,16 @@
 
 import { api } from 'boot/axios';
 
-import { TokenResponse, LoginData, LoginResponse, LogoutResponse, LogoutData, RefreshResponse } from '../types'
+import {
+  LoginData,
+  LogoutData,
+  LoginResponse,
+  LogoutResponse,
+  ProfileResponse,
+  ProfileType,
+  RefreshResponse,
+  TokenResponse,
+} from '../types'
 
 /**
  * class for making backend API calls
@@ -42,6 +51,8 @@ export default class ApiService {
 
   /**
    * Logout
+   *
+   * This API call removes the HttpOnly refresh token cookie to logout the current logged in user
    */
   async logout(): Promise<LogoutResponse> {
     try {
@@ -66,4 +77,23 @@ export default class ApiService {
     }
   }
 
+  /**
+   *
+   * Get user profile
+   *
+   * @returns {ProfileResponse}
+   */
+  async profile(): Promise<ProfileResponse> {
+    try {
+      const { data } = await api.get<ProfileType>('/api/profile/')
+      return [null, data]
+    } catch(error) {
+      console.error(error);
+      return [error]
+    }
+  }
+
 }
+
+// import apiService into modules when making API calls
+export const apiService = new ApiService();
