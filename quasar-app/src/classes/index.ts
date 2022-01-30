@@ -144,6 +144,7 @@ export default class ApiService {
 
   async deletePost(postId: number): Promise<GetPostResponse> {
     try {
+      // TODO use a different Type here since this does not return a PostType
       const { data } = await api.delete<PostType>(`/api/drf/fbv/posts/${postId}/`)
       return [null, data]
     } catch(error) {
