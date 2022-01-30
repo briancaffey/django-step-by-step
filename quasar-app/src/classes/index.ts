@@ -53,7 +53,6 @@ export default class ApiService {
       const { data } = await api.post<TokenResponse>('/api/auth/jwt/token/', loginData, { withCredentials: true });
       return [null, data];
     } catch (error) {
-      console.error(error);
       return [error]
     }
   }
@@ -68,7 +67,6 @@ export default class ApiService {
       const { data } = await api.post<LogoutData>('/api/auth/jwt/token/logout/')
       return [null, data]
     } catch (error) {
-      console.error(error);
       return [error]
     }
   }
@@ -81,7 +79,6 @@ export default class ApiService {
       const { data } = await api.post<TokenResponse>('/api/auth/jwt/token/refresh/')
       return [null, data]
     } catch (error) {
-      console.error(error);
       return [error]
     }
   }
@@ -97,7 +94,6 @@ export default class ApiService {
       const { data } = await api.get<ProfileType>('/api/profile/')
       return [null, data]
     } catch(error) {
-      console.error(error);
       return [error]
     }
   }
@@ -107,7 +103,6 @@ export default class ApiService {
       const { data } = await api.post<PostType>('/api/drf/fbv/posts/new/', formData)
       return [null, data]
     } catch(error) {
-      console.error(error);
       return [error]
     }
   }
@@ -117,7 +112,6 @@ export default class ApiService {
       const { data } = await api.get<PostsType>('/api/drf/fbv/posts/', options)
       return [null, data]
     } catch(error) {
-      console.error(error);
       return [error]
     }
   }
@@ -127,7 +121,6 @@ export default class ApiService {
       const { data } = await api.post<PostType>(`/api/drf/fbv/posts/${postId}/like/`)
       return [null, data]
     } catch(error) {
-      console.error(error);
       return [error]
     }
   }
@@ -137,7 +130,6 @@ export default class ApiService {
       const { data } = await api.get<PostType>(`/api/drf/fbv/posts/${postId}/`)
       return [null, data]
     } catch(error) {
-      console.error(error);
       return [error]
     }
   }
@@ -148,7 +140,6 @@ export default class ApiService {
       const { data } = await api.delete<PostType>(`/api/drf/fbv/posts/${postId}/`)
       return [null, data]
     } catch(error) {
-      console.error(error);
       return [error]
     }
   }
