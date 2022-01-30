@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
-
 import { ref, computed } from 'vue';
 import ApiService from '../classes';
 import { Notify } from 'quasar'
@@ -23,7 +18,7 @@ export default function useAuth() {
 
   const router = useRouter();
 
-  const logout = async (): Promise<any> => {
+  const logout = async (): Promise<void> => {
     const [error, data] = await api.logout();
     if (error) console.log('error logging in');
     else {
