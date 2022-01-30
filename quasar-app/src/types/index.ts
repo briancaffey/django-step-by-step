@@ -64,3 +64,5 @@ type Params = {
 export type GetPostsOptionsType = {
   params: Params;
 }
+
+export type TogglePostLikeResponse = [null, PostType] | [Error];

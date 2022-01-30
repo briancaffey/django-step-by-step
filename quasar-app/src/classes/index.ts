@@ -1,5 +1,7 @@
 /**
  * This file defines all backend REST API endpoint calls with axios
+ *
+ * Reference article: https://dev.to/blindkai/managing-api-layers-in-vue-js-with-typescript-hno
  */
 
 import { api } from 'boot/axios';
@@ -17,6 +19,7 @@ import {
   ProfileResponse,
   ProfileType,
   RefreshResponse,
+  TogglePostLikeResponse,
   TokenResponse,
 } from '../types'
 
@@ -118,6 +121,15 @@ export default class ApiService {
     }
   }
 
+  async togglePostLike(postId: number): Promise<TogglePostLikeResponse> {
+    try {
+      const { data } = await api.post<PostType>(`/api/drf/fbv/posts/${postId}/like/`)
+      return [null, data]
+    } catch(error) {
+      console.error(error);
+      return [error]
+    }
+  }
 }
 
 // import apiService into modules when making API calls

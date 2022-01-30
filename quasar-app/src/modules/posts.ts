@@ -36,9 +36,19 @@ const post = reactive<Post>({
 
 export function usePost() {
   const togglePostLike = async (postId: number): Promise<void> => {
-    const resp = await api.post<Post>(`/api/drf/fbv/posts/${postId}/like/`);
-    post.liked = resp.data.liked;
-    post.like_count = resp.data.like_count;
+    const [error, data] = await apiService.togglePostLike(postId);
+
+    if (error) {
+      console.error(error);
+      // handle error
+      return
+    }
+
+    if (data) {
+      // handle success
+      post.liked = data.liked;
+      post.like_count = data.like_count;
+    }
   };
 
   // use this for a single post
