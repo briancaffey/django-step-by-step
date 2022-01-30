@@ -8,6 +8,9 @@
 /**
  * Interface for login data
  */
+
+import { AxiosError } from 'axios';
+
 export interface LoginData {
   email: string;
   password: string;
@@ -68,3 +71,16 @@ export type GetPostsOptionsType = {
 export type TogglePostLikeResponse = [null, PostType] | [Error];
 
 export type GetPostResponse = [null, PostType] | [Error];
+
+export type ExceptionType = {
+  message: string;
+};
+
+// Is this the correct way to handle errors? Error vs AxiosError?
+type ExceptionError = { detail: string }
+export type ExceptionResponse = [null, ExceptionType] | [AxiosError<ExceptionError>];
+
+export type EmailAdminType = { message: string };
+
+export type EmailAdminResponse = [null, EmailAdminType] | [Error];
+

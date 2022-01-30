@@ -8,6 +8,10 @@ import { api } from 'boot/axios';
 
 import {
   CreatePostResponse,
+  EmailAdminResponse,
+  EmailAdminType,
+  ExceptionResponse,
+  ExceptionType,
   GetPostResponse,
   GetPostsResponse,
   GetPostsOptionsType,
@@ -138,6 +142,24 @@ export default class ApiService {
     try {
       // TODO use a different Type here since this does not return a PostType
       const { data } = await api.delete<PostType>(`/api/drf/fbv/posts/${postId}/`)
+      return [null, data]
+    } catch(error) {
+      return [error]
+    }
+  }
+
+  async triggerException(): Promise<ExceptionResponse> {
+    try {
+      const { data } = await api.post<ExceptionType>('/api/exception/')
+      return [null, data]
+    } catch(error) {
+      return [error]
+    }
+  }
+
+  async emailAdmins(): Promise<EmailAdminResponse> {
+    try {
+      const { data } = await api.post<EmailAdminType>('/api/email-admins/')
       return [null, data]
     } catch(error) {
       return [error]

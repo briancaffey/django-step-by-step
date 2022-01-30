@@ -5,6 +5,7 @@ from rest_framework.decorators import (
     authentication_classes,
     permission_classes,
 )
+from rest_framework.exceptions import APIException
 
 from .tasks import send_email_debug_task
 
@@ -24,8 +25,7 @@ def trigger_exception(request):
     """
     Triggers an exception. used for testing
     """
-    raise Exception("Triggering Exception...")
-
+    raise APIException("Exception message from the API server")
 
 @api_view(["POST"])
 @authentication_classes([])

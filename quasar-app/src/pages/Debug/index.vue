@@ -17,8 +17,6 @@ export default defineComponent({
 
     const { triggerException, emailAdmins } = useDebug();
 
-
-
     return {
       triggerException, emailAdmins
     }
