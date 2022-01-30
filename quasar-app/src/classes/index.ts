@@ -8,6 +8,7 @@ import { api } from 'boot/axios';
 
 import {
   CreatePostResponse,
+  GetPostResponse,
   GetPostsResponse,
   GetPostsOptionsType,
   LoginData,
@@ -124,6 +125,16 @@ export default class ApiService {
   async togglePostLike(postId: number): Promise<TogglePostLikeResponse> {
     try {
       const { data } = await api.post<PostType>(`/api/drf/fbv/posts/${postId}/like/`)
+      return [null, data]
+    } catch(error) {
+      console.error(error);
+      return [error]
+    }
+  }
+
+  async getPost(postId: number): Promise<GetPostResponse> {
+    try {
+      const { data } = await api.get<PostType>(`/api/drf/fbv/posts/${postId}/`)
       return [null, data]
     } catch(error) {
       console.error(error);

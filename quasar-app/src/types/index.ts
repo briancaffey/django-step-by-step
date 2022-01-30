@@ -66,3 +66,5 @@ export type GetPostsOptionsType = {
 }
 
 export type TogglePostLikeResponse = [null, PostType] | [Error];
+
+export type GetPostResponse = [null, PostType] | [Error];

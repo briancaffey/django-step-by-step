@@ -5,31 +5,16 @@ import usePagination from '../modules/pagination';
 
 import { GetPostsOptionsType, PostType } from '../types';
 
-interface User {
-  email: string;
-  id: number;
-}
-
-interface Post {
-  body: string;
-  id: number;
-  image: string;
-  like_count: number;
-  liked: boolean;
-  created_by: User | null;
-  modified_on: string;
-}
-
 const postList = ref<PostType[]>([]);
 const postCount = ref(0);
 const loadingPosts = ref(false);
 
-const post = reactive<Post>({
+const post = reactive<PostType>({
   body: '',
   id: 0,
   image: '',
   like_count: 0,
-  created_by: null,
+  created_by: {email: '', id: 0},
   liked: false,
   modified_on: '1970-01-01T00:00:00.000000-00:00',
 });
@@ -53,16 +38,23 @@ export function usePost() {
 
   // use this for a single post
   const getPost = async (postId: number): Promise<void> => {
-    const res = await api.get<Post>(`/api/drf/fbv/posts/${postId}/`);
-    const postJson = res.data;
-    post.body = postJson.body;
-    post.id = postJson.id;
-    post.image = postJson.image;
-    post.like_count = postJson.like_count;
-    post.created_by = postJson.created_by;
-    post.liked = postJson.liked;
-    post.modified_on = postJson.modified_on;
-    console.log(postJson.modified_on);
+    const [error, data] = await apiService.getPost(postId);
+    if (error) {
+      //handle error
+      console.error(error)
+    }
+    if (data) {
+      // handle success
+
+      // Can this be simplified? Is there a way to assign multiple values to a reactive object at once?
+      post.body = data.body;
+      post.id = data.id;
+      post.image = data.image;
+      post.like_count = data.like_count;
+      post.liked = data.liked;
+      post.created_by = data.created_by;
+      post.modified_on = data.modified_on;
+    }
   };
 
   const deletePost = async (postId: number): Promise<void> => {
