@@ -141,6 +141,16 @@ export default class ApiService {
       return [error]
     }
   }
+
+  async deletePost(postId: number): Promise<GetPostResponse> {
+    try {
+      const { data } = await api.delete<PostType>(`/api/drf/fbv/posts/${postId}/`)
+      return [null, data]
+    } catch(error) {
+      console.error(error);
+      return [error]
+    }
+  }
 }
 
 // import apiService into modules when making API calls

@@ -1,5 +1,4 @@
 import { ref, computed, watch, reactive } from 'vue';
-import { api } from 'boot/axios';
 import { apiService } from '../classes';
 import usePagination from '../modules/pagination';
 
@@ -58,7 +57,18 @@ export function usePost() {
   };
 
   const deletePost = async (postId: number): Promise<void> => {
-    await api.delete(`/api/drf/fbv/posts/${postId}/`);
+    const [error, data] = await apiService.deletePost(postId);
+    if (error) {
+      //handle error
+      console.error(error)
+    }
+
+    if (data) {
+      // handle success
+
+      // TODO: implement component for deleting posts
+      console.log('post deleted')
+    }
   };
 
   return { post, getPost, deletePost, togglePostLike };
