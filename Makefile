@@ -414,6 +414,45 @@ raspi-destroy:
 k6-run-docker:
 	@docker run -i --platform=linux/amd64 loadimpact/k6 run - <k6/script.js
 
+## -- Terraform Targets --
+
+## Format terraform files
+tf-fmt:
+  cd terraform && terraform fmt -recursive
+
+## initialize terraform for the backend
+tf-bootstrap-init:
+	cd terraform/bootstrap && terraform init --var-file=bootstrap.tfvars
+
+## plan terraform S3 backend configuration
+tf-bootstrap-plan:
+	cd terraform/bootstrap && terraform plan --var-file=bootstrap.tfvars
+
+## apply terraform S3 backend configuration
+tf-bootstrap-apply:
+	cd terraform/bootstrap && terraform apply --var-file=bootstrap.tfvars
+
+## init, plan and apply terraform backend configuration
+tf-bootstrap:	tf-bootstrap-init	tf-bootstrap-plan	tf-bootstrap-apply
+
+## write the backend configuration outputs to terraform/backend.tfvars
+tf-bootstrap-output:
+	cd terraform/bootstrap && terraform output > ../local.tfvars
+	cd terraform/bootstrap && terraform output > ../backend.config
+  # cd terraform/bootstrap && terraform output -json > local.tfvars
+
+# TODO: move main terraform config files to core directory?
+tf-core-init:
+	cd terraform && terraform init --backend-config=backend.config --var-file=local.tfvars
+
+tf-core-plan:
+	cd terraform && terraform plan --var-file=local.tfvars
+
+tf-core-apply:
+	cd terraform && terraform apply --var-file=local.tfvars
+
+tf-core:	tf-core-init  tf-core-plan	tf-core-apply
+
 # Credit: https://gist.github.com/prwhite/8168133#gistcomment-2749866
 ## Show this help menu
 help:

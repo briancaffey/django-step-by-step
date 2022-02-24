@@ -1,0 +1,5 @@
+# copy this file, replace with your values and name it bootstrap.tfvars
+# then run `terraform init && terraform plan -var-file=bootstrap.tfvars`
+# or simply `make terraform-bootstrap`
+region = "us-east-1"
+backend_name = "my-backend-name-prefix"
