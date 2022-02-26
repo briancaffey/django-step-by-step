@@ -2,26 +2,36 @@ locals {
   name = "api"
 }
 
+resource "aws_cloudwatch_log_group" "this" {
+  name              = var.api_log_group_name
+  retention_in_days = var.log_retention_in_days
+}
+
+resource "aws_cloudwatch_log_stream" "this" {
+  name           = var.api_log_stream_name
+  log_group_name = aws_cloudwatch_log_group.this.name
+}
+
 resource "aws_ecs_task_definition" "this" {
   family = "${var.env}-api"
   container_definitions = jsonencode([
     {
       name        = local.name
       image       = var.image
-      cpu         = 10
+      cpu         = 1024
       memory      = 512
       essential   = true
       links       = []
       environment = var.env_vars
       command     = var.command
-      # logConfiguration = {
-      #   logDriver = "awslogs"
-      #   options = {
-      #     "awslogs-group"         = var.log_group_name
-      #     "awslogs-region"        = var.region
-      #     "awslogs-stream-prefix" = var.log_stream_name
-      #   }
-      # }
+      logConfiguration = {
+        logDriver = "awslogs"
+        options = {
+          "awslogs-group"         = var.api_log_group_name
+          "awslogs-region"        = var.region
+          "awslogs-stream-prefix" = var.api_log_stream_name
+        }
+      }
       portMappings = [
         {
           containerPort = 8000

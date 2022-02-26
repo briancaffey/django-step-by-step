@@ -39,6 +39,10 @@ resource "aws_lb" "this" {
   internal           = false
   security_groups    = [aws_security_group.this.id]
   subnets            = var.public_subnets
+  timeouts {
+    create = "30m"
+    delete = "30m"
+  }
 }
 
 # Target group

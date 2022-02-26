@@ -24,16 +24,37 @@ variable "env" {
 }
 
 variable "command" {
-  type = list(string)
+  type        = list(string)
   description = "Command to run in Docker container"
 }
 
 variable "env_vars" {
-  type = map
+  type        = list(object({ name = string, value = string }))
   description = "Environment variables to set in Docker container"
 }
 
 variable "image" {
-  type = string
+  type        = string
   description = "Container image from ECS to run"
+}
+
+variable "api_log_group_name" {
+  type        = string
+  description = "Name of the CloudWatch Logs group"
+}
+
+variable "api_log_stream_name" {
+  type        = string
+  description = "Name of the CloudWatch Logs stream"
+}
+
+variable "log_retention_in_days" {
+  default = 1
+  type    = number
+}
+
+variable "region" {
+  default     = "us-east-1"
+  description = "AWS region"
+  type        = string
 }

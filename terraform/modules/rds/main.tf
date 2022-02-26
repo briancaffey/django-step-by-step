@@ -26,7 +26,7 @@ resource "aws_db_subnet_group" "this" {
 
 resource "aws_db_instance" "this" {
   identifier              = "production"
-  name                    = var.rds_db_name
+  db_name                 = var.rds_db_name
   username                = var.rds_username
   password                = var.rds_password
   port                    = "5432"

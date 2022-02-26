@@ -44,7 +44,7 @@ variable "be_image_tag" {
 
 variable "extra_env_vars" {
   description = "User-defined environment variables to pass to the backend service and task containers (api, worker, migrate, etc.)"
-  type = map
+  type        = list(object({ name = string, value = string }))
 }
 
 variable "s3_bucket_name" {
@@ -64,19 +64,19 @@ variable "web_container_name" {
 variable "beat_command" {
   default     = ["celery", "--app=backend.celery_app:app", "beat", "--loglevel=INFO", "-Q", "default"]
   description = "Command used to start celery beat"
-  type = list(string)
+  type        = list(string)
 }
 
 variable "worker_command" {
   description = "Command used to start celery worker"
   default     = ["celery", "--app=backend.celery_app:app", "worker", "--loglevel=INFO", "-Q", "default"]
-  type = list(string)
+  type        = list(string)
 }
 
 variable "web_command" {
   description = "Command used to start backend web container"
-  default     = ["gunicorn", "-t", "1000", "-b", "0.0.0.0:8000", "--log-level", "debug", "backend.wsgi"]
-  type = list(string)
+  default     = ["gunicorn", "-t", "1000", "-b", "0.0.0.0:8000", "--log-level", "info", "backend.wsgi"]
+  type        = list(string)
 }
 
 ##############################################################################

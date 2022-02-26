@@ -29,20 +29,20 @@ module "lb" {
 }
 
 module "ecs" {
-  source         = "./modules/ecs"
-  vpc_id         = module.vpc.vpc_id
-  private_subnets = module.vpc.private_subnets
-  alb_sg_id      = module.lb.alb_sg_id
-  cluster_name   = "${var.env}-cluster"
-  env            = var.env
-  region         = var.region
+  source            = "./modules/ecs"
+  vpc_id            = module.vpc.vpc_id
+  private_subnets   = module.vpc.private_subnets
+  alb_sg_id         = module.lb.alb_sg_id
+  cluster_name      = "${var.env}-cluster"
+  env               = var.env
+  region            = var.region
   autoscale_desired = 1
-  autoscale_min = 1
-  autoscale_max = 1
+  autoscale_min     = 1
+  autoscale_max     = 1
 }
 
 ###############################################################################
-# S3
+# S3 - TODO add S3 bucket resource for app assets
 ###############################################################################
 
 
@@ -75,11 +75,26 @@ module "elasticache" {
 }
 
 locals {
-  env_vars = {
-    "REDIS_SERVICE_HOST" = module.elasticache.redis_service_host
-    "POSTGRES_SERVICE_HOST" = module.rds.postgres_service_host
+  env_vars = [
+    {
+      name  = "REDIS_SERVICE_HOST"
+      value = module.elasticache.redis_service_host
+    },
+    {
+      name  = "POSTGRES_SERVICE_HOST"
+      value = module.rds.postgres_service_host
+    },
+    {
+      name  = "DJANGO_SETTINGS_MODULE"
+      value = var.django_settings_module
+    },
+    {
+      name = "S3_BUCKET_NAME"
+      #TODO change this
+      value = "my-bucket"
+    }
     # "S3_BUCKET" = module.s3.bucket TODO: Add this
-  }
+  ]
   be_image = "${var.ecr_be_repo_url}:${var.be_image_tag}"
 }
 
@@ -92,14 +107,29 @@ module "api" {
   ecs_cluster_id           = module.ecs.cluster_id
   ecs_service_iam_role_arn = module.ecs.service_iam_role_arn
   command                  = var.web_command
-  env_vars                 = merge(local.env_vars, var.extra_env_vars)
+  env_vars                 = concat(local.env_vars, var.extra_env_vars)
   image                    = local.be_image
   env                      = var.env
   alb_default_tg_arn       = module.lb.alb_default_tg_arn
+  api_log_group_name       = "/ecs/api"
+  api_log_stream_name      = "api"
+  region                   = var.region
+}
 
-  # vpc_id = module.vpc.vpc_id
-  # public_subnets = module.vpc.public_subnets
-  # cluster_name = module.ecs.cluster_name
-  # alb_sg_id = module.lb.alb_sg_id
-  # s3_bucket_name = var.s3_bucket_name
+###############################################################################
+# Celery Default Worker
+###############################################################################
+
+module "celery_default_worker" {
+  source                   = "./modules/api"
+  ecs_cluster_id           = module.ecs.cluster_id
+  ecs_service_iam_role_arn = module.ecs.service_iam_role_arn
+  command                  = var.web_command
+  env_vars                 = concat(local.env_vars, var.extra_env_vars)
+  image                    = local.be_image
+  env                      = var.env
+  alb_default_tg_arn       = module.lb.alb_default_tg_arn
+  api_log_group_name       = "/ecs/api"
+  api_log_stream_name      = "api"
+  region                   = var.region
 }

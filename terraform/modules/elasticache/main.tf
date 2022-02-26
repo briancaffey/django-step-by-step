@@ -24,18 +24,18 @@ resource "aws_security_group" "redis" {
 }
 
 resource "aws_elasticache_replication_group" "this" {
-  automatic_failover_enabled    = true
-  replication_group_description = "elasticache-replication-group"
-  replication_group_id          = "elasticache-replication-group-id"
-  availability_zones            = var.azs
-  node_type                     = "cache.t2.micro"
-  port                          = 6379
-  engine                        = "redis"
-  engine_version                = "5.0.6"
-  parameter_group_name          = "default.redis5.0"
-  number_cache_clusters         = 2
-  subnet_group_name             = aws_elasticache_subnet_group.this.name
-  security_group_ids            = [aws_security_group.redis.id]
+  automatic_failover_enabled = true
+  description                = "elasticache-replication-group"
+  replication_group_id       = "elasticache-replication-group-id"
+  availability_zones         = var.azs
+  node_type                  = "cache.t2.micro"
+  port                       = 6379
+  engine                     = "redis"
+  engine_version             = "5.0.6"
+  parameter_group_name       = "default.redis5.0"
+  num_cache_clusters         = 3
+  subnet_group_name          = aws_elasticache_subnet_group.this.name
+  security_group_ids         = [aws_security_group.redis.id]
   lifecycle {
     ignore_changes = [number_cache_clusters]
   }

@@ -418,7 +418,7 @@ k6-run-docker:
 
 ## Format terraform files
 tf-fmt:
-  cd terraform && terraform fmt -recursive
+	cd terraform && terraform fmt -recursive
 
 ## initialize terraform for the backend
 tf-bootstrap-init:
@@ -445,13 +445,22 @@ tf-bootstrap-output:
 tf-core-init:
 	cd terraform && terraform init --backend-config=backend.config --var-file=local.tfvars
 
+tf-core-init-upgrade:
+	cd terraform && terraform init -upgrade --backend-config=backend.config --var-file=local.tfvars
+
 tf-core-plan:
 	cd terraform && terraform plan --var-file=local.tfvars
 
 tf-core-apply:
 	cd terraform && terraform apply --var-file=local.tfvars
 
+tf-core-apply-yes:
+	cd terraform && terraform apply -auto-approve --var-file=local.tfvars
+
 tf-core:	tf-core-init  tf-core-plan	tf-core-apply
+
+tf-core-destroy:
+	cd terraform && terraform destroy --var-file=local.tfvars
 
 # Credit: https://gist.github.com/prwhite/8168133#gistcomment-2749866
 ## Show this help menu
