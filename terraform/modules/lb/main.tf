@@ -75,3 +75,17 @@ resource "aws_alb_listener" "ecs-alb-http-listener" {
     target_group_arn = aws_alb_target_group.default.arn
   }
 }
+
+resource "aws_alb_listener" "https" {
+  load_balancer_arn = aws_lb.this.id
+  port              = "443"
+  protocol          = "HTTPS"
+  ssl_policy        = "ELBSecurityPolicy-2016-08"
+  certificate_arn   = var.certificate_arn
+  depends_on        = [aws_alb_target_group.default]
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_alb_target_group.default.arn
+  }
+}

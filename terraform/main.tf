@@ -24,6 +24,7 @@ module "vpc" {
 module "lb" {
   source            = "./modules/lb"
   vpc_id            = module.vpc.vpc_id
+  certificate_arn   = var.acm_certificate_arn
   health_check_path = var.health_check_path
   public_subnets    = module.vpc.public_subnets
   env               = var.env
@@ -104,7 +105,7 @@ locals {
       value = "my-bucket"
     },
     {
-      name = "FRONTEND_URL"
+      name  = "FRONTEND_URL"
       value = var.frontend_url
     }
     # "S3_BUCKET" = module.s3.bucket TODO: Add this

@@ -1,3 +1,8 @@
+variable "certificate_arn" {
+  type        = string
+  description = "The ARN of the certificate to be used for the HTTPS listener."
+}
+
 variable "health_check_path" {
   default     = "/api/health-check/"
   description = "Health check path for the default target group"

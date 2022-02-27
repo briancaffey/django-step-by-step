@@ -16,8 +16,8 @@ resource "aws_ecs_task_definition" "this" {
   family = "${var.env}-migrate"
   container_definitions = jsonencode([
     {
-      name        = local.name
-      image       = var.image
+      name  = local.name
+      image = var.image
       #cpu         = 512
       memory      = 512
       essential   = false
