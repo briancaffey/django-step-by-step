@@ -20,6 +20,7 @@ module "vpc" {
 ###############################################################################
 # ALB - Module for Application Load Balancer and releted resources
 ###############################################################################
+
 module "lb" {
   source            = "./modules/lb"
   vpc_id            = module.vpc.vpc_id
@@ -28,10 +29,15 @@ module "lb" {
   env               = var.env
 }
 
+###############################################################################
+# ECS - ECS Cluster, EC2 Instances, ASG, Launch Configurations
+###############################################################################
+
 module "ecs" {
   source            = "./modules/ecs"
   vpc_id            = module.vpc.vpc_id
   private_subnets   = module.vpc.private_subnets
+  instance_type     = var.instance_type
   alb_sg_id         = module.lb.alb_sg_id
   cluster_name      = "${var.env}-cluster"
   env               = var.env
@@ -74,6 +80,10 @@ module "elasticache" {
   env             = var.env
 }
 
+###############################################################################
+# Common variables for ECS Services and Tasks
+###############################################################################
+
 locals {
   env_vars = [
     {
@@ -92,6 +102,10 @@ locals {
       name = "S3_BUCKET_NAME"
       #TODO change this
       value = "my-bucket"
+    },
+    {
+      name = "FRONTEND_URL"
+      value = var.frontend_url
     }
     # "S3_BUCKET" = module.s3.bucket TODO: Add this
   ]
@@ -105,14 +119,15 @@ locals {
 module "api" {
   source                   = "./modules/api"
   ecs_cluster_id           = module.ecs.cluster_id
+  task_role_arn            = module.ecs.task_role_arn
   ecs_service_iam_role_arn = module.ecs.service_iam_role_arn
   command                  = var.web_command
   env_vars                 = concat(local.env_vars, var.extra_env_vars)
   image                    = local.be_image
   env                      = var.env
   alb_default_tg_arn       = module.lb.alb_default_tg_arn
-  api_log_group_name       = "/ecs/api"
-  api_log_stream_name      = "api"
+  log_group_name           = "/ecs/api"
+  log_stream_name          = "api"
   region                   = var.region
 }
 
@@ -120,16 +135,34 @@ module "api" {
 # Celery Default Worker
 ###############################################################################
 
-module "celery_default_worker" {
-  source                   = "./modules/api"
+# module "celery_default_worker" {
+#   source                   = "./modules/default_celery_worker"
+#   ecs_cluster_id           = module.ecs.cluster_id
+#   task_role_arn            = module.ecs.task_role_arn
+#   ecs_service_iam_role_arn = module.ecs.service_iam_role_arn
+#   command                  = var.default_celery_worker_command
+#   env_vars                 = concat(local.env_vars, var.extra_env_vars)
+#   image                    = local.be_image
+#   env                      = var.env
+#   log_group_name           = "/ecs/celery-default-worker"
+#   log_stream_name          = "celery-default-worker"
+#   region                   = var.region
+# }
+
+###############################################################################
+# Migrate - Database Migrate Task Definition
+###############################################################################
+
+module "migrate" {
+  source                   = "./modules/migrate"
   ecs_cluster_id           = module.ecs.cluster_id
+  task_role_arn            = module.ecs.task_role_arn
   ecs_service_iam_role_arn = module.ecs.service_iam_role_arn
-  command                  = var.web_command
+  command                  = var.migrate_command
   env_vars                 = concat(local.env_vars, var.extra_env_vars)
   image                    = local.be_image
   env                      = var.env
-  alb_default_tg_arn       = module.lb.alb_default_tg_arn
-  api_log_group_name       = "/ecs/api"
-  api_log_stream_name      = "api"
+  log_group_name           = "/ecs/migrate"
+  log_stream_name          = "migrate"
   region                   = var.region
 }

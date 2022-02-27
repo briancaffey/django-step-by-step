@@ -1,8 +1,3 @@
-variable "alb_default_tg_arn" {
-  description = "The ARN of the default target group"
-  type        = string
-}
-
 variable "app_count" {
   description = "Number of Docker containers to run"
   default     = 1

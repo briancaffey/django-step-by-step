@@ -1,4 +1,7 @@
-# ECS Security group (traffic ALB -> ECS, ssh -> ECS)
+###############################################################################
+# Security Group (traffic ALB -> ECS, ssh -> ECS)
+###############################################################################
+
 resource "aws_security_group" "this" {
   name        = "ecs_security_group"
   description = "Allows inbound access from the ALB only"
@@ -27,9 +30,10 @@ resource "aws_security_group" "this" {
 }
 
 ###############################################################################
-# IAM
+# IAM - Shared Roles and Policies for Launch Configuration, Task and Service
 ###############################################################################
 
+# assume role
 resource "aws_iam_role" "ecs_host" {
   name               = "ecs_host_role_prod"
   assume_role_policy = file("./policies/ecs-role.json")
@@ -39,6 +43,17 @@ resource "aws_iam_role_policy" "ecs_instance" {
   name   = "ecs_instance_role_policy"
   policy = file("./policies/ecs-instance-role-policy.json")
   role   = aws_iam_role.ecs_host.id
+}
+
+resource "aws_iam_role" "ecs_task" {
+  name               = "ecs_task_role"
+  assume_role_policy = file("./policies/ecs-task-role.json")
+}
+
+resource "aws_iam_role_policy" "ecs_task" {
+  name   = "ecs_task_role_policy"
+  policy = file("./policies/ecs-task-role-policy.json")
+  role   = aws_iam_role.ecs_task.id
 }
 
 resource "aws_iam_role" "ecs_service" {
@@ -59,18 +74,8 @@ resource "aws_iam_instance_profile" "this" {
 }
 
 ###############################################################################
-# CloudWatch
+# ECS & EC2
 ###############################################################################
-
-# resource "aws_cloudwatch_log_group" "django-log-group" {
-#   name              = "/ecs/django-app"
-#   retention_in_days = var.log_retention_in_days
-# }
-
-# resource "aws_cloudwatch_log_stream" "django-log-stream" {
-#   name           = "django-app-log-stream"
-#   log_group_name = aws_cloudwatch_log_group.django-log-group.name
-# }
 
 resource "aws_key_pair" "this" {
   key_name   = "${var.env}_key_pair"

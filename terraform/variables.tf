@@ -38,6 +38,11 @@ variable "be_image_tag" {
   default     = "latest"
 }
 
+variable "instance_type" {
+  description = "ECS instance type"
+  default     = "t2.micro"
+}
+
 ##############################################################################
 # Backend Application - Gunicorn, Celery, Beat, etc.
 ##############################################################################
@@ -67,7 +72,7 @@ variable "beat_command" {
   type        = list(string)
 }
 
-variable "worker_command" {
+variable "default_celery_worker_command" {
   description = "Command used to start celery worker"
   default     = ["celery", "--app=backend.celery_app:app", "worker", "--loglevel=INFO", "-Q", "default"]
   type        = list(string)
@@ -76,6 +81,12 @@ variable "worker_command" {
 variable "web_command" {
   description = "Command used to start backend web container"
   default     = ["gunicorn", "-t", "1000", "-b", "0.0.0.0:8000", "--log-level", "info", "backend.wsgi"]
+  type        = list(string)
+}
+
+variable "migrate_command" {
+  description = "Command used to run database migrations"
+  default     = ["python", "manage.py", "migrate"]
   type        = list(string)
 }
 
@@ -99,4 +110,21 @@ variable "rds_password" {
 variable "rds_instance_class" {
   description = "RDS instance type"
   default     = "db.t2.micro"
+}
+
+##############################################################################
+# ACM
+##############################################################################
+
+variable "acm_certificate_arn" {
+  description = "ACM certificate ARN"
+}
+
+##############################################################################
+# Frontend
+##############################################################################
+
+variable "frontend_url" {
+  type        = string
+  description = "Frontend URL"
 }

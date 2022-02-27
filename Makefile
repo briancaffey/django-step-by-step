@@ -457,6 +457,9 @@ tf-core-apply:
 tf-core-apply-yes:
 	cd terraform && terraform apply -auto-approve --var-file=local.tfvars
 
+tf-core-validate:
+	cd terraform && terraform validate
+
 tf-core:	tf-core-init  tf-core-plan	tf-core-apply
 
 tf-core-destroy:
