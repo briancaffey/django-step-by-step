@@ -20,7 +20,7 @@ resource "aws_ecs_task_definition" "this" {
       image = var.image
       #cpu         = 512
       memory      = 512
-      essential   = false
+      essential   = true
       links       = []
       environment = var.env_vars
       command     = var.command
