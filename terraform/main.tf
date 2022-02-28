@@ -168,6 +168,25 @@ module "default_celery_worker" {
 }
 
 ###############################################################################
+# Celery Beat
+###############################################################################
+
+module "celery_beat" {
+  source                   = "./modules/celery_beat"
+  name                     = "beat"
+  ecs_cluster_id           = module.ecs.cluster_id
+  task_role_arn            = module.ecs.task_role_arn
+  ecs_service_iam_role_arn = module.ecs.service_iam_role_arn
+  command                  = var.celery_beat_command
+  env_vars                 = concat(local.env_vars, var.extra_env_vars)
+  image                    = local.be_image
+  env                      = var.env
+  log_group_name           = "/ecs/celery-beat"
+  log_stream_name          = "celery-beat"
+  region                   = var.region
+}
+
+###############################################################################
 # Migrate - Database Migrate Task Definition
 ###############################################################################
 

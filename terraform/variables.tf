@@ -80,8 +80,8 @@ variable "web_container_name" {
   default = "web"
 }
 
-variable "beat_command" {
-  default     = ["celery", "--app=backend.celery_app:app", "beat", "--loglevel=INFO", "-Q", "default"]
+variable "celery_beat_command" {
+  default     = ["celery", "--app=backend.celery_app:app", "beat", "--loglevel=INFO"]
   description = "Command used to start celery beat"
   type        = list(string)
 }
