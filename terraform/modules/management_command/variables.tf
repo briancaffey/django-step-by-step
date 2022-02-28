@@ -38,6 +38,11 @@ variable "image" {
   description = "Container image from ECS to run"
 }
 
+variable "name" {
+  type        = string
+  description = "Name of the container"
+}
+
 variable "log_group_name" {
   type        = string
   description = "Name of the CloudWatch Logs group"
@@ -58,3 +63,4 @@ variable "region" {
   description = "AWS region"
   type        = string
 }
+

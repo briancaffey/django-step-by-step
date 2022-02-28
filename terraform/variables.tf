@@ -104,6 +104,12 @@ variable "migrate_command" {
   type        = list(string)
 }
 
+variable "collectstatic_command" {
+  description = "Command used to run the collectstatic command"
+  default     = ["python", "manage.py", "collectstatic", "--noinput"]
+  type        = list(string)
+}
+
 ##############################################################################
 # RDS
 ##############################################################################

@@ -35,8 +35,8 @@ module "lb" {
 ###############################################################################
 
 module "s3" {
-  source      = "./modules/s3"
-  bucket_name = "${replace(var.record_name, ".", "-")}-${var.env}-bucket"
+  source        = "./modules/s3"
+  bucket_name   = "${replace(var.record_name, ".", "-")}-${var.env}-bucket"
   force_destroy = var.force_destroy
 }
 
@@ -171,7 +171,8 @@ module "api" {
 ###############################################################################
 
 module "migrate" {
-  source                   = "./modules/migrate"
+  name                     = "migrate"
+  source                   = "./modules/management_command"
   ecs_cluster_id           = module.ecs.cluster_id
   task_role_arn            = module.ecs.task_role_arn
   ecs_service_iam_role_arn = module.ecs.service_iam_role_arn
@@ -181,5 +182,24 @@ module "migrate" {
   env                      = var.env
   log_group_name           = "/ecs/migrate"
   log_stream_name          = "migrate"
+  region                   = var.region
+}
+
+###############################################################################
+# collectstatic - collectstatic task
+###############################################################################
+
+module "collectstatic" {
+  name                     = "collectstatic"
+  source                   = "./modules/management_command"
+  ecs_cluster_id           = module.ecs.cluster_id
+  task_role_arn            = module.ecs.task_role_arn
+  ecs_service_iam_role_arn = module.ecs.service_iam_role_arn
+  command                  = var.collectstatic_command
+  env_vars                 = concat(local.env_vars, var.extra_env_vars)
+  image                    = local.be_image
+  env                      = var.env
+  log_group_name           = "/ecs/collectstatic"
+  log_stream_name          = "collectstatic"
   region                   = var.region
 }

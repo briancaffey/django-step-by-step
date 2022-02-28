@@ -1,7 +1,3 @@
-locals {
-  name = "migrate"
-}
-
 resource "aws_cloudwatch_log_group" "this" {
   name              = var.log_group_name
   retention_in_days = var.log_retention_in_days
@@ -13,10 +9,10 @@ resource "aws_cloudwatch_log_stream" "this" {
 }
 
 resource "aws_ecs_task_definition" "this" {
-  family = "${var.env}-migrate"
+  family = "${var.env}-${var.name}"
   container_definitions = jsonencode([
     {
-      name  = local.name
+      name  = var.name
       image = var.image
       #cpu         = 512
       memory      = 512
