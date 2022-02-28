@@ -31,6 +31,16 @@ module "lb" {
 }
 
 ###############################################################################
+# S3 - TODO add S3 bucket resource for app assets
+###############################################################################
+
+module "s3" {
+  source      = "./modules/s3"
+  bucket_name = "${replace(var.record_name, ".", "-")}-${var.env}-bucket"
+  force_destroy = var.force_destroy
+}
+
+###############################################################################
 # ECS - ECS Cluster, EC2 Instances, ASG, Launch Configurations
 ###############################################################################
 
@@ -47,11 +57,6 @@ module "ecs" {
   autoscale_min     = 1
   autoscale_max     = 1
 }
-
-###############################################################################
-# S3 - TODO add S3 bucket resource for app assets
-###############################################################################
-
 
 ###############################################################################
 # RDS
@@ -113,7 +118,7 @@ locals {
     {
       name = "S3_BUCKET_NAME"
       #TODO change this
-      value = "my-bucket"
+      value = module.s3.bucket_name
     },
     {
       name  = "FRONTEND_URL"

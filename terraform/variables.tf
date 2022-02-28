@@ -142,3 +142,13 @@ variable "frontend_url" {
   type        = string
   description = "Frontend URL"
 }
+
+##############################################################################
+# S3
+##############################################################################
+
+variable "force_destroy" {
+  description = "Force destroy of S3 bucket"
+  default     = false
+  type        = bool
+}
