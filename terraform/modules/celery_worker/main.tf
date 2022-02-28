@@ -1,7 +1,3 @@
-locals {
-  name = "default_celery_worker"
-}
-
 resource "aws_cloudwatch_log_group" "this" {
   name              = var.log_group_name
   retention_in_days = var.log_retention_in_days
@@ -13,10 +9,10 @@ resource "aws_cloudwatch_log_stream" "this" {
 }
 
 resource "aws_ecs_task_definition" "this" {
-  family = "${var.env}-default-celery-worker"
+  family = "${var.env}-${var.name}"
   container_definitions = jsonencode([
     {
-      name  = local.name
+      name  = var.name
       image = var.image
       #cpu         = 512
       memory      = 512
@@ -38,7 +34,7 @@ resource "aws_ecs_task_definition" "this" {
 }
 
 resource "aws_ecs_service" "this" {
-  name            = "${var.env}_${local.name}"
+  name            = "${var.env}_${var.name}"
   cluster         = var.ecs_cluster_id
   task_definition = aws_ecs_task_definition.this.arn
   desired_count   = var.app_count

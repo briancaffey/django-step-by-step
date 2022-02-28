@@ -23,6 +23,11 @@ variable "env" {
   type        = string
 }
 
+variable "name" {
+  description = "Name"
+  type        = string
+}
+
 variable "command" {
   type        = list(string)
   description = "Command to run in Docker container"

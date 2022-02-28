@@ -149,22 +149,23 @@ module "api" {
 }
 
 ###############################################################################
-# Celery Default Worker
+# Celery - Default Worker
 ###############################################################################
 
-# module "celery_default_worker" {
-#   source                   = "./modules/default_celery_worker"
-#   ecs_cluster_id           = module.ecs.cluster_id
-#   task_role_arn            = module.ecs.task_role_arn
-#   ecs_service_iam_role_arn = module.ecs.service_iam_role_arn
-#   command                  = var.default_celery_worker_command
-#   env_vars                 = concat(local.env_vars, var.extra_env_vars)
-#   image                    = local.be_image
-#   env                      = var.env
-#   log_group_name           = "/ecs/celery-default-worker"
-#   log_stream_name          = "celery-default-worker"
-#   region                   = var.region
-# }
+module "default_celery_worker" {
+  source                   = "./modules/celery_worker"
+  name                     = "default"
+  ecs_cluster_id           = module.ecs.cluster_id
+  task_role_arn            = module.ecs.task_role_arn
+  ecs_service_iam_role_arn = module.ecs.service_iam_role_arn
+  command                  = var.default_celery_worker_command
+  env_vars                 = concat(local.env_vars, var.extra_env_vars)
+  image                    = local.be_image
+  env                      = var.env
+  log_group_name           = "/ecs/celery-default-worker"
+  log_stream_name          = "celery-default-worker"
+  region                   = var.region
+}
 
 ###############################################################################
 # Migrate - Database Migrate Task Definition
