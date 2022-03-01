@@ -460,6 +460,9 @@ tf-core-apply-yes:
 tf-core-validate:
 	cd terraform && terraform validate
 
+tf-core-output-json:
+	cd terraform && terraform output -json
+
 tf-core:	tf-core-init  tf-core-plan	tf-core-apply
 
 tf-core-destroy:

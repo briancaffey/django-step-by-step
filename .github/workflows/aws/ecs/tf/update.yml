@@ -1,0 +1,29 @@
+# a github action to update the backend application
+name: build, push and deploy new version of the backend application
+
+on:
+  push:
+    tags:
+      - 'aws/ecs/tf/v*'
+
+jobs:
+  deploy:
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+    name: "Update ECS backend application"
+    environment: terraform-aws-ecs
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: "Git version info"
+        id: git_version_info
+        run: |
+          echo "testing.."
