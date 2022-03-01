@@ -1,4 +1,4 @@
-# a github action to update the backend application
+# github action to update the backend application
 name: build, push and deploy new version of the backend application
 
 on:
