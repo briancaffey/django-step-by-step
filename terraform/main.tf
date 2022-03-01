@@ -117,14 +117,12 @@ locals {
     },
     {
       name = "S3_BUCKET_NAME"
-      #TODO change this
       value = module.s3.bucket_name
     },
     {
       name  = "FRONTEND_URL"
       value = var.frontend_url
     }
-    # "S3_BUCKET" = module.s3.bucket TODO: Add this
   ]
   be_image = "${var.ecr_be_repo_url}:${var.be_image_tag}"
 }
