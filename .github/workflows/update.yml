@@ -7,7 +7,7 @@ on:
       - 'aws/ecs/tf/v*'
 
 jobs:
-  deploy:
+  build_and_push:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -26,4 +26,21 @@ jobs:
       - name: "Git version info"
         id: git_version_info
         run: |
+          echo ${GITHUB_REF##*/}
           echo "testing.."
+
+      - name: "terraform init"
+        id: terraform_init
+        env:
+          TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
+          TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
+          TF_BACKEND_REGION: ${{ secrets.TF_BACKEND_REGION }}
+
+        run: |
+          cd terraform
+          terraform init \
+            -backend-config="bucket=${TF_BACKEND_BUCKET}" \
+            -backend-config="key=${TF_BACKEND_KEY}" \
+            -backend-config="region=${TF_BACKEND_REGION}"
+
+          terraform output -json
