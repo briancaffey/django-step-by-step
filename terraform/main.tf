@@ -136,7 +136,7 @@ module "api" {
   ecs_cluster_id           = module.ecs.cluster_id
   task_role_arn            = module.ecs.task_role_arn
   ecs_service_iam_role_arn = module.ecs.service_iam_role_arn
-  command                  = var.web_command
+  command                  = var.api_command
   env_vars                 = concat(local.env_vars, var.extra_env_vars)
   image                    = local.be_image
   env                      = var.env
@@ -144,6 +144,8 @@ module "api" {
   log_group_name           = "/ecs/api"
   log_stream_name          = "api"
   region                   = var.region
+  cpu                      = var.api_cpu
+  memory                   = var.api_memory
 }
 
 ###############################################################################
@@ -163,6 +165,8 @@ module "default_celery_worker" {
   log_group_name           = "/ecs/celery-default-worker"
   log_stream_name          = "celery-default-worker"
   region                   = var.region
+  cpu                      = var.default_celery_worker_cpu
+  memory                   = var.default_celery_worker_memory
 }
 
 ###############################################################################
@@ -182,6 +186,8 @@ module "celery_beat" {
   log_group_name           = "/ecs/celery-beat"
   log_stream_name          = "celery-beat"
   region                   = var.region
+  cpu                      = var.celery_beat_cpu
+  memory                   = var.celery_beat_memory
 }
 
 ###############################################################################
@@ -201,6 +207,8 @@ module "migrate" {
   log_group_name           = "/ecs/migrate"
   log_stream_name          = "migrate"
   region                   = var.region
+  cpu                      = var.migrate_cpu
+  memory                   = var.migrate_memory
 }
 
 ###############################################################################
@@ -220,4 +228,6 @@ module "collectstatic" {
   log_group_name           = "/ecs/collectstatic"
   log_stream_name          = "collectstatic"
   region                   = var.region
+  cpu                      = var.collectstatic_cpu
+  memory                   = var.collectstatic_memory
 }

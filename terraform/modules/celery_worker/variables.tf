@@ -63,3 +63,15 @@ variable "region" {
   description = "AWS region"
   type        = string
 }
+
+variable "cpu" {
+  default     = null
+  description = "CPU to allocate to container"
+  type        = number
+}
+
+variable "memory" {
+  default     = null
+  description = "Amount (in MiB) of memory used by the task"
+  type        = number
+}

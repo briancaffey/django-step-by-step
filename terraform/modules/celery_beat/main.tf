@@ -14,8 +14,8 @@ resource "aws_ecs_task_definition" "this" {
     {
       name  = var.name
       image = var.image
-      #cpu         = 512
-      memory      = 512
+      cpu         = var.cpu
+      memory      = var.memory
       essential   = true
       links       = []
       user        = "root" # needed to fix [Errno 13] Permission denied: 'celerybeat-schedule'

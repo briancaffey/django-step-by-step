@@ -32,13 +32,10 @@ resource "aws_elasticache_replication_group" "this" {
   port                       = 6379
   engine                     = "redis"
   engine_version             = "5.0.6"
-  parameter_group_name       = "default.redis5.0"
+  parameter_group_name       = "default.redis5.0" # default.redis5.0.cluster.on
   num_cache_clusters         = 3
   subnet_group_name          = aws_elasticache_subnet_group.this.name
   security_group_ids         = [aws_security_group.redis.id]
-  lifecycle {
-    ignore_changes = [number_cache_clusters]
-  }
 }
 
 resource "aws_elasticache_cluster" "elasticache" {

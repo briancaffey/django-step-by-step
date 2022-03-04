@@ -1,11 +1,11 @@
 output "s3_backend_bucket" {
-  value = aws_s3_bucket.terraform-state-backend-s3.id
+  value = aws_s3_bucket.this.id
 }
 output "s3_backend_region" {
-  value = aws_s3_bucket.terraform-state-backend-s3.region
+  value = aws_s3_bucket.this.region
 }
 output "dynamodb_lock_table" {
-  value = aws_dynamodb_table.dynamodb-terraform-state-lock.id
+  value = aws_dynamodb_table.this.id
 }
 
 output "ecr_be_repo_url" {
@@ -17,7 +17,7 @@ output "ecr_be_repo_url" {
 ################################################################################
 
 output "bucket" {
-  value = aws_s3_bucket.terraform-state-backend-s3.id
+  value = aws_s3_bucket.this.id
 }
 
 output "key" {

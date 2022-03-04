@@ -14,7 +14,7 @@ provider "aws" {
 }
 
 # S3 bucket for storing state file
-resource "aws_s3_bucket" "terraform-state-backend-s3" {
+resource "aws_s3_bucket" "this" {
   bucket = "${var.backend_name}-bucket"
   versioning {
     enabled = true
@@ -26,7 +26,7 @@ resource "aws_s3_bucket" "terraform-state-backend-s3" {
 }
 
 # DynamoDB table for locking the state file
-resource "aws_dynamodb_table" "dynamodb-terraform-state-lock" {
+resource "aws_dynamodb_table" "this" {
   name           = "${var.backend_name}-lock-table"
   hash_key       = "LockID"
   read_capacity  = 20
@@ -43,7 +43,7 @@ resource "aws_dynamodb_table" "dynamodb-terraform-state-lock" {
 }
 
 # ECR repository for the backend web app
-resource "aws_ecr_repository" "backend-ecr-repo" {
+resource "aws_ecr_repository" "this" {
   name                 = "backend"
   image_tag_mutability = "MUTABLE"
 
