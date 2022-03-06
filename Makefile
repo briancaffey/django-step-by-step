@@ -424,6 +424,10 @@ tf-fmt:
 tf-bootstrap-init:
 	cd terraform/bootstrap && terraform init --var-file=bootstrap.tfvars
 
+## initialize terraform for the backend
+tf-bootstrap-init-upgrade:
+	cd terraform/bootstrap && terraform init -upgrade --var-file=bootstrap.tfvars
+
 ## plan terraform S3 backend configuration
 tf-bootstrap-plan:
 	cd terraform/bootstrap && terraform plan --var-file=bootstrap.tfvars
@@ -434,6 +438,10 @@ tf-bootstrap-apply:
 
 ## init, plan and apply terraform backend configuration
 tf-bootstrap:	tf-bootstrap-init	tf-bootstrap-plan	tf-bootstrap-apply
+
+## destroy terraform backend and ecr resources
+tf-bootstrap-destroy:
+	cd terraform/bootstrap && terraform destroy --var-file=bootstrap.tfvars
 
 ## write the backend configuration outputs to terraform/backend.tfvars
 tf-bootstrap-output:
@@ -461,12 +469,15 @@ tf-core-validate:
 	cd terraform && terraform validate
 
 tf-core-output-json:
-	cd terraform && terraform output -json
+	@cd terraform && terraform output -json
 
 tf-core:	tf-core-init  tf-core-plan	tf-core-apply
 
 tf-core-destroy:
 	cd terraform && terraform destroy --var-file=local.tfvars
+
+tf-core-destroy-yes:
+	cd terraform && terraform destroy -auto-approve --var-file=local.tfvars
 
 # Credit: https://gist.github.com/prwhite/8168133#gistcomment-2749866
 ## Show this help menu

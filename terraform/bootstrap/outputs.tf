@@ -8,8 +8,14 @@ output "dynamodb_lock_table" {
   value = aws_dynamodb_table.this.id
 }
 
+# ECR
+
 output "ecr_be_repo_url" {
-  value = aws_ecr_repository.backend-ecr-repo.repository_url
+  value = aws_ecr_repository.backend.repository_url
+}
+
+output "ecr_fe_repo_url" {
+  value = aws_ecr_repository.frontend.repository_url
 }
 
 ################################################################################

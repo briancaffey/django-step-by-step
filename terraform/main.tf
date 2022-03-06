@@ -116,7 +116,7 @@ locals {
       value = var.django_settings_module
     },
     {
-      name = "S3_BUCKET_NAME"
+      name  = "S3_BUCKET_NAME"
       value = module.s3.bucket_name
     },
     {
@@ -125,6 +125,35 @@ locals {
     }
   ]
   be_image = "${var.ecr_be_repo_url}:${var.be_image_tag}"
+  fe_image = "${var.ecr_fe_repo_url}:${var.fe_image_tag}"
+}
+
+###############################################################################
+# Frontend ECS Service
+###############################################################################
+
+module "web-ui" {
+  source                   = "./modules/api"
+  name                     = "web-ui"
+  ecs_cluster_id           = module.ecs.cluster_id
+  task_role_arn            = module.ecs.task_role_arn
+  ecs_service_iam_role_arn = module.ecs.service_iam_role_arn
+  command                  = var.frontend_command
+  env_vars                 = []
+  image                    = local.fe_image
+  env                      = var.env
+  alb_default_tg_arn       = module.lb.alb_default_tg_arn
+  log_group_name           = "/ecs/web-ui"
+  log_stream_name          = "web-ui"
+  region                   = var.region
+  cpu                      = var.api_cpu
+  memory                   = var.api_memory
+  port                     = 80
+  path_patterns            = ["/*"]
+  health_check_path        = "/"
+  listener_arn             = module.lb.listener_arn
+  vpc_id                   = module.vpc.vpc_id
+  priority                 = 2
 }
 
 ###############################################################################
@@ -133,6 +162,7 @@ locals {
 
 module "api" {
   source                   = "./modules/api"
+  name                     = "gunicorn"
   ecs_cluster_id           = module.ecs.cluster_id
   task_role_arn            = module.ecs.task_role_arn
   ecs_service_iam_role_arn = module.ecs.service_iam_role_arn
@@ -146,6 +176,12 @@ module "api" {
   region                   = var.region
   cpu                      = var.api_cpu
   memory                   = var.api_memory
+  port                     = 8000
+  path_patterns            = ["/api/*", "/admin/*", "/graphql/*", "/mtv/*"]
+  health_check_path        = "/api/health-check/"
+  listener_arn             = module.lb.listener_arn
+  vpc_id                   = module.vpc.vpc_id
+  priority                 = 1
 }
 
 ###############################################################################

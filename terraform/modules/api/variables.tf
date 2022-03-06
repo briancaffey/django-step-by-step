@@ -29,6 +29,7 @@ variable "env" {
 }
 
 variable "command" {
+  default     = null
   type        = list(string)
   description = "Command to run in Docker container"
 }
@@ -74,4 +75,42 @@ variable "memory" {
   default     = null
   description = "Amount (in MiB) of memory used by the task"
   type        = number
+}
+
+variable "name" {
+  description = "Name to use for the service and task"
+  type        = string
+}
+
+variable "port" {
+  default     = 80
+  description = "Port to expose on the container"
+  type        = number
+}
+
+variable "priority" {
+  description = "Priority for the listener rule"
+  type        = number
+}
+
+
+variable "path_patterns" {
+  description = "Path patterns to match"
+  type        = list(string)
+}
+
+variable "listener_arn" {
+  description = "Listener ARN"
+  type        = string
+}
+
+variable "vpc_id" {
+  description = "VPC ID"
+  type        = string
+}
+
+variable "health_check_path" {
+  description = "Path to check for health"
+  default     = "/"
+  type        = string
 }

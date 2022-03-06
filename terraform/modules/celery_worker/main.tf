@@ -12,8 +12,8 @@ resource "aws_ecs_task_definition" "this" {
   family = "${var.env}-${var.name}"
   container_definitions = jsonencode([
     {
-      name  = var.name
-      image = var.image
+      name        = var.name
+      image       = var.image
       cpu         = var.cpu
       memory      = var.memory
       essential   = true

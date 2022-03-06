@@ -8,7 +8,7 @@ aws ecr get-login-password --region us-east-1 | docker login --username AWS --pa
 
 docker build -t backend ./backend
 
-docker tag backend:latest $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/backend:$IMAGE_TAG
+docker tag backend:$IMAGE_TAG $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/backend:$IMAGE_TAG
 
-docker push $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/backend:latest
+docker push $ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/backend:$IMAGE_TAG
 

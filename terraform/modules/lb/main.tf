@@ -1,7 +1,3 @@
-##########################################
-# LB - Security Group
-##########################################
-
 resource "aws_security_group" "this" {
   name        = "load_balancer_security_group"
   description = "Controls access to the ALB"
@@ -29,10 +25,6 @@ resource "aws_security_group" "this" {
   }
 }
 
-################
-# ALB
-################
-
 resource "aws_lb" "this" {
   name               = "${var.env}-alb"
   load_balancer_type = "application"
@@ -45,7 +37,6 @@ resource "aws_lb" "this" {
   }
 }
 
-# Target group
 resource "aws_alb_target_group" "default" {
   name     = "${var.env}-default-tg"
   port     = 80
@@ -63,16 +54,20 @@ resource "aws_alb_target_group" "default" {
   }
 }
 
-# Listener (redirects traffic from the load balancer to the target group)
-resource "aws_alb_listener" "ecs-alb-http-listener" {
+resource "aws_alb_listener" "http" {
   load_balancer_arn = aws_lb.this.id
   port              = "80"
   protocol          = "HTTP"
   depends_on        = [aws_alb_target_group.default]
 
   default_action {
-    type             = "forward"
-    target_group_arn = aws_alb_target_group.default.arn
+    type = "redirect"
+
+    redirect {
+      port        = "443"
+      protocol    = "HTTPS"
+      status_code = "HTTP_301"
+    }
   }
 }
 
@@ -85,7 +80,12 @@ resource "aws_alb_listener" "https" {
   depends_on        = [aws_alb_target_group.default]
 
   default_action {
-    type             = "forward"
-    target_group_arn = aws_alb_target_group.default.arn
+    type = "fixed-response"
+
+    fixed_response {
+      content_type = "text/plain"
+      message_body = "Fixed response content"
+      status_code  = "200"
+    }
   }
 }

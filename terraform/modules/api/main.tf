@@ -1,7 +1,3 @@
-locals {
-  name = "api"
-}
-
 resource "aws_cloudwatch_log_group" "this" {
   name              = var.log_group_name
   retention_in_days = var.log_retention_in_days
@@ -13,11 +9,11 @@ resource "aws_cloudwatch_log_stream" "this" {
 }
 
 resource "aws_ecs_task_definition" "this" {
-  family = "${var.env}-api"
+  family = "${var.env}-${var.name}"
   container_definitions = jsonencode([
     {
-      name  = local.name
-      image = var.image
+      name        = var.name
+      image       = var.image
       cpu         = var.cpu
       memory      = var.memory
       essential   = true
@@ -34,7 +30,7 @@ resource "aws_ecs_task_definition" "this" {
       }
       portMappings = [
         {
-          containerPort = 8000
+          containerPort = var.port
           hostPort      = 0
           protocol      = "tcp"
         }
@@ -45,18 +41,55 @@ resource "aws_ecs_task_definition" "this" {
 }
 
 resource "aws_ecs_service" "this" {
-  name            = "${var.env}-api"
+  name            = "${var.env}-${var.name}"
   cluster         = var.ecs_cluster_id
   task_definition = aws_ecs_task_definition.this.arn
-  iam_role        = var.ecs_service_iam_role_arn # aws_iam_role.ecs_service.arn # change
+  iam_role        = var.ecs_service_iam_role_arn
   desired_count   = var.app_count
 
-  # TODO move depends on to module ?
-  # depends_on      = [aws_alb_listener.ecs-alb-http-listener, aws_iam_role_policy.ecs-service-role-policy]
-
   load_balancer {
-    target_group_arn = var.alb_default_tg_arn # change
-    container_name   = local.name
-    container_port   = 8000
+    target_group_arn = aws_lb_target_group.this.arn
+    container_name   = var.name
+    container_port   = var.port
+  }
+}
+
+resource "aws_lb_target_group" "this" {
+  port        = var.port
+  protocol    = "HTTP"
+  vpc_id      = var.vpc_id
+
+  health_check {
+    healthy_threshold   = "5"
+    unhealthy_threshold = "2"
+    interval            = "120"
+    matcher             = "200-399"
+    path                = var.health_check_path
+    port                = "traffic-port"
+    protocol            = "HTTP"
+    timeout             = "5"
+  }
+  tags = {
+    Name = "${var.env}-${var.name}-tg" #* https://github.com/hashicorp/terraform-provider-aws/issues/636#issuecomment-397459646
+  }
+
+  lifecycle {
+    create_before_destroy = true
+  }
+
+}
+
+resource "aws_lb_listener_rule" "this" {
+  listener_arn = var.listener_arn
+  priority     = var.priority
+
+  condition {
+    path_pattern {
+      values = var.path_patterns
+    }
+  }
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.this.arn
   }
 }

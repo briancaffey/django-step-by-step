@@ -52,6 +52,15 @@ variable "be_image_tag" {
   default     = "latest"
 }
 
+variable "ecr_fe_repo_url" {
+  description = "URL of the ECR repository that contains the frontend image. Take from output value of bootstrap"
+}
+
+variable "fe_image_tag" {
+  description = "Image tag to use in frontend container definitions"
+  default     = "latest"
+}
+
 variable "instance_type" {
   description = "ECS instance type"
   default     = "t3.small"
@@ -76,6 +85,26 @@ variable "s3_bucket_name" {
 variable "django_settings_module" {
   description = "Django settings module"
   default     = "backend.settings.production"
+}
+
+# frontend
+
+variable "frontend_command" {
+  description = "Command to run in the frontend container"
+  default     = ["nginx", "-g", "daemon off;"]
+  type        = list(string)
+}
+
+variable "frontend_cpu" {
+  default     = null
+  description = "CPU to allocate to container for the frontend task"
+  type        = number
+}
+
+variable "frontend_memory" {
+  default     = 128
+  description = "Amount (in MiB) of memory used by the frontend task"
+  type        = number
 }
 
 # Celery beat
@@ -216,6 +245,8 @@ variable "frontend_url" {
   type        = string
   description = "Frontend URL"
 }
+
+
 
 ##############################################################################
 # S3
