@@ -55,9 +55,9 @@ resource "aws_ecs_service" "this" {
 }
 
 resource "aws_lb_target_group" "this" {
-  port        = var.port
-  protocol    = "HTTP"
-  vpc_id      = var.vpc_id
+  port     = var.port
+  protocol = "HTTP"
+  vpc_id   = var.vpc_id
 
   health_check {
     healthy_threshold   = "5"
