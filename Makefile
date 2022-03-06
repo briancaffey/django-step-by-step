@@ -414,6 +414,71 @@ raspi-destroy:
 k6-run-docker:
 	@docker run -i --platform=linux/amd64 loadimpact/k6 run - <k6/script.js
 
+## -- Terraform Targets --
+
+## Format terraform files
+tf-fmt:
+	cd terraform && terraform fmt -recursive
+
+## initialize terraform for the backend
+tf-bootstrap-init:
+	cd terraform/bootstrap && terraform init --var-file=bootstrap.tfvars
+
+## initialize terraform for the backend
+tf-bootstrap-init-upgrade:
+	cd terraform/bootstrap && terraform init -upgrade --var-file=bootstrap.tfvars
+
+## plan terraform S3 backend configuration
+tf-bootstrap-plan:
+	cd terraform/bootstrap && terraform plan --var-file=bootstrap.tfvars
+
+## apply terraform S3 backend configuration
+tf-bootstrap-apply:
+	cd terraform/bootstrap && terraform apply --var-file=bootstrap.tfvars
+
+## init, plan and apply terraform backend configuration
+tf-bootstrap:	tf-bootstrap-init	tf-bootstrap-plan	tf-bootstrap-apply
+
+## destroy terraform backend and ecr resources
+tf-bootstrap-destroy:
+	cd terraform/bootstrap && terraform destroy --var-file=bootstrap.tfvars
+
+## write the backend configuration outputs to terraform/backend.tfvars
+tf-bootstrap-output:
+	cd terraform/bootstrap && terraform output > ../local.tfvars
+	cd terraform/bootstrap && terraform output > ../backend.config
+  # cd terraform/bootstrap && terraform output -json > local.tfvars
+
+# TODO: move main terraform config files to core directory?
+tf-core-init:
+	cd terraform && terraform init --backend-config=backend.config --var-file=local.tfvars
+
+tf-core-init-upgrade:
+	cd terraform && terraform init -upgrade --backend-config=backend.config --var-file=local.tfvars
+
+tf-core-plan:
+	cd terraform && terraform plan --var-file=local.tfvars
+
+tf-core-apply:
+	cd terraform && terraform apply --var-file=local.tfvars
+
+tf-core-apply-yes:
+	cd terraform && terraform apply -auto-approve --var-file=local.tfvars
+
+tf-core-validate:
+	cd terraform && terraform validate
+
+tf-core-output-json:
+	@cd terraform && terraform output -json
+
+tf-core:	tf-core-init  tf-core-plan	tf-core-apply
+
+tf-core-destroy:
+	cd terraform && terraform destroy --var-file=local.tfvars
+
+tf-core-destroy-yes:
+	cd terraform && terraform destroy -auto-approve --var-file=local.tfvars
+
 # Credit: https://gist.github.com/prwhite/8168133#gistcomment-2749866
 ## Show this help menu
 help:
