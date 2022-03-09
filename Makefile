@@ -479,6 +479,15 @@ tf-core-destroy:
 tf-core-destroy-yes:
 	cd terraform && terraform destroy -auto-approve --var-file=local.tfvars
 
+tf-dev-init:
+	terraform -chdir=terraform/live/dev init -backend-config=backend.config
+
+tf-dev-plan:
+	terraform -chdir=terraform/live/dev plan
+
+tf-dev-apply:
+	terraform -chdir=terraform/live/dev apply
+
 # Credit: https://gist.github.com/prwhite/8168133#gistcomment-2749866
 ## Show this help menu
 help:

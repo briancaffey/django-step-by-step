@@ -1,0 +1,6 @@
+# to deploy a development environment from your computer,
+# copy this file to `backend.config` (it is .gitignore'd)
+
+bucket = "your-tf-bucket"
+key = "terraform-state"
+region = "us-east-1"
