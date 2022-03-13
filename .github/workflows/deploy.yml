@@ -4,7 +4,7 @@ name: build, test, push images and docker stack deploy to docker swarm
 on:
   push:
     tags:
-      - 'v*'
+      - 'cdk/v*'
 
 jobs:
   deploy:
