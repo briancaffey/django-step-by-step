@@ -30,6 +30,8 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
 
       - name: "terraform init, plan and apply"
         id: terraform_init
