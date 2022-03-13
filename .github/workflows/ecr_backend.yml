@@ -16,18 +16,16 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
       AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-    name: "Update ECS backend application"
+    name: "Build backend image from git tag"
     environment: terraform-aws-ecs
     runs-on: ubuntu-latest
 
     steps:
 
       - uses: actions/checkout@v2
-        env:
-          GIT_TAG: ${{ github.event.inputs.git_tag }}
         with:
           fetch-depth: 0
-          ref: $GIT_TAG
+          ref: ${{ github.event.inputs.git_tag }}
 
 
       - name: "Build Backend Docker Container"
