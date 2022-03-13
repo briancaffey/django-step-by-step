@@ -1,5 +1,5 @@
 # github action to update the backend application
-name: build, push and deploy new version of the backend application
+name: terraform init, plan, apply
 
 on:
   workflow_dispatch:
