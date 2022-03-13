@@ -1,4 +1,4 @@
-name: Backend Image Build and Push to ECR
+name: Frontend Image Build and Push to ECR
 
 on:
   workflow_dispatch:
@@ -11,7 +11,7 @@ on:
 
 jobs:
   build_and_push:
-    name: "Build backend image from git tag"
+    name: "Build frontend image from git tag"
     environment: terraform-aws-ecs
     runs-on: ubuntu-latest
 
@@ -33,15 +33,15 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: "Build Backend Docker Container"
+      - name: "Build Frontend Docker Container"
         env:
           SOURCE_TAG: ${{ github.event.inputs.git_tag }}
-          BACKEND_IMAGE_URI: ${{ secrets.BACKEND_IMAGE_URI }}
+          FRONTEND_IMAGE_URI: ${{ secrets.FRONTEND_IMAGE_URI }}
 
         run: |
           docker build \
-            --build-arg SOURCE_TAG=$SOURCE_TAG \
-            -t $BACKEND_IMAGE_URI:$SOURCE_TAG \
-            ./backend
+            -t $FRONTEND_IMAGE_URI:$SOURCE_TAG \
+            -f nginx/prod/Dockerfile \
+            .
 
-          docker push $BACKEND_IMAGE_URI:$SOURCE_TAG
+          docker push $FRONTEND_IMAGE_URI:$SOURCE_TAG
