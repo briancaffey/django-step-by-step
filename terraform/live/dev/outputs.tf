@@ -1,19 +1,11 @@
-output "migrate_command" {
-  value = "aws ecs run-task --cluster ${module.ecs.cluster_arn} --task-definition ${module.migrate.task_arn}"
-}
-
-output "collectstatic_command" {
-  value = "aws ecs run-task --cluster ${module.ecs.cluster_arn} --task-definition ${module.collectstatic.task_arn}"
-}
-
-output "app_url" {
-  value = "https://${module.route53.record_name}"
-}
-
 output "migrate_script" {
-  value = module.migrate.task_execution_command
+  value = module.main.migrate_script
 }
 
 output "collectstatic_script" {
-  value = module.collectstatic.task_execution_command
+  value = module.main.collectstatic_script
+}
+
+output "app_url" {
+  value = module.main.app_url
 }
