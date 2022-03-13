@@ -61,6 +61,7 @@ jobs:
 
           terraform -chdir=terraform/live/dev \
             plan \
+            - -no-color \
             -var-file=${TF_WORKSPACE}.tfvars
 
           terraform -chdir=terraform/live/dev \
