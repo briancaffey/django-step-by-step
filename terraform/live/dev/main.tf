@@ -27,5 +27,5 @@ module "main" {
   zone_name           = var.zone_name
   record_name         = var.record_name
   force_destroy       = true
-  extra_env_vars = var.extra_env_vars
+  extra_env_vars      = []
 }

@@ -1,5 +1,5 @@
-region              = "us-east-1"
-instance_type       = "t2.small"
+region        = "us-east-1"
+instance_type = "t2.small"
 
 # additional required variables are defined with TF_VAR_
 # variables and used in GitHub Actions workflow
