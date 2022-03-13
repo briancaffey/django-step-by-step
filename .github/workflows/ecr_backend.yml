@@ -27,6 +27,9 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.inputs.git_tag }}
 
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
       - name: "Build Backend Docker Container"
         env:
@@ -34,11 +37,11 @@ jobs:
           BACKEND_IMAGE_URI: ${{ secrets.BACKEND_IMAGE_URI }}
 
         run: |
-          aws ecr get-login-password \
-            --region us-east-1 \
-            | docker login \
-            --username AWS \
-            --password-stdin $BACKEND_IMAGE_URI
+          # aws ecr get-login-password \
+          #   --region us-east-1 \
+          #   | docker login \
+          #   --username AWS \
+          #   --password-stdin $BACKEND_IMAGE_URI
 
           docker build \
             --build-arg SOURCE_TAG=$SOURCE_TAG \
