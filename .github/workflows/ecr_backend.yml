@@ -1,0 +1,52 @@
+name: Build and push a backend image from a provided git tag
+
+on:
+  workflow_dispatch:
+    inputs:
+      git_tag:
+        description: 'Git tag to deploy'
+        required: true
+        default: 'latest'
+        type: string
+
+jobs:
+  build_and_push:
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+      AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+    name: "Update ECS backend application"
+    environment: terraform-aws-ecs
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v2
+        env:
+          GIT_TAG: ${{ github.event.inputs.git_tag }}
+        with:
+          fetch-depth: 0
+          ref: $GIT_TAG
+
+
+      - name: "Build Backend Docker Container"
+        env:
+          SOURCE_TAG: ${{ github.event.inputs.git_tag }}
+          BACKEND_IMAGE_URI: ${{ steps.stack_outputs.outputs.BACKEND_REPOSITORY_URI }}
+
+        run: |
+          aws ecr get-login-password \
+            --region us-east-1 \
+            | docker login \
+            --username AWS \
+            --password-stdin $BACKEND_IMAGE_URI
+
+          docker build \
+            --build-arg SOURCE_TAG=$SOURCE_TAG \
+            -t $BACKEND_IMAGE_URI \
+            ./backend
+
+          docker tag $BACKEND_IMAGE_URI $BACKEND_IMAGE_URI:$SOURCE_TAG
+
+          docker push $BACKEND_IMAGE_URI:$SOURCE_TAG
