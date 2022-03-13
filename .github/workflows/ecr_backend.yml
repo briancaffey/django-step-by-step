@@ -52,7 +52,7 @@ jobs:
 
           docker build \
             --build-arg SOURCE_TAG=$SOURCE_TAG \
-            -t $BACKEND_IMAGE_URI$SOURCE_TAG \
+            -t $BACKEND_IMAGE_URI:$SOURCE_TAG \
             ./backend
 
           # docker tag $BACKEND_IMAGE_URI $BACKEND_IMAGE_URI:$SOURCE_TAG
