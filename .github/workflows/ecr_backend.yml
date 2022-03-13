@@ -31,7 +31,7 @@ jobs:
       - name: "Build Backend Docker Container"
         env:
           SOURCE_TAG: ${{ github.event.inputs.git_tag }}
-          BACKEND_IMAGE_URI: ${{ steps.stack_outputs.outputs.BACKEND_REPOSITORY_URI }}
+          BACKEND_IMAGE_URI: ${{ secrets.BACKEND_IMAGE_URI }}
 
         run: |
           aws ecr get-login-password \
