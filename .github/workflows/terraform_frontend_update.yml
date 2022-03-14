@@ -58,6 +58,9 @@ jobs:
 
           terraform -chdir=terraform/live/dev output -json > /tmp/output.json
 
+          # debugging output.json file
+          cat /tmp/output.json
+
           SERVICE_NAME=$(cat /tmp/output.json | jq -r '.frontend_service_name.value')
           CLUSTER_NAME=$(cat /tmp/output.json | jq -r '.ecs_cluster_name.value')
           TASK_FAMILY=$(cat /tmp/output.json | jq -r '.frontend_task_family.value')
