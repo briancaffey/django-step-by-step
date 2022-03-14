@@ -56,7 +56,10 @@ jobs:
             -backend-config="key=${TF_BACKEND_KEY}" \
             -backend-config="region=${TF_BACKEND_REGION}"
 
-          terraform -chdir=terraform/live/dev output -json > /tmp/output.json
+          # try using cd instead of -chdir=terraform/live/dev
+          cd terraform/live/dev
+
+          terraform output -json > /tmp/output.json
 
           # debugging output.json file
           echo "output.json:"
@@ -66,9 +69,9 @@ jobs:
 
           cat /tmp/output.json | grep terraform
 
-          SERVICE_NAME=$(tail -n +2 /tmp/output.json | jq -r '.frontend_service_name.value')
-          CLUSTER_NAME=$(tail -n +2 /tmp/output.json | jq -r '.ecs_cluster_name.value')
-          TASK_FAMILY=$(tail -n +2 /tmp/output.json | jq -r '.frontend_task_family.value')
+          SERVICE_NAME=$(cat /tmp/output.json | jq -r '.frontend_service_name.value')
+          CLUSTER_NAME=$(cat /tmp/output.json | jq -r '.ecs_cluster_name.value')
+          TASK_FAMILY=$(cat /tmp/output.json | jq -r '.frontend_task_family.value')
 
           echo ::set-output name=SERVICE_NAME::$SERVICE_NAME
           echo ::set-output name=CLUSTER_NAME::$CLUSTER_NAME
