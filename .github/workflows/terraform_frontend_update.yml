@@ -112,5 +112,5 @@ jobs:
 
           # wait for service to be updated
           aws ecs wait services-stable \
-            --cluster $ECS_CLUSTER \
+            --cluster $CLUSTER_NAME \
             --services $SERVICE_NAME
