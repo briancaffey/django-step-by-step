@@ -100,7 +100,7 @@ jobs:
           # register new task definition
           TASK_DEFINITION=$( \
             aws ecs register-task-definition \
-              --family $FAMILY \
+              --family $TASK_FAMILY \
               --container-definitions /tmp/new-container-defs.json \
               | jq -r .taskDefinition.taskDefinitionArn \
           )
