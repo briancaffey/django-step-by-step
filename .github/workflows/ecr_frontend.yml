@@ -41,7 +41,7 @@ jobs:
         run: |
           docker build \
             -t $FRONTEND_IMAGE_URI:$SOURCE_TAG \
-            -f nginx/prod/Dockerfile \
+            -f nginx/ecs/Dockerfile \
             .
 
           docker push $FRONTEND_IMAGE_URI:$SOURCE_TAG
