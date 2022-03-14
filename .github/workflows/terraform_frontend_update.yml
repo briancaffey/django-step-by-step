@@ -62,9 +62,9 @@ jobs:
           echo "output.json:"
           cat /tmp/output.json
 
-          SERVICE_NAME=$(cat /tmp/output.json | jq -r '.frontend_service_name.value')
-          CLUSTER_NAME=$(cat /tmp/output.json | jq -r '.ecs_cluster_name.value')
-          TASK_FAMILY=$(cat /tmp/output.json | jq -r '.frontend_task_family.value')
+          SERVICE_NAME=$(tail -n +2 /tmp/output.json | jq -r '.frontend_service_name.value')
+          CLUSTER_NAME=$(tail -n +2 /tmp/output.json | jq -r '.ecs_cluster_name.value')
+          TASK_FAMILY=$(tail -n +2 /tmp/output.json | jq -r '.frontend_task_family.value')
 
           echo ::set-output name=SERVICE_NAME::$SERVICE_NAME
           echo ::set-output name=CLUSTER_NAME::$CLUSTER_NAME
