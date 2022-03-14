@@ -51,3 +51,6 @@ jobs:
             -backend-config="key=${TF_BACKEND_KEY}" \
             -backend-config="region=${TF_BACKEND_REGION}"
 
+          terraform -chdir=terraform/live/dev \
+            output -json
+
