@@ -26,6 +26,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.1.7
+          terraform_wrapper: false
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -56,16 +57,7 @@ jobs:
             -backend-config="key=${TF_BACKEND_KEY}" \
             -backend-config="region=${TF_BACKEND_REGION}"
 
-          # try using cd instead of -chdir=terraform/live/dev
-          cd terraform/live/dev
-
-          terraform output -json > /tmp/output.json
-
-          # debugging output.json file
-          echo "output.json:"
-          cat /tmp/output.json
-
-          echo "debugging..."
+          terraform -chdir=terraform/live/dev output -json > /tmp/output.json
 
           cat /tmp/output.json | grep terraform
 
