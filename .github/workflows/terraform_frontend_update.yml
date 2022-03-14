@@ -12,7 +12,7 @@ on:
 
 jobs:
   init_plan_apply:
-    name: "Terraform init, plan and apply for a workspace"
+    name: "Update frontend app for a terraform workspace"
     environment: terraform-aws-ecs
     runs-on: ubuntu-latest
 
