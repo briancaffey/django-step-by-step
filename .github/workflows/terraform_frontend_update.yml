@@ -1,18 +1,18 @@
 # github action to update the backend application
-name: terraform destroy
+name: terraform init, plan, apply
 
 on:
   workflow_dispatch:
     inputs:
       workspace:
-        description: 'Name of terraform workspace to destroy'
+        description: 'Name of terraform workspace to use'
         required: true
         default: 'dev'
         type: string
 
 jobs:
   init_plan_apply:
-    name: "Terraform destroy for a workspace"
+    name: "Terraform init, plan and apply for a workspace"
     environment: terraform-aws-ecs
     runs-on: ubuntu-latest
 
@@ -34,20 +34,12 @@ jobs:
           fetch-depth: 0
 
       - name: "terraform init, plan and apply"
-        id: terraform_destroy
+        id: terraform_init
         env:
           TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
           TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
           TF_BACKEND_REGION: ${{ secrets.TF_BACKEND_REGION }}
           WORKSPACE: ${{ github.event.inputs.workspace }}
-
-          # Terraform variables
-          TF_VAR_ecr_be_repo_url: ${{ secrets.BACKEND_IMAGE_URI }}
-          TF_VAR_ecr_fe_repo_url: ${{ secrets.FRONTEND_IMAGE_URI }}
-          TF_VAR_acm_certificate_arn: ${{ secrets.ACM_CERTIFICATE_ARN }}
-          TF_VAR_frontend_url: ${{ secrets.FRONTEND_URL }}
-          TF_VAR_zone_name: ${{ secrets.ZONE_NAME }}
-          TF_VAR_record_name: ${{ secrets.RECORD_NAME }}
 
         run: |
           # set the terraform workspace
@@ -59,4 +51,3 @@ jobs:
             -backend-config="key=${TF_BACKEND_KEY}" \
             -backend-config="region=${TF_BACKEND_REGION}"
 
-          terraform -chdir=terraform/live/dev destroy -auto-approve
