@@ -97,11 +97,14 @@ jobs:
             --arg IMAGE "$NEW_IMAGE" '.[0].image |= $IMAGE' \
             > /tmp/new-container-defs.json
 
+          # write json to variable
+          CONTAINER_DEFS=$(cat /tmp/new-container-defs.json)
+
           # register new task definition
           TASK_DEFINITION=$( \
             aws ecs register-task-definition \
               --family $TASK_FAMILY \
-              --container-definitions /tmp/new-container-defs.json \
+              --container-definitions $CONTAINER_DEFS \
               | jq -r .taskDefinition.taskDefinitionArn \
           )
 
