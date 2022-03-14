@@ -92,7 +92,7 @@ jobs:
             > /tmp/container-defs.json
 
           # write new container definitions JSON
-          cat container-defs.json \
+          cat /tmp/container-defs.json \
             | jq \
             --arg IMAGE "$NEW_IMAGE" '.[0].image |= $IMAGE' \
             > /tmp/new-container-defs.json
@@ -101,7 +101,7 @@ jobs:
           TASK_DEFINITION=$( \
             aws ecs register-task-definition \
               --family $FAMILY \
-              --container-definitions file://new-container-defs.json \
+              --container-definitions /tmp/new-container-defs.json \
               | jq -r .taskDefinition.taskDefinitionArn \
           )
 
