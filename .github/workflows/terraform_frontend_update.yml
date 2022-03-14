@@ -1,5 +1,5 @@
 # github action to update the backend application
-name: terraform init, plan, apply
+name: Frontend app update (terraform)
 
 on:
   workflow_dispatch:
