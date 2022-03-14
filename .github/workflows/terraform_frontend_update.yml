@@ -62,6 +62,10 @@ jobs:
           echo "output.json:"
           cat /tmp/output.json
 
+          echo "debugging..."
+
+          cat /tmp/output.json | grep terraform
+
           SERVICE_NAME=$(tail -n +2 /tmp/output.json | jq -r '.frontend_service_name.value')
           CLUSTER_NAME=$(tail -n +2 /tmp/output.json | jq -r '.ecs_cluster_name.value')
           TASK_FAMILY=$(tail -n +2 /tmp/output.json | jq -r '.frontend_task_family.value')
