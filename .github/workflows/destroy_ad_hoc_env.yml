@@ -33,7 +33,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: "terraform init, plan and apply"
+      - name: "terraform destroy"
         id: terraform_destroy
         env:
           TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
@@ -53,10 +53,10 @@ jobs:
           # set the terraform workspace
           export TF_WORKSPACE=$WORKSPACE
 
-          terraform -chdir=terraform/live/dev \
+          terraform -chdir=terraform/live/ad-hoc \
             init \
             -backend-config="bucket=${TF_BACKEND_BUCKET}" \
             -backend-config="key=${TF_BACKEND_KEY}" \
             -backend-config="region=${TF_BACKEND_REGION}"
 
-          terraform -chdir=terraform/live/dev destroy -auto-approve
+          terraform -chdir=terraform/live/ad-hoc destroy -auto-approve

@@ -34,7 +34,7 @@ jobs:
           fetch-depth: 0
 
       - name: "terraform init, plan and apply for ad hoc environment"
-        id: terraform_init
+        id: terraform_init_plan_apply
         env:
           TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
           TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
