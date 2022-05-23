@@ -1,18 +1,18 @@
-# github action to update the backend application
-name: terraform destroy
+# github action to create or update an ad hoc environment
+name: Create or update ad hoc environment
 
 on:
   workflow_dispatch:
     inputs:
       workspace:
-        description: 'Name of terraform workspace to destroy'
+        description: 'Name of terraform workspace to use'
         required: true
         default: 'dev'
         type: string
 
 jobs:
-  init_plan_apply:
-    name: "Terraform destroy for a workspace"
+  create_update_ad_hoc_env:
+    name: "Create or update ad hoc environment"
     environment: terraform-aws-ecs
     runs-on: ubuntu-latest
 
@@ -33,8 +33,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: "terraform init, plan and apply"
-        id: terraform_destroy
+      - name: "terraform init, plan and apply for ad hoc environment"
+        id: terraform_init
         env:
           TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
           TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
@@ -59,4 +59,12 @@ jobs:
             -backend-config="key=${TF_BACKEND_KEY}" \
             -backend-config="region=${TF_BACKEND_REGION}"
 
-          terraform -chdir=terraform/live/dev destroy -auto-approve
+          terraform -chdir=terraform/live/dev \
+            plan \
+            -no-color \
+            -var-file=${TF_WORKSPACE}.tfvars
+
+          terraform -chdir=terraform/live/dev \
+            apply \
+            -auto-approve \
+            -var-file=${TF_WORKSPACE}.tfvars
