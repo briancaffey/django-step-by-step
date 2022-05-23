@@ -52,19 +52,20 @@ jobs:
         run: |
           # set the terraform workspace
           export TF_WORKSPACE=$WORKSPACE
+          export VAR_FILE=envs/${TF_WORKSPACE}.tfvars
 
-          terraform -chdir=terraform/live/dev \
+          terraform -chdir=terraform/live/ad-hoc \
             init \
             -backend-config="bucket=${TF_BACKEND_BUCKET}" \
             -backend-config="key=${TF_BACKEND_KEY}" \
             -backend-config="region=${TF_BACKEND_REGION}"
 
-          terraform -chdir=terraform/live/dev \
+          terraform -chdir=terraform/live/ad-hoc \
             plan \
             -no-color \
-            -var-file=${TF_WORKSPACE}.tfvars
+            -var-file=$VAR_FILE
 
-          terraform -chdir=terraform/live/dev \
+          terraform -chdir=terraform/live/ad-hoc \
             apply \
             -auto-approve \
-            -var-file=${TF_WORKSPACE}.tfvars
+            -var-file=$VAR_FILE
