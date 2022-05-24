@@ -17,7 +17,7 @@ provider "aws" {
 
 module "main" {
   source  = "briancaffey/ad-hoc-environments/aws"
-  version = "0.2.0"
+  version = "0.3.0"
   certificate_arn = var.certificate_arn
   key_name        = var.key_name
 }
