@@ -1,0 +1,59 @@
+# github action to destroy shared resources
+name: Destroy shared resources
+
+on:
+  workflow_dispatch:
+    inputs:
+      workspace:
+        description: 'Name of terraform workspace to use'
+        required: true
+        default: 'dev'
+        type: string
+
+jobs:
+  destroy_shared_resources:
+    name: "Destroy shared resources"
+    environment: shared-resources-${{ github.event.inputs.workspace }}
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.1.7
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: "terraform init, plan and apply for shared resources"
+        id: terraform_init_plan_apply_shared_resources
+        env:
+          TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
+          TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
+          TF_BACKEND_REGION: ${{ secrets.TF_BACKEND_REGION }}
+          WORKSPACE: ${{ github.event.inputs.workspace }}
+
+          # Terraform variables
+          TF_VAR_certificate_arn: ${{ secrets.ACM_CERTIFICATE_ARN }}
+          TF_VAR_key_name: ${{ secrets.KEY_NAME }}
+
+        run: |
+          # set the terraform workspace
+          export TF_WORKSPACE=$WORKSPACE
+          export VAR_FILE=envs/${TF_WORKSPACE}.tfvars
+
+          terraform -chdir=terraform/live/shared-resources \
+            init \
+            -backend-config="bucket=${TF_BACKEND_BUCKET}" \
+            -backend-config="key=${TF_BACKEND_KEY}" \
+            -backend-config="region=${TF_BACKEND_REGION}"
+
+          terraform -chdir=terraform/live/shared-resources destroy -auto-approve
