@@ -4,8 +4,19 @@ name: Create or update ad hoc environment
 on:
   workflow_dispatch:
     inputs:
+
+      # The Terraform workspace for the shared resources Terraform configuration
+      # that the ad hoc environment will use.
+      # This input typically will not be used since all ad hoc environments should use one set of shared resources
+      # This may be changed if major changes to the shared resources configuration are made to avoid disrupting existing ad hoc environments
+      shared_resources_workspace:
+        description: 'Name of terraform workspace to use for shared resources'
+        required: true
+        default: 'dev'
+        type: string
+
       workspace:
-        description: 'Name of terraform workspace to use'
+        description: 'Name of terraform workspace to use for the ad hoc environment'
         required: true
         default: 'dev'
         type: string
@@ -40,6 +51,7 @@ jobs:
           TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
           TF_BACKEND_REGION: ${{ secrets.TF_BACKEND_REGION }}
           WORKSPACE: ${{ github.event.inputs.workspace }}
+          SHARED_RESOURCES_WORKSPACE: ${{ github.event.inputs.shared_resources_workspace }}
 
           # Terraform variables
           TF_VAR_ecr_be_repo_url: ${{ secrets.BACKEND_IMAGE_URI }}
@@ -53,6 +65,7 @@ jobs:
           # set the terraform workspace
           export TF_WORKSPACE=$WORKSPACE
           export VAR_FILE=envs/${TF_WORKSPACE}.tfvars
+          export TF_VAR_shared_resources_workspace=$SHARED_RESOURCES_WORKSPACE
 
           terraform -chdir=terraform/live/ad-hoc \
             init \
