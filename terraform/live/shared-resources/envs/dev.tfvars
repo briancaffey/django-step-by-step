@@ -3,3 +3,4 @@
 
 # certificate_arn = "arn:aws:acm:us-east-1:111111111111:certificate/11111111-1111-1111-1111-111111111111"
 # key_name = "key-pair-name"
+region = "us-east-1"
