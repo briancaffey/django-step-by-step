@@ -43,7 +43,7 @@ jobs:
 
           # Terraform variables
           TF_VAR_certificate_arn: ${{ secrets.ACM_CERTIFICATE_ARN }}
-          TF_VAR_key_pair: ${{ secrets.FRONTEND_IMAGE_URI }}
+          TF_VAR_key_name: ${{ secrets.KEY_NAME }}
 
         run: |
           # set the terraform workspace
