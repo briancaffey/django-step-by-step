@@ -488,6 +488,24 @@ tf-dev-plan:
 tf-dev-apply:
 	terraform -chdir=terraform/live/dev apply
 
+# Ad hoc environment terraform deployment for local testing
+# This requires that you have deployed shared infrastructure that ad hoc environments can be built on
+# by running the create_update_shared_resources GitHub Actions workflow
+# Use the create_update_ad_hoc_env GitHub Action to run this using GitHub Actions
+tf-ad-hoc-init:
+	terraform -chdir=terraform/live/ad-hoc init -backend-config=backend.config
+
+tf-ad-hoc-plan:
+	terraform -chdir=terraform/live/ad-hoc plan --var-file=envs/test.tfvars
+
+tf-ad-hoc-apply:
+	terraform -chdir=terraform/live/ad-hoc apply -auto-approve --var-file=envs/test.tfvars
+
+tf-ad-hoc:  tf-ad-hoc-init	tf-ad-hoc-plan	tf-ad-hoc-apply
+
+tf-ad-hoc-destroy:
+	terraform -chdir=terraform/live/ad-hoc destroy -auto-approve --var-file=envs/test.tfvars
+
 # Credit: https://gist.github.com/prwhite/8168133#gistcomment-2749866
 ## Show this help menu
 help:
