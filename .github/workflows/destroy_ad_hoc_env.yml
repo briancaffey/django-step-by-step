@@ -4,6 +4,13 @@ name: Destroy ad hoc environment
 on:
   workflow_dispatch:
     inputs:
+
+      shared_resources_workspace:
+        description: 'Name of terraform workspace to use for shared resources'
+        required: true
+        default: 'dev'
+        type: string
+
       workspace:
         description: 'Name of terraform workspace to destroy'
         required: true
