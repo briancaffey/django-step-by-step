@@ -58,7 +58,7 @@ jobs:
             init \
             -input=false \
             -backend-config="bucket=${TF_BACKEND_BUCKET}" \
-            -backend-config="key=env:/${{ github.event.inputs.shared_resources_workspace }}/ad-hoc/terraform.tfstate" \
+            -backend-config="key=shared-resources/terraform.tfstate" \
             -backend-config="region=${TF_BACKEND_REGION}"
 
           # terraform workspace select ${{ github.event.inputs.shared_resources_workspace }}
