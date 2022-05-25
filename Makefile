@@ -491,20 +491,22 @@ tf-dev-apply:
 # Ad hoc environment terraform deployment for local testing
 # This requires that you have deployed shared infrastructure that ad hoc environments can be built on
 # by running the create_update_shared_resources GitHub Actions workflow
+
+# It also requires that you have a sample.tfvars file copied from the sample.tfvars.template file
 # Use the create_update_ad_hoc_env GitHub Action to run this using GitHub Actions
-tf-ad-hoc-init:
+tf-ad-hoc-sample-init:
 	terraform -chdir=terraform/live/ad-hoc init -backend-config=backend.config
 
-tf-ad-hoc-plan:
-	terraform -chdir=terraform/live/ad-hoc plan --var-file=envs/test.tfvars
+tf-ad-hoc-sample-plan:
+	terraform -chdir=terraform/live/ad-hoc plan --var-file=envs/sample.tfvars
 
-tf-ad-hoc-apply:
-	terraform -chdir=terraform/live/ad-hoc apply -auto-approve --var-file=envs/test.tfvars
+tf-ad-hoc-sample-apply:
+	terraform -chdir=terraform/live/ad-hoc apply -auto-approve --var-file=envs/sample.tfvars
 
-tf-ad-hoc:  tf-ad-hoc-init	tf-ad-hoc-plan	tf-ad-hoc-apply
+tf-ad-hoc-sample:  tf-ad-hoc-sample-init	tf-ad-hoc-sample-plan	tf-ad-hoc-sample-apply
 
-tf-ad-hoc-destroy:
-	terraform -chdir=terraform/live/ad-hoc destroy -auto-approve --var-file=envs/test.tfvars
+tf-ad-hoc-sample-destroy:
+	terraform -chdir=terraform/live/ad-hoc destroy -auto-approve --var-file=envs/sample.tfvars
 
 # Credit: https://gist.github.com/prwhite/8168133#gistcomment-2749866
 ## Show this help menu
