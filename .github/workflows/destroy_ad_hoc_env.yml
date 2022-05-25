@@ -52,6 +52,7 @@ jobs:
         run: |
           # set the terraform workspace
           export TF_WORKSPACE=$WORKSPACE
+          terraform workspace select $WORKSPACE || terraform workspace new $WORKSPACE
 
           terraform -chdir=terraform/live/ad-hoc \
             init \

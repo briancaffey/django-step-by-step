@@ -75,7 +75,7 @@ jobs:
 
         run: |
           # set the terraform workspace
-          # export TF_WORKSPACE=$WORKSPACE
+          export TF_WORKSPACE=$WORKSPACE
           terraform workspace select $WORKSPACE || terraform workspace new $WORKSPACE
 
           # set the relative path of the .tfvars file corresponding to the workspace
