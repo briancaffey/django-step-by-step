@@ -24,7 +24,7 @@ on:
 jobs:
   create_update_ad_hoc_env:
     name: "Create or update ad hoc environment"
-    environment: terraform-aws-ecs
+    environment: ad-hoc-env-${{ github.event.inputs.workspace }}
     runs-on: ubuntu-latest
 
     steps:
@@ -47,16 +47,28 @@ jobs:
       - name: "terraform init, plan and apply for ad hoc environment"
         id: terraform_init_plan_apply
         env:
+
+          # Terraform workspace (from the workflow input)
+          WORKSPACE: ${{ github.event.inputs.workspace }}
+
+          # backend config variables
           TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
           TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
           TF_BACKEND_REGION: ${{ secrets.TF_BACKEND_REGION }}
-          WORKSPACE: ${{ github.event.inputs.workspace }}
-          SHARED_RESOURCES_WORKSPACE: ${{ github.event.inputs.shared_resources_workspace }}
 
-          # Terraform variables
+          # Terraform variables (TF_VAR_)
+          # variables for accessing shared resources over terraform_remote_state
+          TF_VAR_shared_resources_workspace: ${{ github.event.inputs.shared_resources_workspace }}
+          TF_VAR_s3_bucket: ${{ secrets.S3_BUCKET }}
+
+          # ECR variables
           TF_VAR_ecr_be_repo_url: ${{ secrets.BACKEND_IMAGE_URI }}
           TF_VAR_ecr_fe_repo_url: ${{ secrets.FRONTEND_IMAGE_URI }}
+
+          # ACM variables
           TF_VAR_acm_certificate_arn: ${{ secrets.ACM_CERTIFICATE_ARN }}
+
+          # Route 53 variables
           TF_VAR_frontend_url: ${{ secrets.FRONTEND_URL }}
           TF_VAR_zone_name: ${{ secrets.ZONE_NAME }}
           TF_VAR_record_name: ${{ secrets.RECORD_NAME }}
@@ -64,20 +76,26 @@ jobs:
         run: |
           # set the terraform workspace
           export TF_WORKSPACE=$WORKSPACE
-          export VAR_FILE=envs/${TF_WORKSPACE}.tfvars
-          export TF_VAR_shared_resources_workspace=$SHARED_RESOURCES_WORKSPACE
+          terraform workspace select $TF_WORKSPACE || terraform workspace new $TF_WORKSPACE
 
+          # set the relative path of the .tfvars file corresponding to the workspace
+          export VAR_FILE=envs/${TF_WORKSPACE}.tfvars
+
+          # init
           terraform -chdir=terraform/live/ad-hoc \
             init \
+            -input=false \
             -backend-config="bucket=${TF_BACKEND_BUCKET}" \
             -backend-config="key=${TF_BACKEND_KEY}" \
             -backend-config="region=${TF_BACKEND_REGION}"
 
+          # plan
           terraform -chdir=terraform/live/ad-hoc \
             plan \
             -no-color \
             -var-file=$VAR_FILE
 
+          # apply
           terraform -chdir=terraform/live/ad-hoc \
             apply \
             -auto-approve \
