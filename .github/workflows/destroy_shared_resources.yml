@@ -5,14 +5,14 @@ on:
   workflow_dispatch:
     inputs:
       workspace:
-        description: 'Name of terraform workspace to use'
+        description: 'Terraform workspace for shared resources env'
         required: true
         default: 'dev'
         type: string
 
 jobs:
   destroy_shared_resources:
-    name: "Destroy shared resources"
+    name: "Destroy shared resources env [${{ github.event.inputs.workspace }}]"
     environment: shared-resources-${{ github.event.inputs.workspace }}
     runs-on: ubuntu-latest
 

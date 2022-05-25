@@ -7,27 +7,27 @@ on:
     inputs:
 
       shared_resources_workspace:
-        description: 'Name of terraform workspace to use for shared resources'
+        description: 'Terraform workspace for shared resources'
         required: true
         default: 'dev'
         type: string
 
       workspace:
-        description: 'Name of terraform workspace to use'
+        description: 'Terraform workspace for ad hoc env'
         required: true
         default: 'dev'
         type: string
 
       image_tag:
-        description: 'Backend image tag'
+        description: 'Backend image tag to use'
         required: true
         default: 'latest'
         type: string
 
 jobs:
   update_backend:
-    name: "Update backend app for a terraform workspace"
-    environment: terraform-aws-ecs
+    name: "Update backend app for a terraform workspace [${{ github.event.inputs.workspace }}]"
+    environment: ad-hoc-env-${{ github.event.inputs.workspace }}
     runs-on: ubuntu-latest
 
     steps:

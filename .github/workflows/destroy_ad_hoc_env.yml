@@ -6,20 +6,20 @@ on:
     inputs:
 
       shared_resources_workspace:
-        description: 'Name of terraform workspace to use for shared resources'
+        description: 'Terraform workspace for shared resources env'
         required: true
         default: 'dev'
         type: string
 
       workspace:
-        description: 'Name of terraform workspace to destroy'
+        description: 'Terraform workspace for ad hoc env to destroy'
         required: true
         default: 'dev'
         type: string
 
 jobs:
   destroy_ad_hoc_env:
-    name: "Terraform destroy for a workspace"
+    name: "Destroy ad hoc env [${{ github.event.inputs.workspace }}]"
     environment: ad-hoc-env-${{ github.event.inputs.workspace }}
     runs-on: ubuntu-latest
 

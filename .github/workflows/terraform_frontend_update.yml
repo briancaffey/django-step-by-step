@@ -4,11 +4,19 @@ name: Frontend app update (terraform)
 on:
   workflow_dispatch:
     inputs:
-      workspace:
-        description: 'Name of terraform workspace to use'
+
+      shared_resources_workspace:
+        description: 'Terraform workspace for shared resources env'
         required: true
         default: 'dev'
         type: string
+
+      workspace:
+        description: 'Terraform workspace to use'
+        required: true
+        default: 'dev'
+        type: string
+
       image_tag:
         description: 'Frontend image tag'
         required: true

@@ -10,25 +10,24 @@ on:
       # This input typically will not be used since all ad hoc environments should use one set of shared resources
       # This may be changed if major changes to the shared resources configuration are made to avoid disrupting existing ad hoc environments
       shared_resources_workspace:
-        description: 'Name of terraform workspace to use for shared resources'
+        description: 'Terraform workspace for shared resources env'
         required: true
         default: 'dev'
         type: string
 
       workspace:
-        description: 'Name of terraform workspace to use for the ad hoc environment'
+        description: 'Terraform workspace for the ad hoc env'
         required: true
         default: 'dev'
         type: string
 
 jobs:
   create_update_ad_hoc_env:
-    name: "Create or update ad hoc environment"
+    name: "Create or update ad hoc env [${{ github.event.inputs.workspace }}]"
     environment: ad-hoc-env-${{ github.event.inputs.workspace }}
     runs-on: ubuntu-latest
 
     steps:
-
       - uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.1.7
