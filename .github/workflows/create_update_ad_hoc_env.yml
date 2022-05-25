@@ -61,7 +61,7 @@ jobs:
             -backend-config="key=env:/${{ github.event.inputs.shared_resources_workspace }}/shared-resources/terraform.tfstate" \
             -backend-config="region=${TF_BACKEND_REGION}"
 
-          terraform workspace select ${{ github.event.inputs.shared_resources_workspace }}
+          # terraform workspace select ${{ github.event.inputs.shared_resources_workspace }}
 
           terraform output -json > shared_resources_terraform_configuration.json
 
