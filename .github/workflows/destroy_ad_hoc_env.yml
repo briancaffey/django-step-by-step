@@ -43,15 +43,27 @@ jobs:
       - name: "terraform destroy"
         id: terraform_destroy
         env:
+          # Terraform workspace (from the workflow input)
+          WORKSPACE: ${{ github.event.inputs.workspace }}
+
+          # backend config variables
           TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
           TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
           TF_BACKEND_REGION: ${{ secrets.TF_BACKEND_REGION }}
-          WORKSPACE: ${{ github.event.inputs.workspace }}
 
-          # Terraform variables
+          # Terraform variables (TF_VAR_)
+          # variables for accessing shared resources over terraform_remote_state
+          TF_VAR_shared_resources_workspace: ${{ github.event.inputs.shared_resources_workspace }}
+          TF_VAR_s3_bucket: ${{ secrets.S3_BUCKET }}
+
+          # ECR variables
           TF_VAR_ecr_be_repo_url: ${{ secrets.BACKEND_IMAGE_URI }}
           TF_VAR_ecr_fe_repo_url: ${{ secrets.FRONTEND_IMAGE_URI }}
+
+          # ACM variables
           TF_VAR_acm_certificate_arn: ${{ secrets.ACM_CERTIFICATE_ARN }}
+
+          # Route 53 variables
           TF_VAR_frontend_url: ${{ secrets.FRONTEND_URL }}
           TF_VAR_zone_name: ${{ secrets.ZONE_NAME }}
           TF_VAR_record_name: ${{ secrets.RECORD_NAME }}
