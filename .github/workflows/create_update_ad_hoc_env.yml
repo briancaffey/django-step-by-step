@@ -46,7 +46,10 @@ jobs:
       # get the values for the Terraform configuration for the shared resources: BASTION_IP, RDS_ENDPOINT, etc.
       - name: "Get values from shared resources Terraform configuration"
         id: get_shared_resources_terraform_outputs
-
+        env:
+          TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
+          TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
+          TF_BACKEND_REGION: ${{ secrets.TF_BACKEND_REGION }}
         run: |
           # get the values for the Terraform configuration for the shared resources: BASTION_IP, RDS_ENDPOINT, etc.
 
