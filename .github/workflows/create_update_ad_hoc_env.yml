@@ -70,8 +70,6 @@ jobs:
           echo ::set-output name=BASTION_PUBLIC_IP::$BASTION_PUBLIC_IP
           echo ::set-output name=RDS_ENDPOINT::$RDS_ENDPOINT
 
-      - name: Setup SSH Key
-
       # needed in order to access the bastion host when creating ad hoc DB in RDS
       # TODO: is there a GitHub action for doing this?
       - name: "Setup SSH Key"
