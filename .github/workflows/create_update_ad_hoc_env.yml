@@ -65,6 +65,9 @@ jobs:
 
           terraform output -json > shared_resources_terraform_configuration.json
 
+          echo "======DEBUG======"
+          cat shared_resources_terraform_configuration.json
+
           BASTION_PUBLIC_IP=$(cat shared_resources_terraform_configuration.json | jq -r '.bastion_public_ip.value')
           RDS_ENDPOINT=$(cat shared_resources_terraform_configuration.json | jq -r '.rds_endpoint.value')
 
