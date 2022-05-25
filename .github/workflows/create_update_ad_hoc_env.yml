@@ -49,7 +49,6 @@ jobs:
 
         run: |
           # get the values for the Terraform configuration for the shared resources: BASTION_IP, RDS_ENDPOINT, etc.
-          terraform workspace select ${{ github.event.inputs.shared_resources_workspace }}
 
           # init
           terraform -chdir=terraform/live/shared-resources \
@@ -58,6 +57,8 @@ jobs:
             -backend-config="bucket=${TF_BACKEND_BUCKET}" \
             -backend-config="key=env:/${{ github.event.inputs.shared_resources_workspace }}/shared-resources/terraform.tfstate" \
             -backend-config="region=${TF_BACKEND_REGION}"
+
+          terraform workspace select ${{ github.event.inputs.shared_resources_workspace }}
 
           terraform output -json > shared_resources_terraform_configuration.json
 
