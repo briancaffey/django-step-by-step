@@ -18,9 +18,9 @@ on:
         type: string
 
 jobs:
-  init_plan_apply:
+  destroy_ad_hoc_env:
     name: "Terraform destroy for a workspace"
-    environment: terraform-aws-ecs
+    environment: ad-hoc-env-${{ github.event.inputs.workspace }}
     runs-on: ubuntu-latest
 
     steps:
