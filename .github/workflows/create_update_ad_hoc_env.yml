@@ -43,6 +43,56 @@ jobs:
         with:
           fetch-depth: 0
 
+      # get the values for the Terraform configuration for the shared resources: BASTION_IP, RDS_ENDPOINT, etc.
+      - name: "Get values from shared resources Terraform configuration"
+        id: get_shared_resources_terraform_outputs
+
+        run: |
+          # get the values for the Terraform configuration for the shared resources: BASTION_IP, RDS_ENDPOINT, etc.
+          terraform workspace select ${{ github.event.inputs.shared_resources_workspace }}
+
+          # init
+          terraform -chdir=terraform/live/shared-resources \
+            init \
+            -input=false \
+            -backend-config="bucket=${TF_BACKEND_BUCKET}" \
+            -backend-config="key=env:/${{ github.event.inputs.shared_resources_workspace }}/shared-resources/terraform.tfstate" \
+            -backend-config="region=${TF_BACKEND_REGION}"
+
+          terraform output -json > shared_resources_terraform_configuration.json
+
+          BASTION_PUBLIC_IP=$(cat shared_resources_terraform_configuration.json | jq -r '.bastion_public_ip.value')
+          RDS_ENDPOINT=$(cat shared_resources_terraform_configuration.json | jq -r '.rds_endpoint.value')
+
+          echo $BASTION_PUBLIC_IP
+          echo $RDS_ENDPOINT
+
+          echo ::set-output name=BASTION_PUBLIC_IP::$BASTION_PUBLIC_IP
+          echo ::set-output name=RDS_ENDPOINT::$RDS_ENDPOINT
+
+      - name: Setup SSH Key
+
+      # needed in order to access the bastion host when creating ad hoc DB in RDS
+      # TODO: is there a GitHub action for doing this?
+      - name: "Setup SSH Key"
+        id: setup_ssh_key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_rsa
+
+      - name: "Create ad hoc environment DB"
+        id: create_ad_hoc_env_db
+        env:
+          BASTION_IP: ${{ steps.get_shared_resources_terraform_outputs.outputs.BASTION_IP }}
+          RDS_ENDPOINT: ${{ steps.get_shared_resources_terraform_outputs.outputs.RDS_ENDPOINT }}
+        run: |
+          ssh -i ~/.ssh/$KEY_NAME.pem ec2-user@$BASTION_IP \
+            'PGPASSWORD=postgres \
+            createdb -U postgres -w -h $RDS_ENDPOINT ${{ github.event.inputs.workspace }}-db || echo DB already exists'
+
       - name: "terraform init, plan and apply for ad hoc environment"
         id: terraform_init_plan_apply
         env:
