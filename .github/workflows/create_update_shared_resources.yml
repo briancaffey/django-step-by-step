@@ -65,3 +65,5 @@ jobs:
             apply \
             -auto-approve \
             -var-file=$VAR_FILE
+
+          terraform -chdir=terraform/live/shared-resources output -json
