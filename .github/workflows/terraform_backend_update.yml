@@ -5,11 +5,19 @@ name: Backend app update (terraform)
 on:
   workflow_dispatch:
     inputs:
+
+      shared_resources_workspace:
+        description: 'Name of terraform workspace to use for shared resources'
+        required: true
+        default: 'dev'
+        type: string
+
       workspace:
         description: 'Name of terraform workspace to use'
         required: true
         default: 'dev'
         type: string
+
       image_tag:
         description: 'Backend image tag'
         required: true

@@ -15,6 +15,13 @@ terraform {
 
 provider "aws" {
   region = var.region
+  default_tags {
+    tags = {
+      env = terraform.workspace
+      ad_hoc_env = terraform.workspace
+      ad_hoc_environment = "true"
+    }
+  }
 }
 
 # shared resources

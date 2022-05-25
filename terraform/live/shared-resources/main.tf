@@ -13,6 +13,13 @@ terraform {
 
 provider "aws" {
   region = var.region
+  default_tags {
+    tags = {
+      env = terraform.workspace
+      shared_resources_env = terraform.workspace
+      shared_resource = "true"
+    }
+  }
 }
 
 module "main" {
