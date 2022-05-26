@@ -30,9 +30,11 @@ data "terraform_remote_state" "shared" {
   backend = "s3"
   config = {
     bucket = var.s3_bucket
-    key    = "ad-hoc/${var.shared_resources_workspace}/terraform.tfstate"
+    key    = "terraform.tfstate"
     region = var.region
+    workspace_key_prefix = "shared-resources"
   }
+  workspace = var.shared_resources_workspace
 }
 
 # main
