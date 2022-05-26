@@ -83,11 +83,12 @@ jobs:
         env:
           BASTION_PUBLIC_IP: ${{ steps.get_aws_resource_values.outputs.BASTION_PUBLIC_IP }}
           RDS_ENDPOINT: ${{ steps.get_aws_resource_values.outputs.RDS_ENDPOINT }}
+          AD_HOC_ENV: ${{ github.event.inputs.workspace }}
         run: |
           echo "DB endpoint is $RDS_ENDPOINT"
 
           ssh -o StrictHostKeyChecking=no ec2-user@$BASTION_PUBLIC_IP \
-            'PGPASSWORD=postgres createdb -U postgres -w -h ${RDS_ENDPOINT} ${{ github.event.inputs.workspace }}-db || echo DB either already exists or could not be created'
+            "PGPASSWORD=postgres createdb -U postgres -w -h $RDS_ENDPOINT $AD_HOC_ENV-db || echo DB either already exists or could not be created"
 
       - name: "terraform init, plan and apply for ad hoc environment"
         id: terraform_init_plan_apply
