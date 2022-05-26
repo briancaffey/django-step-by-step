@@ -87,8 +87,7 @@ jobs:
           echo "DB endpoint is $RDS_ENDPOINT"
 
           ssh -o StrictHostKeyChecking=no ec2-user@$BASTION_PUBLIC_IP \
-            'PGPASSWORD=postgres \
-            createdb -U postgres -w -h $RDS_ENDPOINT ${{ github.event.inputs.workspace }}-db || echo DB already exists'
+            'PGPASSWORD=postgres createdb -U postgres -w -h ${RDS_ENDPOINT} ${{ github.event.inputs.workspace }}-db || echo DB either already exists or could not be created'
 
       - name: "terraform init, plan and apply for ad hoc environment"
         id: terraform_init_plan_apply
