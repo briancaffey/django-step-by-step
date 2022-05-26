@@ -8,5 +8,5 @@ instance_type = "t2.small"
 # ecr_fe_repo_url     = "111111111111.dkr.ecr.us-east-1.amazonaws.com/frontend"
 # acm_certificate_arn = "arn:aws:acm:us-east-1:111111111111:certificate/11111111-1111-1111-1111-111111111111"
 # frontend_url        = "https://app.example.com"
-# zone_name           = "example.com."
-# record_name         = "app.example.com"
+# domain_name         = "example.com"
+

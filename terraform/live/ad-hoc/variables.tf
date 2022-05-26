@@ -66,13 +66,8 @@ variable "health_check_path" {
 # Route 53
 ##############################################################################
 
-variable "zone_name" {
-  description = "Name of the hosted zone. Last character should be a period (e.g. example.com.)"
-  type        = string
-}
-
-variable "record_name" {
-  description = "Name of the record to create (e.g. app.example.com)"
+variable "domain_name" {
+  description = "Domain name to use for Route 53 records (e.g. example.com)"
   type        = string
 }
 
@@ -279,16 +274,6 @@ variable "rds_instance_class" {
 variable "acm_certificate_arn" {
   description = "ACM certificate ARN"
 }
-
-##############################################################################
-# Frontend
-##############################################################################
-
-variable "frontend_url" {
-  type        = string
-  description = "Frontend URL"
-}
-
 
 
 ##############################################################################

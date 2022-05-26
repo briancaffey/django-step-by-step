@@ -64,9 +64,7 @@ jobs:
           TF_VAR_acm_certificate_arn: ${{ secrets.ACM_CERTIFICATE_ARN }}
 
           # Route 53 variables
-          TF_VAR_frontend_url: ${{ secrets.FRONTEND_URL }}
-          TF_VAR_zone_name: ${{ secrets.ZONE_NAME }}
-          TF_VAR_record_name: ${{ secrets.RECORD_NAME }}
+          TF_VAR_domain_name: ${{ secrets.DOMAIN_NAME }}
 
         run: |
           # set the terraform workspace

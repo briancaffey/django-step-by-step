@@ -96,7 +96,6 @@ jobs:
 
           # backend config variables
           TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
-          TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
           TF_BACKEND_REGION: ${{ secrets.TF_BACKEND_REGION }}
 
           # Terraform variables (TF_VAR_)
@@ -112,9 +111,7 @@ jobs:
           TF_VAR_acm_certificate_arn: ${{ secrets.ACM_CERTIFICATE_ARN }}
 
           # Route 53 variables
-          TF_VAR_frontend_url: ${{ secrets.FRONTEND_URL }}
-          TF_VAR_zone_name: ${{ secrets.ZONE_NAME }}
-          TF_VAR_record_name: ${{ secrets.RECORD_NAME }}
+          TF_VAR_domain_name: ${{ secrets.DOMAIN_NAME }}
 
         run: |
           # set the terraform workspace

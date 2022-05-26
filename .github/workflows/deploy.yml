@@ -60,7 +60,6 @@ jobs:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
           KEY_PAIR_NAME: ${{ secrets.KEY_PAIR_NAME }}
-          ZONE_NAME: ${{ secrets.ZONE_NAME }}
           STACK_NAME: ${{ secrets.STACK_NAME }}
         run: |
           # make cdk-diff-docker-ec2

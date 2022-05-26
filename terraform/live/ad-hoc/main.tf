@@ -41,7 +41,7 @@ data "terraform_remote_state" "shared" {
 
 module "main" {
   source  = "briancaffey/django/aws//modules/ad-hoc"
-  version = "0.8.1"
+  version = "0.9.0"
   # shared resources -- taken from terraform_remote_state data source above
 
   vpc_id                         = data.terraform_remote_state.shared.outputs.vpc_id
@@ -61,7 +61,5 @@ module "main" {
   ecr_be_repo_url = var.ecr_be_repo_url
   ecr_fe_repo_url = var.ecr_fe_repo_url
   region          = var.region
-  frontend_url    = var.frontend_url
-  zone_name       = var.zone_name
-  record_name     = var.record_name
+  domain_name     = var.domain_name
 }

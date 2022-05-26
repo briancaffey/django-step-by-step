@@ -26,4 +26,4 @@ EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 ADMINS = [("Admin", os.environ.get("ADMINS", ""))]
 
-SESSION_COOKIE_DOMAIN = os.environ.get("ZONE_NAME", "domain.com")
+SESSION_COOKIE_DOMAIN = os.environ.get("DOMAIN_NAME", "domain.com")

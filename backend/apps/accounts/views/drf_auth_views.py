@@ -44,7 +44,7 @@ class CookieTokenObtainPairView(TokenObtainPairView):
                 httponly=True,
                 samesite="None",
                 secure=True,
-                domain=os.environ.get("ZONE_NAME"),
+                domain=os.environ.get("DOMAIN_NAME"),
             )
             del response.data["refresh"]
         return super().finalize_response(request, response, *args, **kwargs)
@@ -61,7 +61,7 @@ class CookieTokenRefreshView(TokenRefreshView):
                 samesite="None",
                 httponly=True,
                 secure=True,
-                domain=os.environ.get("ZONE_NAME"),
+                domain=os.environ.get("DOMAIN_NAME"),
             )
             del response.data["refresh"]
         return super().finalize_response(request, response, *args, **kwargs)
