@@ -49,27 +49,17 @@ jobs:
         env:
           TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
           TF_BACKEND_REGION: ${{ secrets.TF_BACKEND_REGION }}
+          SHARED_RESOURCES_ENV: ${{ github.event.inputs.shared_resources_workspace }}
         run: |
-          # get the values for the Terraform configuration for the shared resources: BASTION_IP, RDS_ENDPOINT, etc.
+          BASTION_IP=$(aws ec2 describe-instances \
+            --filters "Name=tag:env,Values=$SHARED_RESOURCES_ENV" \
+            --query "Reservations[*].Instances[*].PublicIpAddress" \
+            --output text)
 
-          terraform workspace new ${{ github.event.inputs.shared_resources_workspace }}
-
-          # init
-          terraform -chdir=terraform/live/shared-resources \
-            init \
-            -input=false \
-            -backend-config="bucket=${TF_BACKEND_BUCKET}" \
-            -backend-config="key=terraform.tfstate" \
-            -backend-config="region=${TF_BACKEND_REGION}" \
-            -backend-config="workspace_key_prefix=shared-resources"
-
-          terraform -chdir=terraform/live/shared-resources output -json > shared_resources_terraform_configuration.json
-
-          echo "======DEBUG======"
-          cat shared_resources_terraform_configuration.json
-
-          BASTION_PUBLIC_IP=$(cat shared_resources_terraform_configuration.json | jq -r '.bastion_public_ip.value')
-          RDS_ENDPOINT=$(cat shared_resources_terraform_configuration.json | jq -r '.rds_endpoint.value')
+          RDS_ENDPOINT=$(aws rds describe-db-instances \
+            --db-instance-identifier $SHARED_RESOURCES_ENV-rds \
+            --query "DBInstances[0].Endpoint.Address" \
+            --output text)
 
           echo $BASTION_PUBLIC_IP
           echo $RDS_ENDPOINT
