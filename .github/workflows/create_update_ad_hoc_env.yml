@@ -84,7 +84,7 @@ jobs:
           BASTION_PUBLIC_IP: ${{ steps.get_shared_resources_terraform_outputs.outputs.BASTION_PUBLIC_IP }}
           RDS_ENDPOINT: ${{ steps.get_shared_resources_terraform_outputs.outputs.RDS_ENDPOINT }}
         run: |
-          ssh ec2-user@$BASTION_PUBLIC_IP \
+          ssh -o StrictHostKeyChecking=no ec2-user@$BASTION_PUBLIC_IP \
             'PGPASSWORD=postgres \
             createdb -U postgres -w -h $RDS_ENDPOINT ${{ github.event.inputs.workspace }}-db || echo DB already exists'
 
