@@ -47,8 +47,6 @@ jobs:
       - name: "Get AWS Resource values"
         id: get_aws_resource_values
         env:
-          TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
-          TF_BACKEND_REGION: ${{ secrets.TF_BACKEND_REGION }}
           SHARED_RESOURCES_ENV: ${{ github.event.inputs.shared_resources_workspace }}
         run: |
           BASTION_PUBLIC_IP=$(aws ec2 describe-instances \
@@ -60,9 +58,6 @@ jobs:
             --db-instance-identifier $SHARED_RESOURCES_ENV-rds \
             --query "DBInstances[0].Endpoint.Address" \
             --output text)
-
-          echo $BASTION_PUBLIC_IP
-          echo $RDS_ENDPOINT
 
           echo ::set-output name=BASTION_PUBLIC_IP::$BASTION_PUBLIC_IP
           echo ::set-output name=RDS_ENDPOINT::$RDS_ENDPOINT
@@ -141,3 +136,17 @@ jobs:
             apply \
             -auto-approve \
             -var-file=$VAR_FILE
+
+          terraform -chdir=terraform/live/ad-hoc \
+            output \
+            -json > terraform_outputs.json
+
+      # Migration and collectstatic commands
+      - name: "Run post-deployment steps"
+        id: post_ad_hoc_env_create_update
+        env:
+          BASTION_PUBLIC_IP: ${{ steps.get_aws_resource_values.outputs.BASTION_PUBLIC_IP }}
+          RDS_ENDPOINT: ${{ steps.get_aws_resource_values.outputs.RDS_ENDPOINT }}
+          AD_HOC_ENV: ${{ github.event.inputs.workspace }}
+        run: |
+          cat terraform_outputs.json | jq -r '.ad_hoc_env_db_endpoint.value' > db_endpoint.txt
