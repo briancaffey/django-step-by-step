@@ -51,7 +51,7 @@ jobs:
           TF_BACKEND_REGION: ${{ secrets.TF_BACKEND_REGION }}
           SHARED_RESOURCES_ENV: ${{ github.event.inputs.shared_resources_workspace }}
         run: |
-          BASTION_IP=$(aws ec2 describe-instances \
+          BASTION_PUBLIC_IP=$(aws ec2 describe-instances \
             --filters "Name=tag:env,Values=$SHARED_RESOURCES_ENV" \
             --query "Reservations[*].Instances[*].PublicIpAddress" \
             --output text)
@@ -81,10 +81,10 @@ jobs:
       - name: "Create ad hoc environment DB"
         id: create_ad_hoc_env_db
         env:
-          BASTION_IP: ${{ steps.get_shared_resources_terraform_outputs.outputs.BASTION_IP }}
+          BASTION_PUBLIC_IP: ${{ steps.get_shared_resources_terraform_outputs.outputs.BASTION_PUBLIC_IP }}
           RDS_ENDPOINT: ${{ steps.get_shared_resources_terraform_outputs.outputs.RDS_ENDPOINT }}
         run: |
-          ssh ec2-user@$BASTION_IP \
+          ssh ec2-user@$BASTION_PUBLIC_IP \
             'PGPASSWORD=postgres \
             createdb -U postgres -w -h $RDS_ENDPOINT ${{ github.event.inputs.workspace }}-db || echo DB already exists'
 
