@@ -12,7 +12,6 @@ on:
 jobs:
   build_and_push:
     name: "Build backend image from git tag"
-    environment: terraform-aws-ecs
     runs-on: ubuntu-latest
 
     steps:
