@@ -36,9 +36,12 @@ jobs:
       - name: "Build Backend Docker Container"
         env:
           SOURCE_TAG: ${{ github.event.inputs.git_tag }}
-          BACKEND_IMAGE_URI: ${{ secrets.BACKEND_IMAGE_URI }}
 
         run: |
+
+          # the name of the ECR repository I am using is called `backend`
+          BACKEND_IMAGE_URI=$AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/backend
+
           docker build \
             --build-arg SOURCE_TAG=$SOURCE_TAG \
             -t $BACKEND_IMAGE_URI:$SOURCE_TAG \
