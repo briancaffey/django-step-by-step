@@ -36,6 +36,7 @@ jobs:
       - name: "Build Backend Docker Container"
         env:
           SOURCE_TAG: ${{ github.event.inputs.git_tag }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
 
         run: |
 
