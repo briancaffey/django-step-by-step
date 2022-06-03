@@ -112,7 +112,7 @@ jobs:
           # terraform workspace select $WORKSPACE || terraform workspace new $WORKSPACE
 
           # set the relative path of the .tfvars file corresponding to the workspace
-          export VAR_FILE=envs/${TF_WORKSPACE}.tfvars
+          export VAR_FILE=envs/${WORKSPACE}.tfvars
 
           # init
           terraform -chdir=terraform/live/ad-hoc \
