@@ -92,7 +92,7 @@ TASK_ID=$( \
   aws ecs run-task \
     --cluster $WORKSPACE-cluster \
     --task-definition $TASK_DEFINITION \
-    --network-configuration '{"awsvpcConfiguration":{"subnets":['"$SUBNET_IDS"'}],"securityGroups":['$ECS_SG_ID"'],"assignPublicIp":"ENABLED"}}' \
+    --network-configuration '{"awsvpcConfiguration":{"subnets":['"$SUBNET_IDS"'],"securityGroups":['"$ECS_SG_ID"'],"assignPublicIp":"ENABLED"}}' \
     | jq -r '.tasks[0].taskArn' \
   )
 
