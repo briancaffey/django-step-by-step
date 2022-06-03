@@ -107,9 +107,6 @@ jobs:
           TF_VAR_domain_name: ${{ secrets.DOMAIN_NAME }}
 
         run: |
-          # set the terraform workspace
-          # export TF_WORKSPACE=$WORKSPACE
-          # terraform workspace select $WORKSPACE || terraform workspace new $WORKSPACE
 
           # set the relative path of the .tfvars file corresponding to the workspace
           export VAR_FILE=envs/${WORKSPACE}.tfvars
@@ -123,7 +120,17 @@ jobs:
             -backend-config="region=${TF_BACKEND_REGION}" \
             -backend-config="workspace_key_prefix=ad-hoc-envs"
 
-          terraform workspace new $WORKSPACE || export TF_WORKSPACE=$WORKSPACE
+          # set the terraform workspace
+          terraform workspace new $WORKSPACE
+
+          if [ $? == 1] then
+            # if the workspace cannot be created, then it already exists, select it
+            terraform workspace select $WORKSPACE
+          fi
+
+          terraform workspace list
+
+          sleep 50
 
           # plan
           terraform -chdir=terraform/live/ad-hoc \
