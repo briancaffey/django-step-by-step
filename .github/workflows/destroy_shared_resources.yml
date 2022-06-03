@@ -1,5 +1,5 @@
 # github action to destroy shared resources
-name: Destroy shared resources
+name: Shared Resources / DESTROY
 
 on:
   workflow_dispatch:

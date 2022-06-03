@@ -1,4 +1,4 @@
-name: Frontend Image Build and Push to ECR
+name: ECR / Frontend
 
 on:
   workflow_dispatch:

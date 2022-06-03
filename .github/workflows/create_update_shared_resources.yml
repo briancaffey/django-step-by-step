@@ -1,5 +1,5 @@
 # github action to create or update shared resources
-name: Create or update shared resources
+name: Shared Resources / CREATE or UPDATE
 
 on:
   workflow_dispatch:
@@ -37,7 +37,6 @@ jobs:
         id: terraform_init_plan_apply_shared_resources
         env:
           TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
-          TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
           TF_BACKEND_REGION: ${{ secrets.TF_BACKEND_REGION }}
           WORKSPACE: ${{ github.event.inputs.workspace }}
 

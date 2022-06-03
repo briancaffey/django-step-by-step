@@ -1,5 +1,5 @@
 # github action to create or update an ad hoc environment
-name: Create or update ad hoc environment
+name: Ad Hoc Env / CREATE or UPDATE
 
 on:
   workflow_dispatch:
@@ -96,14 +96,11 @@ jobs:
           # Terraform variables (TF_VAR_)
           # variables for accessing shared resources over terraform_remote_state
           TF_VAR_shared_resources_workspace: ${{ github.event.inputs.shared_resources_workspace }}
-          TF_VAR_s3_bucket: ${{ secrets.S3_BUCKET }}
+          TF_VAR_s3_bucket: ${{ secrets.TF_BACKEND_BUCKET }}
 
           # ECR variables
-          TF_VAR_ecr_be_repo_url: ${{ secrets.BACKEND_IMAGE_URI }}
-          TF_VAR_ecr_fe_repo_url: ${{ secrets.FRONTEND_IMAGE_URI }}
-
-          # ACM variables
-          TF_VAR_acm_certificate_arn: ${{ secrets.ACM_CERTIFICATE_ARN }}
+          TF_VAR_ecr_be_repo_url: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/backend
+          TF_VAR_ecr_fe_repo_url: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/frontend
 
           # Route 53 variables
           TF_VAR_domain_name: ${{ secrets.DOMAIN_NAME }}
@@ -137,6 +134,7 @@ jobs:
             -auto-approve \
             -var-file=$VAR_FILE
 
+          # output
           terraform -chdir=terraform/live/ad-hoc \
             output \
             -json > terraform_outputs.json
@@ -150,3 +148,4 @@ jobs:
           AD_HOC_ENV: ${{ github.event.inputs.workspace }}
         run: |
           cat terraform_outputs.json | jq -r '.ad_hoc_env_db_endpoint.value' > db_endpoint.txt
+          cat db_endpoint.txt

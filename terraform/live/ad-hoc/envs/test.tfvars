@@ -1,5 +1,5 @@
-region        = "us-east-1"
-instance_type = "t2.small"
+be_image_tag = "v0.1.0"
+fe_image_tag = "latest"
 
 # additional required variables are defined with TF_VAR_
 # variables and used in GitHub Actions workflow
