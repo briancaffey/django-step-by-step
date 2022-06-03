@@ -147,5 +147,12 @@ jobs:
           RDS_ENDPOINT: ${{ steps.get_aws_resource_values.outputs.RDS_ENDPOINT }}
           AD_HOC_ENV: ${{ github.event.inputs.workspace }}
         run: |
-          cat terraform_outputs.json | jq -r '.ad_hoc_env_db_endpoint.value' > db_endpoint.txt
-          cat db_endpoint.txt
+
+          # get the migrate command from Terraform outputs
+          MIGRATE_COMMAND=$(cat terraform_outputs.json | jq -r '.migrate_command.value')
+
+          # check the value of the migrate command
+          echo $MIGRATE_COMMAND
+
+          # run the migrate command
+          $MIGRATE_COMMAND
