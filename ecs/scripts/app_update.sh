@@ -22,12 +22,15 @@ do
     .taskDefinition.containerDefinitions \
     > /tmp/$TASK_FAMILY.json
 
-  # write new container definitions JSON with updated image
+  # write new container definition JSON with updated image
   echo "Writing new $TASK_FAMILY container definitions JSON..."
   cat /tmp/$TASK_FAMILY.json \
     | jq \
     --arg IMAGE "$BACKEND_IMAGE_TAG" '.[0].image |= $IMAGE' \
     > /tmp/$TASK_FAMILY-new.json
+
+  # check the content of the new container definition JSON
+  cat /tmp/$TASK_FAMILY-new.json
 
   # register new task definition
   echo "Registering new $TASK_FAMILY task definition..."
@@ -76,7 +79,6 @@ TASK_ID=$( \
   aws ecs run-task \
     --cluster $WORKSPACE-cluster \
     --task-definition $TASK_DEFINITION \
-    # network configuration
     --network-configuration '{"awsvpcConfiguration":{"subnets":[${SUBNET_IDS}],"securityGroups":[${ECS_SG_ID}],"assignPublicIp":"ENABLED"}}' \
     | jq -r '.tasks[0].taskArn' \
   )
