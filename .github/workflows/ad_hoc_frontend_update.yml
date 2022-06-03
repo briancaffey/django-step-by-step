@@ -1,5 +1,5 @@
 # github action to update the backend application
-name: Frontend app update (terraform)
+name: Ad Hoc / FRONTEND UPDATE
 
 on:
   workflow_dispatch:
