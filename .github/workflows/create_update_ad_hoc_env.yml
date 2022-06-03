@@ -147,11 +147,11 @@ jobs:
           AD_HOC_ENV: ${{ github.event.inputs.workspace }}
         run: |
 
-          # get the migrate command from Terraform outputs
-          MIGRATE_COMMAND=$(cat terraform_outputs.json | jq -r '.migrate_command.value')
+          # get the migrate command from Terraform outputs and write to file
+          cat terraform_outputs.json | jq -r '.migrate_command.value' > migrate_command.sh
 
-          # check the value of the migrate command
-          echo $MIGRATE_COMMAND
+          # make the file executable
+          sudo chmod +x migrate_command.sh
 
-          # run the migrate command
-          $MIGRATE_COMMAND
+          # run migrate command
+          ./migrate_command.sh
