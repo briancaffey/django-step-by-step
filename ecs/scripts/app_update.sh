@@ -51,6 +51,7 @@ do
       --family $TASK_FAMILY \
       --container-definitions file:///tmp/$TASK_FAMILY-new.json \
       --memory $MEMORY \
+      --network-mode awsvpc \
       --requires-compatibilities "FARGATE" \
       | jq -r .taskDefinition.taskDefinitionArn \
   )
@@ -86,7 +87,7 @@ VPC_ID=$( \
 # get ecs_sg_id - just a single value
 ECS_SG_ID=$( \
   aws ec2 describe-security-groups \
-    --filters "Name=tag:env,Values=$SHARED_RESOURCES_WORKSPACE" "Name=vpc-id,Values=$VPC_ID" \
+    --filters "Name=tag:Name,Values=$SHARED_RESOURCES_WORKSPACE-ecs-sg" \
     --query 'SecurityGroups[*].GroupId' \
     --output json \
 )
