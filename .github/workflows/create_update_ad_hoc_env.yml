@@ -144,8 +144,6 @@ jobs:
       - name: "Run post-deployment steps"
         id: post_ad_hoc_env_create_update
         env:
-          BASTION_PUBLIC_IP: ${{ steps.get_aws_resource_values.outputs.BASTION_PUBLIC_IP }}
-          RDS_ENDPOINT: ${{ steps.get_aws_resource_values.outputs.RDS_ENDPOINT }}
           AD_HOC_ENV: ${{ github.event.inputs.workspace }}
         run: |
 

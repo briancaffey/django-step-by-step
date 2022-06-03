@@ -1,0 +1,24 @@
+# github action for debugging and testing things
+name: TEST
+
+on:
+  workflow_dispatch:
+    inputs:
+      test:
+        description: 'Test input'
+        required: true
+        default: 'dev'
+        type: string
+
+jobs:
+  tests:
+    name: "Used for testing"
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # Test
+      - name: "Test"
+        id: test_date_command
+        run: |
+          date
