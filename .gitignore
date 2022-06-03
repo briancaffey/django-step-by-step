@@ -11,3 +11,4 @@ cdk.context.json
 
 # Redis .rdb files
 *.rdb
+ecs/scripts/app*
