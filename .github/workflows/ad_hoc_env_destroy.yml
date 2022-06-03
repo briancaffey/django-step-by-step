@@ -48,13 +48,12 @@ jobs:
 
           # backend config variables
           TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
-          TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
           TF_BACKEND_REGION: ${{ secrets.TF_BACKEND_REGION }}
 
           # Terraform variables (TF_VAR_)
           # variables for accessing shared resources over terraform_remote_state
           TF_VAR_shared_resources_workspace: ${{ github.event.inputs.shared_resources_workspace }}
-          TF_VAR_s3_bucket: ${{ secrets.S3_BUCKET }}
+          TF_VAR_s3_bucket: ${{ secrets.TF_BACKEND_BUCKET }}
 
           # ECR variables
           TF_VAR_ecr_be_repo_url: ${{ secrets.BACKEND_IMAGE_URI }}

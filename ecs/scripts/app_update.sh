@@ -51,6 +51,7 @@ do
       --family $TASK_FAMILY \
       --container-definitions file:///tmp/$TASK_FAMILY-new.json \
       --memory $MEMORY \
+      --requires-compatibilities "FARGATE" \
       | jq -r .taskDefinition.taskDefinitionArn \
   )
 done
@@ -70,18 +71,24 @@ SUBNETS=$( \
   aws ec2 describe-subnets \
     --filters "Name=tag:env,Values=$SHARED_RESOURCES_WORKSPACE" "Name=tag:Name,Values=*private*" \
     --query 'Subnets[*].SubnetId' \
+    --output json \
+)
+
+# get VPC by tag
+VPC_ID=$( \
+  aws ec2 describe-vpcs \
+    --filters "Name=tag:env,Values=$SHARED_RESOURCES_WORKSPACE" \
+    --query 'Vpcs[0].VpcId' \
     --output text \
 )
 
-# replace spaces with commas
-SUBNET_IDS=$(echo $SUBNETS | tr " " ",")
-
+# https://github.com/aws/aws-cli/issues/5348
 # get ecs_sg_id - just a single value
 ECS_SG_ID=$( \
   aws ec2 describe-security-groups \
-    --filters "Name=group-name,Values=$WORKSPACE-ecs-sg" \
+    --filters "Name=tag:env,Values=$SHARED_RESOURCES_WORKSPACE" "Name=vpc-id,Values=$VPC_ID" \
     --query 'SecurityGroups[*].GroupId' \
-    --output text \
+    --output json \
 )
 
 echo "Running database migrations..."
@@ -92,7 +99,7 @@ TASK_ID=$( \
   aws ecs run-task \
     --cluster $WORKSPACE-cluster \
     --task-definition $TASK_DEFINITION \
-    --network-configuration '{"awsvpcConfiguration":{"subnets":['"$SUBNET_IDS"'],"securityGroups":['"$ECS_SG_ID"'],"assignPublicIp":"ENABLED"}}' \
+    --network-configuration "awsvpcConfiguration={subnets=[$SUBNETS],securityGroups=[$ECS_SG_ID],assignPublicIp=ENABLED}" \
     | jq -r '.tasks[0].taskArn' \
   )
 
