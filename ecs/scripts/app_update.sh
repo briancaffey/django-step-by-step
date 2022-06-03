@@ -1,12 +1,13 @@
 #!/bin/bash
 
 # This script will be called to update an ad hoc environment backend
+# It is called from the ad_hock_backend_update.yml GitHub Actions file
 
 # Required env vars:
 
 # WORKSPACE - ad hoc environment workspace
 # SHARED_RESOURCES_WORKSPACE - shared resources workspace
-# BACKEND_IMAGE_TAG - backend image tag to update the backend services to
+# BACKEND_IMAGE_TAG - backend image tag to update the backend services to (e.g. v1.2.3)
 
 echo "Updating backend services..."
 
@@ -17,7 +18,7 @@ do
   echo "Updating $TASK task definition..."
   TASK_FAMILY=$WORKSPACE-$TASK
   aws ecs describe-task-definition \
-    --task-definition $WORKSPACE-$TASK \
+    --task-definition $TASK_FAMILY \
     | jq -r \
     .taskDefinition.containerDefinitions \
     > /tmp/$TASK_FAMILY.json
@@ -29,6 +30,17 @@ do
     --arg IMAGE "$BACKEND_IMAGE_TAG" '.[0].image |= $IMAGE' \
     > /tmp/$TASK_FAMILY-new.json
 
+
+  # https://github.com/aws/aws-cli/issues/4453
+  # Get the existing memory configuration for the task definition
+  echo "Getting existing memory configuration for $TASK_FAMILY..."
+  MEMORY=$( \
+    aws ecs describe-task-definition \
+      --task-definition $TASK_FAMILY \
+      | jq -r \
+      .taskDefinition.memory \
+  )
+
   # check the content of the new container definition JSON
   cat /tmp/$TASK_FAMILY-new.json
 
@@ -38,6 +50,7 @@ do
     aws ecs register-task-definition \
       --family $TASK_FAMILY \
       --container-definitions file:///tmp/$TASK_FAMILY-new.json \
+      --memory $MEMORY \
       | jq -r .taskDefinition.taskDefinitionArn \
   )
 done
