@@ -92,3 +92,5 @@ jobs:
 
 
           terraform -chdir=terraform/live/ad-hoc destroy -auto-approve
+
+          terraform workspace delete $WORKSPACE
