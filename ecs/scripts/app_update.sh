@@ -79,7 +79,7 @@ SUBNET_IDS=$(echo $SUBNETS | tr " " ",")
 # get ecs_sg_id - just a single value
 ECS_SG_ID=$( \
   aws ec2 describe-security-groups \
-    --filters "Name=tag:env,Values=$SHARED_RESOURCES_WORKSPACE" \
+    --filters "Name=group-name,Values=$WORKSPACE-ecs-sg" \
     --query 'SecurityGroups[*].GroupId' \
     --output text \
 )
@@ -119,12 +119,13 @@ do
   # get task ARN for `update-service` command
   TASK_DEFINITION=$( \
     aws ecs describe-task-definition \
-      --task-definition $WORKSPACE-migrate \
+      --task-definition $WORKSPACE-$TASK \
       | jq -r \
       .taskDefinition.taskDefinitionArn \
   )
   # update service
-  aws ecs update-service --cluster $WORKSPACE-cluster \
+  aws ecs update-service \
+    --cluster $WORKSPACE-cluster \
     --service $WORKSPACE-$TASK \
     --task-definition $TASK_DEFINITION
 done
