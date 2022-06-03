@@ -22,3 +22,7 @@ jobs:
         id: test_date_command
         run: |
           date
+
+          START_TIME=$(date +%s000)
+
+          echo $START_TIME
