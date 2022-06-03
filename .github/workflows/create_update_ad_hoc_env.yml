@@ -150,6 +150,9 @@ jobs:
           # get the migrate command from Terraform outputs and write to file
           cat terraform_outputs.json | jq -r '.migrate_command.value' > migrate_command.sh
 
+          # view migrate command
+          cat migrate_command.sh
+
           # make the file executable
           sudo chmod +x migrate_command.sh
 
