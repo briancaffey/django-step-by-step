@@ -41,7 +41,7 @@ data "terraform_remote_state" "shared" {
 
 module "main" {
   source  = "briancaffey/django/aws//modules/ad-hoc"
-  version = "0.9.2"
+  version = "0.9.3"
   # shared resources -- taken from terraform_remote_state data source above
 
   vpc_id                         = data.terraform_remote_state.shared.outputs.vpc_id
@@ -55,6 +55,8 @@ module "main" {
   rds_address                    = data.terraform_remote_state.shared.outputs.rds_address
   alb_default_tg_arn             = data.terraform_remote_state.shared.outputs.alb_default_tg_arn
   ecs_sg_id                      = data.terraform_remote_state.shared.outputs.ecs_sg_id
+
+  shared_resources_workspace     = var.shared_resources_workspace
 
   # per environment settings -- taken from .tfvars files
 

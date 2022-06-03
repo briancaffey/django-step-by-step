@@ -8,6 +8,7 @@
 # WORKSPACE - ad hoc environment workspace
 # SHARED_RESOURCES_WORKSPACE - shared resources workspace
 # BACKEND_IMAGE_TAG - backend image tag to update the backend services to (e.g. v1.2.3)
+# AWS_ACCOUNT_ID - AWS account ID is used for the ECR repository URL
 
 echo "Updating backend services..."
 
@@ -17,28 +18,46 @@ for TASK in "migrate" "gunicorn" "default" "beat"
 do
   echo "Updating $TASK task definition..."
   TASK_FAMILY=$WORKSPACE-$TASK
-  aws ecs describe-task-definition \
+
+  TASK_DESCRIPTION=$(aws ecs describe-task-definition \
     --task-definition $TASK_FAMILY \
-    | jq -r \
+  )
+
+  echo $TASK_DESCRIPTION | jq -r \
     .taskDefinition.containerDefinitions \
     > /tmp/$TASK_FAMILY.json
 
   # write new container definition JSON with updated image
   echo "Writing new $TASK_FAMILY container definitions JSON..."
+
+  # update image
+  NEW_BACKEND_IMAGE_URI="$AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/backend:$BACKEND_IMAGE_TAG"
+
+  # Replace old image with new image tag
   cat /tmp/$TASK_FAMILY.json \
     | jq \
-    --arg IMAGE "$BACKEND_IMAGE_TAG" '.[0].image |= $IMAGE' \
+    --arg IMAGE "$NEW_BACKEND_IMAGE_URI" '.[0].image |= $IMAGE' \
     > /tmp/$TASK_FAMILY-new.json
 
 
   # https://github.com/aws/aws-cli/issues/4453
-  # Get the existing memory configuration for the task definition
-  echo "Getting existing memory configuration for $TASK_FAMILY..."
-  MEMORY=$( \
-    aws ecs describe-task-definition \
-      --task-definition $TASK_FAMILY \
-      | jq -r \
-      .taskDefinition.memory \
+  # Get the existing configuration for the task definition (memory, cpu, etc.)
+  echo "Getting existing configuration for $TASK_FAMILY..."
+
+  MEMORY=$( echo $TASK_DESCRIPTION | jq -r \
+    .taskDefinition.memory \
+  )
+
+  CPU=$( echo $TASK_DESCRIPTION | jq -r \
+    .taskDefinition.cpu \
+  )
+
+  ECS_EXECUTION_ROLE_ARN=$( echo $TASK_DESCRIPTION | jq -r \
+    .taskDefinition.executionRoleArn \
+  )
+
+  ECS_TASK_ROLE_ARN=$( echo $TASK_DESCRIPTION | jq -r \
+    .taskDefinition.taskRoleArn \
   )
 
   # check the content of the new container definition JSON
@@ -51,7 +70,10 @@ do
       --family $TASK_FAMILY \
       --container-definitions file:///tmp/$TASK_FAMILY-new.json \
       --memory $MEMORY \
+      --cpu $CPU \
       --network-mode awsvpc \
+      --execution-role-arn $ECS_EXECUTION_ROLE_ARN \
+      --task-role-arn $ECS_TASK_ROLE_ARN \
       --requires-compatibilities "FARGATE" \
       | jq -r .taskDefinition.taskDefinitionArn \
   )
@@ -72,8 +94,11 @@ SUBNETS=$( \
   aws ec2 describe-subnets \
     --filters "Name=tag:env,Values=$SHARED_RESOURCES_WORKSPACE" "Name=tag:Name,Values=*private*" \
     --query 'Subnets[*].SubnetId' \
-    --output json \
+    --output text \
 )
+
+# replace spaces with commas using tr
+SUBNET_IDS=$(echo $SUBNETS | tr ' ' ',')
 
 # get VPC by tag
 VPC_ID=$( \
@@ -89,7 +114,7 @@ ECS_SG_ID=$( \
   aws ec2 describe-security-groups \
     --filters "Name=tag:Name,Values=$SHARED_RESOURCES_WORKSPACE-ecs-sg" \
     --query 'SecurityGroups[*].GroupId' \
-    --output json \
+    --output text \
 )
 
 echo "Running database migrations..."
@@ -100,9 +125,11 @@ TASK_ID=$( \
   aws ecs run-task \
     --cluster $WORKSPACE-cluster \
     --task-definition $TASK_DEFINITION \
-    --network-configuration "awsvpcConfiguration={subnets=[$SUBNETS],securityGroups=[$ECS_SG_ID],assignPublicIp=ENABLED}" \
+    --network-configuration "awsvpcConfiguration={subnets=[$SUBNET_IDS],securityGroups=[$ECS_SG_ID],assignPublicIp=ENABLED}" \
     | jq -r '.tasks[0].taskArn' \
   )
+
+echo "Task ID is $TASK_ID"
 
 aws ecs wait tasks-stopped \
   --tasks $TASK_ID \
@@ -135,14 +162,15 @@ do
   aws ecs update-service \
     --cluster $WORKSPACE-cluster \
     --service $WORKSPACE-$TASK \
-    --task-definition $TASK_DEFINITION
+    --task-definition $TASK_DEFINITION \
+    --no-cli-pager
 done
 
 echo "Services updated. Waiting for services to become stable..."
 
-  # wait for service to be updated
-  aws ecs wait services-stable \
-    --cluster $WORKSPACE-cluster \
-    --services $WORKSPACE-$TASK
+# wait for service to be updated
+aws ecs wait services-stable \
+  --cluster $WORKSPACE-cluster \
+  --services $WORKSPACE-gunicorn $WORKSPACE-default $WORKSPACE-beat
 
 echo "Services are now stable. Backend services are now up to date with $BACKEND_IMAGE_TAG."
