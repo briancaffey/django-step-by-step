@@ -41,7 +41,7 @@ data "terraform_remote_state" "shared" {
 
 module "main" {
   source  = "briancaffey/django/aws//modules/ad-hoc"
-  version = "0.9.6"
+  version = "0.11.0"
   # shared resources -- taken from terraform_remote_state data source above
 
   vpc_id                         = data.terraform_remote_state.shared.outputs.vpc_id
