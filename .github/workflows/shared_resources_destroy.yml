@@ -33,12 +33,13 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: "terraform init, plan and apply for shared resources"
+      - name: "terraform destroy for shared resources"
         id: terraform_init_plan_apply_shared_resources
         env:
           TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
           TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
           TF_BACKEND_REGION: ${{ secrets.TF_BACKEND_REGION }}
+          TF_BACKEND_DYNAMODB_TABLE: ${{ secrets.TF_BACKEND_DYNAMODB_TABLE }}
           WORKSPACE: ${{ github.event.inputs.workspace }}
 
           # Terraform variables
@@ -53,6 +54,7 @@ jobs:
           terraform -chdir=terraform/live/shared-resources \
             init \
             -backend-config="bucket=${TF_BACKEND_BUCKET}" \
+            -backend-config="dynamodb_table=${TF_BACKEND_DYNAMODB_TABLE}" \
             -backend-config="key=terraform.tfstate" \
             -backend-config="region=${TF_BACKEND_REGION}" \
             -backend-config="workspace_key_prefix=shared-resources"
