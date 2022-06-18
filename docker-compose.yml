@@ -89,8 +89,6 @@ services:
       - POSTGRES_SERVICE_HOST=postgres
       - REDIS_SERVICE_HOST=redis
       - DJANGO_SETTINGS_MODULE=backend.settings.development
-      - AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID
-      - AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY
 
       # celery beat
       - PIDFILE=/code/celerybeat.pid
@@ -115,6 +113,21 @@ services:
       - manage.py
       - start_beat
     ports: []
+
+  # migrate command
+  migrate:
+    <<: *backend
+    container_name: migrate
+    command:
+      - python3
+      - manage.py
+      - migrate
+    ports: []
+    depends_on:
+      - postgres
+      - redis
+      - backend
+    restart: "on-failure"
 
   notebook:
     <<: *backend
