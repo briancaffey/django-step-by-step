@@ -275,7 +275,7 @@ docker-compose-backend-jupyter:
 	@docker compose run backend bash -c "cd notebooks && ../manage.py shell_plus --notebook"
 
 ## docker-compose up
-docker-compose-up: docker-compose-backend-migrate
+docker-compose-up:
 	@docker compose up
 
 ## run pytest-cov with backend container
