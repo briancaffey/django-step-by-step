@@ -17,5 +17,7 @@ RUN pip3 install -r requirements_dev.txt
 USER app
 
 FROM base AS prod
+
+COPY . /code
 RUN chown -R app:app /code
 USER app
