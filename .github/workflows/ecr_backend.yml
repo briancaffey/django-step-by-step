@@ -34,8 +34,6 @@ jobs:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
 
         run: |
-          echo "ref_name is.."
-          echo ${{ github.ref_name }}
 
           # the name of the ECR repository I am using is called `backend`
           BACKEND_IMAGE_URI=${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/backend
