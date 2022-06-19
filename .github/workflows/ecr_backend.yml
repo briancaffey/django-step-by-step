@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-          ref: ${{ github.ref }}
+          ref: ${{ github.ref_name }}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -30,7 +30,7 @@ jobs:
 
       - name: "Build Backend Docker Container"
         env:
-          SOURCE_TAG: ${{ github.ref }}
+          SOURCE_TAG: ${{ github.ref_name }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
 
         run: |
