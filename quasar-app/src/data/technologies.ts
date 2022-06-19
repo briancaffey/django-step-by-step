@@ -59,6 +59,13 @@ const otherTechnologies = [
     documentationLink: 'https://aws.amazon.com/cdk/',
   },
   {
+    title: 'Terraform',
+    description: 'Infrastructure as Code',
+    detail: 'Used for defining AWS infrastructure in code',
+    image: 'terraform.webp',
+    documentationLink: 'https://www.terraform.io/',
+  },
+  {
     title: 'Heroku',
     description: 'Platform as a Service',
     detail: 'An easy way to deploy web applications',
