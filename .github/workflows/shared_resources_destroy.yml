@@ -63,5 +63,4 @@ jobs:
           # set the TF_WORKSPACE environment variable
           export TF_WORKSPACE=$WORKSPACE
 
-
           terraform -chdir=terraform/live/shared-resources destroy -auto-approve
