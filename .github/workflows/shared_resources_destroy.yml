@@ -47,7 +47,7 @@ jobs:
           TF_VAR_key_name: ${{ secrets.KEY_NAME }}
 
         run: |
-          export VAR_FILE=envs/${TF_WORKSPACE}.tfvars
+          export VAR_FILE=envs/${WORKSPACE}.tfvars
 
           terraform -chdir=terraform/live/shared-resources \
             init \
