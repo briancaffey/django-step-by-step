@@ -123,7 +123,7 @@ jobs:
             -backend-config="workspace_key_prefix=ad-hoc-envs"
 
           # create the workspace if it doesn't exist already
-          terraform workspace create ${WORKSPACE} || echo "Workspace ${WORKSPACE} already exists or cannot be created"
+          terraform workspace new ${WORKSPACE} || echo "Workspace ${WORKSPACE} already exists or cannot be created"
 
           # set the TF_WORKSPACE environment variable
           export TF_WORKSPACE=$WORKSPACE
