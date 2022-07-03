@@ -21,7 +21,7 @@ data "terraform_remote_state" "shared" {
     bucket               = var.s3_bucket
     key                  = "terraform.tfstate"
     region               = var.region
-    workspace_key_prefix = "prod/app"
+    workspace_key_prefix = "prod/base"
   }
   workspace = var.prod_base_env
 }
