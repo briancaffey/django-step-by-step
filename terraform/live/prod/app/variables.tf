@@ -7,7 +7,7 @@ variable "s3_bucket" {
 }
 
 variable "prod_base_env" {
-  type    = string
+  type = string
 }
 
 ##############################################################################
@@ -27,10 +27,6 @@ variable "ecr_fe_repo_url" {
 }
 
 variable "be_image_tag" {
-  type = string
-}
-
-variable "frontend_url" {
   type = string
 }
 

@@ -45,7 +45,6 @@ module "main" {
   # variables
   ecr_be_repo_url = var.ecr_be_repo_url
   ecr_fe_repo_url = var.ecr_fe_repo_url
-  be_image_tag = var.be_image_tag
-  frontend_url = var.frontend_url
-  domain_name = var.domain_name
+  be_image_tag    = var.be_image_tag
+  domain_name     = var.domain_name
 }
