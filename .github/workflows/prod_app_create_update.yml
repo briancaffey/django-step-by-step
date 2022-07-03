@@ -10,6 +10,12 @@ on:
         default: 'stage'
         type: string
 
+      prod_base_env:
+        description: 'Prod base env'
+        required: true
+        default: 'stage'
+        type: string
+
 jobs:
   create_update_shared_resources:
     name: "Create or update prod app env [${{ github.event.inputs.workspace }}]"
@@ -36,14 +42,20 @@ jobs:
       - name: "terraform init, plan and apply for prod base env"
         id: terraform_init_plan_apply_prod_base
         env:
+
+          # backend config
           TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
           TF_BACKEND_REGION: ${{ secrets.TF_BACKEND_REGION }}
           TF_BACKEND_DYNAMODB_TABLE: ${{ secrets.TF_BACKEND_DYNAMODB_TABLE }}
-          WORKSPACE: ${{ github.event.inputs.workspace }}
 
-          # Terraform variables
-          TF_VAR_certificate_arn: ${{ secrets.ACM_CERTIFICATE_ARN }}
-          TF_VAR_key_name: ${{ secrets.KEY_NAME }}
+          WORKSPACE: ${{ github.event.inputs.workspace }}
+          TF_VAR_prod_base_env: ${{ github.event.inputs.prod_base_env }}
+
+          TF_VAR_s3_bucket: ${{ secrets.TF_BACKEND_BUCKET }}
+
+          # ECR variables
+          TF_VAR_ecr_be_repo_url: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/backend
+          TF_VAR_ecr_fe_repo_url: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/frontend
 
         run: |
           export VAR_FILE=envs/${WORKSPACE}.tfvars
