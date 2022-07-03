@@ -15,8 +15,8 @@ provider "aws" {
   region = var.region
   default_tags {
     tags = {
-      env = terraform.workspace
-      ad_hoc_env = terraform.workspace
+      env                = terraform.workspace
+      ad_hoc_env         = terraform.workspace
       ad_hoc_environment = "true"
     }
   }
@@ -29,9 +29,9 @@ provider "aws" {
 data "terraform_remote_state" "shared" {
   backend = "s3"
   config = {
-    bucket = var.s3_bucket
-    key    = "terraform.tfstate"
-    region = var.region
+    bucket               = var.s3_bucket
+    key                  = "terraform.tfstate"
+    region               = var.region
     workspace_key_prefix = "shared-resources"
   }
   workspace = var.shared_resources_workspace
@@ -56,7 +56,7 @@ module "main" {
   alb_default_tg_arn             = data.terraform_remote_state.shared.outputs.alb_default_tg_arn
   ecs_sg_id                      = data.terraform_remote_state.shared.outputs.ecs_sg_id
 
-  shared_resources_workspace     = var.shared_resources_workspace
+  shared_resources_workspace = var.shared_resources_workspace
 
   # per environment settings -- taken from .tfvars files
 

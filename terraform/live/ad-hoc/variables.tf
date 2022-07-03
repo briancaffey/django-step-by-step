@@ -7,7 +7,7 @@ variable "s3_bucket" {
 }
 
 variable "shared_resources_workspace" {
-  type = string
+  type    = string
   default = "dev"
 }
 

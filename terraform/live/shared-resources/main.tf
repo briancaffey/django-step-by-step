@@ -15,16 +15,16 @@ provider "aws" {
   region = var.region
   default_tags {
     tags = {
-      env = terraform.workspace
+      env                  = terraform.workspace
       shared_resources_env = terraform.workspace
-      shared_resource = "true"
+      shared_resource      = "true"
     }
   }
 }
 
 module "main" {
-  source  = "briancaffey/ad-hoc-environments/aws"
-  version = "0.8.0"
+  source          = "briancaffey/ad-hoc-environments/aws"
+  version         = "0.8.0"
   certificate_arn = var.certificate_arn
   key_name        = var.key_name
 }
