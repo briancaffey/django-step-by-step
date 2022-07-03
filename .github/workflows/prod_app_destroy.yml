@@ -80,4 +80,5 @@ jobs:
 
           terraform -chdir=terraform/live/prod/app \
             destroy \
+            -var-file=${VAR_FILE} \
             -auto-approve
