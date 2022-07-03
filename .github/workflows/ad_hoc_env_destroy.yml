@@ -1,5 +1,5 @@
 # github action to destroy an ad hoc environment
-name: Ad Hoc Env / DESTROY
+name: ad hoc | env | destroy
 
 on:
   workflow_dispatch:

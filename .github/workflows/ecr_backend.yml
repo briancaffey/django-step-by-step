@@ -1,4 +1,4 @@
-name: ECR / Backend
+name: ecr | backend
 
 on:
   push:

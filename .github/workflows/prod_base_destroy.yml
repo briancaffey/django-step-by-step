@@ -1,5 +1,5 @@
 # github action to create or update shared resources
-name: Prod base / DESTROY
+name: prod | base | destroy
 
 on:
   workflow_dispatch:

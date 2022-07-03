@@ -1,5 +1,5 @@
 # github action to update the backend application
-name: Ad Hoc / FRONTEND UPDATE
+name: ad hoc | frontend | update
 
 on:
   workflow_dispatch:

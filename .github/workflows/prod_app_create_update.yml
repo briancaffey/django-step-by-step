@@ -1,19 +1,19 @@
-# github action to create or update shared resources
-name: prod | base | create / update
+# github action to create or update prod env
+name: prod | app | create / update
 
 on:
   workflow_dispatch:
     inputs:
       workspace:
-        description: 'Terraform workspace for prod base env'
+        description: 'Terraform workspace for prod app env'
         required: true
         default: 'stage'
         type: string
 
 jobs:
   create_update_shared_resources:
-    name: "Create or update prod base env [${{ github.event.inputs.workspace }}]"
-    environment: prod-base-${{ github.event.inputs.workspace }}
+    name: "Create or update prod app env [${{ github.event.inputs.workspace }}]"
+    environment: prod-app-${{ github.event.inputs.workspace }}
     runs-on: ubuntu-latest
 
     steps:

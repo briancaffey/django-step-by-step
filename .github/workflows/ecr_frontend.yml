@@ -1,4 +1,4 @@
-name: ECR / Frontend
+name: ecr | frontend
 
 on:
   workflow_dispatch:

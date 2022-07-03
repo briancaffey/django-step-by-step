@@ -1,5 +1,5 @@
 # github action to create or update an ad hoc environment
-name: Ad Hoc Env / CREATE or UPDATE
+name: ad hoc | env | create / update
 
 on:
   workflow_dispatch:
