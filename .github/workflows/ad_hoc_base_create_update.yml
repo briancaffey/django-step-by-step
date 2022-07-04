@@ -1,5 +1,5 @@
 # github action to create or update shared resources
-name: ad hoc | shared | create / update
+name: ad hoc | base | create / update
 
 on:
   workflow_dispatch:
