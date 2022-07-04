@@ -68,6 +68,8 @@ jobs:
 
         run: |
 
+          export VAR_FILE=envs/${WORKSPACE}.tfvars
+
           terraform -chdir=terraform/live/ad-hoc/app \
             init \
             -input=false \
