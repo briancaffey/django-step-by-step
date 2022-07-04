@@ -11,7 +11,7 @@ on:
         type: string
 
 jobs:
-  destroy_prod_base:
+  prod_base_destroy:
     name: "Destroy prod base env [${{ github.event.inputs.workspace }}]"
     environment: prod-base-${{ github.event.inputs.workspace }}
     runs-on: ubuntu-latest
@@ -21,6 +21,7 @@ jobs:
       - uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.1.7
+          terraform_wrapper: false
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -34,7 +35,7 @@ jobs:
           fetch-depth: 0
 
       - name: "terraform init and destroy for prod base env"
-        id: terraform_init_plan_apply_prod_base
+        id: prod_base_destroy_terraform_init_destroy
         env:
           TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
           TF_BACKEND_REGION: ${{ secrets.TF_BACKEND_REGION }}
