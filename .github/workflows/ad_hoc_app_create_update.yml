@@ -153,13 +153,13 @@ jobs:
         run: |
 
           # get the migrate command from Terraform outputs and write to file
-          cat terraform_outputs.json | jq -r '.migrate_command.value' > migrate_command.sh
+          cat terraform_outputs.json | jq -r '.backend_update_command.value' > backend_update_command.sh
 
           # view migrate command
-          cat migrate_command.sh
+          cat backend_update_command.sh
 
           # make the file executable
-          sudo chmod +x migrate_command.sh
+          sudo chmod +x backend_update_command.sh
 
           # run migrate command
-          ./migrate_command.sh
+          ./backend_update_command.sh

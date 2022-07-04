@@ -88,4 +88,21 @@ jobs:
             -auto-approve \
             -var-file=$VAR_FILE
 
-          terraform -chdir=terraform/live/prod/app output -json
+          terraform -chdir=terraform/live/prod/app output -json > terraform_outputs.json
+
+      # backend_update_command
+      - name: "Run post-deployment backend_update_command"
+        id: post_prod_app_create_update
+        run: |
+
+          # get the backend_update_command command from Terraform outputs and write to file
+          cat terraform_outputs.json | jq -r '.backend_update_command.value' > backend_update_command.sh
+
+          # view migrate command
+          cat backend_update_command.sh
+
+          # make the file executable
+          sudo chmod +x backend_update_command.sh
+
+          # run migrate command
+          ./backend_update_command.sh

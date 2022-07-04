@@ -1,6 +1,6 @@
-output "migrate_command" {
-  value       = module.main.migrate_command
-  description = "Command for running database migrations use run-task"
+output "backend_update_command" {
+  value       = module.main.backend_update_command
+  description = "Command for running backend update commands with run-task"
 }
 
 output "ecs_exec_command" {
