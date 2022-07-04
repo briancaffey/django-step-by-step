@@ -1,19 +1,19 @@
 # github action to destroy shared resources
-name: ad hoc | shared | destroy
+name: ad hoc | base | destroy
 
 on:
   workflow_dispatch:
     inputs:
       workspace:
-        description: 'Terraform workspace for shared resources env'
+        description: 'Terraform workspace for ad hoc base env'
         required: true
         default: 'dev'
         type: string
 
 jobs:
-  destroy_shared_resources:
+  destroy_ad_hoc_base_env:
     name: "Destroy shared resources env [${{ github.event.inputs.workspace }}]"
-    environment: shared-resources-${{ github.event.inputs.workspace }}
+    environment: ad-hoc-base-${{ github.event.inputs.workspace }}
     runs-on: ubuntu-latest
 
     steps:
@@ -34,7 +34,7 @@ jobs:
           fetch-depth: 0
 
       - name: "terraform destroy for shared resources"
-        id: terraform_init_plan_apply_shared_resources
+        id: terraform_init_plan_apply_ad_hoc_base
         env:
           TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
           TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
@@ -49,7 +49,7 @@ jobs:
         run: |
           export VAR_FILE=envs/${WORKSPACE}.tfvars
 
-          terraform -chdir=terraform/live/shared-resources \
+          terraform -chdir=terraform/live/ad-hoc/base \
             init \
             -backend-config="bucket=${TF_BACKEND_BUCKET}" \
             -backend-config="dynamodb_table=${TF_BACKEND_DYNAMODB_TABLE}" \
@@ -63,4 +63,4 @@ jobs:
           # set the TF_WORKSPACE environment variable
           export TF_WORKSPACE=$WORKSPACE
 
-          terraform -chdir=terraform/live/shared-resources destroy -auto-approve
+          terraform -chdir=terraform/live/ad-hoc/base destroy -auto-approve
