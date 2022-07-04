@@ -1,4 +1,0 @@
-
-bucket = "my-example-bucket"
-key    = "ad-hoc/terraform.tfstate"
-region = "us-east-1"
