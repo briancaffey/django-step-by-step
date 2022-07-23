@@ -50,13 +50,13 @@
 <div>
 {% if post.created_by%}
 <!-- TODO: refactor this URL -->
-<a class="btn btn-primary" href="/posts/{{ post.id}}/edit"><i class="bi bi-pencil"></i></a>
+<a class="btn btn-primary" href="{% url 'update-post' id=post.id %}"><i class="bi bi-pencil"></i></a>
 {% endif %}
 
 <!-- Delete post -->
 {% if request.user.is_authenticated %}
 {% if post.created_by.id == request.user.id %}
-<form action="/posts/{{ post.id }}/delete" method="post">
+<form action="{% url 'delete-post' id=post.id %}" method="post">
     {% csrf_token %}
 <button type="submit" class="btn btn-danger">
   <i class="bi bi-trash"></i>

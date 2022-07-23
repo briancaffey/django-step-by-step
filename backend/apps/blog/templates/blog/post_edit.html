@@ -11,7 +11,7 @@
 <!-- Content -->
 
 {% block content %}
-<form action="/cbv/posts/{{ form.instance.id }}/edit" method="post">
+<form action="{% url 'post-update-cbv' pk=form.instance.id %}" method="post">
   <div class="form-group">
     {% csrf_token %}
     <h1>Edit this post</h1>

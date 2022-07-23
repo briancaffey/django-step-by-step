@@ -12,7 +12,7 @@
 
 {% block content %}
 
-<form action="/cbv/posts/new" method="post" enctype="multipart/form-data">
+<form action="{% url 'post-create-cbv' %}" method="post" enctype="multipart/form-data">
   <div class="form-group">
     {% csrf_token %}
     <h1>Create a new post - <small>Class-based view</small></h1>

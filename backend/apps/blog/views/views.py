@@ -4,7 +4,7 @@ import logging
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.decorators.http import require_POST
@@ -36,7 +36,10 @@ def posts(request):
 
 def post(request, id):
 
-    post = Post.objects.with_like_info(user=request.user).get(id=id)
+    try:
+        post = Post.objects.with_like_info(user=request.user).get(id=id)
+    except Post.DoesNotExist:
+        raise Http404("Post does not exist")
 
     return render(request, template_name="post.html", context={"post": post})
 

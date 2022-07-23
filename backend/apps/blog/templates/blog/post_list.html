@@ -27,7 +27,7 @@
 
 <div>
   {% for post in page_obj %}
-  <a href="/cbv/posts/{{ post.id }}" style="text-decoration: none; color: #000">
+  <a href="{% url 'post-detail-cbv' pk=post.id %}" style="text-decoration: none; color: #000">
     <div class="card p-4 mb-2">
 
       {% if post.image %}

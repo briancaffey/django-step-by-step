@@ -25,7 +25,7 @@
         async toggleLike() {
             try {
                 // TODO: refactor this URL
-                const resp = await axios.post("/api/posts/{{ post.id }}/like");
+                const resp = await axios.post("{% url 'like-post' id=post.id  %}");
                 console.log(resp.data);
                 this.counter = resp.data.likes;
                 this.liked = resp.data.like;

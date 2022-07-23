@@ -209,8 +209,8 @@ ADMINS = [("Local Admin", "admin@dev.local")]
 # Login Redirect
 
 LOGIN_URL = "/login"
-LOGIN_REDIRECT_URL = "/posts"
-LOGOUT_REDIRECT_URL = "/posts"
+LOGIN_REDIRECT_URL = "/mtv"
+LOGOUT_REDIRECT_URL = "/mtv"
 
 # REST Framework
 
