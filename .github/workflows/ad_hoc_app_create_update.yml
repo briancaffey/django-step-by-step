@@ -50,9 +50,9 @@ jobs:
         env:
           SHARED_RESOURCES_ENV: ${{ github.event.inputs.shared_resources_workspace }}
         run: |
-          BASTION_PUBLIC_IP=$(aws ec2 describe-instances \
+          BASTION_INSTANCE_ID=$(aws ec2 describe-instances \
             --filters "Name=tag:env,Values=$SHARED_RESOURCES_ENV" \
-            --query "Reservations[*].Instances[*].PublicIpAddress" \
+            --query "Reservations[*].Instances[*].InstanceId" \
             --output text)
 
           RDS_ENDPOINT=$(aws rds describe-db-instances \
@@ -60,29 +60,51 @@ jobs:
             --query "DBInstances[0].Endpoint.Address" \
             --output text)
 
-          echo ::set-output name=BASTION_PUBLIC_IP::$BASTION_PUBLIC_IP
+          echo ::set-output name=BASTION_INSTANCE_ID::$BASTION_INSTANCE_ID
           echo ::set-output name=RDS_ENDPOINT::$RDS_ENDPOINT
-
-      # needed in order to access the bastion host when creating ad hoc DB in RDS
-      # TODO: is there a GitHub action for doing this?
-      - name: "Setup SSH Key"
-        id: setup_ssh_key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          eval "$(ssh-agent -s)"
-          ssh-add ~/.ssh/id_rsa
 
       - name: "Create ad hoc environment DB"
         id: create_ad_hoc_env_db
         env:
-          BASTION_PUBLIC_IP: ${{ steps.get_aws_resource_values.outputs.BASTION_PUBLIC_IP }}
           RDS_ENDPOINT: ${{ steps.get_aws_resource_values.outputs.RDS_ENDPOINT }}
+          BASTION_INSTANCE_ID: ${{ steps.get_aws_resource_values.outputs.BASTION_INSTANCE_ID }}
           AD_HOC_ENV: ${{ github.event.inputs.workspace }}
+          AWS_PAGER: ""
         run: |
-          ssh -o StrictHostKeyChecking=no ec2-user@$BASTION_PUBLIC_IP \
-            "PGPASSWORD=postgres createdb -U postgres -w -h $RDS_ENDPOINT $AD_HOC_ENV-db || echo DB either already exists or could not be created"
+          # TODO - move the hard-coded password to secrets manager and retrieve it from AWS Secrets Manager
+          # define the command to create the database
+          export COMMAND="PGPASSWORD=postgres createdb -U postgres -w -h $RDS_ENDPOINT $AD_HOC_ENV-db || echo DB either already exists or could not be created"
+
+          # send the command and capture the output to get the command ID
+          SEND_COMMAND_OUTPUT=$( \
+            aws ssm send-command \
+              --instance-ids "${BASTION_INSTANCE_ID}" \
+              --document-name "AWS-RunShellScript" \
+              --parameters '{"commands": ["'"${COMMAND}"'"]}' \
+          )
+
+          # get the command ID
+          COMMAND_ID=$(echo $SEND_COMMAND_OUTPUT | jq -r '.Command.CommandId')
+
+          # wait for the command to complete
+          aws ssm wait command-executed \
+            --command-id $COMMAND_ID \
+            --instance-id ${BASTION_INSTANCE_ID}
+
+          echo "Command Completed.."
+
+          # get command output for StdOut and StdErr content
+          COMMAND_INFO=$( \
+            aws ssm get-command-invocation \
+              --command-id $COMMAND_ID \
+              --instance-id "${BASTION_INSTANCE_ID}" \
+          )
+
+          echo $COMMAND_INFO
+
+          # get the command output
+          echo $COMMAND_INFO | jq -r '.StandardOutputContent'
+          echo $COMMAND_INFO | jq -r '.StandardErrorContent'
 
       - name: "terraform init, plan and apply for ad hoc environment"
         id: terraform_init_plan_apply

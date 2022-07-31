@@ -83,12 +83,8 @@ jobs:
               --parameters '{"commands": ["'"${COMMAND}"'"]}' \
           )
 
-          echo "Command Sent.."
-
           # get the command ID
           COMMAND_ID=$(echo $SEND_COMMAND_OUTPUT | jq -r '.Command.CommandId')
-          echo "Command ID"
-          echo $COMMAND_ID
 
           # wait for the command to complete
           aws ssm wait command-executed \
