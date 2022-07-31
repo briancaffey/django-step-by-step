@@ -97,7 +97,7 @@ jobs:
 
           echo "Command Completed.."
 
-          $ get command output for StdOut and StdErr content
+          # get command output for StdOut and StdErr content
           COMMAND_INFO=$( \
             aws ssm get-command-invocation \
               --command-id $COMMAND_ID \
