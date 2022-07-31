@@ -25,5 +25,4 @@ provider "aws" {
 module "main" {
   source          = "git::https://github.com/briancaffey/terraform-aws-django.git//modules/ad-hoc/base"
   certificate_arn = var.certificate_arn
-  key_name        = var.key_name
 }
