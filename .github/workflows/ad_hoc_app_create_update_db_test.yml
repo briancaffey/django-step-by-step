@@ -74,6 +74,6 @@ jobs:
           export COMMAND="PGPASSWORD=postgres createdb -U postgres -w -h $RDS_ENDPOINT $AD_HOC_ENV-db || echo DB either already exists or could not be created"
 
           aws ssm send-command \
-            --targets=$BASTION_INSTANCE_ID \
-            --document-name=AWS-StartNonInteractiveCommand \
-            --parameters='{"command": ["'"${COMMAND}"'"]}'
+            --instance-ids "${BASTION_INSTANCE_ID}" \
+            --document-name "AWS-StartNonInteractiveCommand" \
+            --parameters '{"command": ["'"${COMMAND}"'"]}'
