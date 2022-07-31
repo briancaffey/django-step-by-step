@@ -75,5 +75,5 @@ jobs:
 
           aws ssm send-command \
             --instance-ids "${BASTION_INSTANCE_ID}" \
-            --document-name "AWS-StartNonInteractiveCommand" \
+            --document-name "AWS-RunShellScript" \
             --parameters '{"command": ["'"${COMMAND}"'"]}'
