@@ -1,0 +1,79 @@
+# github action to create or update an ad hoc environment
+name: ad hoc | app | create / update | db test
+
+on:
+  workflow_dispatch:
+    inputs:
+
+      # The Terraform workspace for the shared resources Terraform configuration
+      # that the ad hoc environment will use.
+      # This input typically will not be used since all ad hoc environments should use one set of shared resources
+      # This may be changed if major changes to the shared resources configuration are made to avoid disrupting existing ad hoc environments
+      shared_resources_workspace:
+        description: 'Terraform workspace for shared resources env'
+        required: true
+        default: 'dev'
+        type: string
+
+      workspace:
+        description: 'Terraform workspace for the ad hoc env'
+        required: true
+        default: 'dev'
+        type: string
+
+jobs:
+  create_update_ad_hoc_env:
+    name: "Create or update ad hoc env [${{ github.event.inputs.workspace }}]"
+    environment: ad-hoc-env-${{ github.event.inputs.workspace }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.1.7
+          terraform_wrapper: false
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      # get the values for the Terraform configuration for the shared resources: BASTION_IP, RDS_ENDPOINT, etc.
+      - name: "Get AWS Resource values"
+        id: get_aws_resource_values
+        env:
+          SHARED_RESOURCES_ENV: ${{ github.event.inputs.shared_resources_workspace }}
+        run: |
+          BASTION_INSTANCE_ID=$(aws ec2 describe-instances \
+            --filters "Name=tag:env,Values=$SHARED_RESOURCES_ENV" \
+            --query "Reservations[*].Instances[*].PublicIpAddress" \
+            --output text)
+
+          RDS_ENDPOINT=$(aws rds describe-db-instances \
+            --db-instance-identifier $SHARED_RESOURCES_ENV-rds \
+            --query "DBInstances[0].Endpoint.Address" \
+            --output text)
+
+          echo ::set-output name=BASTION_INSTANCE_ID::$BASTION_INSTANCE_ID
+          echo ::set-output name=RDS_ENDPOINT::$RDS_ENDPOINT
+
+      - name: "Create ad hoc environment DB"
+        id: create_ad_hoc_env_db
+        env:
+          RDS_ENDPOINT: ${{ steps.get_aws_resource_values.outputs.RDS_ENDPOINT }}
+          BASTION_INSTANCE_ID: ${{ steps.get_aws_resource_values.outputs.BASTION_INSTANCE_ID }}
+          AD_HOC_ENV: ${{ github.event.inputs.workspace }}
+        run: |
+          # TODO - move the hard-coded password to secrets manager and retrieve it from AWS Secrets Manager
+          COMMAND="PGPASSWORD=postgres createdb -U postgres -w -h $RDS_ENDPOINT $AD_HOC_ENV-db || echo DB either already exists or could not be created"
+
+          aws ssm start-session \
+            --target $BASTION_INSTANCE_ID \
+            --document-name AWS-StartNonInteractiveCommand \
+            --parameters '{"command": ["'"${COMMAND}"'"]}'
