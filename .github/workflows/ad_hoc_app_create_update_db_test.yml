@@ -83,13 +83,19 @@ jobs:
               --parameters '{"commands": ["'"${COMMAND}"'"]}' \
           )
 
+          echo "Command Sent.."
+
           # get the command ID
           COMMAND_ID=$(echo $SEND_COMMAND_OUTPUT | jq -r '.Command.CommandId')
+          echo "Command ID"
+          echo $COMMAND_ID
 
           # wait for the command to complete
           aws ssm wait command-executed \
             --command-id $COMMAND_ID \
             --instance-id ${BASTION_INSTANCE_ID}
+
+          echo "Command Completed.."
 
           $ get command output for StdOut and StdErr content
           COMMAND_INFO=$( \
@@ -97,6 +103,8 @@ jobs:
               --command-id $COMMAND_ID \
               --instance-id "${BASTION_INSTANCE_ID}" \
           )
+
+          echo $COMMAND_INFO
 
           # get the command output
           echo $COMMAND_INFO | jq -r '.StandardOutputContent'
