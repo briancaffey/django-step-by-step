@@ -52,7 +52,7 @@ jobs:
         run: |
           BASTION_INSTANCE_ID=$(aws ec2 describe-instances \
             --filters "Name=tag:env,Values=$SHARED_RESOURCES_ENV" \
-            --query "Reservations[*].Instances[*].PublicIpAddress" \
+            --query "Reservations[*].Instances[*].InstanceId" \
             --output text)
 
           RDS_ENDPOINT=$(aws rds describe-db-instances \
