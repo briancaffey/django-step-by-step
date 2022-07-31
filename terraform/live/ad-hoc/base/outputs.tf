@@ -54,14 +54,3 @@ output "rds_address" {
   value       = module.main.rds_address
   description = "address of the RDS instance"
 }
-
-# Bastion
-
-output "bastion_public_ip" {
-  value       = module.main.bastion_public_ip
-  description = "bastion host public ip"
-}
-
-output "ssh_command" {
-  value = module.main.ssh_command
-}
