@@ -3,7 +3,7 @@ name: ecr | backend
 on:
   push:
     tags:
-      - 'v*'
+      - 'be/v*'
 
 jobs:
   build_and_push:
@@ -30,10 +30,12 @@ jobs:
 
       - name: "Build Backend Docker Container"
         env:
-          SOURCE_TAG: ${{ github.ref_name }}
+          GIT_TAG: ${{ github.ref_name }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
 
         run: |
+
+          SOURCE_TAG="${GIT_TAG##*/}"
 
           # the name of the ECR repository I am using is called `backend`
           BACKEND_IMAGE_URI=${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/backend

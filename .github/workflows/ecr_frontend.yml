@@ -1,13 +1,9 @@
 name: ecr | frontend
 
 on:
-  workflow_dispatch:
-    inputs:
-      git_tag:
-        description: 'Git tag to use for building the image'
-        required: true
-        default: 'latest'
-        type: string
+  push:
+    tags:
+      - "fe/v*"
 
 jobs:
   build_and_push:
@@ -35,16 +31,18 @@ jobs:
 
       - name: "Build Frontend Docker Container"
         env:
-          SOURCE_TAG: ${{ github.event.inputs.git_tag }}
+          GIT_TAG: ${{ github.ref_name }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
         run: |
+
+          IMAGE_TAG="${GIT_TAG##*/}"
 
           FRONTEND_IMAGE_URI=${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/frontend
 
           docker build \
-            --build-arg VERSION=$SOURCE_TAG \
-            -t $FRONTEND_IMAGE_URI:$SOURCE_TAG \
+            --build-arg VERSION=$IMAGE_TAG \
+            -t $FRONTEND_IMAGE_URI:$IMAGE_TAG \
             -f nginx/ecs/Dockerfile \
             .
 
-          docker push $FRONTEND_IMAGE_URI:$SOURCE_TAG
+          docker push $FRONTEND_IMAGE_URI:$IMAGE_TAG
