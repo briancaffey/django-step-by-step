@@ -36,9 +36,11 @@ jobs:
       - name: "Build Frontend Docker Container"
         env:
           SOURCE_TAG: ${{ github.event.inputs.git_tag }}
-          FRONTEND_IMAGE_URI: ${{ secrets.FRONTEND_IMAGE_URI }}
-
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
         run: |
+
+          FRONTEND_IMAGE_URI=${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/frontend
+
           docker build \
             --build-arg VERSION=$SOURCE_TAG \
             -t $FRONTEND_IMAGE_URI:$SOURCE_TAG \
