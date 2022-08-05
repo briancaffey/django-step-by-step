@@ -217,6 +217,8 @@ Add an environment variable called `NODE_VERSION` to project's `Environment` set
 
 ### `API_URL`
 
+This value has been removed.
+
 Add another environment variable called `API_URL` set to the Heroku URL. For example:
 
 ```

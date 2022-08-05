@@ -7,11 +7,6 @@ if [[ -z "${DOCKER_HOST}" ]]; then
   exit 1;
 fi
 
-if [[ -z "${BACKEND_API_URL}" ]]; then
-  echo "API_URL not set. Please set this to your Raspberry Pi IP address."
-  exit 1;
-fi
-
 if [ ! -f raspberrypi/.raspberrypi.env ]; then
     echo
     echo "please create raspberrypi/.raspberrypi.env";
@@ -47,7 +42,7 @@ docker \
 echo "Building and tagging frontend container"
 
 docker build \
-    --build-arg BACKEND_API_URL=$BACKEND_API_URL \
+    # --build-arg BACKEND_API_URL=$BACKEND_API_URL \
     -t $REGISTRY/nginx:$VERSION \
     -f nginx/prod/Dockerfile \
     .

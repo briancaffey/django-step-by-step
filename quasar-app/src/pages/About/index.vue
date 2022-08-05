@@ -10,7 +10,7 @@
         This is a Quasar Framework application. It is a frontend application that consumes the μblog API.
       </q-card-section>
       <q-card-section>
-        {{ apiUrl }}
+        {{ version }}
       </q-card-section>
     </q-card>
     <q-card v-if="dev" class="q-mt-md">
@@ -115,8 +115,8 @@ export default defineComponent({
       }
     ];
 
-    const apiUrl = process.env.API_URL;
-    return { apiUrl, devLinks, dev, prodLinks }
+    const version = process.env.VERSION;
+    return { version, devLinks, dev, prodLinks }
   }
 })
 </script>

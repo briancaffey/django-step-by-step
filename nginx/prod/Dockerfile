@@ -1,6 +1,6 @@
 FROM node:14 as build-stage
-ARG BACKEND_API_URL
-ENV BACKEND_API_URL=$BACKEND_API_URL
+ARG VERSION
+ENV VERSION=$VERSION
 WORKDIR /app/
 COPY quasar-app/package.json /app/
 RUN npm cache verify

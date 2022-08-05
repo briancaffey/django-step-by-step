@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       git_tag:
-        description: 'Git tag to deploy'
+        description: 'Git tag to use for building the image'
         required: true
         default: 'latest'
         type: string
@@ -40,6 +40,7 @@ jobs:
 
         run: |
           docker build \
+            --build-arg VERSION=$SOURCE_TAG \
             -t $FRONTEND_IMAGE_URI:$SOURCE_TAG \
             -f nginx/ecs/Dockerfile \
             .

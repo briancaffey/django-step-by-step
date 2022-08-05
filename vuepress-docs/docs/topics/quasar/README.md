@@ -120,17 +120,17 @@ In `quasar.conf.js`, set the default router mode:
       vueRouterMode: 'history', // available values: 'hash', 'history'
 ```
 
-### Set API_URL in quasar.conf.js
+### Set VERSION in quasar.conf.js
 
 ```ts
     build: {
       vueRouterMode: 'history', // available values: 'hash', 'history'
       env: ctx.dev
         ? {
-            API_URL: `http://localhost:8000`,
+            VERSION: 'None',
           }
         : {
-            API_URL: `https://${process.env.API_URL}`,
+            VERSION: process.env.VERSION,
         }
 ```
 

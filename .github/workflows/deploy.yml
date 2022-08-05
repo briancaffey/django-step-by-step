@@ -159,7 +159,6 @@ jobs:
             --password-stdin $FRONTEND_IMAGE_URI
 
           docker build \
-              --build-arg BACKEND_API_URL=https://$APPLICATION_HOST_NAME \
               -t $FRONTEND_IMAGE_URI \
               -f nginx/prod/Dockerfile \
               .
