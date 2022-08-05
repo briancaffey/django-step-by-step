@@ -17,7 +17,11 @@ export default function i18n() {
   };
 
   const updateLocale = () => {
-    localStorage.setItem('lang', locale.value);
+
+    // TODO: figure out why this is giving compilations errors in CI
+    // localStorage.setItem('lang', locale.value);
+    localStorage.setItem('lang', 'en-US');
+
   }
 
   watch(locale, updateLocale);
