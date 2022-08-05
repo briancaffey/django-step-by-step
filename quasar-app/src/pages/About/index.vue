@@ -3,7 +3,7 @@
     <q-card>
       <q-card-section>
       <q-card-title class="text-h4">
-        About this project
+        About this Project
       </q-card-title>
       </q-card-section>
       <q-card-section>

@@ -24,9 +24,8 @@ on:
         type: string
 
 jobs:
-  init_plan_apply:
-    name: "Update frontend app for a terraform workspace"
-    environment: terraform-aws-ecs
+  update_service:
+    name: "Update frontend service for a terraform workspace"
     runs-on: ubuntu-latest
 
     steps:
@@ -47,78 +46,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: "terraform init, plan and apply"
-        id: terraform_output
-        env:
-          TF_BACKEND_BUCKET: ${{ secrets.TF_BACKEND_BUCKET }}
-          TF_BACKEND_KEY: ${{ secrets.TF_BACKEND_KEY }}
-          TF_BACKEND_REGION: ${{ secrets.TF_BACKEND_REGION }}
-          WORKSPACE: ${{ github.event.inputs.workspace }}
-
-        run: |
-          # set the terraform workspace
-          export TF_WORKSPACE=$WORKSPACE
-
-          terraform -chdir=terraform/live/dev \
-            init \
-            -backend-config="bucket=${TF_BACKEND_BUCKET}" \
-            -backend-config="key=${TF_BACKEND_KEY}" \
-            -backend-config="region=${TF_BACKEND_REGION}"
-
-          terraform -chdir=terraform/live/dev output -json > /tmp/output.json
-
-          echo "parsing output values"
-          SERVICE_NAME=$(cat /tmp/output.json | jq -r '.frontend_service_name.value')
-          CLUSTER_NAME=$(cat /tmp/output.json | jq -r '.ecs_cluster_name.value')
-          TASK_FAMILY=$(cat /tmp/output.json | jq -r '.frontend_task_family.value')
-
-          echo ::set-output name=SERVICE_NAME::$SERVICE_NAME
-          echo ::set-output name=CLUSTER_NAME::$CLUSTER_NAME
-          echo ::set-output name=TASK_FAMILY::$TASK_FAMILY
-
       - name: "Update frontend app"
         id: update_frontend
         env:
-          SERVICE_NAME: ${{ steps.terraform_output.outputs.SERVICE_NAME }}
-          CLUSTER_NAME: ${{ steps.terraform_output.outputs.CLUSTER_NAME }}
-          TASK_FAMILY: ${{ steps.terraform_output.outputs.TASK_FAMILY }}
-          NEW_IMAGE: ${{ secrets.FRONTEND_IMAGE_URI }}:${{ github.event.inputs.image_tag }}
-
+          WORKSPACE: ${{ github.event.inputs.workspace }}
+          SHARED_RESOURCES_WORKSPACE: ${{ github.event.inputs.shared_resources_workspace }}
+          BACKEND_IMAGE_TAG: ${{ github.event.inputs.frontend_image_tag }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
         run: |
-          # run the update
-
-          # env vars
-          echo $SERVICE_NAME
-          echo $CLUSTER_NAME
-          echo $TASK_FAMILY
-
-          # get container definitions JSON for task definition
-          aws ecs describe-task-definition \
-            --task-definition $TASK_FAMILY \
-            | jq -r \
-            .taskDefinition.containerDefinitions \
-            > /tmp/container-defs.json
-
-          # write new container definitions JSON
-          cat /tmp/container-defs.json \
-            | jq \
-            --arg IMAGE "$NEW_IMAGE" '.[0].image |= $IMAGE' \
-            > /tmp/new-container-defs.json
-
-          # register new task definition
-          TASK_DEFINITION=$( \
-            aws ecs register-task-definition \
-              --family $TASK_FAMILY \
-              --container-definitions file:///tmp/new-container-defs.json \
-              | jq -r .taskDefinition.taskDefinitionArn \
-          )
-
-          # update service
-          aws ecs update-service --cluster $CLUSTER_NAME \
-            --service $SERVICE_NAME \
-            --task-definition $TASK_DEFINITION
-
-          # wait for service to be updated
-          aws ecs wait services-stable \
-            --cluster $CLUSTER_NAME \
-            --services $SERVICE_NAME
+          ./ecs/scripts/frontend_app_update.sh
