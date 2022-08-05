@@ -1,6 +1,6 @@
 # update the backend application
 # run update scripts (migrate, collectstatic, etc)
-name: ad hoc | backend | update
+name: ad hoc | update | backend
 
 on:
   workflow_dispatch:
