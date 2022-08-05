@@ -51,7 +51,7 @@ jobs:
         env:
           WORKSPACE: ${{ github.event.inputs.workspace }}
           SHARED_RESOURCES_WORKSPACE: ${{ github.event.inputs.shared_resources_workspace }}
-          BACKEND_IMAGE_TAG: ${{ github.event.inputs.frontend_image_tag }}
+          FRONTEND_IMAGE_TAG: ${{ github.event.inputs.frontend_image_tag }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
         run: |
           ./ecs/scripts/frontend_app_update.sh
