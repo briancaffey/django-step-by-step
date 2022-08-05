@@ -9,7 +9,7 @@
 
 # WORKSPACE - ad hoc environment workspace
 # SHARED_RESOURCES_WORKSPACE - shared resources workspace
-# FRONTEND_IMAGE_TAG - backend image tag to update services to (e.g. v1.2.3)
+# FRONTEND_IMAGE_TAG - frontend image tag to update services to (e.g. v1.2.3)
 # AWS_ACCOUNT_ID - AWS account ID is used for the ECR repository URL
 
 echo "Updating frontend service..."
@@ -38,7 +38,7 @@ echo "Writing new $TASK_FAMILY container definitions JSON..."
 # replace old image URI with new image URI in a new container definitions JSON
 cat /tmp/$TASK_FAMILY.json \
   | jq \
-  --arg IMAGE "$NEW_BACKEND_IMAGE_URI" '.[0].image |= $IMAGE' \
+  --arg IMAGE "$NEW_FRONTEND_IMAGE_URI" '.[0].image |= $IMAGE' \
   > /tmp/$TASK_FAMILY-new.json
 
 # Get the existing configuration for the task definition (memory, cpu, etc.)
