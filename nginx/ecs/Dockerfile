@@ -1,4 +1,4 @@
-FROM node:14 as build-stage
+FROM node:16 as build-stage
 ARG VERSION
 ENV VERSION=$VERSION
 WORKDIR /app/
