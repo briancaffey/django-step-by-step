@@ -1,5 +1,5 @@
 <template>
-  <router-view />
+  <router-view id="q-app" />
 </template>
 <script lang="ts">
 import { defineComponent, onMounted } from 'vue';
