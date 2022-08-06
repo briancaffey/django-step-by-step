@@ -67,6 +67,7 @@ jobs:
           terraform -chdir=terraform/live/ad-hoc/base destroy -auto-approve
 
           # switch to the default workspace
+          unset TF_WORKSPACE
           terraform workspace select default
 
           # delete the workspace

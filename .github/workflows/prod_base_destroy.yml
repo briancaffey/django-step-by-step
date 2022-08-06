@@ -68,6 +68,7 @@ jobs:
             -auto-approve
 
           # switch to the default workspace
+          unset TF_WORKSPACE
           terraform workspace select default
 
           # delete the workspace
