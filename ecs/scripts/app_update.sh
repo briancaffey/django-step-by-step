@@ -21,13 +21,13 @@ NEW_BACKEND_IMAGE_URI="$AWS_ACCOUNT_ID.dkr.ecr.us-east-1.amazonaws.com/backend:$
 
 # register new task definitions
 # https://docs.aws.amazon.com/cli/latest/reference/ecs/describe-task-definition.html#description
-for TASK in "migrate" "gunicorn" "default" "beat"
+for TASK in "backend_update" "gunicorn" "default" "beat"
 do
   echo "Updating $TASK task definition..."
 
   # in Terraform we name our tasks based on the ad hoc environment name
   # (also the Terraform workspace name) and the name of the task
-  # (e.g. migrate, gunicorn, default, beat)
+  # (e.g. backend_update, gunicorn, default, beat)
   TASK_FAMILY=$WORKSPACE-$TASK
 
   # save the task definition JSON to a variable
@@ -90,15 +90,14 @@ do
 
 done
 
-# Now we need to run migrate, collectstatic and any other commands that need to be run
-# before doing a rolling update of the backend services
+# Now we need to run backend_update before doing a rolling update of the backend services
 
 # We will use the new task definitions we just created to run these commands
 
-# get the ARN of the most recent revision of the migrate task definition
+# get the ARN of the most recent revision of the backend_update task definition
 TASK_DEFINITION=$( \
   aws ecs describe-task-definition \
-    --task-definition $WORKSPACE-migrate \
+    --task-definition $WORKSPACE-backend_update \
     | jq -r \
     .taskDefinition.taskDefinitionArn \
 )
@@ -123,7 +122,7 @@ ECS_SG_ID=$( \
     --output text \
 )
 
-echo "Running database migrations..."
+echo "Running backend_update commands..."
 
 # timestamp used for log retrieval (milliseconds after Jan 1, 1970 00:00:00 UTC)
 START_TIME=$(date +%s000)
@@ -139,7 +138,7 @@ TASK_ID=$( \
 
 echo "Task ID is $TASK_ID"
 
-# wait for the migrate task to exit
+# wait for the backend_update task to exit
 # https://docs.aws.amazon.com/cli/latest/reference/ecs/wait/tasks-stopped.html#description
 # > It will poll every 6 seconds until a successful state has been reached.
 # > This will exit with a return code of 255 after 100 failed checks.
@@ -152,8 +151,8 @@ END_TIME=$(date +%s000)
 
 # print the CloudWatch log events to STDOUT
 aws logs get-log-events \
-  --log-group-name "/ecs/$WORKSPACE/migrate" \
-  --log-stream-name "migrate/migrate/${TASK_ID##*/}" \
+  --log-group-name "/ecs/$WORKSPACE/backend_update" \
+  --log-stream-name "backend_update/backend_update/${TASK_ID##*/}" \
   --start-time $START_TIME \
   --end-time $END_TIME \
   | jq -r '.events[].message'
