@@ -18,7 +18,7 @@ on:
         default: 'dev'
         type: string
 
-      backend_image_tag:
+      image_tag:
         description: 'Backend image tag'
         required: true
         default: 'latest'
@@ -26,7 +26,7 @@ on:
 
 jobs:
   update_backend:
-    name: "Update backend app for a terraform workspace [${{ github.event.inputs.workspace }}]"
+    name: "update backend service for ${{ github.event.inputs.workspace }} on ${{ github.event.inputs.shared_resources_workspace }} with ${{ github.event.inputs.image_tag }}"
     runs-on: ubuntu-latest
 
     steps:
@@ -47,12 +47,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: "Update backend app"
+      - name: "update backend app"
         id: update_backend
         env:
           WORKSPACE: ${{ github.event.inputs.workspace }}
           SHARED_RESOURCES_WORKSPACE: ${{ github.event.inputs.shared_resources_workspace }}
-          BACKEND_IMAGE_TAG: ${{ github.event.inputs.backend_image_tag }}
+          BACKEND_IMAGE_TAG: ${{ github.event.inputs.image_tag }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
         run: |
           ./ecs/scripts/app_update.sh
