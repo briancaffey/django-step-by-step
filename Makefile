@@ -411,8 +411,8 @@ raspi-destroy:
 	@./raspberrypi/destroy.sh
 
 ## -- K6 Targets --
-k6-run-docker:
-	@docker run -i --platform=linux/amd64 loadimpact/k6 run - <k6/script.js
+k6-local-run-docker:
+	@docker run --rm --net=host -i grafana/k6 run - <k6/script.js
 
 ## -- Terraform Targets --
 

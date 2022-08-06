@@ -1,16 +1,23 @@
 import http from 'k6/http';
-import { sleep } from 'k6';
+
+const baseUrl = __ENV.BASE_URL || 'http://0.0.0.0:8000';
 
 export const options = {
   vus: 10,
-  duration: '30s',
+  duration: '10s',
 };
 
 export default function () {
-  http.get('https://brian.jamescaffey.com/api/drf/cbv/posts/', {
-    tags: {
-      'k6.test': 'test',
-    }
+  const path = '/api/drf/cbv/posts/'
+  const url = baseUrl + path;
+  const params = {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  };
+  const payload = JSON.stringify({
+    body: 'k6 blog post content ' + Math.random(),
   });
-  sleep(1);
+
+  http.post(url, payload, params);
 }
