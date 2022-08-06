@@ -83,3 +83,11 @@ jobs:
             destroy \
             -var-file=${VAR_FILE} \
             -auto-approve
+
+          # switch to the default workspace
+          terraform workspace select default
+
+          # delete the workspace
+          terraform workspace delete ${WORKSPACE}
+
+          echo "Terraform workspace ${WORKSPACE} has been deleted."
