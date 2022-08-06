@@ -1,5 +1,5 @@
 // import { useQuasar } from 'quasar';
-import { ref, watch } from 'vue'
+import { ref } from 'vue'
 import { useI18n } from 'vue-i18n';
 
 // Hook for i18n
@@ -16,15 +16,14 @@ export default function i18n() {
     locale.value = localStorage.getItem('lang') || 'en-US';
   };
 
-  const updateLocale = () => {
+  // const updateLocale = () => {
 
-    // TODO: figure out why this is giving compilations errors in CI
-    // localStorage.setItem('lang', locale.value);
-    localStorage.setItem('lang', 'en-US');
+  //   // TODO: figure out why this is giving compilations errors in CI
+  //   localStorage.setItem('lang', locale.value);
 
-  }
+  // }
 
-  watch(locale, updateLocale);
+  // watch(locale, updateLocale);
 
   return { locale, localeOptions };
 }
