@@ -48,7 +48,7 @@ do
     | jq \
       --arg image "$NEW_BACKEND_IMAGE_URI" \
       --arg containerName $TASK \
-      '.[] | select(.name == $containerName).image |= $image' \
+      '.[] | select(.name == $containerName).image |= $image' | jq -s \
     > /tmp/$TASK_FAMILY-new.json
 
   # Get the existing configuration for the task definition (memory, cpu, etc.)
