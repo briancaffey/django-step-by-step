@@ -46,7 +46,9 @@ do
   # replace old image URI with new image URI in a new container definitions JSON
   cat /tmp/$TASK_FAMILY.json \
     | jq \
-    --arg IMAGE "$NEW_BACKEND_IMAGE_URI" '.[0].image |= $IMAGE' \
+      --arg image "$NEW_BACKEND_IMAGE_URI" \
+      --arg containerName $TASK \
+      '.[] | select(.containerName == $containerName).image |= $image' \
     > /tmp/$TASK_FAMILY-new.json
 
   # Get the existing configuration for the task definition (memory, cpu, etc.)
