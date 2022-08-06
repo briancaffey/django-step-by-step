@@ -65,3 +65,8 @@ jobs:
           export TF_WORKSPACE=$WORKSPACE
 
           terraform -chdir=terraform/live/ad-hoc/base destroy -auto-approve
+
+          # delete the workspace
+          terraform workspace delete ${WORKSPACE}
+
+          echo "Terraform workspace ${WORKSPACE} has been deleted."

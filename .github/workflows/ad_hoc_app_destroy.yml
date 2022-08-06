@@ -91,3 +91,8 @@ jobs:
             destroy \
             -var-file=${VAR_FILE} \
             -auto-approve
+
+          # delete the workspace
+          terraform workspace delete ${WORKSPACE}
+
+          echo "Terraform workspace ${WORKSPACE} has been deleted."
