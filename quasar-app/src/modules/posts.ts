@@ -7,6 +7,7 @@ import { GetPostsOptionsType, PostType } from '../types';
 const postList = ref<PostType[]>([]);
 const postCount = ref(0);
 const loadingPosts = ref(false);
+const errorLoadingPosts = ref(false);
 
 const post = reactive<PostType>({
   body: '',
@@ -87,6 +88,8 @@ export default function usePosts() {
 
     if (error) {
       console.error(error);
+      loadingPosts.value = false;
+      errorLoadingPosts.value = true;
       // handle error
       return
 
@@ -111,5 +114,6 @@ export default function usePosts() {
     limit,
     offset,
     loadingPosts,
+    errorLoadingPosts
   };
 }

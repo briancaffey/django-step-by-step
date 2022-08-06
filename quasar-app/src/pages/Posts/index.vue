@@ -10,6 +10,9 @@
         size="2em"
       />
     </div>
+    <div v-if="errorLoadingPosts" class="content-center text-center">
+      Unable to load posts.
+    </div>
     <q-pagination
       class="justify-center"
       v-model="currentPage"
@@ -36,6 +39,7 @@ export default defineComponent({
       limit,
       offset,
       loadingPosts,
+      errorLoadingPosts,
     } = usePosts();
 
     // doing this to avoid floating promises
@@ -45,7 +49,7 @@ export default defineComponent({
       await getPosts();
     })
 
-    return { posts, currentPage, postCount, limit, offset, loadingPosts }
+    return { posts, currentPage, postCount, limit, offset, loadingPosts, errorLoadingPosts }
   }
 })
 </script>
