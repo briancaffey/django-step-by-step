@@ -10,7 +10,7 @@ export const options = {
 
       vus: 100,
       iterations: 200,
-      maxDuration: '3m',
+      maxDuration: '10m',
     },
   },
 };

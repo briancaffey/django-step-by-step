@@ -10,7 +10,7 @@ on:
       # This input typically will not be used since all ad hoc environments should use one set of shared resources
       # This may be changed if major changes to the shared resources configuration are made to avoid disrupting existing ad hoc environments
       url:
-        description: 'URL to use fr load test'
+        description: 'URL to use for load test'
         required: true
         type: string
 
