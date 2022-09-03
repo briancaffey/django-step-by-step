@@ -18,7 +18,12 @@ This is a Django reference project showing how to develop and deploy Django appl
 
 ## tl;dr
 
-This project implements a simple blog app using vanilla Django function-based views and class-based views as well as DRF function and class-based views. There is also an implementation of the same application using GraphQL. The application involves a simple data model including users, posts with text and image and post likes. Local development using virtual environments and docker are both covered in detail, including guidance on how to run the application on different operating systems (Linux, Intel Mac, M1 Mac, Windows, WSL). There is 100% test coverage for the project and comprehensive e2e tests using Cypress. The project can be deployed to multiple production environments including Heroku and AWS. Deployment to AWS environment on Elastic Container Service (ECS) is powered by CDK and [a CDK construct library that I wrote specifically for deploying containerized Django projects on AWS](https://github.com/briancaffey/django-cdk).
+This project implements a simple blog app using vanilla Django function-based views and class-based views as well as DRF function and class-based views. There is also an implementation of the same application using GraphQL. The application involves a simple data model including users, posts with text and image and post likes. Local development using virtual environments and docker are both covered in detail, including guidance on how to run the application on different operating systems (Linux, Intel Mac, M1 Mac, Windows, WSL). There is 100% test coverage for the project and comprehensive e2e tests using Cypress.
+
+Deployment to AWS environment on Elastic Container Service (ECS) is shown with both:
+
+- CDK and [a CDK construct library that I wrote specifically for deploying containerized Django projects on AWS](https://github.com/briancaffey/django-cdk)
+- Terraform
 
 This project is originally designed as a reference or example project that I can use when I need to recall common patterns, syntax and frequently-used code snippets. I have tried to carefully document each part of the development process as a guide for someone who wants to learn how this project is built and deployed from the ground up. Please visit the project documentation site ([briancaffey.github.io/django-step-by-step/](https://briancaffey.github.io/django-step-by-step/)) for a complete explanation of the project, step-by-step.
 
@@ -112,19 +117,9 @@ Continuous integration checks that all unit tests pass and that code is formatte
 
 This project can be deployed to multiple live environments including:
 
-- Heroku
 - AWS ECS
 - AWS EKS
 - docker swarm cluster (planned)
-
-### Heroku
-
-This project uses media files, which is a common component of most Django applications. Heroku cannot host media files, so AWS is used to host media files instead. Setting up media file usage on AWS involves setting up:
-
-- An S3 bucket
-- An IAM user with correct permissions needed to interact with the bucket's resources
-
-The creation of the S3 bucket and the IAM user can be automated using Infrasturcture as Code. A CDK construct from the `django-cdk` project is used to deploy the resource, and then environment variables are added to Heroku in order for the application to use the S3 bucket.
 
 ### AWS ECS
 
@@ -191,7 +186,7 @@ There are a few different ways in which this project manages dependencies:
 
 ### III: Config
 
-There is a good amount of environment variables used for configuration both locally and in the different production enviroments (Heroku and ECS).
+There is a good amount of environment variables used for configuration both locally and in the different production environments.
 
 Locally, the application uses default values that allow development in a virtual environment to work without the need for configuring any environment variables as a separate step.
 
@@ -220,11 +215,9 @@ One interesting part about config is the Postgres password for the ECS environme
 
 The name of this `Secret` is passed as an environment to the Django application, and the Django application uses another library to retrieve and cache the database password for later use. Again, the value of the secret is not passed to Django as an environment variable, but the name of the `Secret` (from AWS Secrets Manager) is the value passed. This way we don't even have to worry about what the password is. It is not stored in the code base and it is not even stored anywhere in config (until is created in AWS Secrets Manager).
 
-For Heroku, the database connection URL is passed into the `DATABASE_URL` environment variable and is parsed to populate the `DATABASES` dictionary in the Django application.
-
 ### IV: Backing Services
 
-In AWS, it is easy to start relying on AWS services such as RDS, ElastiCache, S3 and other services. Similarly, Heroku provides add-ons such as Postgres and Redis that are easy to use and configure.
+In AWS, it is easy to start relying on AWS services such as RDS, ElastiCache, S3 and other services.
 
 ### V: Build, release, run
 
@@ -242,7 +235,7 @@ The CDK construct is passed a list of strings that define the processes that are
 
 ### VII: Port binding
 
-This is done in both ECS and Heroku.
+This is done in ECS.
 
 ### VIII: Concurrency
 

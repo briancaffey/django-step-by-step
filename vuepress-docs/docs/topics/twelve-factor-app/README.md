@@ -29,7 +29,7 @@ There are a few different ways in which this project manages dependencies:
 
 ## III: Config
 
-There is a good amount of environment variables used for configuration both locally and in the different production enviroments (Heroku and ECS).
+There is a good amount of environment variables used for configuration both locally and in the different production environments.
 
 Locally, the application uses default values that allow development in a virtual environment to work without the need for configuring any environment variables as a separate step.
 
@@ -58,11 +58,9 @@ One interesting part about config is the Postgres password for the ECS environme
 
 The name of this `Secret` is passed as an environment to the Django application, and the Django application uses another library to retrieve and cache the database password for later use. Again, the value of the secret is not passed to Django as an environment variable, but the name of the `Secret` (from AWS Secrets Manager) is the value passed. This way we don't even have to worry about what the password is. It is not stored in the code base and it is not even stored anywhere in config (until is created in AWS Secrets Manager).
 
-For Heroku, the database connection URL is passed into the `DATABASE_URL` environment variable and is parsed to populate the `DATABASES` dictionary in the Django application.
-
 ## IV: Backing Services
 
-In AWS, it is easy to start relying on AWS services such as RDS, ElastiCache, S3 and other services. Similarly, Heroku provides add-ons such as Postgres and Redis that are easy to use and configure.
+In AWS, it is easy to start relying on AWS services such as RDS, ElastiCache, S3 and other services.
 
 ## V: Build, release, run
 
@@ -80,7 +78,7 @@ The CDK construct is passed a list of strings that define the processes that are
 
 ## VII: Port binding
 
-This is done in both ECS and Heroku.
+This is done in ECS.
 
 ## VIII: Concurrency
 

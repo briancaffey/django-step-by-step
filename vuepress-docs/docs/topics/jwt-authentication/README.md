@@ -37,7 +37,6 @@ This method of authentication is very flexible and easy to implement and seems t
 
 - Storing authentication data is `localStorage` is not a best practice
 - You can easily authenticate requests where the backend and frontend are on different hosts. Some examples of `backend` / `frontend` configurations that you can use with JWT authentication include:
-    - `my-api.herokuapp.com` / `my-frontend.netlify.app`
     - `api.mydomain.com` / `app.mydomain.com`
     - `localhost:8000` / `localhost:8080`
 - Using JWT authentication typically involves using a third-party package such as [`djangorestframework-simplejwt`](https://github.com/jazzband/djangorestframework-simplejwt)

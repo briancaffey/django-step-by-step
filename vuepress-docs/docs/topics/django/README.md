@@ -92,10 +92,3 @@ The payload of the JWT access token is not used to retrieve any information. Ins
 When the user authenticates with a username and password and gets the `access` token as described above, there is no `refresh` token in the response body. Instead, the `refresh` token is set in an `HttpOnly` cookie on the server that is then set on the web browser client. The refresh cookie is used to refresh the short-lived `access` token.
 
 See `auth_views.py` for the code that customizes the `djangorestframework-simplejwt` package behavior.
-
-### Domain name limitations
-
-An important implication of this authentication setup is that the backend API and frontend web client must be located on the same domain or some common subdomain. This is because an API request to `abc.com` can not set an `HttpOnly` cookie on a frontend that is `xyz.com`.
-
-If you are storing both the `access` and `refresh` tokens in `localStorage`, then you can have your frontend and backend hosted on separate domains, such us `my-backend-app.herokuapp.com` and `my-frontend-app.netlify.app`.
-

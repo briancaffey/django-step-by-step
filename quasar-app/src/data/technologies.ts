@@ -66,13 +66,6 @@ const otherTechnologies = [
     documentationLink: 'https://www.terraform.io/',
   },
   {
-    title: 'Heroku',
-    description: 'Platform as a Service',
-    detail: 'An easy way to deploy web applications',
-    image: 'heroku.png',
-    documentationLink: 'https://heroku.com',
-  },
-  {
     title: 'Bootstrap 4',
     description: 'A UI Framework',
     detail: 'Used for styling Django templates',

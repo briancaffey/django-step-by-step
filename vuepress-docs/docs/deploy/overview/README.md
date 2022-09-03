@@ -6,7 +6,6 @@ Here are some of the different ways that you can deploy the μblog application, 
 
 - docker swarm running on a Raspberry Pi on your local network
 - Kubernetes cluster running locally on minikube
-- Heroku (for Django app) & Netlify (for the Vue/Quasar app)
 - DigitalOcean using docker swarm pre-installed on a droplet from the DigitalOcean marketplace
 - AWS ECS cluster running on Fargate compute instances
 - AWS EKS cluster running on EC2 instances
@@ -18,8 +17,6 @@ For docker swarm and local kubernetes deployments, a shell script is used to ini
 - `docker stack deploy` for docker swarm
 - `kubctl apply` for minikube
 
-Heroku uses the `git push` git command to deploy changes when new commits are pushed to the Heroku repository.
-
 When the application runs on docker swarm on DigitalOcean, it is updated using `docker stack deploy` from a GitLab CI/CD pipeline that remotely connects to the docker daemon runnong on the DigitalOcean droplet using SSH.
 
 ### [`django-cdk`](/deploy/aws)
@@ -28,7 +25,7 @@ The ECS and EKS deployments use the Cloud Development Kit (CDK) to both create A
 
 ## Containers and container orchestration
 
-To clarify terminology, all of the deployment targets (except for Heroku) use containers to run the applicaiton. The main difference in these deployments is the container orchestration tool used. The container orchestration tool refers to the tools that keeps track of the containers and their lifecycle and scaling. There are four main conatiner orchestration tools:
+To clarify terminology, all of the deployment targets use containers to run the applicaiton. The main difference in these deployments is the container orchestration tool used. The container orchestration tool refers to the tools that keeps track of the containers and their lifecycle and scaling. There are four main conatiner orchestration tools:
 
 - docker-compose (used mostly for local development)
 - docker swarm
