@@ -1,7 +1,5 @@
 #!/bin/bash
 
-# if the PORT environment variable is set (when using heroku), use that
-# otherwise use 8000
 if [[ -z $PORT ]]; then
     PORT=8000
 fi

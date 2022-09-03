@@ -1,6 +1,5 @@
 ---
 next: /deploy/aws
-prev: /deploy/heroku-and-netlify
 ---
 
 # DigitalOcean Deployment Guide

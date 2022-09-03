@@ -71,10 +71,6 @@ export const en: NavbarConfig = [
             link: '/deploy/raspi/',
           },
           {
-            text: 'Heroku and Netlify',
-            link: '/deploy/heroku-and-netlify/',
-          },
-          {
             text: 'DigitalOcean',
             link: '/deploy/digital-ocean/',
           },

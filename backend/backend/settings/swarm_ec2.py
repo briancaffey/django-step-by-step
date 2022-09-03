@@ -3,7 +3,6 @@ from .base import *  # noqa
 
 DEBUG = False
 
-# when deploying to heroku, pull in env vars for AWS access
 AWS_DEFAULT_ACL = None
 STATICFILES_STORAGE = "backend.storage_backends.StaticStorage"
 
