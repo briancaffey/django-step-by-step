@@ -61,6 +61,7 @@ module.exports = configure(function (ctx) {
           }
         : {
             VERSION: process.env.VERSION,
+            BASE_URL: '/'
         },
 
       // transpile: false,
