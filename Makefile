@@ -322,11 +322,6 @@ vuepress-dev:
 vuepress-build:
 	cd vuepress-docs && yarn docs:build
 
-vuepress-copy:
-	cp -R vuepress-docs/docs/.vuepress/dist/ docs/
-
-vuepress-build-docs: vuepress-build	vuepress-copy
-
 ## -- Raspbery Pi Targets --
 
 ## Deploy the application to rasberry pi
