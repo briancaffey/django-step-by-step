@@ -80,13 +80,7 @@ class Query(graphene.ObjectType):
     # Now, in your resolver functions, you just query your objects and
     # turn thequeryset into the PaginatedType using the helper function:
     def resolve_paginated_posts(
-        self,
-        info,
-        page=None,
-        page_size=None,
-        by_creator_id=None,
-        search=None,
-        **kwargs
+        self, info, page=None, page_size=None, by_creator_id=None, search=None, **kwargs
     ):
         posts = Post.objects.with_like_info(user=info.context.user)
 
@@ -109,9 +103,7 @@ class Query(graphene.ObjectType):
             raise Exception("No post ID provided")
 
         try:
-            post = Post.objects.with_like_info(user=info.context.user).get(
-                id=post_id
-            )
+            post = Post.objects.with_like_info(user=info.context.user).get(id=post_id)
         except Post.DoesNotExist:
             raise Exception("No such post")
 
@@ -155,9 +147,7 @@ class UpdatePost(graphene.Mutation):
         if user.is_anonymous:
             raise Exception("Must be logged in to update a post.")
 
-        post = (
-            Post.objects.with_like_info(user=user).filter(id=post_id).first()
-        )
+        post = Post.objects.with_like_info(user=user).filter(id=post_id).first()
 
         if not post:
             raise Exception("No such post")
@@ -216,9 +206,7 @@ class TogglePostLike(graphene.Mutation):
         if user.is_anonymous:
             raise Exception("Must be logged in to like a post")
 
-        post = (
-            Post.objects.with_like_info(user=user).filter(id=post_id).first()
-        )
+        post = Post.objects.with_like_info(user=user).filter(id=post_id).first()
 
         if not post:
             raise Exception("Invalid post")
@@ -232,9 +220,7 @@ class TogglePostLike(graphene.Mutation):
 
         # make sure we are using an updated version of the post with update
         # like info, so simply make the query again
-        post = (
-            Post.objects.with_like_info(user=user).filter(id=post_id).first()
-        )
+        post = Post.objects.with_like_info(user=user).filter(id=post_id).first()
 
         return TogglePostLike(
             user=user,

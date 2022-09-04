@@ -242,13 +242,6 @@ const otherTechnologies = [
     documentationLink: 'https://swagger.io/specification/',
   },
   {
-    title: 'CircleCI',
-    description: 'Automate your development process quickly, safely, and at scale',
-    detail: 'A CI/CD tool that integrates with GitHub in this project',
-    image: 'circleci.jpeg',
-    documentationLink: 'https://circleci.com/',
-  },
-  {
     title: 'Sentry',
     description: 'Error Monitoring - Get Started in Minutes',
     detail: 'Open-source error tracking with full stacktraces & asynchronous context',

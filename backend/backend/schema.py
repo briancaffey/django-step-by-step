@@ -5,9 +5,7 @@ import apps.blog.schema
 import apps.accounts.schema
 
 
-class Query(
-    apps.accounts.schema.Query, apps.blog.schema.Query, graphene.ObjectType
-):
+class Query(apps.accounts.schema.Query, apps.blog.schema.Query, graphene.ObjectType):
     pass
 
 

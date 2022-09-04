@@ -32,9 +32,7 @@ class PostViewSet(ModelViewSet):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
         if request.user not in post.likes.all():
-            post_like_through_model = PostLike(
-                post=post, liked_by=request.user
-            )
+            post_like_through_model = PostLike(post=post, liked_by=request.user)
             post_like_through_model.save()
 
         else:

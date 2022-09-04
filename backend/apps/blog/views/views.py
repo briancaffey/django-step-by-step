@@ -29,9 +29,7 @@ def posts(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    return render(
-        request, template_name="posts.html", context={"page_obj": page_obj}
-    )
+    return render(request, template_name="posts.html", context={"page_obj": page_obj})
 
 
 def post(request, id):
@@ -61,9 +59,7 @@ def new_post(request):
                 "Your post was created!",
                 extra_tags=c.BOOTSTRAP_ALERT_SUCCESS,
             )
-            return HttpResponseRedirect(
-                reverse("post", kwargs={"id": post.id})
-            )
+            return HttpResponseRedirect(reverse("post", kwargs={"id": post.id}))
 
     else:
         form = PostForm()
@@ -86,9 +82,7 @@ def edit_post(request, id):
             "You cannot edit an anonymous post",
             extra_tags=c.BOOTSTRAP_ALERT_WARNING,
         )
-        return HttpResponseRedirect(
-            reverse("post", kwargs={"id": instance.id})
-        )
+        return HttpResponseRedirect(reverse("post", kwargs={"id": instance.id}))
     else:
         logger.info("here.")
 
@@ -101,9 +95,7 @@ def edit_post(request, id):
                 "You cannot edit this post",
                 extra_tags=c.BOOTSTRAP_ALERT_WARNING,
             )
-            return HttpResponseRedirect(
-                reverse("post", kwargs={"id": instance.id})
-            )
+            return HttpResponseRedirect(reverse("post", kwargs={"id": instance.id}))
 
         form = PostForm(request.POST or None, instance=instance)
 
@@ -116,9 +108,7 @@ def edit_post(request, id):
                 "Your post was updated!",
                 extra_tags=c.BOOTSTRAP_ALERT_SUCCESS,
             )
-            return HttpResponseRedirect(
-                reverse("post", kwargs={"id": post.id})
-            )
+            return HttpResponseRedirect(reverse("post", kwargs={"id": post.id}))
 
     else:
         post = get_object_or_404(Post, id=id)
@@ -140,9 +130,7 @@ def delete_post(request, id):
             "You cannot delete an anonymous post",
             extra_tags=c.BOOTSTRAP_ALERT_WARNING,
         )
-        return HttpResponseRedirect(
-            reverse("post", kwargs={"id": instance.id})
-        )
+        return HttpResponseRedirect(reverse("post", kwargs={"id": instance.id}))
 
     # delete object
     instance.delete()

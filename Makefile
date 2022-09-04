@@ -10,6 +10,16 @@
 
 all: migrate	runserver
 
+## -- System Check Targets --
+check:
+	@docker --version
+	@which python3
+	@python3 --version
+	@echo Node `node -v`; echo
+
+# check to see if postgres and redis are running locally
+check_dbs: pg_isready	redis-cli-ping
+
 ## -- Poetry Targets --
 
 ## Check poetry installation
@@ -17,8 +27,13 @@ poetry-version:
 	poetry --version
 
 ## Export requirements from poetry to requirements.txt and requirements_dev.txt
-poetry-export:
-	cd backend && poetry export --without-hashes -f requirements.txt -o requirements.txt && poetry export --without-hashes -f requirements.txt -o requirements_dev.txt --dev
+poetry-export: poetry-export-base	poetry-export-dev
+
+poetry-export-base:
+	cd backend && poetry export --without-hashes -f requirements.txt -o requirements.txt
+
+poetry-export-dev:
+	cd backend && poetry export --with dev --without-hashes -f requirements.txt -o requirements_dev.txt
 
 ## Install dependencies
 poetry-install:
@@ -34,12 +49,39 @@ poetry-migrate:
 
 ## Create superuser using poetry environment
 poetry-createsuperuser:
-	DJANGO_SUPERUSER_PASSWORD=password DJANGO_SUPERUSER_USERNAME=brian DJANGO_SUPERUSER_EMAIL=user@email.com cd backend && poetry run python3 manage.py createsuperuser --no-input
+	cd backend && poetry run python3 manage.py createsuperuser --no-input --email user5@email.com
 
-# TODO: add runserver_plus
 ## Start local development server using poetry virtual environment
 poetry-runserver:
 	cd backend && poetry run python3 manage.py runserver
+
+## As an alternative to the above runserver command, use runserver_plus from django-extensions which uses Werkzeug
+poetry-runserver-plus:
+	cd backend && poetry run python3 manage.py runserver_plus
+
+## start the celery default worker
+poetry-celery-default-worker:
+	cd backend && poetry run python3 manage.py start_worker
+
+## start celery beat
+poetry-celery-beat:
+	cd backend && poetry run python3 manage.py start_beat
+
+## start a jupyter notebook session
+poetry-notebook:
+	cd backend && poetry run python3 manage.py shell_plus --notebook
+
+## open a Django shell with shell_plus from django-extensions
+poetry-shell:
+	cd backend && poetry run python3 manage.py shell_plus
+
+## Run pytest using poetry virtual environment
+poetry-pytest:
+	cd backend && poetry run pytest
+
+## Show URLs using poetry virtual environment
+poetry-show-urls:
+	cd backend && poetry run python3 manage.py show_urls
 
 ## Generate GraphQL schema as JSON using poetry schema
 poetry-make-schema:
@@ -53,14 +95,6 @@ poetry-make-sdl:
 poetry-make-openapi-schema:
 	python3 backend/manage.py generateschema > backend/static/openapi/schema.yml
 
-## Show URLs using poetry virtual environment
-poetry-show-urls:
-	cd backend && poetry run python3 manage.py show_urls
-
-## Run pytest using poetry virtual environment
-poetry-pytest:
-	cd backend && poetry run pytest
-
 ## Run pytest with a code coverage report using poetry virtual environment
 poetry-pytest-cov:
 	cd backend && poetry run pytest --cov-report html --cov=backend
@@ -71,18 +105,10 @@ poetry-flake8:
 
 ## check code formatting with black
 poetry-black:
-	cd backend && poetry run black -l 79 .
+	cd backend && poetry run black .
 
 ## run flake8 and black
 poetry-format: poetry-flake8	poetry-black
-
-## start the celery default worker
-poetry-celery-default-worker:
-	cd backend && poetry run python3 manage.py start_worker
-
-## start celery beat
-poetry-celery-beat:
-	cd backend && poetry run python3 manage.py start_beat
 
 ## Generate data for post model
 poetry-generate-posts:
@@ -93,6 +119,20 @@ poetry-graphviz-models:
 	cd backend && poetry run python3 manage.py graph_models -a -o models.png
 
 ## -- Virtual Environment Targets --
+
+# remove the virtualenv in backend/.env
+venv-clean:
+	@rm -rf backend/.env
+
+# installs dependencies
+venv-install-dev: venv-clean
+	@python3 -m venv backend/.env
+	@python3 -m pip install --upgrade pip
+	@. backend/.env/bin/activate
+	@pip3 install -r backend/requirements_dev.txt
+
+venv-activate:
+	@. backend/.env/bin/activate
 
 ## Apply migration files to the database
 venv-migrate:
@@ -190,76 +230,6 @@ venv-make-gql-schema-sdl:
 venv-graphviz-models:
 	python3 backend/manage.py graph_models -o my_project_subsystem.png
 
-## update poetry dependencies
-venv-poetry-update:
-	cd backend && poetry update
-
-## export requirements.txt and requirements_dev.txt from poetry
-venv-poetry-export: venv-poetry-update
-	cd backend && poetry export --without-hashes -f requirements.txt -o requirements.txt && poetry export --without-hashes -f requirements.txt -o requirements_dev.txt --dev
-
-## -- vue frontend Targets --
-
-## create the frontend (use this if you delete the frontend directory and want to regenerte it)
-frontend_create_from_vue_ts_template:
-	yarn create @vitejs/app frontend --template vue-ts
-
-## install frontend deps
-frontend_install_deps:
-	cd frontend && npm i
-
-## run frontend dev server
-frontend_dev:
-	cd frontend && npm run dev
-
-## -- microk8s Targets --
-
-## install cdk8s deps
-cdk8s_project_install:
-	cd k8s/cdk8s && npm i
-
-## check cdk8s installation
-cdk8s_check_deps:
-	npm list -g cdk8s-cli
-
-## synthesize manifests to cdk8s
-cdk8s_synth: cdk8s_check_deps
-	cd k8s/cdk8s && cdk8s synth
-
-## watch cdk8s for development
-cdk8s_watch:
-	cd k8s/cdk8s && npm run watch
-
-
-## -- minikube Targets --
-
-## start minikube
-minikube_start: minikube_check_deps	minikube_build_and_push	minikube_synthesize_manifests	minikube_apply_manifests
-
-## check dependencies needed for running minikube locally
-minikube_check_deps:
-	@k8s/scripts/check_deps.sh
-
-## build and push images to minikube registry
-minikube_build_and_push:
-	@k8s/scripts/build_and_push.sh
-
-## synthesized k8s manifests with cdk8s
-minikube_synthesize_manifests:
-	@k8s/scripts/synthesize_manifests.sh
-
-## apply k8s synthesized manifests
-minikube_apply_manifests:
-	@k8s/scripts/apply_manifests.sh
-
-## delete all k8s resources in minikube
-minikube_destroy_resources:
-	kubectl delete all --all -n app
-
-## open a shell in the backend django container
-minikube_backend_shell:
-	@k8s/scripts/backend_shell.sh
-
 ## -- docker Targets --
 
 ## make migrations in backend container
@@ -292,32 +262,6 @@ docker-compose-poetry-update:
 ## export poetry dependencies from poetry.lock file to requirements.txt and requirements_dev.txt
 docker-compose-poetry-export: docker-compose-poetry-update
 	docker compose run backend poetry export --without-hashes -f requirements.txt -o requirements.txt && docker compose run backend poetry export --without-hashes -f requirements.txt -o requirements_dev.txt --dev
-
-## -- Pulumi (minikube) Targets
-
-## Start a new pulumi k8s project in a new directory
-pulumi_minikube_init:
-	@mkdir pulumi && cd pulumi && pulumi new kubernetes-typescript
-
-## watch pulumi for typescript development
-pulumi_watch:
-	@cd pulumi && tsc . --watch
-
-## build container, load it into minikube and run pulumi up
-pulumi_deploy:
-	@pulumi/scripts/deploy.sh
-
-## deploy pulumi app
-pulumi_up:
-	@cd pulumi && pulumi up
-
-## destroy pulumi resources
-pulumi_destroy:
-	@cd pulumi && pulumi destroy
-
-## remove pulumi stack (dev environment)
-pulumi_rm_stack:
-	@cd pulumi && pulumi stack rm dev --force
 
 ## -- Misc Targets --
 
@@ -356,30 +300,10 @@ cypress_open:
 psql:
 	sudo -u postgres psql
 
-## -- CDK Targets --
-cdk-watch:
-	cd cdk && npm run watch
-
-cdk-install:
-	cd cdk && npm install
-
-cdk-build:
-	cd cdk && npm run build
-
-## -- CDK - Docker EC2 Targets --
-cdk-deploy-docker-ec2: cdk-install	cdk-build
-	cdk deploy --app='./cdk/bin/docker-ec2.js' --require-approval never
-
-cdk-synth-docker-ec2: cdk-install	cdk-build
-	cdk synth --app='./cdk/bin/docker-ec2.js' --require-approval never
-
-cdk-diff-docker-ec2: cdk-install	cdk-build
-	cdk diff --app='./cdk/bin/docker-ec2.js' --require-approval never
-
-cdk-destroy: cdk-install	cdk-build
-	cdk destroy --app='./cdk/bin/docker-ec2.js' --require-approval never
-
 ## -- Quasar Targets --
+
+quasar-install:
+	cd quasar-app && yarn
 
 ## start quasar project locally
 quasar-dev:
@@ -390,16 +314,13 @@ quasar-build:
 	cd quasar-app && quasar build -m spa
 
 ## -- VuePress Targets --
+
+## start vuepress documentation site locally
 vuepress-dev:
 	cd vuepress-docs && yarn docs:dev
 
 vuepress-build:
 	cd vuepress-docs && yarn docs:build
-
-vuepress-copy:
-	cp -R vuepress-docs/docs/.vuepress/dist/ docs/
-
-vuepress-build-docs: vuepress-build	vuepress-copy
 
 ## -- Raspbery Pi Targets --
 

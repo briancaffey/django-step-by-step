@@ -71,9 +71,7 @@ class GqlPostTests(JSONWebTokenTestCase):
     def setUp(self):
         self.EMAIL = "user@email.com"
         self.PASSWORD = "Abcd1234!"
-        self.user = User.objects.create_user(
-            email=self.EMAIL, password=self.PASSWORD
-        )
+        self.user = User.objects.create_user(email=self.EMAIL, password=self.PASSWORD)
 
     @unittest.skipIf(PYJWT_VERSION_CONFLICT, REASON)
     def test_get_post(self):
@@ -149,9 +147,7 @@ class GqlPostTests(JSONWebTokenTestCase):
 
         resp = self.client.execute(query)
 
-        self.assertEqual(
-            resp.data["paginatedPosts"]["objects"][0]["likeCount"], 1
-        )
+        self.assertEqual(resp.data["paginatedPosts"]["objects"][0]["likeCount"], 1)
 
     @unittest.skipIf(PYJWT_VERSION_CONFLICT, REASON)
     def test_create_post_mutation(self):
@@ -165,9 +161,7 @@ class GqlPostTests(JSONWebTokenTestCase):
             }
         """
 
-        variable_values = {
-            "body": "this is a post created using a gql mutation"
-        }
+        variable_values = {"body": "this is a post created using a gql mutation"}
 
         resp = self.client.execute(query, variable_values)
 
@@ -190,9 +184,7 @@ class GqlPostTests(JSONWebTokenTestCase):
             }
         """
 
-        variable_values = {
-            "body": "this is a post created using a gql mutation"
-        }
+        variable_values = {"body": "this is a post created using a gql mutation"}
 
         resp = self.client.execute(query, variable_values)
 
@@ -274,9 +266,7 @@ class GqlPostTests(JSONWebTokenTestCase):
     @unittest.skipIf(PYJWT_VERSION_CONFLICT, REASON)
     def test_delete_post_mutation(self):
 
-        anonymous_post = PostFactory(
-            body="Anonymous post that cannot be deleted."
-        )
+        anonymous_post = PostFactory(body="Anonymous post that cannot be deleted.")
         user_post = PostFactory(
             body="Post owned by a user that can be deleted.",
             created_by=self.user,

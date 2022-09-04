@@ -29,7 +29,6 @@ module.exports = configure(function (ctx) {
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli/boot-files
     boot: [
-      'i18n',
       'axios',
     ],
 
@@ -58,6 +57,7 @@ module.exports = configure(function (ctx) {
       env: ctx.dev
         ? {
             VERSION: 'None',
+            BASE_URL: 'http://localhost:8000'
           }
         : {
             VERSION: process.env.VERSION,

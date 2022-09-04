@@ -5,7 +5,7 @@ description = "Dependencies for django-step-by-step"
 authors = ["Brian Caffey <briancaffey2010@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "==3.9.9"
+python = "==3.9.13"
 
 # Update to Django 3.2 requires additional changes
 Django = "~3.2.0"
@@ -71,6 +71,7 @@ Werkzeug = "^2.0.2"
 ipython = "^7.31.0"
 # jupyter's dependency on argon2-cffi can't be installed on Apple M1
 jupyter = { version = "^1.0.0", markers = "platform_machine == 'x86_64'" }
+notebook = "^6.4.12"
 
 # OpenAPI
 pyyaml = "^5.3.1"

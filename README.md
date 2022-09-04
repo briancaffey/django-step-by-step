@@ -1,12 +1,8 @@
-<span><a href="https://app.circleci.com/pipelines/github/briancaffey/django-step-by-step"><img alt="circle ci pipeline statue" src="https://circleci.com/gh/briancaffey/django-step-by-step.svg?style=shield"/></a>
-</span><span>[![Netlify Status](https://api.netlify.com/api/v1/badges/45943233-efa7-4e83-bd8c-fffb28f8a6c1/deploy-status)](https://app.netlify.com/sites/mystifying-ardinghelli-30e1a3/deploys)
-</span>
 <span>
 <a href="https://github.com/briancaffey/django-step-by-step/actions/workflows/lint.yml"><img src="https://github.com/briancaffey/django-step-by-step/actions/workflows/lint.yml/badge.svg" /></a>
 </span><span>
 <a href="https://gitlab.com/briancaffey/django-step-by-step/-/commits/main"><img alt="pipeline status" src="https://gitlab.com/briancaffey/django-step-by-step/badges/main/pipeline.svg" /></a></span>
-<span>
-<a href="https://gitlab.com/briancaffey/django-step-by-step/-/commits/main"><img alt="coverage report" src="https://gitlab.com/briancaffey/django-step-by-step/badges/main/coverage.svg" /></a></span>
+<span><a href="https://gitlab.com/briancaffey/django-step-by-step/-/commits/main"><img alt="coverage report" src="https://gitlab.com/briancaffey/django-step-by-step/badges/main/coverage.svg" /></a></span>
 
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
@@ -104,7 +100,6 @@ Multiple tools are used for running unit tests and code quality checks on each c
 
 - GitHub Actions
 - GitLab CI
-- CircleCI
 - Bitbucket Pipelines
 
 Continuous integration checks that all unit tests pass and that code is formatted correctly. Unit tests run the Python code in a simulated environment that contains the dependent services (postgres and redis). The following tools are used in CI:

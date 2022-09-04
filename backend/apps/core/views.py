@@ -15,9 +15,11 @@ from .tasks import send_email_debug_task
 def health_check(request):
     return JsonResponse({"message": "OK"})
 
+
 def version(request):
     version = os.environ.get("SOURCE_TAG", "-")
     return JsonResponse({"version": version})
+
 
 def index(request):
     return render(request, "index.html")
@@ -31,6 +33,7 @@ def trigger_exception(request):
     Triggers an exception. used for testing
     """
     raise APIException("Exception message from the API server")
+
 
 @api_view(["POST"])
 @authentication_classes([])
