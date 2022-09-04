@@ -47,6 +47,10 @@ poetry-update:
 	cd backend && poetry update
 
 ## Migrate using poetry's virtual environment
+poetry-makemigrations:
+	cd backend && poetry run python3 manage.py makemigrations
+
+## Migrate using poetry's virtual environment
 poetry-migrate:
 	cd backend && poetry run python3 manage.py migrate
 
