@@ -10,6 +10,13 @@
 
 all: migrate	runserver
 
+## -- System Check Targets --
+check:
+	@docker --version
+	@which python3
+	@python3 --version
+	@echo Node `node -v`; echo
+
 ## -- Poetry Targets --
 
 ## Check poetry installation
@@ -93,6 +100,21 @@ poetry-graphviz-models:
 	cd backend && poetry run python3 manage.py graph_models -a -o models.png
 
 ## -- Virtual Environment Targets --
+
+# remove the virtualenv in backend/.env
+venv-clean:
+	@rm -rf backend/.env
+
+# installs dependencies
+venv-install-dev: venv-clean
+	@python3 -m venv backend/.env
+	@python3 -m pip install --upgrade pip
+	@. backend/.env/bin/activate
+	@pip3 install -r backend/requirements.txt
+	@pip3 install -r backend/requirements_dev.txt
+
+venv-activate:
+	@. backend/.env/bin/activate
 
 ## Apply migration files to the database
 venv-migrate:
@@ -292,32 +314,6 @@ docker-compose-poetry-update:
 ## export poetry dependencies from poetry.lock file to requirements.txt and requirements_dev.txt
 docker-compose-poetry-export: docker-compose-poetry-update
 	docker compose run backend poetry export --without-hashes -f requirements.txt -o requirements.txt && docker compose run backend poetry export --without-hashes -f requirements.txt -o requirements_dev.txt --dev
-
-## -- Pulumi (minikube) Targets
-
-## Start a new pulumi k8s project in a new directory
-pulumi_minikube_init:
-	@mkdir pulumi && cd pulumi && pulumi new kubernetes-typescript
-
-## watch pulumi for typescript development
-pulumi_watch:
-	@cd pulumi && tsc . --watch
-
-## build container, load it into minikube and run pulumi up
-pulumi_deploy:
-	@pulumi/scripts/deploy.sh
-
-## deploy pulumi app
-pulumi_up:
-	@cd pulumi && pulumi up
-
-## destroy pulumi resources
-pulumi_destroy:
-	@cd pulumi && pulumi destroy
-
-## remove pulumi stack (dev environment)
-pulumi_rm_stack:
-	@cd pulumi && pulumi stack rm dev --force
 
 ## -- Misc Targets --
 

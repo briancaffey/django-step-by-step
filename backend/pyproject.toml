@@ -5,7 +5,7 @@ description = "Dependencies for django-step-by-step"
 authors = ["Brian Caffey <briancaffey2010@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "==3.9.9"
+python = "==3.9.13"
 
 # Update to Django 3.2 requires additional changes
 Django = "~3.2.0"
