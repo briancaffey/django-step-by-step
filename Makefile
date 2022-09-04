@@ -26,6 +26,9 @@ check_dbs: pg_isready	redis-cli-ping
 poetry-version:
 	poetry --version
 
+poetry-lock:
+	cd backend && poetry lock
+
 ## Export requirements from poetry to requirements.txt and requirements_dev.txt
 poetry-export: poetry-export-base	poetry-export-dev
 
