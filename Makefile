@@ -35,7 +35,6 @@ poetry-export-base:
 poetry-export-dev:
 	cd backend && poetry export --with dev --without-hashes -f requirements.txt -o requirements_dev.txt
 
-
 ## Install dependencies
 poetry-install:
 	cd backend && poetry install
@@ -130,7 +129,6 @@ venv-install-dev: venv-clean
 	@python3 -m venv backend/.env
 	@python3 -m pip install --upgrade pip
 	@. backend/.env/bin/activate
-	@pip3 install -r backend/requirements.txt
 	@pip3 install -r backend/requirements_dev.txt
 
 venv-activate:
@@ -232,28 +230,6 @@ venv-make-gql-schema-sdl:
 venv-graphviz-models:
 	python3 backend/manage.py graph_models -o my_project_subsystem.png
 
-## update poetry dependencies
-venv-poetry-update:
-	cd backend && poetry update
-
-## export requirements.txt and requirements_dev.txt from poetry
-venv-poetry-export: venv-poetry-update
-	cd backend && poetry export --without-hashes -f requirements.txt -o requirements.txt && poetry export --without-hashes -f requirements.txt -o requirements_dev.txt --dev
-
-## -- vue frontend Targets --
-
-## create the frontend (use this if you delete the frontend directory and want to regenerte it)
-frontend_create_from_vue_ts_template:
-	yarn create @vitejs/app frontend --template vue-ts
-
-## install frontend deps
-frontend_install_deps:
-	cd frontend && npm i
-
-## run frontend dev server
-frontend_dev:
-	cd frontend && npm run dev
-
 ## -- docker Targets --
 
 ## make migrations in backend container
@@ -324,29 +300,6 @@ cypress_open:
 psql:
 	sudo -u postgres psql
 
-## -- CDK Targets --
-cdk-watch:
-	cd cdk && npm run watch
-
-cdk-install:
-	cd cdk && npm install
-
-cdk-build:
-	cd cdk && npm run build
-
-## -- CDK - Docker EC2 Targets --
-cdk-deploy-docker-ec2: cdk-install	cdk-build
-	cdk deploy --app='./cdk/bin/docker-ec2.js' --require-approval never
-
-cdk-synth-docker-ec2: cdk-install	cdk-build
-	cdk synth --app='./cdk/bin/docker-ec2.js' --require-approval never
-
-cdk-diff-docker-ec2: cdk-install	cdk-build
-	cdk diff --app='./cdk/bin/docker-ec2.js' --require-approval never
-
-cdk-destroy: cdk-install	cdk-build
-	cdk destroy --app='./cdk/bin/docker-ec2.js' --require-approval never
-
 ## -- Quasar Targets --
 
 quasar-install:
@@ -361,6 +314,8 @@ quasar-build:
 	cd quasar-app && quasar build -m spa
 
 ## -- VuePress Targets --
+
+## start vuepress documentation site locally
 vuepress-dev:
 	cd vuepress-docs && yarn docs:dev
 
