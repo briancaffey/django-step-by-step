@@ -17,6 +17,7 @@ check:
 	@python3 --version
 	@echo Node `node -v`; echo
 
+# check to see if postgres and redis are running locally
 check_dbs: pg_isready	redis-cli-ping
 
 ## -- Poetry Targets --
@@ -51,10 +52,29 @@ poetry-migrate:
 poetry-createsuperuser:
 	cd backend && poetry run python3 manage.py createsuperuser --no-input --email user5@email.com
 
-# TODO: add runserver_plus
 ## Start local development server using poetry virtual environment
 poetry-runserver:
 	cd backend && poetry run python3 manage.py runserver
+
+## As an alternative to the above runserver command, use runserver_plus from django-extensions which uses Werkzeug
+poetry-runserver-plus:
+	cd backend && poetry run python3 manage.py runserver_plus
+
+## start the celery default worker
+poetry-celery-default-worker:
+	cd backend && poetry run python3 manage.py start_worker
+
+## start celery beat
+poetry-celery-beat:
+	cd backend && poetry run python3 manage.py start_beat
+
+## start a jupyter notebook session
+poetry-notebook:
+	cd backend && poetry run python3 manage.py shell_plus --notebook
+
+## open a Django shell with shell_plus from django-extensions
+poetry-shell:
+	cd backend && poetry run python3 manage.py shell_plus
 
 ## Run pytest using poetry virtual environment
 poetry-pytest:
@@ -90,14 +110,6 @@ poetry-black:
 
 ## run flake8 and black
 poetry-format: poetry-flake8	poetry-black
-
-## start the celery default worker
-poetry-celery-default-worker:
-	cd backend && poetry run python3 manage.py start_worker
-
-## start celery beat
-poetry-celery-beat:
-	cd backend && poetry run python3 manage.py start_beat
 
 ## Generate data for post model
 poetry-generate-posts:
@@ -336,6 +348,9 @@ cdk-destroy: cdk-install	cdk-build
 	cdk destroy --app='./cdk/bin/docker-ec2.js' --require-approval never
 
 ## -- Quasar Targets --
+
+quasar-install:
+	cd quasar-app && yarn
 
 ## start quasar project locally
 quasar-dev:
