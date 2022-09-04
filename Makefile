@@ -17,6 +17,8 @@ check:
 	@python3 --version
 	@echo Node `node -v`; echo
 
+check_dbs: pg_isready	redis-cli-ping
+
 ## -- Poetry Targets --
 
 ## Check poetry installation
@@ -24,8 +26,14 @@ poetry-version:
 	poetry --version
 
 ## Export requirements from poetry to requirements.txt and requirements_dev.txt
-poetry-export:
-	cd backend && poetry export --without-hashes -f requirements.txt -o requirements.txt && poetry export --without-hashes -f requirements.txt -o requirements_dev.txt --dev
+poetry-export: poetry-export-base	poetry-export-dev
+
+poetry-export-base:
+	cd backend && poetry export --without-hashes -f requirements.txt -o requirements.txt
+
+poetry-export-dev:
+	cd backend && poetry export --with dev --without-hashes -f requirements.txt -o requirements_dev.txt
+
 
 ## Install dependencies
 poetry-install:

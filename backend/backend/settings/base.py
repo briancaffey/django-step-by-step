@@ -145,9 +145,7 @@ BROKER_PORT = 1
 RESULTS_PORT = 2
 
 CELERY_BROKER_URL = f"redis://{REDIS_SERVICE_HOST}:{REDIS_PORT}/{BROKER_PORT}"
-CELERY_RESULT_BACKEND = (
-    f"redis://{REDIS_SERVICE_HOST}:{REDIS_PORT}/{RESULTS_PORT}"
-)
+CELERY_RESULT_BACKEND = f"redis://{REDIS_SERVICE_HOST}:{REDIS_PORT}/{RESULTS_PORT}"
 CELERY_ACCEPT_CONTENT = ["application/json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
@@ -162,9 +160,7 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
-CELERY_TASK_ALWAYS_EAGER = bool(
-    int(os.environ.get("CELERY_TASK_ALWAYS_EAGER", 0))
-)
+CELERY_TASK_ALWAYS_EAGER = bool(int(os.environ.get("CELERY_TASK_ALWAYS_EAGER", 0)))
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
