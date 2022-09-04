@@ -57,6 +57,7 @@ module.exports = configure(function (ctx) {
       env: ctx.dev
         ? {
             VERSION: 'None',
+            BASE_URL: 'http://localhost:8000'
           }
         : {
             VERSION: process.env.VERSION,

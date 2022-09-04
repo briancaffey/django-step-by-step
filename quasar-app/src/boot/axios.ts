@@ -21,7 +21,7 @@ interface RequestHeaders {
 // for each client)
 const api = axios.create(
   {
-    baseURL: 'http://localhost:8000'
+    baseURL: process.env.BASE_URL || '/'
   }
 );
 
