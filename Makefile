@@ -242,54 +242,6 @@ frontend_install_deps:
 frontend_dev:
 	cd frontend && npm run dev
 
-## -- microk8s Targets --
-
-## install cdk8s deps
-cdk8s_project_install:
-	cd k8s/cdk8s && npm i
-
-## check cdk8s installation
-cdk8s_check_deps:
-	npm list -g cdk8s-cli
-
-## synthesize manifests to cdk8s
-cdk8s_synth: cdk8s_check_deps
-	cd k8s/cdk8s && cdk8s synth
-
-## watch cdk8s for development
-cdk8s_watch:
-	cd k8s/cdk8s && npm run watch
-
-
-## -- minikube Targets --
-
-## start minikube
-minikube_start: minikube_check_deps	minikube_build_and_push	minikube_synthesize_manifests	minikube_apply_manifests
-
-## check dependencies needed for running minikube locally
-minikube_check_deps:
-	@k8s/scripts/check_deps.sh
-
-## build and push images to minikube registry
-minikube_build_and_push:
-	@k8s/scripts/build_and_push.sh
-
-## synthesized k8s manifests with cdk8s
-minikube_synthesize_manifests:
-	@k8s/scripts/synthesize_manifests.sh
-
-## apply k8s synthesized manifests
-minikube_apply_manifests:
-	@k8s/scripts/apply_manifests.sh
-
-## delete all k8s resources in minikube
-minikube_destroy_resources:
-	kubectl delete all --all -n app
-
-## open a shell in the backend django container
-minikube_backend_shell:
-	@k8s/scripts/backend_shell.sh
-
 ## -- docker Targets --
 
 ## make migrations in backend container
