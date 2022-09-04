@@ -2,6 +2,8 @@ import { boot } from 'quasar/wrappers';
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from 'axios';
 import useAuth from '../modules/auth';
 
+const BASE_URL = process.env.BASE_URL || '/';
+
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $axios: AxiosInstance;
@@ -21,7 +23,7 @@ interface RequestHeaders {
 // for each client)
 const api = axios.create(
   {
-    baseURL: process.env.BASE_URL || '/'
+    baseURL: BASE_URL
   }
 );
 
