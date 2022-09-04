@@ -89,7 +89,6 @@ Multiple tools are used for running unit tests and code quality checks on each c
 
 - GitHub Actions
 - GitLab CI
-- CircleCI
 - Bitbucket Pipelines
 
 Continuous integration checks that all unit tests pass and that code is formatted correctly. Unit tests run the Python code in a simulated environment that contains the dependent services (postgres and redis). The following tools are used in CI:

@@ -1,6 +1,5 @@
 media
 .local-env
-.circleci
 .github
 .pytest_cache
 .vscode
