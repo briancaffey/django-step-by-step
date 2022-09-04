@@ -19,9 +19,7 @@ class GqlUsersTests(JSONWebTokenTestCase):
     def setUp(self):
         self.EMAIL = "user@email.com"
         self.PASSWORD = "Abcd1234!"
-        self.user = User.objects.create_user(
-            email=self.EMAIL, password=self.PASSWORD
-        )
+        self.user = User.objects.create_user(email=self.EMAIL, password=self.PASSWORD)
 
     def test_gql_get_user(self):
 
@@ -108,13 +106,9 @@ def test_token_authentication(client):
 
     print(response.content)
 
-    assert (
-        json.loads(response.content)["data"]["createPost"]["body"] == "test!"
-    )
+    assert json.loads(response.content)["data"]["createPost"]["body"] == "test!"
 
     assert (
-        json.loads(response.content)["data"]["createPost"]["createdBy"][
-            "email"
-        ]
+        json.loads(response.content)["data"]["createPost"]["createdBy"]["email"]
         == "user@email.com"
     )

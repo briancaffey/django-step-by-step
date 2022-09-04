@@ -23,9 +23,7 @@ def test_obtain_jwt_token(client):
     client = APIClient()
     email = "user1@email.com"
     password = "foobar123!"
-    _ = User.objects.create_user(
-        email=email, password=password, is_active=True
-    )
+    _ = User.objects.create_user(email=email, password=password, is_active=True)
 
     # WHEN the user logs in
     url = reverse("jwt_token_obtain_pair")

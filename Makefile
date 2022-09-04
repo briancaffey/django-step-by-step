@@ -49,12 +49,20 @@ poetry-migrate:
 
 ## Create superuser using poetry environment
 poetry-createsuperuser:
-	DJANGO_SUPERUSER_PASSWORD=password DJANGO_SUPERUSER_USERNAME=brian DJANGO_SUPERUSER_EMAIL=user@email.com cd backend && poetry run python3 manage.py createsuperuser --no-input
+	cd backend && poetry run python3 manage.py createsuperuser --no-input --email user5@email.com
 
 # TODO: add runserver_plus
 ## Start local development server using poetry virtual environment
 poetry-runserver:
 	cd backend && poetry run python3 manage.py runserver
+
+## Run pytest using poetry virtual environment
+poetry-pytest:
+	cd backend && poetry run pytest
+
+## Show URLs using poetry virtual environment
+poetry-show-urls:
+	cd backend && poetry run python3 manage.py show_urls
 
 ## Generate GraphQL schema as JSON using poetry schema
 poetry-make-schema:
@@ -68,14 +76,6 @@ poetry-make-sdl:
 poetry-make-openapi-schema:
 	python3 backend/manage.py generateschema > backend/static/openapi/schema.yml
 
-## Show URLs using poetry virtual environment
-poetry-show-urls:
-	cd backend && poetry run python3 manage.py show_urls
-
-## Run pytest using poetry virtual environment
-poetry-pytest:
-	cd backend && poetry run pytest
-
 ## Run pytest with a code coverage report using poetry virtual environment
 poetry-pytest-cov:
 	cd backend && poetry run pytest --cov-report html --cov=backend
@@ -86,7 +86,7 @@ poetry-flake8:
 
 ## check code formatting with black
 poetry-black:
-	cd backend && poetry run black -l 79 .
+	cd backend && poetry run black .
 
 ## run flake8 and black
 poetry-format: poetry-flake8	poetry-black

@@ -18,9 +18,7 @@ User = get_user_model()
 )
 @pytest.mark.django_db(transaction=True)
 def test_get_post_drf_fbv(client, reverse_url):
-    user = User.objects.create_user(
-        email="user@email.com", password="MyPassword!"
-    )
+    user = User.objects.create_user(email="user@email.com", password="MyPassword!")
     client = APIClient()
 
     client.force_login(user)
@@ -63,9 +61,7 @@ def test_create_post_drf_fbv(reverse_url):
 
     client = APIClient()
 
-    user = User.objects.create_user(
-        email="user@email.com", password="MyPassword!"
-    )
+    user = User.objects.create_user(email="user@email.com", password="MyPassword!")
 
     post_data = {"body": "my post"}
     response = client.post(reverse("drf-fbv-create-post"), data=post_data)
@@ -80,9 +76,7 @@ def test_create_post_drf_fbv(reverse_url):
 
     client.force_login(user)
 
-    response = client.post(
-        reverse("drf-fbv-create-post"), data={"body": "my post"}
-    )
+    response = client.post(reverse("drf-fbv-create-post"), data={"body": "my post"})
 
     assert response.status_code == status.HTTP_201_CREATED
 
@@ -96,13 +90,9 @@ def test_create_post_drf_fbv(reverse_url):
 )
 @pytest.mark.django_db(transaction=True)
 def test_update_post_drf_fbv(reverse_url):
-    user1 = User.objects.create_user(
-        email="user@email.com", password="MyPassword!"
-    )
+    user1 = User.objects.create_user(email="user@email.com", password="MyPassword!")
 
-    user2 = User.objects.create_user(
-        email="user2@email.com", password="MyPassword!"
-    )
+    user2 = User.objects.create_user(email="user2@email.com", password="MyPassword!")
 
     client = APIClient()
 
@@ -156,13 +146,9 @@ def test_update_post_drf_fbv(reverse_url):
 )
 @pytest.mark.django_db(transaction=True)
 def test_delete_post_drf_fbv(reverse_url):
-    user1 = User.objects.create_user(
-        email="user@email.com", password="MyPassword!"
-    )
+    user1 = User.objects.create_user(email="user@email.com", password="MyPassword!")
 
-    user2 = User.objects.create_user(
-        email="user2@email.com", password="MyPassword!"
-    )
+    user2 = User.objects.create_user(email="user2@email.com", password="MyPassword!")
     client = APIClient()
 
     post_data = {"body": "first draft"}
@@ -194,9 +180,7 @@ def test_delete_post_drf_fbv(reverse_url):
 )
 @pytest.mark.django_db(transaction=True)
 def test_like_post_drf_fbv(reverse_url):
-    user = User.objects.create_user(
-        email="user@email.com", password="MyPassword!"
-    )
+    user = User.objects.create_user(email="user@email.com", password="MyPassword!")
     client = APIClient()
 
     post_data = {"body": "first draft"}

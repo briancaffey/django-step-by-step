@@ -43,34 +43,22 @@ urlpatterns = [
     ),
     # function-based views for blog
     path("mtv/fbv/", include("apps.blog.urls.fbv_urls")),
-
     # class-based views for mtv
     path("mtv/cbv/", include("apps.blog.urls.cbv_urls")),
-
     # simple JWT routes
-    path(
-        "api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"
-    ),
-    path(
-        "api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"
-    ),
-
+    path("api/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     # api views for blog app
     path("api/drf/fbv/", include("apps.blog.urls.drf_fbv_urls")),
     path("api/drf/cbv/", include("apps.blog.urls.drf_cbv_urls")),
-
     # auth urls for api
     path("api/", include("apps.accounts.urls.drf_fbv_urls")),
-
     # auth urls for api
     path("api/", include("apps.accounts.urls.auth.api_urls")),
-
     # auth urls for mtv
     path("mtv/", include("apps.accounts.urls.auth.mtv_urls")),
-
     # django admin
     path("admin/", admin.site.urls),
-
     # graphql endpoint
     path(
         "graphql/",
@@ -91,9 +79,7 @@ if settings.DEBUG:  # pragma: no cover
 
     urlpatterns += [path("__debug__/", include(debug_toolbar.urls))]
 
-    urlpatterns += static(
-        settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
-    )
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
     urlpatterns += [path("api-auth/", include("rest_framework.urls"))]
 

@@ -27,9 +27,7 @@ class CookieTokenRefreshSerializer(TokenRefreshSerializer):
         if attrs["refresh"]:
             return super().validate(attrs)
         else:
-            raise InvalidToken(
-                "No valid token found in cookie 'refresh_token'"
-            )
+            raise InvalidToken("No valid token found in cookie 'refresh_token'")
 
 
 class CookieTokenObtainPairView(TokenObtainPairView):

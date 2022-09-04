@@ -33,9 +33,7 @@ def list_posts(request):
     paginator = LimitOffsetPagination()
     posts = Post.objects.with_like_info(user=request.user).all()
     result_page = paginator.paginate_queryset(posts, request)
-    serializer = PostSerializer(
-        result_page, many=True, context={"request": request}
-    )
+    serializer = PostSerializer(result_page, many=True, context={"request": request})
     return_data = paginator.get_paginated_response(serializer.data)
     return return_data
 
