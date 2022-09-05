@@ -3,7 +3,6 @@ These views override the default DRF authentication views to support storing
 JWT tokens in HttpOnly cookies.
 """
 
-import os
 
 from rest_framework.decorators import (
     api_view,
@@ -42,7 +41,6 @@ class CookieTokenObtainPairView(TokenObtainPairView):
                 httponly=True,
                 samesite="None",
                 secure=True,
-                domain=os.environ.get("DOMAIN_NAME"),
             )
             del response.data["refresh"]
         return super().finalize_response(request, response, *args, **kwargs)
@@ -59,7 +57,6 @@ class CookieTokenRefreshView(TokenRefreshView):
                 samesite="None",
                 httponly=True,
                 secure=True,
-                domain=os.environ.get("DOMAIN_NAME"),
             )
             del response.data["refresh"]
         return super().finalize_response(request, response, *args, **kwargs)
