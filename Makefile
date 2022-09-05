@@ -436,6 +436,16 @@ tf-ad-hoc-sample:  tf-ad-hoc-sample-init	tf-ad-hoc-sample-plan	tf-ad-hoc-sample-
 tf-ad-hoc-sample-destroy:
 	terraform -chdir=terraform/live/ad-hoc destroy -auto-approve --var-file=envs/sample.tfvars
 
+## -- AWS Targets --
+
+## start ecs exec session for ad hoc env
+ad-hoc-ecs-exec:
+	@./backend/scripts/aws/ecs_exec.sh
+
+## start port forwarding session for ad hoc env
+ad-hoc-ssm-port-forward:
+	@./backend/scripts/aws/ssm_port_forward.sh
+
 # Credit: https://gist.github.com/prwhite/8168133#gistcomment-2749866
 ## Show this help menu
 help:
