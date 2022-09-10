@@ -26,6 +26,12 @@ check_dbs: pg_isready	redis-cli-ping
 poetry-version:
 	poetry --version
 
+poetry-python-version:
+	cd backend && poetry run python3 --version && poetry run python --version
+
+poetry-which-python:
+	cd backend && poetry run which python && poetry run which python3
+
 poetry-lock:
 	cd backend && poetry lock
 

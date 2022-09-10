@@ -4,7 +4,7 @@ name: Backend / Unit Tests
 on:
   push:
     branches:
-      - feature/cdk
+      - dev
 
 jobs:
   # Set the job key. The key is displayed as the job name
