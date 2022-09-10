@@ -68,7 +68,7 @@ jobs:
         id: cached-poetry-dependencies
         uses: actions/cache@v2
         with:
-          path: .venv
+          path: backend/.venv
           key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
 
       #----------------------------------------------
@@ -84,7 +84,7 @@ jobs:
         run: |
           cd backend
           source .venv/bin/activate
-          black . --exclude=.venv
+          black . --exclude="\.venv"
 
       # run pytest tests
       - name: Run pytest tests
