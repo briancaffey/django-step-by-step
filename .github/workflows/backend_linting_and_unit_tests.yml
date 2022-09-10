@@ -77,14 +77,14 @@ jobs:
       - name: Install dependencies
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: |
-          cd backend && poetry install --no-interaction --no-root
+          cd backend && poetry install --no-interaction --no-root --with dev
 
       # lint python code using flake8
       - name: Code formatting check with Black
         run: |
           cd backend
           source .venv/bin/activate
-          black .
+          black . --exclude=.venv
 
       # run pytest tests
       - name: Run pytest tests
