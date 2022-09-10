@@ -84,7 +84,7 @@ jobs:
         run: |
           cd backend
           source .venv/bin/activate
-          black . --exclude="\.venv"
+          black . --exclude=".venv"
 
       # run pytest tests
       - name: Run pytest tests
