@@ -9,10 +9,9 @@ on:
 jobs:
   # Set the job key. The key is displayed as the job name
   # when a job name is not provided
-  lint-and-test-python:
-    if: 1 == 0
+  lint-backend-code:
     # Name the Job
-    name: Lint and test python code
+    name: Lint backend python code
     # Set the type of machine to run on
     runs-on: ubuntu-latest
 
@@ -31,10 +30,15 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
-
+        # ports
         ports:
           # Maps tcp port 5432 on service container to the host
           - 5432:5432
+
+      redis:
+        image: redis
+        ports:
+          - 6379:6379
 
     strategy:
       matrix:
@@ -50,18 +54,39 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # install pip dependencies
-      - name: pip install
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r backend/requirements_dev.txt
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+          installer-parallel: true
+
+      #----------------------------------------------
+      #       load cached venv if cache exists
+      #----------------------------------------------
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v2
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+
+      #----------------------------------------------
+      # install dependencies if cache does not exist
+      #----------------------------------------------
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
 
       # lint python code using flake8
-      - name: Lint code
-        run: flake8 backend
+      - name: Code formatting check with Black
+        run: |
+          source .venv/bin/activate
+          black backend
 
       # run pytest tests
       - name: Run pytest tests
         run: |
+          source .venv/bin/activate
           python -V
           pytest backend
