@@ -13,7 +13,6 @@ if settings.DEBUG:
     class PrivateMediaStorage(FileSystemStorage):
         location = settings.AWS_PRIVATE_MEDIA_LOCATION
 
-
 else:
 
     class PrivateMediaStorage(S3Boto3Storage):

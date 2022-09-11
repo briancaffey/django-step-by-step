@@ -63,7 +63,7 @@ jobs:
       - name: Code formatting check with Black
         run: |
           cd backend
-          poetry run black .
+          poetry run black . --check
 
       # run pytest tests
       - name: Run pytest tests
