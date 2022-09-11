@@ -69,7 +69,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: backend/.venv
-          key: venv-${{ runner.os }}-${{ steps.setup-python.outputs.python-version }}-${{ hashFiles('**/poetry.lock') }}
+          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
 
       #----------------------------------------------
       # install dependencies if cache does not exist
