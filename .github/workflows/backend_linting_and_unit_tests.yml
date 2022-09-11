@@ -83,7 +83,8 @@ jobs:
       - name: Code formatting check with Black
         run: |
           cd backend
-          source .venv/bin/activate
+          source $VENV
+          pip freeze
           black . --exclude=".venv"
 
       # run pytest tests
