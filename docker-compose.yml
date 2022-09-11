@@ -18,7 +18,7 @@ services:
 
   postgres:
     container_name: postgres
-    image: postgres:13.1
+    image: postgres:14
     networks:
       - main
     ports:
