@@ -11,7 +11,7 @@ jobs:
   # when a job name is not provided
   lint-backend-code:
     # Name the Job
-    name: Lint backend python code
+    name: Lint and test backend python code
     # Set the type of machine to run on
     runs-on: ubuntu-latest
 
@@ -63,7 +63,7 @@ jobs:
       - name: Code formatting check with Black
         run: |
           cd backend
-          poetry run black . --exclude=".venv"
+          poetry run black .
 
       # run pytest tests
       - name: Run pytest tests
