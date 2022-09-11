@@ -50,7 +50,7 @@ flower = "^1.0"
 [tool.poetry.dev-dependencies]
 
 # test dependencies
-black =  { version = "^20.8b1", markers = "platform_machine == 'x86_64'" }
+black = "^22.8.0"
 flake8 = "^4.0.1"
 pytest = "^6.2.5"
 pytest-cov = "^3.0.0"
