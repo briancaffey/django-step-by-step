@@ -1,0 +1,56 @@
+# github action to update the backend application
+name: prod | update | frontend
+
+on:
+  workflow_dispatch:
+    inputs:
+
+      prod_base_env:
+        description: 'Prod base env'
+        required: true
+        default: 'stage'
+        type: string
+
+      workspace:
+        description: 'Terraform workspace to use'
+        required: true
+        default: 'dev'
+        type: string
+
+      image_tag:
+        description: 'Frontend image tag'
+        required: true
+        default: 'latest'
+        type: string
+
+jobs:
+  update_service:
+    name: "update frontend service for ${{ github.event.inputs.workspace }} on ${{ github.event.inputs.prod_base_env }} with ${{ github.event.inputs.image_tag }}"
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.1.7
+          terraform_wrapper: false
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: "Update frontend app"
+        id: update_frontend
+        env:
+          WORKSPACE: ${{ github.event.inputs.workspace }}
+          FRONTEND_IMAGE_TAG: ${{ github.event.inputs.image_tag }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+        run: |
+          ./ecs/scripts/frontend_app_update.sh
