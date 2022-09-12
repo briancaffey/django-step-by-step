@@ -1,16 +1,12 @@
-<span>
-<a href="https://github.com/briancaffey/django-step-by-step/actions/workflows/lint.yml"><img src="https://github.com/briancaffey/django-step-by-step/actions/workflows/lint.yml/badge.svg" /></a>
-</span><span>
-<a href="https://gitlab.com/briancaffey/django-step-by-step/-/commits/main"><img alt="pipeline status" src="https://gitlab.com/briancaffey/django-step-by-step/badges/main/pipeline.svg" /></a></span>
-<span><a href="https://gitlab.com/briancaffey/django-step-by-step/-/commits/main"><img alt="coverage report" src="https://gitlab.com/briancaffey/django-step-by-step/badges/main/coverage.svg" /></a></span>
-
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+<span><img src="https://img.shields.io/badge/code%20style-black-000000.svg" />
+<a href="https://github.com/briancaffey/django-step-by-step/actions/workflows/backend_linting_and_unit_tests.yml"><img src="https://github.com/briancaffey/django-step-by-step/actions/workflows/backend_linting_and_unit_tests.yml/badge.svg" /></a>
+</span>
 
 Project Documentation: [https://briancaffey.github.io/django-step-by-step/](https://briancaffey.github.io/django-step-by-step/)
 
 # Django Step by Step
 
-This is a Django reference project showing how to develop and deploy Django applications using multiple tools and methodologies with best practices and consice examples.
+This is a Django reference project showing how to develop and deploy Django applications using multiple tools and methodologies with best practices and concise examples.
 
 ## tl;dr
 
@@ -19,7 +15,7 @@ This project implements a simple blog app using vanilla Django function-based vi
 Deployment to AWS environment on Elastic Container Service (ECS) is shown with both:
 
 - CDK and [a CDK construct library that I wrote specifically for deploying containerized Django projects on AWS](https://github.com/briancaffey/django-cdk)
-- Terraform
+- Terraform using [`terraform-aws-django`](https://github.com/briancaffey/terraform-aws-django)
 
 This project is originally designed as a reference or example project that I can use when I need to recall common patterns, syntax and frequently-used code snippets. I have tried to carefully document each part of the development process as a guide for someone who wants to learn how this project is built and deployed from the ground up. Please visit the project documentation site ([briancaffey.github.io/django-step-by-step/](https://briancaffey.github.io/django-step-by-step/)) for a complete explanation of the project, step-by-step.
 
@@ -29,7 +25,7 @@ This project is open-source and new-comers to Django and Python and welcome to c
 
 This project implements a simple microblogging application called μblog. Here are some of the core features of μblog:
 
-- Anyone (incuding unathenticated users) can publish posts with text and an optional image
+- Anyone (including unauthenticated users) can publish posts with text and an optional image
 - Users can sign up for accounts that are activated by clicking a link in an email
 - Signed-in users can like posts
 - Signed-in users can edit and delete their own posts
@@ -110,11 +106,7 @@ Continuous integration checks that all unit tests pass and that code is formatte
 
 ## Deployment
 
-This project can be deployed to multiple live environments including:
-
-- AWS ECS
-- AWS EKS
-- docker swarm cluster (planned)
+This project focuses on deployment to AWS using Elastic Container Service.
 
 ### AWS ECS
 
@@ -165,10 +157,6 @@ The code can be found in multiple public repositories:
 > One codebase tracked in revision control, many deploys
 
 - **GitHub** (please open any issues, pull requests or discussions here): [https://github.com/briancaffey/django-step-by-step](https://github.com/briancaffey/django-step-by-step)
-- **GitLab**: [https://gitlab.com/briancaffey/django-step-by-step](https://gitlab.com/briancaffey/django-step-by-step)
-- **BitBucket**: [https://bitbucket.org/briancaffey1/django-step-by-step/](https://bitbucket.org/briancaffey1/django-step-by-step/)
-
-In the case of AWS deployment with CDK, there are multiple applications that are shared as dependencies through libraries (**II: Dependencies**).
 
 ### II: Dependencies
 
@@ -178,6 +166,7 @@ There are a few different ways in which this project manages dependencies:
 - `npm` manages TypeScript/JavaScript dependencies for the construct library application
 - The `Dockerfile` defines dependencies needed for the container, including the version of Python to use
 - The `django-cdk` library defines specific version of AWS services to use, such as the version of postgres and Redis that are used
+- `terraform-aws-django` also defines specific versions, such as the database engine version to use for Postgres
 
 ### III: Config
 
@@ -260,7 +249,7 @@ Developers will often wish to do one-off administrative or maintenance tasks for
 - Running a console
 - Running one-time scripts committed into the app’s repo
 
-With ECS and CDK, management commands can be run easily either through automation or using a new tool called ECS Exec.
+With ECS and CDK, management commands can be run easily either through automation or using a tool called ECS Exec.
 
 To run automated tasks, `managementCommandProps` can be passed a value of `true` (`false` by default). This will run the task each time the application is deployed with `cdk deploy`. This uses the an AWS Custom Resource that is defined in the construct. The CR's `onCreate` and `unUpdate` are set to an `AwsSdkCall` that runs `ecs:RunTask` with the appropiate parameters.
 
