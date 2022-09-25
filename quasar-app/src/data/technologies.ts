@@ -122,13 +122,6 @@ const otherTechnologies = [
     documentationLink: 'https://aws.amazon.com/ecs/',
   },
   {
-    title: 'EKS',
-    description: 'A container orchestration tool for AWS based on Kubernetes',
-    detail: 'A tool used to run the application containers in AWS using Kubernetes',
-    image: 'eks.png',
-    documentationLink: 'https://aws.amazon.com/eks/',
-  },
-  {
     title: 'Projen',
     description: 'Define and maintain complex project configuration through code',
     detail: 'Used for maintaining the CDK construct library',
