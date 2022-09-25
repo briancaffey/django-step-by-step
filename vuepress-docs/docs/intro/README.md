@@ -85,25 +85,13 @@ Cypress is used for e2e testing which can run locally against the docker-compose
 
 ## Continuous Intergration
 
-Multiple tools are used for running unit tests and code quality checks on each commit. These include:
+On each push to the `dev` branch, a GitHub Actions pipeline runs static code linting and unit tests.
 
-- GitHub Actions
-- GitLab CI
-- Bitbucket Pipelines
-
-Continuous integration checks that all unit tests pass and that code is formatted correctly. Unit tests run the Python code in a simulated environment that contains the dependent services (postgres and redis). The following tools are used in CI:
-
-- flake8
-- black
-- pytest
+Continuous integration checks that all unit tests pass and that code is formatted correctly. Unit tests run the Python code in a simulated environment that contains the dependent services (postgres and redis).
 
 ## Deployment
 
-This project can be deployed to multiple live environments including:
-
-- AWS ECS
-- AWS EKS
-- docker swarm cluster (planned)
+This project focuses on using AWS ECS to deploy the application in different environments (on-demand test environments, pre-production environments and production environments).
 
 ### AWS ECS
 
@@ -139,10 +127,6 @@ This project can deploy ECS from the command line (using `make cdk-deploy`) or f
 
 Additional [ECS Exec](https://aws.amazon.com/blogs/containers/new-using-amazon-ecs-exec-access-your-containers-fargate-ec2/) is used to run management commands and open shells inside of the containers running on Fargate.
 
-### AWS EKS
-
-AWS Elastic Kubernetes Service (EKS)
-
 ## This project is open source and MIT Licensed
 
-See [LICENSE.md](/LICENSE.md)
+See [LICENSE.md](/LICENSE.md).

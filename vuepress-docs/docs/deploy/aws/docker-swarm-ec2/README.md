@@ -202,7 +202,7 @@ This construct tries to adhere to the [12 Factor App](https://12factor.net/) mod
 
 ### I. **Codebase** - *One codebase tracked in revision control, many deploys*
 
-This first factor of the 12 Factor app deserves some clarification. There are **two** code repositories in use here. The first is `django-cdk`. This repo is an AWS CDK construct library that is written in TypeScript and published to NPM and PyPI. It includes several different constructs that help developers and teams deploy Django applications on AWS using different tools (such ECS, EKS and docker swarm).
+This first factor of the 12 Factor app deserves some clarification. There are **two** code repositories in use here. The first is `django-cdk`. This repo is an AWS CDK construct library that is written in TypeScript and published to NPM and PyPI. It includes several different constructs that help developers and teams deploy Django applications on AWS.
 
   The second codebase is `django-step-by-step`. This project is a reference application that several applications in a monorepo structure. It includes a Django project built with Django REST Framework and a Vue.js frontend application built with Quasar, TypeScript, Vue 3 and the Composition API. It is a simple micro-blogging application called μblog. The `django-step-by-step` repo also includes a `cdk` directory that includes the `django-cdk` library as a dependency.
 
@@ -263,10 +263,6 @@ Some of the important topics I wanted to address with this project include:
 ### Library design
 - Balancing ease of use with complexity
 - Use minimal inputs (secrets entered to GitHub, stack name)
-
-## Next steps
-
-My next goal is to improve `django-cdk` and apply my learnings from working on the `DockerEc2` construct to other constructs I have written for ECS and EKS.
 
 ### Using the `DockerEc2` construct for testing
 

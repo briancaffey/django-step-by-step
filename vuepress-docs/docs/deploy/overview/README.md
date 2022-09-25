@@ -8,7 +8,6 @@ Here are some of the different ways that you can deploy the μblog application, 
 - Kubernetes cluster running locally on minikube
 - DigitalOcean using docker swarm pre-installed on a droplet from the DigitalOcean marketplace
 - AWS ECS cluster running on Fargate compute instances
-- AWS EKS cluster running on EC2 instances
 
 ## CI/CD Tools
 
@@ -18,10 +17,6 @@ For docker swarm and local kubernetes deployments, a shell script is used to ini
 - `kubctl apply` for minikube
 
 When the application runs on docker swarm on DigitalOcean, it is updated using `docker stack deploy` from a GitLab CI/CD pipeline that remotely connects to the docker daemon runnong on the DigitalOcean droplet using SSH.
-
-### [`django-cdk`](/deploy/aws)
-
-The ECS and EKS deployments use the Cloud Development Kit (CDK) to both create AWS infrastructure and deploy μblog. The CDK code (Infrastructure as Code) is written in TypeScript and it references a npm package called `django-cdk` which was developed together with μblog. `django-cdk` is a library containing high-level CDK constructs for deploying secure and scalable Django applications on AWS.
 
 ## Containers and container orchestration
 
