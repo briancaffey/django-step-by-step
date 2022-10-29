@@ -60,14 +60,14 @@ jobs:
             --query "DBInstances[0].Endpoint.Address" \
             --output text)
 
-          echo ::set-output name=BASTION_INSTANCE_ID::$BASTION_INSTANCE_ID
-          echo ::set-output name=RDS_ENDPOINT::$RDS_ENDPOINT
+          echo "rds_endpoint=$RDS_ENDPOINT" >> $GITHUB_ENV
+          echo "bastion_instance_id=$BASTION_INSTANCE_ID" >> $GITHUB_ENV
 
       - name: "Create ad hoc environment DB"
         id: create_ad_hoc_env_db
         env:
-          RDS_ENDPOINT: ${{ steps.get_aws_resource_values.outputs.RDS_ENDPOINT }}
-          BASTION_INSTANCE_ID: ${{ steps.get_aws_resource_values.outputs.BASTION_INSTANCE_ID }}
+          RDS_ENDPOINT: ${{ env.rds_endpoint }}
+          BASTION_INSTANCE_ID: ${{ env.bastion_instance_id }}
           AD_HOC_ENV: ${{ github.event.inputs.workspace }}
           AWS_PAGER: ""
         run: |
