@@ -37,7 +37,7 @@ jobs:
         run: |
           cd iac/cdk/
           ls -al
-          la -al iac/cdk/
+          ls -al iac/cdk/
           cd iac/cdk/ && npm install
 
       - name: "cdk synth"
