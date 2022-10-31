@@ -35,6 +35,9 @@ jobs:
 
       - name: Install CDK
         run: |
+          cd iac/cdk/
+          ls -al
+          ls -al iac/cdk/
           cd iac/cdk/ && npm install
 
       - name: "cdk synth"
@@ -44,4 +47,4 @@ jobs:
           ACM_CERTIFICATE_ARN: ${{ secrets.ACM_CERTIFICATE_ARN }}
           DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
         run: |
-          cd iac/cdk && cdk synth AdHocBaseStack
+          cd iac/cdk/ && cdk synth AdHocBaseStack
