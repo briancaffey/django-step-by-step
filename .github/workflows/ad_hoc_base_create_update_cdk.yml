@@ -35,10 +35,11 @@ jobs:
 
       - name: Install CDK
         run: |
+          npm i -g aws-cdk
           cd iac/cdk/
           ls -al
           ls -al iac/cdk/
-          cd iac/cdk/ && npx projen
+          cd iac/cdk/ && npm install
 
       - name: "cdk synth"
         id: cdk_synth
