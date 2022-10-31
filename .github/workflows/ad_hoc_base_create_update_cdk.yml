@@ -33,6 +33,10 @@ jobs:
         with:
           node-version: "16"
 
+      - name: Install CDK
+        run: |
+          npm install
+
       - name: "cdk synth"
         id: cdk_synth
         env:
