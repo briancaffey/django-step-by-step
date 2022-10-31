@@ -36,6 +36,7 @@ jobs:
       - name: Install CDK
         run: |
           cd iac/cdk/
+          ls -al
           npm install
 
       - name: "cdk synth"
