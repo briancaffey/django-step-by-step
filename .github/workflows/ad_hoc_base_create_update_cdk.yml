@@ -38,7 +38,7 @@ jobs:
           cd iac/cdk/
           ls -al
           ls -al iac/cdk/
-          cd iac/cdk/ && npm install
+          cd iac/cdk/ && npx projen
 
       - name: "cdk synth"
         id: cdk_synth
