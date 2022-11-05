@@ -82,7 +82,12 @@ jobs:
           )
 
           # get secret value
-          export PGPASSWORD=$(aws secretsmanager get-secret-value --secret-id $SECRET_ARN | jq .SecretString | jq fromjson | jq .password)
+          export PGPASSWORD=$(aws secretsmanager get-secret-value \
+            --secret-id $SECRET_ARN \
+            | jq .SecretString \
+            | jq fromjson \
+            | jq -r .password \
+          )
           export COMMAND="PGPASSWORD=$PGPASSWORD createdb -U postgres -w -h $RDS_ENDPOINT $AD_HOC_ENV-db || echo DB either already exists or could not be created"
 
           # send the command and capture the output to get the command ID
