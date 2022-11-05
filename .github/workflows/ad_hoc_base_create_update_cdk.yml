@@ -42,9 +42,9 @@ jobs:
       - name: "cdk synth"
         id: cdk_synth
         run: |
-          cd iac/cdk/ && cdk synth AdHocBaseStack
+          cd iac/cdk/ && cdk synth AdHocBaseStack --require-approval never
 
       - name: "cdk deploy"
         id: cdk_deploy
         run: |
-          cd iac/cdk/ && cdk deploy AdHocBaseStack
+          cd iac/cdk/ && cdk deploy AdHocBaseStack --require-approval never
