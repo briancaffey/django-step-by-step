@@ -25,6 +25,7 @@ jobs:
       AD_HOC_APP_NAME: ${{ github.event.inputs.ad_hoc_app_name }}
       ACM_CERTIFICATE_ARN: ${{ secrets.ACM_CERTIFICATE_ARN }}
       DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+      AWS_PAGER: ""
     runs-on: ubuntu-latest
 
     steps:
@@ -42,18 +43,26 @@ jobs:
       # a database for an ad hoc environment
       - name: "Get AWS Resource values"
         id: get_aws_resource_values
-        env:
-          AD_HOC_BASE_NAME: ${{ github.event.inputs.ad_hoc_base_name }}
         run: |
           BASTION_INSTANCE_ID=$(aws ec2 describe-instances \
-            --filters "Name=tag:env,Values=$AD_HOC_BASE_NAME" \
+            --filters "Name=tag:stack,Values=ad-hoc-base-${AD_HOC_BASE_NAME}" \
             --query "Reservations[*].Instances[*].InstanceId" \
             --output text)
 
+          # get RDS instance by tags
+          DB_IDENTIFIER=$(aws resourcegroupstaggingapi get-resources \
+            --tag-filters Key=stack,Values=ad-hoc-base-${AD_HOC_BASE_NAME} \
+            --resource-type-filters rds:db \
+            --query ResourceTagMappingList[0].ResourceARN \
+            --output text \
+          )
+
+          # rds endpoint
           RDS_ENDPOINT=$(aws rds describe-db-instances \
-            --db-instance-identifier $AD_HOC_BASE_NAME-rds \
+            --db-instance-identifier $DB_IDENTIFIER \
             --query "DBInstances[0].Endpoint.Address" \
-            --output text)
+            --output text \
+          )
 
           echo "rds_endpoint=$RDS_ENDPOINT" >> $GITHUB_ENV
           echo "bastion_instance_id=$BASTION_INSTANCE_ID" >> $GITHUB_ENV
@@ -63,16 +72,13 @@ jobs:
         env:
           RDS_ENDPOINT: ${{ env.rds_endpoint }}
           BASTION_INSTANCE_ID: ${{ env.bastion_instance_id }}
-          AD_HOC_ENV: ${{ github.event.inputs.ad_hoc_base_name }}
-          AWS_PAGER: ""
         run: |
-          # TODO - move the hard-coded password to secrets manager and retrieve it from AWS Secrets Manager
-          # define the command to create the database
-          # get secret ARN from tagging api
+          # get secret ARN from resource group tagging api
           SECRET_ARN=$(aws resourcegroupstaggingapi get-resources \
-            --tag-filters Key=stack,Values=ad-hoc-base-${AD_HOC_ENV} \
+            --tag-filters Key=stack,Values=ad-hoc-base-${AD_HOC_BASE_NAME} \
             --resource-type-filters secretsmanager:secret \
-            | jq .ResourceTagMappingList[0].ResourceARN \
+            --query ResourceTagMappingList[0].ResourceARN \
+            --output text \
           )
 
           # get secret value
