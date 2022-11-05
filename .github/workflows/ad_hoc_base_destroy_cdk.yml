@@ -1,18 +1,18 @@
-# github action to create or update shared resources
-name: ad hoc | base | create / update [CDK]
+# github action to destroy ad hoc base
+name: ad hoc | base | destroy [CDK]
 
 on:
   workflow_dispatch:
     inputs:
       ad_hoc_base_name:
-        description: 'Name for ad hoc base environment to create/update using CDK'
+        description: 'Name for ad hoc base environment to destroy using CDK'
         required: true
         default: 'dev'
         type: string
 
 jobs:
-  create_update_ad_hoc_base:
-    name: "Create or update ad hoc base infrastructure using CDK [${{ github.event.inputs.ad_hoc_base_name }}]"
+  destroy_ad_hoc_base:
+    name: "Destroy ad hoc base infrastructure using CDK [${{ github.event.inputs.ad_hoc_base_name }}]"
     environment: ad-hoc-base-${{ github.event.inputs.ad_hoc_base_name }}
     env:
       AD_HOC_BASE_NAME: ${{ github.event.inputs.ad_hoc_base_name }}
@@ -39,12 +39,7 @@ jobs:
         run: |
           cd iac/cdk/ && npm install && npm i -g aws-cdk
 
-      - name: "cdk synth"
-        id: cdk_synth
+      - name: "cdk destroy"
+        id: cdk_destroy
         run: |
-          cd iac/cdk/ && cdk synth AdHocBaseStack
-
-      - name: "cdk deploy"
-        id: cdk_deploy
-        run: |
-          cd iac/cdk/ && cdk deploy AdHocBaseStack
+          cd iac/cdk/ && cdk destroy AdHocBaseStack
