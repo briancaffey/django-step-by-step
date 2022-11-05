@@ -42,4 +42,4 @@ jobs:
       - name: "cdk destroy"
         id: cdk_destroy
         run: |
-          cd iac/cdk/ && cdk destroy AdHocBaseStack --require-approval never
+          cd iac/cdk/ && cdk destroy AdHocBaseStack AdHocAppStack --require-approval never
