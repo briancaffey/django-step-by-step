@@ -26,8 +26,6 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
       - uses: actions/checkout@v3
-        with:
-          path: iac/cdk/
 
       - uses: actions/setup-node@v3
         with:
@@ -35,11 +33,7 @@ jobs:
 
       - name: Install CDK
         run: |
-          npm i -g aws-cdk
-          cd iac/cdk/
-          ls -al
-          ls -al iac/cdk/
-          cd iac/cdk/ && npm install
+          cd iac/cdk/ && npx projen && npm i -g aws-cdk
 
       - name: "cdk synth"
         id: cdk_synth
@@ -48,4 +42,4 @@ jobs:
           ACM_CERTIFICATE_ARN: ${{ secrets.ACM_CERTIFICATE_ARN }}
           DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
         run: |
-          cd iac/cdk/ && cdk synth AdHocBaseStack
+          pwd && ls && cd iac/cdk/ && cdk synth AdHocBaseStack
