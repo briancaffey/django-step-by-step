@@ -442,6 +442,10 @@ tf-ad-hoc-sample:  tf-ad-hoc-sample-init	tf-ad-hoc-sample-plan	tf-ad-hoc-sample-
 tf-ad-hoc-sample-destroy:
 	terraform -chdir=terraform/live/ad-hoc destroy -auto-approve --var-file=envs/sample.tfvars
 
+## -- CDK Targets --
+projen:
+	@cd iac/cdk && npx projen
+
 ## -- AWS Targets --
 
 ## start ecs exec session for ad hoc env
