@@ -46,4 +46,4 @@ jobs:
             -f nginx/ecs/Dockerfile \
             .
 
-          docker push $FRONTEND_IMAGE_URI:$IMAGE_TAG
+          docker push --all-tags $FRONTEND_IMAGE_URI

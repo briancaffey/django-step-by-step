@@ -47,4 +47,4 @@ jobs:
             -t $BACKEND_IMAGE_URI:latest \
             ./backend
 
-          docker push $BACKEND_IMAGE_URI:$SOURCE_TAG
+          docker push --all-tags $BACKEND_IMAGE_URI
