@@ -13,8 +13,13 @@ const adHocAppEnvName = process.env.AD_HOC_APP_NAME || 'alpha';
 
 const app = new App();
 
-const adHocBaseStack = new Stack(app, 'AdHocBaseStack', { stackName: `ad-hoc-base-${adHocBaseEnvName}` });
-const adHocAppStack = new Stack(app, 'AdHocAppStack', { stackName: `ad-hoc-app-${adHocAppEnvName}` });
+const env = {
+  account: process.env.CDK_DEFAULT_ACCOUNT,
+  region: process.env.CDK_DEFAULT_REGION,
+};
+
+const adHocBaseStack = new Stack(app, 'AdHocBaseStack', { stackName: `ad-hoc-base-${adHocBaseEnvName}`, env });
+const adHocAppStack = new Stack(app, 'AdHocAppStack', { stackName: `ad-hoc-app-${adHocAppEnvName}`, env });
 
 const adHocBase = new AdHocBase(adHocBaseStack, 'AdHocBase', { certificateArn, domainName });
 
