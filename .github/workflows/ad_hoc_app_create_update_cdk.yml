@@ -134,6 +134,11 @@ jobs:
         run: |
           cd iac/cdk/ && cdk synth AdHocAppStack
 
+      - name: "cdk diff for AdHocAppStack"
+        id: cdk_diff
+        run: |
+          cd iac/cdk/ && cdk diff AdHocAppStack
+
       - name: "cdk deploy"
         id: cdk_deploy
         run: |
