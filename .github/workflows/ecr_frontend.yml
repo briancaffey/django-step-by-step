@@ -42,6 +42,7 @@ jobs:
           docker build \
             --build-arg VERSION=$IMAGE_TAG \
             -t $FRONTEND_IMAGE_URI:$IMAGE_TAG \
+            -t $FRONTEND_IMAGE_URI:latest \
             -f nginx/ecs/Dockerfile \
             .
 
