@@ -144,7 +144,19 @@ jobs:
         run: |
           cd iac/cdk/ && cdk deploy AdHocAppStack --require-approval never
 
-      # - name: "Run backend update command"
-      #   id: run_backend_update
-      #   run: |
-      #     aws cloudformation describe-stacks --stack-name $STACK_NAME
+      - name: "Run backend update command"
+        id: run_backend_update
+        run: |
+          # get the script from the stack output with an output key that contains the string `backendUpdate`
+          BACKEND_UPDATE_SCRIPT=$(aws cloudformation describe-stacks \
+            --stack-name ad-hoc-app-$AD_HOC_APP_NAME \
+            | jq -r '.Stacks[0].Outputs[]|select(.OutputKey | contains("backendUpdate")) | .OutputValue' \
+          )
+
+          echo $BACKEND_UPDATE_SCRIPT > backend_update_command.sh
+
+          cat backend_update_command.sh
+
+          sudo chmod +x backend_update_command.sh
+
+          ./backend_update_command.sh
