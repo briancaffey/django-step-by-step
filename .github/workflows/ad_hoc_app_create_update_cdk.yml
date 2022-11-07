@@ -153,7 +153,7 @@ jobs:
             | jq -r '.Stacks[0].Outputs[]|select(.OutputKey | contains("backendUpdate")) | .OutputValue' \
           )
 
-          echo $BACKEND_UPDATE_SCRIPT > backend_update_command.sh
+          echo "$BACKEND_UPDATE_SCRIPT" > backend_update_command.sh
 
           cat backend_update_command.sh
 
