@@ -256,3 +256,7 @@ To run automated tasks, `managementCommandProps` can be passed a value of `true`
 If you do not want to run database migrations automatically as a Custom Resource in CDK, you can use the AWS CLI to run the command from your CI tool, or you can use ECS Exec.
 
 ECS Exec would also be a good choice if you want to run a one-time script or open a console in the container.
+
+## Unit Testing backend Django application with GitHub Actions
+
+Backend tests for the Django application run when code is pushed to the `dev` branch.
