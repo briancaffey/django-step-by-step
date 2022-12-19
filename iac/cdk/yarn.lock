@@ -1492,10 +1492,10 @@ case@1.6.3, case@^1.6.3:
   resolved "https://registry.yarnpkg.com/case/-/case-1.6.3.tgz#0a4386e3e9825351ca2e6216c60467ff5f1ea1c9"
   integrity sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==
 
-cdk-django@0.0.17:
-  version "0.0.17"
-  resolved "https://registry.yarnpkg.com/cdk-django/-/cdk-django-0.0.17.tgz#e38e925af7ed9ebf0e2403c58943043278b32566"
-  integrity sha512-YSehMZbz5erMQbQuxakca3GxzRuPHu1j4hPyA92w+9gF18oMSY2dMNDIwT+vxbRJsvarQOXlRzjycCEkR6hwCQ==
+cdk-django@0.0.18:
+  version "0.0.18"
+  resolved "https://registry.yarnpkg.com/cdk-django/-/cdk-django-0.0.18.tgz#297eaf83762304f2ba973b17e6656594c307e599"
+  integrity sha512-99xlYfaQ07l7zomiQuUvEj1YOMEVdNwqwubPLu6CQK6bR0C8wiCZZbDXG3EszlIoZZR2n2+BfsokJDBEoXv5gQ==
   dependencies:
     "@types/jest" "27.4.1"
 
