@@ -96,7 +96,6 @@
     },
     {
       "name": "cdk-django",
-      "version": "0.0.15",
       "type": "runtime"
     },
     {
