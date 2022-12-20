@@ -34,7 +34,7 @@ const adHocApp = new AdHocApp(adHocAppStack, 'AdHocApp', {
   domainName: adHocBase.domainName,
   listener: adHocBase.listener,
 
-  djangoSettingsModule: process.env.DJANGO_SETTINGS_MODULE || 'backend.settings.production',
+  djangoSettingsModule: process.env.DJANGO_SETTINGS_MODULE || 'backend.settings.aws',
   backendVersion: process.env.BACKEND_VERSION || 'latest',
   frontendVersion: process.env.FRONTEND_VERSION || 'latest',
 });
