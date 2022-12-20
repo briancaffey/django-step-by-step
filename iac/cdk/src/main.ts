@@ -18,8 +18,8 @@ const env = {
   region: process.env.CDK_DEFAULT_REGION,
 };
 
-const adHocBaseStack = new Stack(app, 'AdHocBaseStack', { stackName: `ad-hoc-base-${adHocBaseEnvName}`, env });
-const adHocAppStack = new Stack(app, 'AdHocAppStack', { stackName: `ad-hoc-app-${adHocAppEnvName}`, env });
+const adHocBaseStack = new Stack(app, 'AdHocBaseStack', { stackName: adHocBaseEnvName, env });
+const adHocAppStack = new Stack(app, 'AdHocAppStack', { stackName: adHocAppEnvName, env });
 
 const adHocBase = new AdHocBase(adHocBaseStack, 'AdHocBase', { certificateArn, domainName });
 
@@ -42,9 +42,9 @@ const adHocApp = new AdHocApp(adHocAppStack, 'AdHocApp', {
 /**
  * Add tagging for this construct and all child constructs
  */
-Tags.of(adHocBase).add('stack', adHocBaseStack.stackName);
+Tags.of(adHocBase).add('env', adHocBaseStack.stackName);
 
-Tags.of(adHocApp).add('stack', adHocAppStack.stackName);
+Tags.of(adHocApp).add('env', adHocAppStack.stackName);
 
 
 app.synth();
