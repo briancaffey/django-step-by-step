@@ -39,6 +39,11 @@ jobs:
         run: |
           cd iac/cdk/ && npm install && npm i -g aws-cdk
 
+      - name: "cdk diff"
+        id: cdk_diff
+        run: |
+          cd iac/cdk/ && cdk diff AdHocBaseStack --require-approval never
+
       - name: "cdk synth"
         id: cdk_synth
         run: |
