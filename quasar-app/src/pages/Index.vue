@@ -2,7 +2,7 @@
   <q-page padding>
     <div class="text-center q-pa-md q-pa-lg">
       <div class="text-h2 ">
-        Welcome to μblog!
+        Welcome to μblog!!!
       </div>
 
       <div class="text-subtitle1 q-pa-md">

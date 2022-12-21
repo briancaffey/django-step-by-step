@@ -6,15 +6,15 @@ on:
     inputs:
 
       shared_resources_workspace:
-        description: 'Terraform workspace for shared resources env'
+        description: 'Base environment'
         required: true
         default: 'dev'
         type: string
 
       workspace:
-        description: 'Terraform workspace to use'
+        description: 'Name of app environment to update'
         required: true
-        default: 'dev'
+        default: 'alpha'
         type: string
 
       image_tag:

@@ -18,7 +18,7 @@ def health_check(request):
 
 def version(request):
     version = os.environ.get("SOURCE_TAG", "-")
-    return JsonResponse({"version": version})
+    return JsonResponse({"version": version, "foo": "bar"})
 
 
 def index(request):
