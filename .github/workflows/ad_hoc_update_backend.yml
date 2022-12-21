@@ -15,7 +15,7 @@ on:
       workspace:
         description: 'Terraform workspace for ad hoc env'
         required: true
-        default: 'dev'
+        default: 'alpha'
         type: string
 
       image_tag:
