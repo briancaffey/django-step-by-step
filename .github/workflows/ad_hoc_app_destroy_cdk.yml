@@ -51,13 +51,13 @@ jobs:
         id: get_aws_resource_values
         run: |
           BASTION_INSTANCE_ID=$(aws ec2 describe-instances \
-            --filters "Name=tag:stack,Values=ad-hoc-base-${AD_HOC_BASE_NAME}" \
+            --filters "Name=tag:env,Values=${AD_HOC_BASE_NAME}" \
             --query "Reservations[*].Instances[*].InstanceId" \
             --output text)
 
           # get RDS instance by tags
           DB_IDENTIFIER=$(aws resourcegroupstaggingapi get-resources \
-            --tag-filters Key=stack,Values=ad-hoc-base-${AD_HOC_BASE_NAME} \
+            --tag-filters Key=env,Values=${AD_HOC_BASE_NAME} \
             --resource-type-filters rds:db \
             --query ResourceTagMappingList[0].ResourceARN \
             --output text \
@@ -82,7 +82,7 @@ jobs:
         run: |
           # get secret ARN from resource group tagging api
           SECRET_ARN=$(aws resourcegroupstaggingapi get-resources \
-            --tag-filters Key=stack,Values=ad-hoc-base-${AD_HOC_BASE_NAME} \
+            --tag-filters Key=env,Values=${AD_HOC_BASE_NAME} \
             --resource-type-filters secretsmanager:secret \
             --query ResourceTagMappingList[0].ResourceARN \
             --output text \
