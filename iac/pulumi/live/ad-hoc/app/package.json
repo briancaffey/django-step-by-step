@@ -1,5 +1,5 @@
 {
-    "name": "adhoc-base",
+    "name": "adhoc-app",
     "main": "index.ts",
     "devDependencies": {
         "@types/node": "^14"
