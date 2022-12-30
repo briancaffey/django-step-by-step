@@ -1,3 +1,0 @@
-name: pulumi-ublog
-description: ublog application infrastructure used for deployment to AWS on ECS Fargate
-runtime: nodejs

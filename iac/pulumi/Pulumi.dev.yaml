@@ -1,5 +1,0 @@
-config:
-  aws:region: us-east-1
-  pulumi-ublog:containerPort: "80"
-  pulumi-ublog:cpu: "512"
-  pulumi-ublog:memory: "128"
