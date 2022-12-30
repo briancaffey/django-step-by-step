@@ -15,5 +15,5 @@ export const albDnsName = adHocBaseEnv.alb.dnsName;
 export const serviceDiscoveryNamespaceId = adHocBaseEnv.serviceDiscoveryNamespace.id;
 export const rdsAddress = adHocBaseEnv.databaseInstance.address;
 export const domainName = adHocBaseEnv.domainName;
-// export const baseStackName = adHocBaseEnv.stackName;
-// export const bastionHostInstanceId = adHocBaseEnv.bastionHostInstanceId;
+export const baseStackName = adHocBaseEnv.stackName;
+export const bastionHostInstanceId = adHocBaseEnv.bastionHostInstanceId;
