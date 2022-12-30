@@ -8,6 +8,6 @@
         "@pulumi/pulumi": "^3.0.0",
         "@pulumi/aws": "^5.0.0",
         "@pulumi/awsx": "^1.0.0",
-        "pulumi-aws-django": "1.7.1"
+        "pulumi-aws-django": "1.7.2"
     }
 }
