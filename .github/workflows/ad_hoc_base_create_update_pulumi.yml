@@ -41,7 +41,7 @@ jobs:
       - uses: pulumi/actions@v3
         with:
           command: preview
-          stack-name: briancaffey/adhoc-base/$AD_HOC_BASE_NAME
+          stack-name: briancaffey/adhoc-base/dev
           github-token: ${{ secrets.GITHUB_TOKEN }}
           work-dir: iac/pulumi/live/ad-hoc/base
         env:
