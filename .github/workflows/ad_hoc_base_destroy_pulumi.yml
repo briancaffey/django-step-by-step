@@ -1,11 +1,11 @@
 # github action to create or update shared resources
-name: ad hoc | base | create / update [Pulumi]
+name: ad hoc | base | destroy [Pulumi]
 
 on:
   workflow_dispatch:
     inputs:
       ad_hoc_base_name:
-        description: 'Name for ad hoc base environment to create/update using Pulumi'
+        description: 'Name for ad hoc base environment to destroy using Pulumi'
         required: true
         default: 'dev'
         type: string
@@ -38,20 +38,9 @@ jobs:
       - run: npm install
         working-directory: iac/pulumi/live/ad-hoc/base
 
-      - name: Preview Pulumi base ad hoc environment
-        uses: pulumi/actions@v3
+      - uses: pulumi/actions@v3
         with:
-          command: preview
-          stack-name: briancaffey/adhoc-base/dev
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          work-dir: iac/pulumi/live/ad-hoc/base
-        env:
-          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
-
-      - name: Pulumi up for base ad hoc environment
-        uses: pulumi/actions@v3
-        with:
-          command: up
+          command: destroy
           stack-name: briancaffey/adhoc-base/dev
           github-token: ${{ secrets.GITHUB_TOKEN }}
           work-dir: iac/pulumi/live/ad-hoc/base
