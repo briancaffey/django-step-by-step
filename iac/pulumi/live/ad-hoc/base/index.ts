@@ -1,7 +1,7 @@
 import { AdHocBaseEnvComponent } from 'pulumi-aws-django';
 
 const adHocBaseEnv = new AdHocBaseEnvComponent('myAdHocEnv', {
-  certificateArn: process.env.CERTIFICATE_ARN || 'arn:aws:acm:us-east-1:111111111111:certificate/11111111-1111-1111-1111-111111111111',
+  certificateArn: process.env.ACM_CERTIFICATE_ARN || 'arn:aws:acm:us-east-1:111111111111:certificate/11111111-1111-1111-1111-111111111111',
   domainName: process.env.DOMAIN_NAME || 'example.com'
 });
 
