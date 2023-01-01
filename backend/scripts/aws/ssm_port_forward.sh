@@ -12,6 +12,7 @@ read -p "Ad hoc shared environment name (dev): " AD_HOC_BASE_ENV
 
 BASTION_INSTANCE_ID=$(aws ec2 describe-instances \
   --filters "Name=tag:env,Values=$AD_HOC_BASE_ENV" \
+  --filters "Name=instance-state-name,Values=running" \
   --query "Reservations[*].Instances[*].InstanceId" \
   --output text \
   --region us-east-1

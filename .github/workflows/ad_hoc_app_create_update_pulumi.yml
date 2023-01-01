@@ -49,6 +49,7 @@ jobs:
         run: |
           BASTION_INSTANCE_ID=$(aws ec2 describe-instances \
             --filters "Name=tag:env,Values=$AD_HOC_BASE_NAME" \
+            --filters "Name=instance-state-name,Values=running" \
             --query "Reservations[*].Instances[*].InstanceId" \
             --output text)
 
