@@ -51,13 +51,13 @@ jobs:
       - name: "cdk synth"
         id: cdk_synth
         run: |
-          cd iac/cdk && cdk synth --app='lib/ad-hoc/index.js' -e ExampleAdHocBaseStack --require-approval never
+          cd iac/cdk && cdk synth --app='lib/ad-hoc/index.js' -e ExampleAdHocBaseStack --require-approval never > synth.yml
 
       - name: Save synth output to artifact
         uses: actions/upload-artifact@v3
         with:
           name: synth-output
-          path: iac/cdk/cdk.out
+          path: iac/cdk/synth.yml
 
   ad_hoc_base_deploy:
     name: "Ad hoc base deploy"
@@ -85,4 +85,4 @@ jobs:
       - name: "cdk deploy"
         id: cdk_deploy
         run: |
-          cd iac/cdk && cdk deploy --app cdk.out -e ExampleAdHocBaseStack --require-approval never
+          cd iac/cdk && cdk deploy --app synth.yml -e ExampleAdHocBaseStack --require-approval never
