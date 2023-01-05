@@ -37,11 +37,11 @@ jobs:
 
       - name: Install CDK
         run: |
-          cd iac/cdk/ && npm install && npm i -g aws-cdk
+          cd iac/cdk && npm install && npm i -g aws-cdk
 
       - name: Build
         run: |
-          cd iac/cdk/ && tsc
+          cd iac/cdk && tsc
 
       - name: "cdk diff"
         id: cdk_diff
@@ -51,7 +51,7 @@ jobs:
       - name: "cdk synth"
         id: cdk_synth
         run: |
-          cd iac/cdk/ && cdk synth --app='lib/ad-hoc/index.js' -e ExampleAdHocBaseStack --require-approval never
+          cd iac/cdk && cdk synth --app='lib/ad-hoc/index.js' -e ExampleAdHocBaseStack --require-approval never
 
       - name: Save synth output to artifact
         uses: actions/upload-artifact@v3
@@ -78,7 +78,11 @@ jobs:
         run: |
           npm i -g aws-cdk
 
+      - name: Install Dependencies
+        run: |
+          cd iac/cdk && npm install
+
       - name: "cdk deploy"
         id: cdk_deploy
         run: |
-          cd iac/cdk/ && cdk deploy --app cdk.out -e ExampleAdHocBaseStack --require-approval never
+          cd iac/cdk && cdk deploy --app cdk.out -e ExampleAdHocBaseStack --require-approval never
