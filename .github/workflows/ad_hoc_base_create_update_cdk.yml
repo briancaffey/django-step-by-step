@@ -11,7 +11,7 @@ on:
         type: string
 
 jobs:
-  create_update_ad_hoc_base:
+  ad_hoc_base_synth:
     name: "Create or update ad hoc base infrastructure using CDK [${{ github.event.inputs.ad_hoc_base_name }}]"
     environment: ad-hoc-base-${{ github.event.inputs.ad_hoc_base_name }}
     env:
@@ -53,7 +53,25 @@ jobs:
         run: |
           cd iac/cdk/ && cdk synth --app='lib/ad-hoc/index.js' -e ExampleAdHocBaseStack --require-approval never
 
-      # - name: "cdk deploy"
-      #   id: cdk_deploy
-      #   run: |
-      #     cd iac/cdk/ && cdk deploy --app='lib/ad-hoc/index.js' -e ExampleAdHocBaseStack --require-approval never
+      - name: Save synth output to artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: synth-output
+          path: iac/cdk/cdk.out
+
+  ad_hoc_base_deploy:
+    name: "Ad hoc base deploy"
+    environment: ad-hoc-base
+    runs-on: ubuntu-latest
+    needs: ad_hoc_base_synth
+
+    steps:
+
+      - uses: actions/download-artifact@v2
+        with:
+          name: synth-output
+
+      - name: "cdk deploy"
+        id: cdk_deploy
+        run: |
+          cd iac/cdk/ && cdk deploy --app cdk.out -e ExampleAdHocBaseStack --require-approval never
