@@ -53,6 +53,11 @@ jobs:
         run: |
           cd iac/cdk && cdk synth --app='lib/ad-hoc/index.js' -e ExampleAdHocBaseStack --require-approval never > synth.yml
 
+      - name: "ls"
+        id: ls
+        run: |
+          ls && cd iac/cdk && ls
+
       - name: Save synth output to artifact
         uses: actions/upload-artifact@v3
         with:
@@ -73,6 +78,11 @@ jobs:
         with:
           name: synth-output
           path: iac/cdk
+
+      - name: "ls"
+        id: ls
+        run: |
+          cd iac/cdk && ls
 
       - name: Install CDK
         run: |
