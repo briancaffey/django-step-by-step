@@ -39,6 +39,10 @@ jobs:
         run: |
           cd iac/cdk/ && npm install && npm i -g aws-cdk
 
+      - name: Build
+        run: |
+          cd iac/cdk/ && tsc
+
       - name: "cdk diff"
         id: cdk_diff
         run: |
