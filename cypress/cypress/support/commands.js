@@ -26,7 +26,7 @@
 
 import 'cypress-file-upload';
 
-// -- This command will recuresively search the mailhog API for an email that matches a search term --
+// -- This command will recursively search the mailhog API for an email that matches a search term --
 // https://humble.dev/testing-an-email-workflow-from-end-to-end-with-cypress
 Cypress.Commands.add('getConfirmationEmail', email => {
   function getEmail() {
