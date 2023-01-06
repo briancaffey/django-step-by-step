@@ -448,12 +448,18 @@ projen:
 
 ## -- AWS Targets --
 
-## start ecs exec session for ad hoc env
-ad-hoc-ecs-exec:
+## TODO: move these scripts to another directory?
+
+## start ecs exec session in a container in application environment
+aws-ecs-exec:
+	@./backend/scripts/aws/ecs_exec.sh
+
+## connects a shell to the bastion host in a base environment
+aws-ssm-start-session:
 	@./backend/scripts/aws/ecs_exec.sh
 
 ## start port forwarding session for ad hoc env
-ad-hoc-ssm-port-forward:
+aws-ssm-port-forward:
 	@./backend/scripts/aws/ssm_port_forward.sh
 
 # Credit: https://gist.github.com/prwhite/8168133#gistcomment-2749866
