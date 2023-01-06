@@ -217,7 +217,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.settings.development')
 ## Add a requirements folder with three files: `base.txt`, `dev.txt` and `test.txt`
 
 ```
-mkdir backend/requirements && touch backned/requirements/{base,dev,test}.txt
+mkdir backend/requirements && touch backend/requirements/{base,dev,test}.txt
 ```
 
 In `base.txt`, add the only dependency that we have so far, which is Django:
