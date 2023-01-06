@@ -1,5 +1,5 @@
 # These values can be either included in this file or as environment variables
-# Environment variables are prefereble for values that should not be committed, such as AWS ARNs
+# Environment variables are preferable for values that should not be committed, such as AWS ARNs
 
 # The following variables have been added to GitHub environment secrets for the environment called 'shared-resources-dev'
 # The variables are: TV_VARS_certificate_arn and TV_VARS_key_name

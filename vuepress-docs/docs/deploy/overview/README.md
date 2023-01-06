@@ -15,7 +15,7 @@ For local kubernetes deployments, a shell script is used to initiate the deploym
 
 ## Containers and container orchestration
 
-To clarify terminology, all of the deployment targets use containers to run the applicaiton. The main difference in these deployments is the container orchestration tool used. The container orchestration tool refers to the tools that keeps track of the containers and their lifecycle and scaling. There are four main conatiner orchestration tools:
+To clarify terminology, all of the deployment targets use containers to run the application. The main difference in these deployments is the container orchestration tool used. The container orchestration tool refers to the tools that keeps track of the containers and their lifecycle and scaling. There are four main container orchestration tools:
 
 - docker-compose (used mostly for local development)
 - ECS (proprietary container orchestration tool from AWS, good AWS integration)
@@ -26,7 +26,7 @@ To clarify terminology, all of the deployment targets use containers to run the 
 There are some variations in how the application is deployed across the different deployment targets.
 
 - How and where to run Django management commands (migrations)
-- Frontend applicaiton hosting (nginx, S3, CDN)
+- Frontend application hosting (nginx, S3, CDN)
 - Static files (collectstatic, nginx, S3, CDN)
 - Media files (images, videos, etc)
 - Domain and subdomains for the application (this is very important)

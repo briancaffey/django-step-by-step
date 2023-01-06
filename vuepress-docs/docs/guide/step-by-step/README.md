@@ -144,7 +144,7 @@ Starting development server at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```
 
-You should see the rocketship animation with the message:
+You should see the rocket ship animation with the message:
 
 > The install worked successfully! Congratulations!
 
@@ -757,7 +757,7 @@ TOTAL                                                126     33    74%
 
 ## Write browsable coverage to a directory and view with simple HTTP server
 
-Run pyest with the following options:
+Run pytest with the following options:
 
 ```
 pytest backend --cov=backend --cov-report html:backend/.coverage
@@ -924,7 +924,7 @@ There's no need to run migrations since the model is `abstract`. This model can 
 
 ## Add settings for enabling use of Jupyter notebooks
 
-Add the following dependencies that will allow us to use Jupyter notebooks to work with our Django application in it's own environment.
+Add the following dependencies that will allow us to use Jupyter notebooks to work with our Django application in its own environment.
 
 `dev.txt`
 
@@ -1952,7 +1952,7 @@ Migrations for 'blog':
     - Create model Post
 ```
 
-Check out the `0001_initial.py` file that was generated and we can see the fields that will created for our `Post` model (when we run the `migrate` command):
+Check out the `0001_initial.py` file that was generated and we can see the fields that will be created for our `Post` model (when we run the `migrate` command):
 
 - `id`
 - `created_on`
@@ -2011,7 +2011,7 @@ Add factory to the `test.txt` dependencies file:
 factory-boy==3.2.0
 ```
 
-Install the depenencies again with:
+Install the dependencies again with:
 
 ```
 pip3 install -r backend/requirements/test.txt
@@ -2149,7 +2149,7 @@ This is the base template
 
 ## Write a management command that generates fake data
 
-To test out our template logic, we can generate some posts. We can use the `faker` library to do this along with a Django managment command.
+To test out our template logic, we can generate some posts. We can use the `faker` library to do this along with a Django management command.
 
 Create the following file in `apps/blog/management/commands/generate_posts.py`:
 
@@ -2216,7 +2216,7 @@ class Post(BaseModel):
 
 ## Add wildcard to `ALLOWED_HOSTS` in `development` settings module
 
-This will allow you to view the appliction from a mobile device on your local network
+This will allow you to view the application from a mobile device on your local network
 
 ## Use Django messaging framework to update user on post creation success
 
@@ -2264,7 +2264,7 @@ Add the following do each of the links in the pagination section of the post lis
 >
 ```
 
-If there are lots of other parametes to add, use the following solution:
+If there are lots of other parameters to add, use the following solution:
 [https://stackoverflow.com/questions/2047622/how-to-paginate-django-with-other-get-variables](https://stackoverflow.com/questions/2047622/how-to-paginate-django-with-other-get-variables)
 
 ## Add registration URL
@@ -2273,7 +2273,7 @@ If there are lots of other parametes to add, use the following solution:
 
 There are a lot of ways to do registration, and lots of packages that can help with this process.
 
-We can start with a simle implementation that allows us to signup with an email address with a confirmation email. Since we have already setup MailHog, this should be easy.
+We can start with a simple implementation that allows us to signup with an email address with a confirmation email. Since we have already setup MailHog, this should be easy.
 
 ## Add registration form
 
@@ -2541,9 +2541,9 @@ definitions:
 
 ## Generic Class Based Views
 
-We can reimplement our application logic with generic class-based views (GCBVs). There's nothing wrong with out function-based views (FBVs). The code is straightforward and relatively easy to understand. GCBVs will let us acheive the same functionality with fewer lines of code. You can use only CBVs, only GBVs or a mix of the two together. However you decide to write your view, GCBVs are in import part of Django that you should know about.
+We can reimplement our application logic with generic class-based views (GCBVs). There's nothing wrong without function-based views (FBVs). The code is straightforward and relatively easy to understand. GCBVs will let us achieve the same functionality with fewer lines of code. You can use only CBVs, only GBVs or a mix of the two together. However you decide to write your view, GCBVs are in import part of Django that you should know about.
 
-This project demonstrates implementations of FBVs and GCBVs, as well as other ways of expressing our views using the Django REST Framework, which also has a similar concpet of FBVs and GCBVs.
+This project demonstrates implementations of FBVs and GCBVs, as well as other ways of expressing our views using the Django REST Framework, which also has a similar concept of FBVs and GCBVs.
 
 ## Create a file in the `blog` app called `class_based_views.py`
 
@@ -2621,7 +2621,7 @@ class PostDetailView(DetailView):
     path("posts/<int:pk>", PostDetailView.as_view()),
 ```
 
-## Add a teplate for the PostDetailView in `blog/post_detail` in the `blog` app `templates` directory
+## Add a template for the PostDetailView in `blog/post_detail` in the `blog` app `templates` directory
 
 ```html
 
@@ -2631,7 +2631,7 @@ class PostDetailView(DetailView):
 
 ## Add a PostUpdateView for editing posts
 
-- tempalte
+- template
 - URL pattern
 - CBV
 - tests
@@ -2813,7 +2813,7 @@ class PostSerializer(serializers.ModelSerializer):
 
 - Resources
 - Install packages
-- Configurure settings
+- Configure settings
 - JWT Token Auth setup
 - PostType
 - PostLikeType
@@ -3476,7 +3476,7 @@ postgres.png redis.png
 
 Follow these steps: [https://www.npmjs.com/package/cypress-file-upload](https://www.npmjs.com/package/cypress-file-upload)
 
-### Install Graphene extension for image support in GrpahQL
+### Install Graphene extension for image support in GraphQL
 
 https://github.com/lmcgartland/graphene-file-upload
 https://pypi.org/project/graphene-file-upload/1.3.0/
