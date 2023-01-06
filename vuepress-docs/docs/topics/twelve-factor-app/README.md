@@ -4,7 +4,7 @@ next: /topics/django/
 
 # 12 Factor App
 
-This project tries to follow the [12 Factor App](https://12factor.net/) principles. Here are the 12 factors of the 12 Factor app with a brief description of how they are achived in this project across multiple deployment environments.
+This project tries to follow the [12 Factor App](https://12factor.net/) principles. Here are the 12 factors of the 12 Factor app with a brief description of how they are achieved in this project across multiple deployment environments.
 
 ## I: Codebase
 
@@ -48,7 +48,7 @@ DATABASES = {
 }
 ```
 
-The `django-cdk` application uses environment variables to determine which options to use for deployment. For example, the `HostedZoneName` is read in from the environment and use to determin which DNS records and ACM records to create. CloudFormation Stacks help to isolate environments, and no infrstructure is shared between environments.
+The `django-cdk` application uses environment variables to determine which options to use for deployment. For example, the `HostedZoneName` is read in from the environment and use to determine which DNS records and ACM records to create. CloudFormation Stacks help to isolate environments, and no infrastructure is shared between environments.
 
 > A litmus test for whether an app has all config correctly factored out of the code is whether the codebase could be made open source at any moment, without compromising any credentials.
 
@@ -74,7 +74,7 @@ When `cdk deploy` runs, it first builds and pushes the docker image to the ECR r
 
 In each environment, both local and non-local, the application's processes are clearly defined.
 
-The CDK construct is passed a list of strings that define the processes that are run in the container for the wep services as well as the celery worker and celery beat proceses.
+The CDK construct is passed a list of strings that define the processes that are run in the container for the wep services as well as the celery worker and celery beat processes.
 
 ## VII: Port binding
 
@@ -92,7 +92,7 @@ Using CDK is a great way to put application disposability into practice. ECS ser
 
 ## X: Dev/prod parity
 
-This project makes dev/prod partiy somewhat trivial. Using Infrastrucutre as Code, we can be condifent that two environments will only vary by the values that are passed in through through environment variables. If the only difference between two application stacks is the subdomain, then we can expect that everything else about the two applications is similar and that none of the other resources between the two enviroments will be shared.
+This project makes dev/prod parity somewhat trivial. Using Infrastructure as Code, we can be confident that two environments will only vary by the values that are passed in through through environment variables. If the only difference between two application stacks is the subdomain, then we can expect that everything else about the two applications is similar and that none of the other resources between the two environments will be shared.
 
 ## XI: Logs
 
@@ -110,7 +110,7 @@ Developers will often wish to do one-off administrative or maintenance tasks for
 
 With ECS and CDK, management commands can be run easily either through automation or using a new tool called ECS Exec.
 
-To run automated tasks, `managementCommandProps` can be passed a value of `true` (`false` by default). This will run the task each time the application is deployed with `cdk deploy`. This uses the an AWS Custom Resource that is defined in the construct. The CR's `onCreate` and `unUpdate` are set to an `AwsSdkCall` that runs `ecs:RunTask` with the appropiate parameters.
+To run automated tasks, `managementCommandProps` can be passed a value of `true` (`false` by default). This will run the task each time the application is deployed with `cdk deploy`. This uses the an AWS Custom Resource that is defined in the construct. The CR's `onCreate` and `unUpdate` are set to an `AwsSdkCall` that runs `ecs:RunTask` with the appropriate parameters.
 
 If you do not want to run database migrations automatically as a Custom Resource in CDK, you can use the AWS CLI to run the command from your CI tool, or you can use ECS Exec.
 

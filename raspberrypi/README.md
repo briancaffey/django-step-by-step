@@ -49,7 +49,7 @@ NAME       SERVICES   ORCHESTRATOR
 my-stack   6          Swarm
 ```
 
-List servics for stack:
+List services for stack:
 
 ```
 docker stack services my-stack
