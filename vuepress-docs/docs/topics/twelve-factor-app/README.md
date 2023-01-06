@@ -110,7 +110,7 @@ Developers will often wish to do one-off administrative or maintenance tasks for
 
 With ECS and CDK, management commands can be run easily either through automation or using a new tool called ECS Exec.
 
-To run automated tasks, `managementCommandProps` can be passed a value of `true` (`false` by default). This will run the task each time the application is deployed with `cdk deploy`. This uses the an AWS Custom Resource that is defined in the construct. The CR's `onCreate` and `unUpdate` are set to an `AwsSdkCall` that runs `ecs:RunTask` with the appropriate parameters.
+To run automated tasks, `managementCommandProps` can be passed a value of `true` (`false` by default). This will run the task each time the application is deployed with `cdk deploy`. This uses the AWS Custom Resource that is defined in the construct. The CR's `onCreate` and `unUpdate` are set to an `AwsSdkCall` that runs `ecs:RunTask` with the appropriate parameters.
 
 If you do not want to run database migrations automatically as a Custom Resource in CDK, you can use the AWS CLI to run the command from your CI tool, or you can use ECS Exec.
 
