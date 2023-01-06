@@ -10,7 +10,7 @@ heroImage: /images/ublog.png
 
 features:
   - title: Full Stack
-    details: This project covers the full technology stack of modurn web applications, from frontend to backend to CI/CD and Infrastructure as Code.
+    details: This project covers the full technology stack of modern web applications, from frontend to backend to CI/CD and Infrastructure as Code.
   - title: Twelve-Factor App
     details: This project follows the 12 Factor methodology.
   - title: Best Practices
@@ -23,7 +23,7 @@ footer: MIT Licensed | Copyright © 2021 Brian Caffey
 
 This documentation covers lots of different topics that are related to various aspects of the project. The project aims to provide two things:
 
-- a working example of a sample web applicaiton called μblog.
+- a working example of a sample web application called μblog.
 - in-depth technical guides on how to build each part of the application
 
 At a high level, the documentation can be broken down into the following categories:

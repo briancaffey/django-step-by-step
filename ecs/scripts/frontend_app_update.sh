@@ -88,7 +88,7 @@ TASK_DEFINITION=$( \
     .taskDefinition.taskDefinitionArn \
 )
 
-# update each service with new task definintion
+# update each service with new task definition
 aws ecs update-service \
   --cluster $WORKSPACE-cluster \
   --service $WORKSPACE-web-ui \

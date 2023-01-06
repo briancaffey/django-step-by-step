@@ -19,7 +19,7 @@ Deployment to AWS environment on Elastic Container Service (ECS) is shown with b
 
 This project is originally designed as a reference or example project that I can use when I need to recall common patterns, syntax and frequently-used code snippets. I have tried to carefully document each part of the development process as a guide for someone who wants to learn how this project is built and deployed from the ground up. Please visit the project documentation site ([briancaffey.github.io/django-step-by-step/](https://briancaffey.github.io/django-step-by-step/)) for a complete explanation of the project, step-by-step.
 
-This project is open-source and new-comers to Django and Python and welcome to create issues and pull requests.
+This project is open-source and newcomers to Django and Python and welcome to create issues and pull requests.
 
 ## Core application
 
@@ -40,9 +40,9 @@ This project implements a simple microblogging application called μblog. Here a
 - Django REST Framework class-based views
 - GraphQL with Graphene
 
-Each of the implementations are tested and documented with OpenAPI (Swagger UI). GraphiQL is exposed for the GraphQL API which includes documentation for queries and mutations.
+Each implementation is tested and documented with OpenAPI (Swagger UI). GraphiQL is exposed for the GraphQL API which includes documentation for queries and mutations.
 
-Django templates and and Bootstrap are used for the function and class based Django views. Vue.js is used to implement the like button using AJAX (with axios).
+Django templates and Bootstrap are used for the function and class based Django views. Vue.js is used to implement the like button using AJAX (with axios).
 
 ## Local development
 
@@ -90,7 +90,7 @@ The application can also run locally inside a local Kubernetes cluster. This is 
 
 Cypress is used for e2e testing which can run locally against the docker-compose development environment. To test user registration and email verification in e2e tests, MailHog and the MailHog API are used to retrieve the email confirmation link from the email sent by the Django application.
 
-## Continuous Intergration
+## Continuous Integration
 
 Multiple tools are used for running unit tests and code quality checks on each commit. These include:
 
@@ -124,7 +124,7 @@ The Django ECS construct included in the library creates the following AWS resou
 - A Route53 DNS record that points to the Application Load Balancer public DNS name
 - AWS RDS Postgres database instance that servers as the database for the Django application
 - A single-node AWS ElastiCache Redis cluster that provides caching and messaging brokering for celery workers
-- Secrurity groups that allow for the stateless application layer to communicate with the Postgres database and Redis cluster
+- Security groups that allow for the stateless application layer to communicate with the Postgres database and Redis cluster
 - Automated database migrations for the Django application using ECS tasks
 
 The Django ECS construct takes a few inputs, including:
@@ -148,7 +148,7 @@ See [LICENSE.md](/LICENSE.md)
 
 ## 12 Factor App
 
-This project tries to follow the [12 Factor App](https://12factor.net/) principles. Here are the 12 factors of the 12 Factor app with a brief description of how they are achived in this project across multiple deployment environments.
+This project tries to follow the [12 Factor App](https://12factor.net/) principles. Here are the 12 factors of the 12 Factor app with a brief description of how they are achieved in this project across multiple deployment environments.
 
 ### I: Codebase
 
@@ -189,7 +189,7 @@ DATABASES = {
 }
 ```
 
-The `django-cdk` application uses environment variables to determine which options to use for deployment. For example, the `HostedZoneName` is read in from the environment and use to determin which DNS records and ACM records to create. CloudFormation Stacks help to isolate environments, and no infrstructure is shared between environments.
+The `django-cdk` application uses environment variables to determine which options to use for deployment. For example, the `HostedZoneName` is read in from the environment and use to determine which DNS records and ACM records to create. CloudFormation Stacks help to isolate environments, and no infrastructure is shared between environments.
 
 > A litmus test for whether an app has all config correctly factored out of the code is whether the codebase could be made open source at any moment, without compromising any credentials.
 
@@ -215,7 +215,7 @@ When `cdk deploy` runs, it first builds and pushes the docker image to the ECR r
 
 In each environment, both local and non-local, the application's processes are clearly defined.
 
-The CDK construct is passed a list of strings that define the processes that are run in the container for the wep services as well as the celery worker and celery beat proceses.
+The CDK construct is passed a list of strings that define the processes that are run in the container for the wep services as well as the celery worker and celery beat processes.
 
 ### VII: Port binding
 
@@ -233,7 +233,7 @@ Using CDK is a great way to put application disposability into practice. ECS ser
 
 ### X: Dev/prod parity
 
-This project makes dev/prod partiy somewhat trivial. Using Infrastrucutre as Code, we can be condifent that two environments will only vary by the values that are passed in through through environment variables. If the only difference between two application stacks is the subdomain, then we can expect that everything else about the two applications is similar and that none of the other resources between the two enviroments will be shared.
+This project makes dev/prod parity somewhat trivial. Using Infrastructure as Code, we can be confident that two environments will only vary by the values that are passed in through environment variables. If the only difference between two application stacks is the subdomain, then we can expect that everything else about the two applications is similar and that none of the other resources between the two environments will be shared.
 
 ### XI: Logs
 
@@ -251,7 +251,7 @@ Developers will often wish to do one-off administrative or maintenance tasks for
 
 With ECS and CDK, management commands can be run easily either through automation or using a tool called ECS Exec.
 
-To run automated tasks, `managementCommandProps` can be passed a value of `true` (`false` by default). This will run the task each time the application is deployed with `cdk deploy`. This uses the an AWS Custom Resource that is defined in the construct. The CR's `onCreate` and `unUpdate` are set to an `AwsSdkCall` that runs `ecs:RunTask` with the appropiate parameters.
+To run automated tasks, `managementCommandProps` can be passed a value of `true` (`false` by default). This will run the task each time the application is deployed with `cdk deploy`. This uses the AWS Custom Resource that is defined in the construct. The CR's `onCreate` and `unUpdate` are set to an `AwsSdkCall` that runs `ecs:RunTask` with the appropriate parameters.
 
 If you do not want to run database migrations automatically as a Custom Resource in CDK, you can use the AWS CLI to run the command from your CI tool, or you can use ECS Exec.
 

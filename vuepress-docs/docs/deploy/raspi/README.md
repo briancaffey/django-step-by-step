@@ -24,7 +24,7 @@ Assuming that the Raspberry Pi on your local network has address `192.168.1.2`, 
 docker swarm init
 ```
 
-We will be using a single-node swarm cluster for this example, so don't worry about the output of this command. The commands displayed in the above command's output are used for networking mutliple devices into a single swarm cluster.
+We will be using a single-node swarm cluster for this example, so don't worry about the output of this command. The commands displayed in the above command's output are used for networking multiple devices into a single swarm cluster.
 
 ### Ensure that you have SSH access to the Raspberry Pi
 
@@ -58,7 +58,7 @@ Here's what the commands to build the docker images look like:
 docker build -t docker build -t $CI_REGISTRY_IMAGE/backend:$CI_COMMIT_SHORT_SHA -f backend/docker/Dockerfile.prod ./backend/
 ```
 
-Also, when we deploy the docker swarm stack using `docker stack deploy`, we will use the following environment variables to tell the Raspberry Pi docker daemon to use the images built in that registry. This way we don't have to worry about getting source code onto the Raspberry Pi. Instead, we just make sure that the docker image "artifacts" are sent to the Raspbery Pi.
+Also, when we deploy the docker swarm stack using `docker stack deploy`, we will use the following environment variables to tell the Raspberry Pi docker daemon to use the images built in that registry. This way we don't have to worry about getting source code onto the Raspberry Pi. Instead, we just make sure that the docker image "artifacts" are sent to the Raspberry Pi.
 
 Set the following environment variables:
 
@@ -73,7 +73,7 @@ docker service ps --no-trunc {serviceName}
 
 ## `build_containers`
 
-This script automats most of the process of building containers and deploying the swarm stack.
+This script automates most of the process of building containers and deploying the swarm stack.
 
 It checks to see if `DOCKER_HOST` is set. This should be set with:
 

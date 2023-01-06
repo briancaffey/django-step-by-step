@@ -12,7 +12,7 @@ This is a short walkthrough of how to deploy this project on DigitalOcean. There
 - Create a project
 - Add any size Droplet with Docker 19.03.12 machine image, add the SSH key that you created
 - Don't add any volumes (we will do that automatically with REX-Ray)
-- Ceate a DigitOcean Personal Access Token and store it somewhere, we will use it later
+- Create a DigitOcean Personal Access Token and store it somewhere, we will use it later
 
 ## GitLab Setup
 
@@ -136,7 +136,7 @@ Alternatively, you can annotate the tag by using the `-a` flag:
 git tag -a rc0.0.1
 ```
 
-If you protected all tags starting with `rc` using an `rc*` wildcard for protected tags as mentioned above, only you (or whever you selected) will be able to push tags starting with `rc` that will trigger a deployment.
+If you protected all tags starting with `rc` using an `rc*` wildcard for protected tags as mentioned above, only you (or whoever you selected) will be able to push tags starting with `rc` that will trigger a deployment.
 
 When you push this tag, the GitLab CI jobs defined in `.gitlab-ci.yml` will run:
 
@@ -146,7 +146,7 @@ When you push this tag, the GitLab CI jobs defined in `.gitlab-ci.yml` will run:
 
 The first two jobs build images, tag them with the current short git commit SHA-1 checksum and then push them to your private GitLab registry. You don't need to set up this registry, they are available by default for every GitLab project, and the environment variable `CI_REGISTRY_IMAGE` is automatically set in each GitLab CI job.
 
-The last job, `docker-stack-deploy`, deploys a docker swarm stack to the swarm cluster that you set up earlier. This is done securly over SSH. The `.add-ssh-key` job template is included in the `docker-stack-deploy` which gives the CI job SSH access to the swarm cluster manager.
+The last job, `docker-stack-deploy`, deploys a docker swarm stack to the swarm cluster that you set up earlier. This is done securely over SSH. The `.add-ssh-key` job template is included in the `docker-stack-deploy` which gives the CI job SSH access to the swarm cluster manager.
 
 ### Verify the deployment manually
 
@@ -213,7 +213,7 @@ There are still a few things that must be done manually when we first release:
 
 The `.gitlab-ci.yml` file defines three additional jobs that are set to only run manually, which is whenever you press the "Play" button on a pipeline job. Once you push a tag and the first two stages (`build` and `deploy`) complete, you will be able to run these manual commands. However, you should verify that the `backend` service has been created and that it is running. You will see the logs from these jobs in the GitLab CI job logs, so if anything goes wrong it should be easy to figure out what may be causing a job failure.
 
-Any time you add static files or add something to `INSTALLED_APPS` that includes static files (like Django REST Framework), you will need to trigger the `collectstatic` manaul job again.
+Any time you add static files or add something to `INSTALLED_APPS` that includes static files (like Django REST Framework), you will need to trigger the `collectstatic` manual job again.
 
 Also, when you add new migration files, you will need to run the `migrate` manual job as well.
 
@@ -223,4 +223,4 @@ If you wish to tear everything down, the easiest way is to delete the Droplet an
 
 ## Cleaning up resources
 
-One other thing to be aware of is older tags in your GitLab CI repository will not be automatically removed. You may want to periodically remove these, or use the GitLab API to do so. The assets created for the frontend will persist on GitLab for 30 days by default. You don't need these files once they are built into the docker image, so you can change the settings for these artififacts if you wish to do so.
+One other thing to be aware of is older tags in your GitLab CI repository will not be automatically removed. You may want to periodically remove these, or use the GitLab API to do so. The assets created for the frontend will persist on GitLab for 30 days by default. You don't need these files once they are built into the docker image, so you can change the settings for these artifacts if you wish to do so.

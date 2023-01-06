@@ -16,11 +16,11 @@ For docker swarm and local kubernetes deployments, a shell script is used to ini
 - `docker stack deploy` for docker swarm
 - `kubctl apply` for minikube
 
-When the application runs on docker swarm on DigitalOcean, it is updated using `docker stack deploy` from a GitLab CI/CD pipeline that remotely connects to the docker daemon runnong on the DigitalOcean droplet using SSH.
+When the application runs on docker swarm on DigitalOcean, it is updated using `docker stack deploy` from a GitLab CI/CD pipeline that remotely connects to the docker daemon running on the DigitalOcean droplet using SSH.
 
 ## Containers and container orchestration
 
-To clarify terminology, all of the deployment targets use containers to run the applicaiton. The main difference in these deployments is the container orchestration tool used. The container orchestration tool refers to the tools that keeps track of the containers and their lifecycle and scaling. There are four main conatiner orchestration tools:
+To clarify terminology, all of the deployment targets use containers to run the application. The main difference in these deployments is the container orchestration tool used. The container orchestration tool refers to the tools that keeps track of the containers and their lifecycle and scaling. There are four main container orchestration tools:
 
 - docker-compose (used mostly for local development)
 - docker swarm
@@ -32,7 +32,7 @@ To clarify terminology, all of the deployment targets use containers to run the 
 There are some variations in how the application is deployed across the different deployment targets.
 
 - How and where to run Django management commands (migrations)
-- Frontend applicaiton hosting (nginx, S3, CDN)
+- Frontend application hosting (nginx, S3, CDN)
 - Static files (collectstatic, nginx, S3, CDN)
 - Media files (images, videos, etc)
 - Domain and subdomains for the application (this is very important)
