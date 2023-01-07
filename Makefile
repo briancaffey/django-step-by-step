@@ -335,14 +335,6 @@ vuepress-dev:
 vuepress-build:
 	cd vuepress-docs && yarn docs:build
 
-## -- Raspbery Pi Targets --
-
-## Deploy the application to rasberry pi
-raspi-deploy:
-	@./raspberrypi/deploy.sh
-
-raspi-destroy:
-	@./raspberrypi/destroy.sh
 
 ## -- K6 Targets --
 k6-local-run-docker:

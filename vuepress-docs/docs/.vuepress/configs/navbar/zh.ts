@@ -27,14 +27,6 @@ export const zh: NavbarConfig = [
         text: 'AWS',
         link: '/deploy/aws/',
       },
-      {
-        text: 'Raspberry Pi',
-        link: '/deploy/raspi/',
-      },
-      {
-        text: 'DigitalOcean',
-        link: '/deploy/digital-ocean/',
-      },
     ],
   },
 ]

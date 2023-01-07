@@ -67,20 +67,8 @@ export const en: NavbarConfig = [
         link: '/deploy/overview/',
         children: [
           {
-            text: 'Raspberry Pi',
-            link: '/deploy/raspi/',
-          },
-          {
-            text: 'DigitalOcean',
-            link: '/deploy/digital-ocean/',
-          },
-          {
             text: 'AWS Overview',
             link: '/deploy/aws/overview',
-          },
-          {
-            text: 'Docker Swarm on EC2',
-            link: '/deploy/aws/docker-swarm-ec2/',
           },
         ],
       },
