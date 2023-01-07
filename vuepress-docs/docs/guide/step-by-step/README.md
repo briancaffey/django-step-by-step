@@ -2966,8 +2966,6 @@ node_modules/.bin/cypress run
 
 ## Add Session Authentication for Vue SPA
 
-## Use Nuxt for SSR
-
 ## Setup .gitlab-ci.yml
 
 ## Setup gitlab-runner
