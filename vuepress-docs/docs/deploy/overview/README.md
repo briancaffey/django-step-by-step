@@ -9,9 +9,8 @@ Here are some of the different ways that you can deploy the μblog application, 
 
 ## CI/CD Tools
 
-For docker swarm and local kubernetes deployments, a shell script is used to initiate the deployment process which involves building containers and and CLI tools for deployment:
+For local kubernetes deployments, a shell script is used to initiate the deployment process which involves building containers and and CLI tools for deployment:
 
-- `docker stack deploy` for docker swarm
 - `kubctl apply` for minikube
 
 ## Containers and container orchestration
@@ -19,7 +18,6 @@ For docker swarm and local kubernetes deployments, a shell script is used to ini
 To clarify terminology, all of the deployment targets use containers to run the applicaiton. The main difference in these deployments is the container orchestration tool used. The container orchestration tool refers to the tools that keeps track of the containers and their lifecycle and scaling. There are four main conatiner orchestration tools:
 
 - docker-compose (used mostly for local development)
-- docker swarm
 - ECS (proprietary container orchestration tool from AWS, good AWS integration)
 - Kubernetes (Elastic Kubernetes Service) (an open-source version of Kubernetes that allows for running Kubernetes workloads on AWS)
 

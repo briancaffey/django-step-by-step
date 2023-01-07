@@ -291,13 +291,6 @@ const otherTechnologies = [
     documentationLink: 'https://k6.io/',
   },
   {
-    title: 'Docker swarm',
-    description: 'A distributed container orchestration platform',
-    detail: 'used for running containers on any machine',
-    image: 'swarm.png',
-    documentationLink: 'https://www.docker.com/products/swarm',
-  },
-  {
     title: 'Traefik',
     description: 'A reverse proxy and load balancer',
     detail: 'used for routing traffic to the API',
