@@ -2976,8 +2976,6 @@ node_modules/.bin/cypress run
 
 ## Generate model visualizations with graphviz
 
-## Django Doctor
-
 ## VSCode remote container
 
 ## Add a privacy policy
