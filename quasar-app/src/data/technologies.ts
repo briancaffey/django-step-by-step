@@ -333,13 +333,6 @@ const otherTechnologies = [
     documentationLink: 'https://portainer.io/',
   },
   {
-    title: 'Raspberry Pi',
-    description: 'A low-cost, open-source, and easy-to-use computer',
-    detail: 'used for running the application',
-    image: 'raspberrypi.png',
-    documentationLink: 'https://www.raspberrypi.org/',
-  },
-  {
     title: 'Netlify',
     description: 'An intuitive Git-based workflow and powerful serverless platform to build, deploy, and collaborate on web apps',
     detail: 'used to deploy the Quasar application',

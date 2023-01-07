@@ -4,7 +4,6 @@ This page will provide an overview of the different ways that μblog can be depl
 
 Here are some of the different ways that you can deploy the μblog application, from simple to complex:
 
-- docker swarm running on a Raspberry Pi on your local network
 - Kubernetes cluster running locally on minikube
 - DigitalOcean using docker swarm pre-installed on a droplet from the DigitalOcean marketplace
 - AWS ECS cluster running on Fargate compute instances
@@ -38,7 +37,7 @@ There are some variations in how the application is deployed across the differen
 - Domain and subdomains for the application (this is very important)
 - SSL certificates (this is also very important)
 - CI/CD (Updating the application)
-- Platform (amd64, arm64, M1 and Raspberry Pi 4)
+- Platform (amd64, arm64, M1)
 - Costs (free, low, medium, high)
 - Security (NAT, VPN, Firewall, etc)
 - Performance
