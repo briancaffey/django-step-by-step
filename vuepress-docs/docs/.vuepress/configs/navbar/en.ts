@@ -49,10 +49,6 @@ export const en: NavbarConfig = [
           {
             text: 'GitHub Actions',
             link: '/guide/ci-cd/github-actions/',
-          },
-          {
-            text: 'GitLab CI',
-            link: '/guide/ci-cd/gitlab-ci/',
           }
         ]
       }
