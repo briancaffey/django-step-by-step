@@ -1,6 +1,4 @@
 ---
-prev: /deploy/digital-ocean
-
 head:
   - - meta
     - name: description

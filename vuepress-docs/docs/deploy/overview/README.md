@@ -5,7 +5,6 @@ This page will provide an overview of the different ways that μblog can be depl
 Here are some of the different ways that you can deploy the μblog application, from simple to complex:
 
 - Kubernetes cluster running locally on minikube
-- DigitalOcean using docker swarm pre-installed on a droplet from the DigitalOcean marketplace
 - AWS ECS cluster running on Fargate compute instances
 
 ## CI/CD Tools
@@ -14,8 +13,6 @@ For docker swarm and local kubernetes deployments, a shell script is used to ini
 
 - `docker stack deploy` for docker swarm
 - `kubctl apply` for minikube
-
-When the application runs on docker swarm on DigitalOcean, it is updated using `docker stack deploy` from a GitLab CI/CD pipeline that remotely connects to the docker daemon runnong on the DigitalOcean droplet using SSH.
 
 ## Containers and container orchestration
 

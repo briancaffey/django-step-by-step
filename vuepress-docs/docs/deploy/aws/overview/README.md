@@ -1,7 +1,3 @@
----
-prev: /deploy/digital-ocean
----
-
 # How to deploy μblog on AWS
 
 This page will describe how to deploy μblog on AWS using an Infrastructure as Code (IAC) tool called AWS CloudDevelopment Kit (CDK).

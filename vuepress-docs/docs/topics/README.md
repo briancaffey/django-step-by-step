@@ -20,4 +20,4 @@ Local development is done using Docker.
 
 ## Production Environments
 
-This project shows how to deploy to multiple production environments including AWS, DigitalOcean, and a local server using a Rasperry Pi.
+This project shows how to deploy to a production environment using AWS.

@@ -108,13 +108,6 @@ const otherTechnologies = [
     documentationLink: 'https://www.cypress.io',
   },
   {
-    title: 'DigitalOcean',
-    description: 'DigitalOcean, Inc. is an American cloud infrastructure provider headquartered in New York City with data centers worldwide.',
-    detail: 'The cloud computing services you need, with the predictable pricing, developer-friendly features, and scalability you\'ll love.',
-    image: 'do.png',
-    documentationLink: 'https://www.digitalocean.com/',
-  },
-  {
     title: 'ECS',
     description: 'A container orchestration tool for AWS',
     detail: 'A tool used to run the application containers in AWS',
