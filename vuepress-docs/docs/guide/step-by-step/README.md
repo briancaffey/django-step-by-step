@@ -1243,7 +1243,6 @@ Redis will allow us to do several different things with our Django application:
 - **caching**: this refers to storing responses in redis so that database queries can be avoided. This is useful for expensive queries that will likely not change frequently and it will also result in a faster request/response cycle.
 - **async processing**: redis will help us do long-running tasks on "another computer", such as processing large files, sending emails, etc. Redis will keep track of the tasks that need to be processed. You can think about redis as a way to store python lists, dictionaries, sets, strings and numbers on a remote database. Redis offers some additional data types, as well. I'll use redis with `celery` later on.
 - **web sockets**: redis will allow us to work with web sockets. This allows for real-time communication between the server and connected clients using web sockets.
-- **constance**: Django constance is a package that allows you to configure settings that you can change in real-time. This will be used later
 - more: there are likely other use cases that use redis. The examples listed here can usually use a number of different services such as `memcached` or `RabbitMQ`. A redis server can use dedicated numbered databases so that there is no possibility of key collision.
 
 Check the redis connection using the CLI command:
@@ -2966,19 +2965,11 @@ node_modules/.bin/cypress run
 
 ## Add Session Authentication for Vue SPA
 
-## Use Nuxt for SSR
-
-## Setup .gitlab-ci.yml
-
-## Setup gitlab-runner
-
 ## Show how to setup e2e tests with Cypress
 
 ## Draw a project diagram using diagrams.net
 
 ## Generate model visualizations with graphviz
-
-## Django Doctor
 
 ## VSCode remote container
 
