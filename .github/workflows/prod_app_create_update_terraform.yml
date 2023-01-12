@@ -65,7 +65,7 @@ jobs:
         run: |
           export VAR_FILE=envs/${WORKSPACE}.tfvars
 
-          terraform -chdir=terraform/live/prod/app \
+          terraform -chdir=iac/terraform/live/prod/app \
             init \
             -backend-config="bucket=${TF_BACKEND_BUCKET}" \
             -backend-config="dynamodb_table=${TF_BACKEND_DYNAMODB_TABLE}" \
@@ -79,17 +79,17 @@ jobs:
           # set the TF_WORKSPACE environment variable
           export TF_WORKSPACE=$WORKSPACE
 
-          terraform -chdir=terraform/live/prod/app \
+          terraform -chdir=iac/terraform/live/prod/app \
             plan \
             -no-color \
             -var-file=$VAR_FILE
 
-          terraform -chdir=terraform/live/prod/app \
+          terraform -chdir=iac/terraform/live/prod/app \
             apply \
             -auto-approve \
             -var-file=$VAR_FILE
 
-          terraform -chdir=terraform/live/prod/app output -json > terraform_outputs.json
+          terraform -chdir=iac/terraform/live/prod/app output -json > terraform_outputs.json
 
       # backend_update_command
       - name: "Run post-deployment backend_update_command"

@@ -71,7 +71,7 @@ jobs:
 
           export VAR_FILE=envs/${WORKSPACE}.tfvars
 
-          terraform -chdir=terraform/live/ad-hoc/app \
+          terraform -chdir=iac/terraform/live/ad-hoc/app \
             init \
             -input=false \
             -backend-config="bucket=${TF_BACKEND_BUCKET}" \
@@ -87,7 +87,7 @@ jobs:
           export TF_WORKSPACE=$WORKSPACE
 
           # destroy
-          terraform -chdir=terraform/live/ad-hoc/app \
+          terraform -chdir=iac/terraform/live/ad-hoc/app \
             destroy \
             -var-file=${VAR_FILE} \
             -auto-approve

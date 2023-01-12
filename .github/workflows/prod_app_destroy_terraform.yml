@@ -65,7 +65,7 @@ jobs:
         run: |
           export VAR_FILE=envs/${WORKSPACE}.tfvars
 
-          terraform -chdir=terraform/live/prod/app \
+          terraform -chdir=iac/terraform/live/prod/app \
             init \
             -backend-config="bucket=${TF_BACKEND_BUCKET}" \
             -backend-config="dynamodb_table=${TF_BACKEND_DYNAMODB_TABLE}" \
@@ -79,7 +79,7 @@ jobs:
           # set the TF_WORKSPACE environment variable
           export TF_WORKSPACE=$WORKSPACE
 
-          terraform -chdir=terraform/live/prod/app \
+          terraform -chdir=iac/terraform/live/prod/app \
             destroy \
             -var-file=${VAR_FILE} \
             -auto-approve
