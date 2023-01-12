@@ -335,15 +335,6 @@ vuepress-dev:
 vuepress-build:
 	cd vuepress-docs && yarn docs:build
 
-## -- Raspbery Pi Targets --
-
-## Deploy the application to rasberry pi
-raspi-deploy:
-	@./raspberrypi/deploy.sh
-
-raspi-destroy:
-	@./raspberrypi/destroy.sh
-
 ## -- K6 Targets --
 k6-local-run-docker:
 	@docker run --rm --net=host -i grafana/k6 run - <k6/script.js
@@ -352,103 +343,36 @@ k6-local-run-docker:
 
 ## Format terraform files
 tf-fmt:
-	cd terraform && terraform fmt -recursive
+	cd iac/terraform && terraform fmt -recursive
 
 ## initialize terraform for the backend
 tf-bootstrap-init:
-	cd terraform/bootstrap && terraform init --var-file=bootstrap.tfvars
+	cd iac/terraform/bootstrap && terraform init --var-file=bootstrap.tfvars
 
 ## initialize terraform for the backend
 tf-bootstrap-init-upgrade:
-	cd terraform/bootstrap && terraform init -upgrade --var-file=bootstrap.tfvars
+	cd iac/terraform/bootstrap && terraform init -upgrade --var-file=bootstrap.tfvars
 
 ## plan terraform S3 backend configuration
 tf-bootstrap-plan:
-	cd terraform/bootstrap && terraform plan --var-file=bootstrap.tfvars
+	cd iac/terraform/bootstrap && terraform plan --var-file=bootstrap.tfvars
 
 ## apply terraform S3 backend configuration
 tf-bootstrap-apply:
-	cd terraform/bootstrap && terraform apply --var-file=bootstrap.tfvars
+	cd iac/terraform/bootstrap && terraform apply --var-file=bootstrap.tfvars
 
 ## init, plan and apply terraform backend configuration
 tf-bootstrap:	tf-bootstrap-init	tf-bootstrap-plan	tf-bootstrap-apply
 
 ## destroy terraform backend and ecr resources
 tf-bootstrap-destroy:
-	cd terraform/bootstrap && terraform destroy --var-file=bootstrap.tfvars
-
-## write the backend configuration outputs to terraform/backend.tfvars
-tf-bootstrap-output:
-	cd terraform/bootstrap && terraform output > ../local.tfvars
-	cd terraform/bootstrap && terraform output > ../backend.config
-  # cd terraform/bootstrap && terraform output -json > local.tfvars
-
-# TODO: move main terraform config files to core directory?
-tf-core-init:
-	cd terraform && terraform init --backend-config=backend.config --var-file=local.tfvars
-
-tf-core-init-upgrade:
-	cd terraform && terraform init -upgrade --backend-config=backend.config --var-file=local.tfvars
-
-tf-core-plan:
-	cd terraform && terraform plan --var-file=local.tfvars
-
-tf-core-apply:
-	cd terraform && terraform apply --var-file=local.tfvars
-
-tf-core-apply-yes:
-	cd terraform && terraform apply -auto-approve --var-file=local.tfvars
-
-tf-core-validate:
-	cd terraform && terraform validate
-
-tf-core-output-json:
-	@cd terraform && terraform output -json
-
-tf-core:	tf-core-init  tf-core-plan	tf-core-apply
-
-tf-core-destroy:
-	cd terraform && terraform destroy --var-file=local.tfvars
-
-tf-core-destroy-yes:
-	cd terraform && terraform destroy -auto-approve --var-file=local.tfvars
-
-tf-dev-init:
-	terraform -chdir=iac/terraform/live/dev init -backend-config=backend.config
-
-tf-dev-plan:
-	terraform -chdir=iac/terraform/live/dev plan
-
-tf-dev-apply:
-	terraform -chdir=iac/terraform/live/dev apply
-
-# Ad hoc environment terraform deployment for local testing
-# This requires that you have deployed shared infrastructure that ad hoc environments can be built on
-# by running the create_update_shared_resources GitHub Actions workflow
-
-# It also requires that you have a sample.tfvars file copied from the sample.tfvars.template file
-# Use the create_update_ad_hoc_env GitHub Action to run this using GitHub Actions
-tf-ad-hoc-sample-init:
-	terraform -chdir=iac/terraform/live/ad-hoc init -backend-config=backend.config
-
-tf-ad-hoc-sample-plan:
-	terraform -chdir=iac/terraform/live/ad-hoc plan --var-file=envs/sample.tfvars
-
-tf-ad-hoc-sample-apply:
-	terraform -chdir=iac/terraform/live/ad-hoc apply -auto-approve --var-file=envs/sample.tfvars
-
-tf-ad-hoc-sample:  tf-ad-hoc-sample-init	tf-ad-hoc-sample-plan	tf-ad-hoc-sample-apply
-
-tf-ad-hoc-sample-destroy:
-	terraform -chdir=iac/terraform/live/ad-hoc destroy -auto-approve --var-file=envs/sample.tfvars
+	cd iac/terraform/bootstrap && terraform destroy --var-file=bootstrap.tfvars
 
 ## -- CDK Targets --
 projen:
 	@cd iac/cdk && npx projen
 
 ## -- AWS Targets --
-
-## TODO: move these scripts to another directory?
 
 ## start ecs exec session in a container in application environment
 aws-ecs-exec:
