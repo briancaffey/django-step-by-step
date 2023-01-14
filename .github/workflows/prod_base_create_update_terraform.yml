@@ -76,12 +76,15 @@ jobs:
             -no-color \
             -out=tfplan \
             -var-file=$VAR_FILE
+      - name: ls
+        run: |
+          ls -al
 
       - name: Save synth output to artifact
         uses: actions/upload-artifact@v3
         with:
           name: tfplan
-          path: "${WORKING_DIRECTORY}/tfplan"
+          path: "iac/terraform/live/prod/base/tfplan"
 
 
   # prod_base_deploy:
