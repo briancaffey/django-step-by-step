@@ -11,10 +11,8 @@ terraform {
   backend "s3" {}
 }
 
-data "aws_region" "current" {}
-
 provider "aws" {
-  region = data.aws_region.current.name
+  region = var.region
   default_tags {
     tags = {
       env = terraform.workspace
