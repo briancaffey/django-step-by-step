@@ -59,7 +59,7 @@ jobs:
         env:
           WORKSPACE: ${{ github.event.inputs.workspace }}
           TF_VAR_certificate_arn: ${{ secrets.ACM_CERTIFICATE_ARN }}
-          TF_VAR_key_name: ${{ secrets.KEY_NAME }}
+          TF_VAR_domain_name: ${{ secrets.DOMAIN_NAME }}
         run: |
 
           terraform workspace new ${WORKSPACE} || echo "Workspace ${WORKSPACE} already exists or cannot be created"
