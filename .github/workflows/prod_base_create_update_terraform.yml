@@ -77,10 +77,6 @@ jobs:
             -out=tfplan \
             -var-file=$VAR_FILE
 
-      - name: ls
-        run: |
-          ls -al
-
       # https://github.com/actions/upload-artifact/issues?q=is%3Aissue+is%3Aopen+working-directory
       - name: Upload artifacts
         uses: actions/upload-artifact@v3
