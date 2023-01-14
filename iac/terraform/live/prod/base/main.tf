@@ -14,7 +14,7 @@ terraform {
 data "aws_region" "current" {}
 
 provider "aws" {
-  region = aws_region.current.name
+  region = data.aws_region.current.name
   default_tags {
     tags = {
       env = terraform.workspace
