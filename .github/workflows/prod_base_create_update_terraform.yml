@@ -122,6 +122,9 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
       - name: terraform apply
+        id: terraform_apply
+        env:
+          WORKSPACE: ${{ github.event.inputs.workspace }}
         run: |
 
           # terraform \
