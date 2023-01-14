@@ -11,8 +11,10 @@ terraform {
   backend "s3" {}
 }
 
+data "aws_region" "current" {}
+
 provider "aws" {
-  region = var.region
+  region = aws_region.current.name
   default_tags {
     tags = {
       env = terraform.workspace
@@ -23,5 +25,5 @@ provider "aws" {
 module "main" {
   source          = "git::https://github.com/briancaffey/terraform-aws-django.git//modules/prod/base"
   certificate_arn = var.certificate_arn
-  key_name        = var.key_name
+  domain_name     = var.domain_name
 }
