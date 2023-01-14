@@ -96,6 +96,8 @@ jobs:
 
     steps:
 
+      - uses: actions/checkout@v2
+
       # https://github.com/actions/upload-artifact/issues?q=is%3Aissue+is%3Aopen+working-directory
       - uses: actions/download-artifact@v3
         with:
