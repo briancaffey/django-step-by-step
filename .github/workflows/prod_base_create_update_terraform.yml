@@ -1,5 +1,5 @@
 # github action to create or update shared resources
-name: prod | base | create / update
+name: prod | base | create / update [Terraform]
 
 on:
   workflow_dispatch:
