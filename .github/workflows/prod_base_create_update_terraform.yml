@@ -81,7 +81,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: tfplan
-          path: $WORKING_DIRECTORY/tfplan
+          path: "${WORKING_DIRECTORY}/tfplan"
 
 
   # prod_base_deploy:
