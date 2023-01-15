@@ -1,5 +1,5 @@
 # github action to create or update prod app env
-name: prod | app | create / update
+name: prod | app | create / update [Terraform]
 
 on:
   workflow_dispatch:
@@ -16,10 +16,14 @@ on:
         default: 'stage'
         type: string
 
+defaults:
+  run:
+    working-directory: iac/terraform/live/prod/app
+
 jobs:
-  create_update_prod_app_env:
-    name: "Create or update prod app env [${{ github.event.inputs.workspace }}]"
-    environment: prod-app-${{ github.event.inputs.workspace }}
+  prod_app_init_plan:
+    name: "Terraform init and plan for prod app env [${{ github.event.inputs.workspace }}]"
+    environment: prod
     runs-on: ubuntu-latest
 
     steps:
@@ -36,12 +40,10 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v3
 
-      - name: "terraform init, plan and apply for prod app env"
-        id: terraform_init_plan_apply_prod_app
+      - name: "terraform init and plan for prod app env"
+        id: terraform_init_plan_prod_app
         env:
 
           # backend config
@@ -55,15 +57,7 @@ jobs:
           TF_VAR_prod_base_env: ${{ github.event.inputs.prod_base_env }}
           TF_VAR_s3_bucket: ${{ secrets.TF_BACKEND_BUCKET }}
 
-          # ECR variables
-          TF_VAR_ecr_be_repo_url: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/backend
-          TF_VAR_ecr_fe_repo_url: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/frontend
-
-          # Route 53 variables
-          TF_VAR_domain_name: ${{ secrets.DOMAIN_NAME }}
-
         run: |
-          export VAR_FILE=envs/${WORKSPACE}.tfvars
 
           terraform -chdir=iac/terraform/live/prod/app \
             init \
@@ -73,27 +67,68 @@ jobs:
             -backend-config="region=${TF_BACKEND_REGION}" \
             -backend-config="workspace_key_prefix=prod/app"
 
+          export VAR_FILE=envs/${WORKSPACE}.tfvars
+
           # create the workspace if it doesn't exist already
           terraform workspace new ${WORKSPACE} || echo "Workspace ${WORKSPACE} already exists or cannot be created"
 
           # set the TF_WORKSPACE environment variable
           export TF_WORKSPACE=$WORKSPACE
 
-          terraform -chdir=iac/terraform/live/prod/app \
+          terraform \
             plan \
             -no-color \
+            -out=tfplan \
             -var-file=$VAR_FILE
 
-          terraform -chdir=iac/terraform/live/prod/app \
-            apply \
-            -auto-approve \
-            -var-file=$VAR_FILE
+      # https://github.com/actions/upload-artifact/issues?q=is%3Aissue+is%3Aopen+working-directory
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: tfplan
+          path: "iac/terraform/live/prod/app/"
 
-          terraform -chdir=iac/terraform/live/prod/app output -json > terraform_outputs.json
+  prod_app_apply:
+    name: "Prod app apply"
+    environment: prod
+    runs-on: ubuntu-latest
+    needs: prod_app_init_plan
+
+    steps:
+
+      - uses: actions/checkout@v3
+
+      # https://github.com/actions/upload-artifact/issues?q=is%3Aissue+is%3Aopen+working-directory
+      - uses: actions/download-artifact@v3
+        with:
+          name: tfplan
+          path: "iac/terraform/live/prod/app"
+
+      - name: "terraform apply for prod app env"
+        id: terraform_prod_app_apply
+        env:
+
+          WORKSPACE: ${{ github.event.inputs.workspace }}
+
+          # for terraform_remote_state
+          TF_VAR_prod_base_env: ${{ github.event.inputs.prod_base_env }}
+          TF_VAR_s3_bucket: ${{ secrets.TF_BACKEND_BUCKET }}
+
+        run: |
+
+          # create the workspace if it doesn't exist already
+          terraform workspace new ${WORKSPACE} || echo "Workspace ${WORKSPACE} already exists or cannot be created"
+
+          # set the TF_WORKSPACE environment variable
+          export TF_WORKSPACE=$WORKSPACE
+
+          terraform apply -auto-approve "tfplan"
+
+          terraform output -json > terraform_outputs.json
 
       # backend_update_command
       - name: "Run post-deployment backend_update_command"
-        id: post_prod_app_create_update
+        id: backend_update
         run: |
 
           # get the backend_update_command command from Terraform outputs and write to file

@@ -31,20 +31,14 @@ module "main" {
 
   # remote state from local module
   vpc_id             = data.terraform_remote_state.shared.outputs.vpc_id
+  assets_bucket_name = data.terraform_remote_state.shared.outputs.assets_bucket_name
+  domain_name        = data.terraform_remote_state.shared.outputs.domain_name
   rds_address        = data.terraform_remote_state.shared.outputs.rds_address
   redis_service_host = data.terraform_remote_state.shared.outputs.redis_service_host
   task_role_arn      = data.terraform_remote_state.shared.outputs.task_role_arn
   execution_role_arn = data.terraform_remote_state.shared.outputs.execution_role_arn
   listener_arn       = data.terraform_remote_state.shared.outputs.listener_arn
   alb_dns_name       = data.terraform_remote_state.shared.outputs.alb_dns_name
-  ecs_sg_id          = data.terraform_remote_state.shared.outputs.ecs_sg_id
-  alb_default_tg_arn = data.terraform_remote_state.shared.outputs.alb_default_tg_arn
-  private_subnets    = data.terraform_remote_state.shared.outputs.private_subnets
-  public_subnets     = data.terraform_remote_state.shared.outputs.public_subnets
-
-  # variables
-  ecr_be_repo_url = var.ecr_be_repo_url
-  ecr_fe_repo_url = var.ecr_fe_repo_url
-  be_image_tag    = var.be_image_tag
-  domain_name     = var.domain_name
+  app_sg_id          = data.terraform_remote_state.shared.outputs.app_sg_id
+  private_subnet_ids = data.terraform_remote_state.shared.outputs.private_subnet_ids
 }
