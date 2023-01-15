@@ -99,10 +99,6 @@ jobs:
           name: tfplan
           path: "iac/terraform/live/prod/base"
 
-      - name: ls
-        run: |
-          ls -al
-
       - uses: hashicorp/setup-terraform@v1
         with:
           terraform_version: 1.3.6
