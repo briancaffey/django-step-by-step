@@ -43,8 +43,6 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
       - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
 
       - name: "Update frontend app"
         id: update_frontend
