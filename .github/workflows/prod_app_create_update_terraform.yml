@@ -128,10 +128,9 @@ jobs:
 
         run: |
 
-          # create the workspace if it doesn't exist already
-          terraform workspace new ${WORKSPACE} || echo "Workspace ${WORKSPACE} already exists or cannot be created"
+          chmod -R a+x ./.terraform/*
 
-          # set the TF_WORKSPACE environment variable
+          terraform workspace new ${WORKSPACE} || echo "Workspace ${WORKSPACE} already exists or cannot be created"
           export TF_WORKSPACE=$WORKSPACE
 
           terraform apply -auto-approve "tfplan"
