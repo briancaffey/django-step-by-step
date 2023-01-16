@@ -36,6 +36,8 @@ features:
     details: Local backend development can be done with both virtual environments and docker compose
   - title: Testing and coverage
     details: pytest is used for backend tests, and test coverage is measured with pytest-cov
+  - title: Makefile
+    details: All commands for local development are documented in the Makefile
 
 
 footer: MIT Licensed | Copyright © 2023 Brian Caffey
