@@ -45,12 +45,12 @@ export default defineUserConfig<DefaultThemeOptions>({
     '/': {
       lang: 'en-US',
       title: 'μblog docs',
-      description: 'documentation for μblog, a reference web application built with Django and Vue.js',
+      description: 'a reference web application built with Django and Vue.js deployed on AWS with ECS Fargate',
     },
     '/zh/': {
       lang: 'zh-CN',
-      title: 'VuePress',
-      description: 'Vue 驱动的静态网站生成器',
+      title: 'μblog',
+      description: '使用 Django 和 Vue.js 构建的参考 Web 应用程序部署在 AWS 上，带有 ECS Fargate',
     },
   },
 

@@ -1,4 +1,13 @@
+---
+next: /guide/ci-cd/github-actions
+prev: /topics/vuepress
+---
+
 # Step by Step Guide :rocket:
+
+::: warning
+This section is mostly outdated and needs to be removed or re-written. Some of the content might be helpful for someone setting up a new Django project, but it doesn't reflect the most recent changes in the `django-step-by-step` repo.
+:::
 
 This document covers Django project setup step by step at a high level of detail. Starting from a blank directory, this guide will progressively build an application in a local development environment that uses Django as the core service. In addition to Django, there is a demonstration on how to use Vue.js along with Django in a "progressive" fashion. Vue is a personal choice, but it can be easily exchanged with any other frontend library or framework.
 

@@ -12,7 +12,7 @@ This project implements a simple blog app using vanilla Django function-based vi
 
 This project is originally designed as a reference or example project that I can use when I need to recall common patterns, syntax and frequently-used code snippets. I have tried to carefully document each part of the development process as a guide for someone who wants to learn how this project is built and deployed from the ground up. Please see [/STEP_BY_STEP.md](STEP_BY_STEP.md) for a complete explanation of the project, step-by-step. The last part of the article goes over the 12 Factor App principles and how this project conforms to those principles.
 
-This project is open-source and new-comers to Django and Python and welcome to create issues and pull requests.
+This project is open-source and newcomers to Django and Python and welcome to create issues and pull requests.
 
 ## Core application
 
@@ -127,6 +127,6 @@ This project can deploy ECS from the command line (using `make cdk-deploy`) or f
 
 Additional [ECS Exec](https://aws.amazon.com/blogs/containers/new-using-amazon-ecs-exec-access-your-containers-fargate-ec2/) is used to run management commands and open shells inside of the containers running on Fargate.
 
-## This project is open source and MIT Licensed
+## This project is open-source and MIT Licensed
 
-See [LICENSE.md](/LICENSE.md).
+See [LICENSE.md](https://github.com/briancaffey/django-step-by-step/blob/main/LICENSE.md).

@@ -1,20 +1,27 @@
+---
+next: /deploy/aws
+prev: /guide/step-by-step
+---
+
 # GitHub Actions Guide
 
-GitHub Actions are used to run unit tests and to deploy the application using CDK.
+GitHub Actions are used for automating things related to this project including:
 
-There are two jobs defined for out GitHub actions:
+- linting files to check for correct syntax
+- running unit tests to test business logic
+- building and pushing container images to ECR (Elastic Container Registry)
+- creating/updating/destroying infrastructure stacks
+- updating the application version (both backend and frontend)
+- running load tests with k6
 
-- `lint-and-test-python`
-- `deploy`
+## Linting
 
-## `lint-and-test-python`
+## Unit Tests
 
-This job checks the code quality of the Django application and runs unit tests using a Postgres database.
+## Building and Pushing Images
 
-If this job fails, the pipeline will be terminated and will not continue on to the `deploy` job
+## Infrastructure operations
 
-## `deploy`
+## Application updates
 
-The deploy job uses `ubuntu-latest`. More information on the tools that are included in this environment can be found here: [https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2004-README.md#tools](https://github.com/actions/virtual-environments/blob/main/images/linux/Ubuntu2004-README.md#tools).
-
-The environment does include docker, so we will not need to install or configure docker separately. The `cdk deploy` command that this job runs uses docker to build our application's backend docker image and then pushes that image to Elastic Container Registry (ECR).
+## Load tests

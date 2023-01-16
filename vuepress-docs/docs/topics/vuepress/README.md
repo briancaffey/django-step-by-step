@@ -1,3 +1,8 @@
+---
+next: /guide/step-by-step
+prev: /topics/jwt-authentication
+---
+
 # A guide to this VuePress site
 
 [[toc]]
@@ -73,7 +78,7 @@ This is how GitHub pages are configured under `Settings > Pages` in Github:
 
 <img :src="$withBase('/images/screenshots/gh-pages-settings.png')" alt="github pages settings image">
 
-When changes are pushed to the `dev` branch, the Vuepress sites are built and the committed to the `master` branch serves the GitHub Pages site. The `master` branch of the repo will only contain the files needed for the documentation site. No other files will on the `master` branch.
+When changes are pushed to the `dev` branch, the Vuepress sites are built and the committed to the `master` branch serves the GitHub Pages site. The `master` branch of the repo will only contain the files needed for the documentation site. No other files will be committed on the `master` branch.
 
 ## How to add images to pages in the documentation site
 

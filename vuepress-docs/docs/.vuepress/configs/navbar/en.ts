@@ -60,24 +60,21 @@ export const en: NavbarConfig = [
     children: [
       {
         text: 'Overview',
-        link: '/deploy/overview/',
+        link: '/deploy/aws/',
         children: [
           {
-            text: 'Raspberry Pi',
-            link: '/deploy/raspi/',
+            link: '/deploy/aws/cdk',
+            text: 'CDK',
+            ariaLabel: 'CDK',
           },
           {
-            text: 'DigitalOcean',
-            link: '/deploy/digital-ocean/',
+            link: '/deploy/aws/terraform',
+            text: 'Terraform'
           },
           {
-            text: 'AWS Overview',
-            link: '/deploy/aws/overview',
-          },
-          {
-            text: 'Docker Swarm on EC2',
-            link: '/deploy/aws/docker-swarm-ec2/',
-          },
+            link: '/deploy/aws/pulumi',
+            text: 'Pulumi'
+          }
         ],
       },
     ],
