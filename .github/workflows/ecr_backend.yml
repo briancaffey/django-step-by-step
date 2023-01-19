@@ -7,7 +7,7 @@ on:
 
 jobs:
   build_and_push:
-    name: "Build Backend image from git tag"
+    name: "Build Backend Image From Git Tag"
     runs-on: ubuntu-latest
 
     steps:
@@ -28,7 +28,7 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: "Build Backend Docker Container"
+      - name: "Build & Push Backend Docker Image"
         env:
           GIT_TAG: ${{ github.ref_name }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}

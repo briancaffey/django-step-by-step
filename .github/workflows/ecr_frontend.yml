@@ -7,16 +7,9 @@ on:
 
 jobs:
   build_and_push:
-    name: "Build Frontend image from git tag"
+    name: "Build Frontend Image From Git Tag"
     environment: terraform-aws-ecs
-    runs-on: ubuntu-latest
-
-    steps:
-
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.inputs.git_tag }}
+    runs-on: ubuntu-latestπ
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -29,7 +22,7 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: "Build Frontend Docker Container"
+      - name: "Build & Push Frontend Docker Image"
         env:
           GIT_TAG: ${{ github.ref_name }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
