@@ -36,7 +36,6 @@ jobs:
 
           TAG="${GIT_TAG##*/}"
 
-          # the name of the ECR repository I am using is called `backend`
           IMAGE_URI=${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/backend
 
           docker build \
