@@ -1,4 +1,4 @@
-name: ecr | frontend
+name: ECR | Frontend - Build Image & Push to ECR
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build_and_push:
-    name: "Build frontend image from git tag"
+    name: "Build Frontend image from git tag"
     environment: terraform-aws-ecs
     runs-on: ubuntu-latest
 
@@ -35,15 +35,15 @@ jobs:
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
         run: |
 
-          IMAGE_TAG="${GIT_TAG##*/}"
+          TAG="${GIT_TAG##*/}"
 
-          FRONTEND_IMAGE_URI=${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/frontend
+          IMAGE_URI=${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/frontend
 
           docker build \
-            --build-arg VERSION=$IMAGE_TAG \
-            -t $FRONTEND_IMAGE_URI:$IMAGE_TAG \
-            -t $FRONTEND_IMAGE_URI:latest \
+            --build-arg VERSION=$TAG \
+            -t $IMAGE_URI:$TAG \
+            -t $IMAGE_URI:latest \
             -f nginx/ecs/Dockerfile \
             .
 
-          docker push --all-tags $FRONTEND_IMAGE_URI
+          docker push --all-tags $IMAGE_URI
