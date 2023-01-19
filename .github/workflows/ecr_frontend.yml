@@ -9,7 +9,14 @@ jobs:
   build_and_push:
     name: "Build Frontend Image From Git Tag"
     environment: terraform-aws-ecs
-    runs-on: ubuntu-latestπ
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.inputs.git_tag }}
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
