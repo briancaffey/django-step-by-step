@@ -1,13 +1,13 @@
-name: ecr | backend
+name: ECR | Backend - Build Image & Push to ECR
 
 on:
   push:
     tags:
-      - 'be/v*'
+      - "backend/v*"
 
 jobs:
   build_and_push:
-    name: "Build backend image from git tag"
+    name: "Build Backend Image From Git Tag"
     runs-on: ubuntu-latest
 
     steps:
@@ -28,23 +28,21 @@ jobs:
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: "Build Backend Docker Container"
+      - name: "Build & Push Backend Docker Image"
         env:
           GIT_TAG: ${{ github.ref_name }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
-
         run: |
 
-          SOURCE_TAG="${GIT_TAG##*/}"
+          TAG="${GIT_TAG##*/}"
 
-          # the name of the ECR repository I am using is called `backend`
-          BACKEND_IMAGE_URI=${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/backend
+          IMAGE_URI=${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/backend
 
           docker build \
-            --build-arg SOURCE_TAG=$SOURCE_TAG \
+            --build-arg SOURCE_TAG=$TAG \
             --target prod \
-            -t $BACKEND_IMAGE_URI:$SOURCE_TAG \
-            -t $BACKEND_IMAGE_URI:latest \
+            -t $IMAGE_URI:$TAG \
+            -t $IMAGE_URI:latest \
             ./backend
 
-          docker push --all-tags $BACKEND_IMAGE_URI
+          docker push --all-tags $IMAGE_URI
