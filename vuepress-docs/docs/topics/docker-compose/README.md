@@ -58,7 +58,7 @@ The outer-most box in the diagram contains all of docker resources: containers, 
 - `redis-commander`
 - `backend`
 - `celery_worker`
-- `beat`
+- `celery_beat`
 - `mailhog`
 
 ### 6. `nginx`
@@ -147,11 +147,11 @@ Celery is the processes that does work on tasks when new tasks are submitted to 
 
 If there is not much task queuing happening in your application, you probably only need one task queue.
 
-### 13. `beat`
+### 13. `celery_beat`
 
 Celery beat is a services that submits tasks to the task queue on a set schedule. The schedule is defined in the `base.py` Django settings file with the `CELERY_BEAT_SCHEDULE` settings value.
 
-Note that both `celery_worker` and `beat` both inherit the service settings from the `backend` container. This is done using **YAML anchors**.
+Note that both `celery_worker` and `celery_beat` both inherit the service settings from the `backend` container. This is done using **YAML anchors**.
 
 ### 14. Apple
 

@@ -74,7 +74,7 @@ docker-compose 文件包含以下服务：
 - redis-commander：Redis 管理服务
 - 后端：主要的 Django Web 应用程序
 - celery_worker：处理默认队列的celery worker
-- beat：按计划对任务进行排队的 celery 进程
+- celery_beat：按计划对任务进行排队的 celery 进程
 - mailhog：用于测试的本地 SMTP 服务器
 
 该应用程序还可以在本地 Kubernetes 集群中本地运行。这是通过 minikube 实现的。 cdk8s 和 pulumi 都用于展示如何从代码 (TypeScript) 动态生成 kubernetes 清单文件并将其部署到集群。

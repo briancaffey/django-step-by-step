@@ -105,9 +105,9 @@ services:
       - "start_worker"
     ports: []
 
-  beat:
+  celery_beat:
     <<: *backend
-    container_name: beat
+    container_name: celery_beat
     command:
       - python3
       - manage.py

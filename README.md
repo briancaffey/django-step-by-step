@@ -81,7 +81,7 @@ The docker-compose file contains the following services:
 - redis-commander: Redis admin service
 - backend: main Django web application
 - celery_worker: celery worker that processes the default queue
-- beat: celery process that queues tasks on a schedule
+- celery_beat: celery process that queues tasks on a schedule
 - mailhog: a local SMTP server for testing
 
 The application can also run locally inside a local Kubernetes cluster. This is made possible with minikube. cdk8s and pulumi are both used to show how kubernetes manifest files can be generated dynamically from code (TypeScript) and deployed to a cluster.
