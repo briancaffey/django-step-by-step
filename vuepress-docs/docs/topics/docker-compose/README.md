@@ -57,7 +57,7 @@ The outer-most box in the diagram contains all of docker resources: containers, 
 - `redis`
 - `redis-commander`
 - `backend`
-- `celery_default`
+- `celery_worker`
 - `beat`
 - `mailhog`
 
@@ -141,9 +141,9 @@ Redis is a key-value store that can be used by Django in few different ways:
 - email: `pgadmin4@pgadmin.org`
 - password: `admin`
 
-### 12. `celery_default`
+### 12. `celery_worker`
 
-Celery is the processes that does work on tasks when new tasks are submitted to the queue. The `celery_default` container is configure to only process the `default` task queue. You can configure as many different queues as you want, and a single container can be configured to process tasks for any number of queues.
+Celery is the processes that does work on tasks when new tasks are submitted to the queue. The `celery_worker` container is configure to only process the `default` task queue. You can configure as many different queues as you want, and a single container can be configured to process tasks for any number of queues.
 
 If there is not much task queuing happening in your application, you probably only need one task queue.
 
@@ -151,7 +151,7 @@ If there is not much task queuing happening in your application, you probably on
 
 Celery beat is a services that submits tasks to the task queue on a set schedule. The schedule is defined in the `base.py` Django settings file with the `CELERY_BEAT_SCHEDULE` settings value.
 
-Note that both `celery_default` and `beat` both inherit the service settings from the `backend` container. This is done using **YAML anchors**.
+Note that both `celery_worker` and `beat` both inherit the service settings from the `backend` container. This is done using **YAML anchors**.
 
 ### 14. Apple
 

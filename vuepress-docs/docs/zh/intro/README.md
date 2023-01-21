@@ -73,7 +73,7 @@ docker-compose 文件包含以下服务：
 - pgadmin：Postgres 管理服务
 - redis-commander：Redis 管理服务
 - 后端：主要的 Django Web 应用程序
-- celery_default：处理默认队列的celery worker
+- celery_worker：处理默认队列的celery worker
 - beat：按计划对任务进行排队的 celery 进程
 - mailhog：用于测试的本地 SMTP 服务器
 

@@ -73,7 +73,7 @@ The docker-compose file contains the following services:
 - pgadmin: Postgres admin service
 - redis-commander: Redis admin service
 - backend: main Django web application
-- celery_default: celery worker that processes the default queue
+- celery_worker: celery worker that processes the default queue
 - beat: celery process that queues tasks on a schedule
 - mailhog: a local SMTP server for testing
 
