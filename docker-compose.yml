@@ -111,7 +111,7 @@ services:
     command:
       - python3
       - manage.py
-      - start_beat
+      - start_celery_beat
     ports: []
 
   # migrate command
