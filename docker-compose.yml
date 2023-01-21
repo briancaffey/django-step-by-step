@@ -102,7 +102,7 @@ services:
     command:
       - "python3"
       - "manage.py"
-      - "start_worker"
+      - "start_celery_worker"
     ports: []
 
   celery_beat:

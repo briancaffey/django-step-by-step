@@ -74,7 +74,7 @@ poetry-runserver-plus:
 
 ## start the celery default worker
 poetry-celery-default-worker:
-	cd backend && poetry run python3 manage.py start_worker
+	cd backend && poetry run python3 manage.py start_celery_worker
 
 ## start celery beat
 poetry-celery-beat:
@@ -205,7 +205,7 @@ venv-format: venv-flake8	venv-black
 
 ## Start celery worker that will reload on code changes
 venv-celery-default-worker:
-	cd backend && python3 manage.py start_worker
+	cd backend && python3 manage.py start_celery_worker
 
 ## Start celery beat that will reload on code changes
 venv-celery-beat:
