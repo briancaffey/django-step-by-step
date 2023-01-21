@@ -11,7 +11,7 @@ from django.utils import autoreload
 PIDFILE = "/code/celerybeat.pid"
 
 
-def restart_celery_beat():
+def restart_celery_worker():
     cmd = "pkill -9 celery"
     subprocess.call(shlex.split(cmd))
     # fmt: off
@@ -22,4 +22,4 @@ def restart_celery_beat():
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        autoreload.run_with_reloader(restart_celery_beat)
+        autoreload.run_with_reloader(restart_celery_worker)
