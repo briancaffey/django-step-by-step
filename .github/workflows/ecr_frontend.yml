@@ -3,7 +3,7 @@ name: ECR | Frontend - Build Image & Push to ECR
 on:
   push:
     tags:
-      - "fe/v*"
+      - "frontend/v*"
 
 jobs:
   build_and_push:
