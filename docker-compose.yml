@@ -96,22 +96,22 @@ services:
       - postgres
       - redis
 
-  celery_default:
+  celery_worker:
     <<: *backend
-    container_name: celery_default
+    container_name: celery_worker
     command:
       - "python3"
       - "manage.py"
-      - "start_worker"
+      - "start_celery_worker"
     ports: []
 
-  beat:
+  celery_beat:
     <<: *backend
-    container_name: beat
+    container_name: celery_beat
     command:
       - python3
       - manage.py
-      - start_beat
+      - start_celery_beat
     ports: []
 
   # migrate command
@@ -157,7 +157,7 @@ services:
     networks:
       - main
     depends_on:
-      - celery_default
+      - celery_worker
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/1
 
