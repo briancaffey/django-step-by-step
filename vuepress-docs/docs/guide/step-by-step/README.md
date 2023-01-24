@@ -2500,7 +2500,7 @@ jobs:
           python-version: ${{ matrix.python-version }}
       # Checks out a copy of your repository on the ubuntu-latest machine
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # install pip dependencies
       - name: pip install

@@ -42,7 +42,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: "Update frontend app"
         id: update_frontend
