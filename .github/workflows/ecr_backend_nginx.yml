@@ -1,0 +1,45 @@
+name: ECR | Backend NGINX - Build Image & Push to ECR
+
+on:
+  push:
+    tags:
+      - "backend/nginx/v*"
+
+jobs:
+  build_and_push:
+    name: "Build Backend NGINX Image From Git Tag"
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: "Build & Push Backend Docker Image"
+        env:
+          GIT_TAG: ${{ github.ref_name }}
+          AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+        run: |
+
+          TAG="${GIT_TAG##*/}"
+
+          IMAGE_URI=${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/backend-nginx
+
+          docker build \
+            --build-arg SOURCE_TAG=$TAG \
+            --target prod \
+            -t $IMAGE_URI:$TAG \
+            -t $IMAGE_URI:latest \
+            ./nginx/backend/prod
+
+          docker push --all-tags $IMAGE_URI

@@ -56,6 +56,16 @@ resource "aws_ecr_repository" "backend" {
   }
 }
 
+# ECR repository for the backend web app sidecar NGINX container
+resource "aws_ecr_repository" "backend-nginx" {
+  name                 = "backend-nginx"
+  image_tag_mutability = "MUTABLE"
+
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+}
+
 # ECR repository for the frontend web app
 resource "aws_ecr_repository" "frontend" {
   name                 = "frontend"
