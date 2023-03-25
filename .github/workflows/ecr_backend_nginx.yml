@@ -37,7 +37,6 @@ jobs:
 
           docker build \
             --build-arg SOURCE_TAG=$TAG \
-            --target prod \
             -t $IMAGE_URI:$TAG \
             -t $IMAGE_URI:latest \
             ./nginx/backend/prod
