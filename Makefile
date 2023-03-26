@@ -380,7 +380,7 @@ aws-ecs-exec:
 
 ## connects a shell to the bastion host in a base environment
 aws-ssm-start-session:
-	@./backend/scripts/aws/ecs_exec.sh
+	@./backend/scripts/aws/ssm_start_session.sh
 
 ## start port forwarding session for ad hoc env
 aws-ssm-port-forward:

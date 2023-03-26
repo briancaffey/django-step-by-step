@@ -10,6 +10,9 @@ TASK_ARN=$(aws ecs list-tasks \
   --cluster $APP_ENV_NAME-cluster \
   --service-name  $APP_ENV_NAME-gunicorn | jq -r '.taskArns | .[0]' \
 )
+
+echo $TASK_ARN
+
 aws ecs execute-command --cluster $APP_ENV_NAME-cluster \
     --task $TASK_ARN \
     --container gunicorn \
