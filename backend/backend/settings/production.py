@@ -4,6 +4,11 @@ from .base import *
 
 DEBUG = 0
 
+DATABASES["default"]["OPTIONS"] = {
+    "sslmode": "verify-full",
+    "sslrootcert": "/usr/local/share/rds-ca-2019-root.pem",
+}
+
 # add django-storages to INSTALLED_APPS
 INSTALLED_APPS += ("storages",)
 
