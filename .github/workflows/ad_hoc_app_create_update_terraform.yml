@@ -40,9 +40,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-      - uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v3
 
       # get the values for the Terraform configuration for the shared resources: BASTION_IP, RDS_ENDPOINT, etc.
       - name: "Get AWS Resource values"
