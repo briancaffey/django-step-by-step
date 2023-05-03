@@ -1,0 +1,5 @@
+{
+  "dockerComposeFile": "../docker-compose.devcontainer.yaml",
+  "service": "backend",
+  "shutdownAction": "stopCompose"
+}
