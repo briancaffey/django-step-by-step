@@ -129,6 +129,18 @@ services:
       - backend
     restart: "on-failure"
 
+  # shell command - usefule for updating poetry
+  # shell:
+  #   <<: *backend
+  #   container_name: shell
+  #   command: ["/bin/sh", "-c", "while true; do echo 'Container is alive!'; sleep 10; done"]
+  #   ports: []
+  #   depends_on:
+  #     - postgres
+  #     - redis
+  #     - backend
+  #   restart: "on-failure"
+
   notebook:
     <<: *backend
     container_name: notebook

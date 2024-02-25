@@ -10,4 +10,4 @@ cdk.context.json
 
 # Redis .rdb files
 *.rdb
-
+backend/.bash_history
