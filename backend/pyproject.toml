@@ -5,7 +5,7 @@ description = "Dependencies for django-step-by-step"
 authors = ["Brian Caffey <briancaffey2010@gmail.com>"]
 
 [tool.poetry.dependencies]
-python = "==3.9.13"
+python = "==3.11.8"
 
 # Update to Django 3.2 requires additional changes
 Django = "~4.2.10"
@@ -20,7 +20,7 @@ celery= "^5.2.3"
 # for OpenAPI
 uritemplate = "^3.0.1"
 coreapi = "^2.3.3"
-pyyaml = "^5.4.1"
+pyyaml = "^6.0.1"
 
 # graphql
 graphene-django = "^2.15.0"
@@ -70,18 +70,18 @@ Werkzeug = "^2.0.2"
 # for Jupyter notebooks
 ipython = "^7.31.0"
 # jupyter's dependency on argon2-cffi can't be installed on Apple M1
-jupyter = { version = "^1.0.0", markers = "platform_machine == 'x86_64'" }
-notebook = "^6.4.12"
+# jupyter = { version = "^1.0.0", markers = "platform_machine == 'x86_64'" }
+jupyter = "^1.0.0"
 
 # OpenAPI
-pyyaml = "^5.3.1"
-argh = "^0.26.2"
+pyyaml = "^6.0.1"
+argh = "^0.31.2"
 
 # faker
 faker = "^11.3.0"
 
 # django-silk
-django-silk = "^4.2.0"
+django-silk = "^5.1.0"
 
 # pyparsing
 # poetry 1.0.0 requires pyparsing<3.0,>=2.2 but packaging tries to install a 3.0.6 which is not compatible

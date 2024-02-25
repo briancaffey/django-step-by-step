@@ -133,7 +133,8 @@ services:
   # shell:
   #   <<: *backend
   #   container_name: shell
-  #   command: ["/bin/sh", "-c", "while true; do echo 'Container is alive!'; sleep 10; done"]
+  #   command: ["/bin/sh", "-c", "while true; do echo 'Container is alive...'; sleep 10; done"]
+  #   # command: ["poetry", "lock"]
   #   ports: []
   #   depends_on:
   #     - postgres
