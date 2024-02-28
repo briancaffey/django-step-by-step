@@ -7,7 +7,7 @@ from aws_secretsmanager_caching import (
 )
 
 client = botocore.session.get_session().create_client(
-    "secretsmanager", region_name="us-east-1"
+    "secretsmanager", region_name=os.environ.get("AWS_REGION", "us-east-1")
 )
 cache = SecretCache(client=client)
 
