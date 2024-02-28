@@ -4,6 +4,7 @@ htmlcov
 node_modules
 notes
 .env
+.venv
 cdk.out
 .raspberrypi.env
 cdk.context.json
