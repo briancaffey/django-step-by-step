@@ -276,6 +276,10 @@ docker-compose-poetry-update:
 docker-compose-poetry-export: docker-compose-poetry-update
 	docker compose run backend poetry export --without-hashes -f requirements.txt -o requirements.txt && docker compose run backend poetry export --without-hashes -f requirements.txt -o requirements_dev.txt --dev
 
+## create a superuser in the docker compose development environment (credentials are: admin@email.com/password)
+docker-compose-createsuperuser:
+	docker compose run -e DJANGO_SUPERUSER_PASSWORD=password backend python manage.py createsuperuser --email admin@email.com --no-input
+
 ## -- Misc Targets --
 
 ## Check to see if the local postgres service is running
