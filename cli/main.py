@@ -7,7 +7,7 @@ def main():
     aws_command = [
         'aws', 'ecs', 'execute-command',
         '--cluster', 'alpha-cluster',
-        '--task', '',
+        '--task', 'arn:aws:ecs:us-east-1:733623710918:task/alpha-cluster/b749fff8f59243159fa7e83f3ff456df',
         '--command', 'bash',
         '--interactive'
     ]

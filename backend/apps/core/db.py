@@ -2,6 +2,9 @@ import os
 
 import psycopg2
 
+from apps.core.utils import from_secret
+
+
 def create_database(database_name=None):
     """
     This function is only used with ad-hoc environments
@@ -11,10 +14,10 @@ def create_database(database_name=None):
     dbname = database_name or os.environ.get("APP_ENV_NAME")
     try:
         conn = psycopg2.connect(
-            dbname=os.environ.get("BASE_ENV_NAME", "postgres"),
-            user=os.environ.get("DB_USER", "postgres"),
+            dbname="postgres",
+            user="postgres",
             host=os.environ.get("POSTGRES_SERVICE_HOST", "localhost"),
-            password=os.environ.get("POSTGRES_PASSWORD", "postgres")
+            password=from_secret() # os.environ.get("POSTGRES_PASSWORD", "postgres")
         )
 
         # https://www.psycopg.org/docs/connection.html#connection.set_isolation_level
