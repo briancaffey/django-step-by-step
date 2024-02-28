@@ -6,7 +6,7 @@ DEBUG = 0
 
 DATABASES["default"]["OPTIONS"] = {
     "sslmode": "verify-full",
-    "sslrootcert": "/usr/local/share/rds-combined-ca-bundle.pem",
+    "sslrootcert": "/usr/local/share/global-bundle.pem",
 }
 
 # add django-storages to INSTALLED_APPS

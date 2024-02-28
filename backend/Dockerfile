@@ -14,7 +14,7 @@ RUN pip install "poetry==$POETRY_VERSION"
 COPY poetry.lock pyproject.toml /code/
 
 FROM base AS prod
-RUN curl https://s3.amazonaws.com/rds-downloads/rds-combined-ca-bundle.pem -o /usr/local/share/rds-combined-ca-bundle.pem
+RUN curl https://truststore.pki.rds.amazonaws.com/global/global-bundle.pem -o /usr/local/share/global-bundle.pem
 RUN POETRY_VIRTUALENVS_CREATE=false poetry install --only main
 COPY . /code
 RUN chown -R app:app /code
