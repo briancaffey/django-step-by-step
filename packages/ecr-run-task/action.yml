@@ -106,6 +106,7 @@ runs:
         TASK_ID=$( \
           aws ecs run-task \
             --cluster $APP_ENV-cluster \
+            --launch-type FARGATE \
             --task-definition $TASK_DEFINITION_ARN \
             --network-configuration "awsvpcConfiguration={subnets=[$SUBNET_IDS],securityGroups=[$SECURITY_GROUPS],assignPublicIp=ENABLED}" \
             | jq -r '.tasks[0].taskArn' \
