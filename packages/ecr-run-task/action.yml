@@ -31,6 +31,7 @@ runs:
       shell: bash
       run: |
         AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r .Account)
+        echo $AWS_ACCOUNT_ID
         echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> $GITHUB_ENV
 
     - name: Download existing task definition
@@ -38,7 +39,7 @@ runs:
       shell: bash
       run: |
         aws ecs describe-task-definition \
-          --task-definition ${{ env.FULL_TASK_NAME }} \
+          --task-definition ${{ env.CONTAINER_NAME }} \
           | jq '.taskDefinition' > task-definition.json
 
     - name: Render new task definition
@@ -54,5 +55,4 @@ runs:
       uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       with:
         cluster: ${{ inputs.APP_ENV }}-cluster
-        service: ${{ inputs.APP_ENV }}-${{ inputs.CONTAINER_NAME }}
         task-definition: ${{ steps.render-new-task-definition.outputs.task-definition }}

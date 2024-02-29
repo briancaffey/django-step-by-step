@@ -7,6 +7,9 @@ on:
       VERSION:
         required: true
         description: 'Git tag to deploy (e.g. v1.2.3)'
+      APP_ENV:
+        required: true
+        description: 'App env name (e.g. alpha)'
 
 jobs:
   pre-update:
@@ -16,8 +19,19 @@ jobs:
       contents: read
     runs-on: ubuntu-latest
     steps:
+      # Switch to role auth
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
       - uses: actions/checkout@v4
       - name: Run the pre-update command
-        uses: ./packages/test
+        uses: ./packages/ecr-run-task
         with:
-          FOO: ${{ inputs.VERSION }}
+          BASE_ENV: dev
+          APP_ENV: ${{ inputs.APP_ENV }}
+          VERSION: ${{ inputs.VERSION }}
+          ECR_REPO: backend
+          CONTAINER_NAME: update
