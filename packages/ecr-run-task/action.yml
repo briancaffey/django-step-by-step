@@ -1,0 +1,58 @@
+name: 'Action for running an ECS task in a GHA workflow'
+description: 'Action for running ECS task'
+author: 'Brian Caffey'
+inputs:
+  BASE_ENV:
+    required: true
+    description: 'Base env name (e.g. dev)'
+  APP_ENV:
+    required: true
+    description: 'App env name (e.g. alpha)'
+  VERSION:
+    required: true
+    description: 'Application version git tag (e.g. v1.2.3)'
+  ECR_REPO:
+    required: true
+    description: 'ECR repo to use'
+  CONTAINER_NAME:
+    required: true
+    description: 'Name of the container to update'
+  AWS_REGION:
+    required: false
+    description: 'AWS Region'
+    default: 'us-east-1'
+
+runs:
+  using: "composite"
+  steps:
+    # Note: this assumes that your ECR repo lives in the same AWS account as your ECS cluster
+    - name: Get current AWS Account
+      id: get-aws-account
+      shell: bash
+      run: |
+        AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r .Account)
+        echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> $GITHUB_ENV
+
+    - name: Download existing task definition
+      id: download-task-definition
+      shell: bash
+      run: |
+        aws ecs describe-task-definition \
+          --task-definition ${{ env.FULL_TASK_NAME }} \
+          | jq '.taskDefinition' > task-definition.json
+
+    - name: Render new task definition
+      id: render-new-task-definition
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: task-definition.json
+        container-name: ${{ inputs.CONTAINER_NAME }}
+        image: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ inputs.AWS_REGION}}.amazonaws.com/${{ inputs.ECR_REPO }}:${{ inputs.VERSION }}
+
+    - name: Deploy new task definition
+      id: deploy-new-task-definition
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      with:
+        cluster: ${{ inputs.APP_ENV }}-cluster
+        service: ${{ inputs.APP_ENV }}-${{ inputs.CONTAINER_NAME }}
+        task-definition: ${{ steps.render-new-task-definition.outputs.task-definition }}

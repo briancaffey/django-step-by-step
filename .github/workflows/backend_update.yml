@@ -1,0 +1,23 @@
+name: 'Backend update'
+run-name: 'Backend update' # TODO: add parameters to name
+
+on:
+  workflow_dispatch:
+    inputs:
+      VERSION:
+        required: true
+        description: 'Git tag to deploy (e.g. v1.2.3)'
+
+jobs:
+  pre-update:
+    name: "Pre-update"
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run the pre-update command
+        uses: ./packages/test
+        with:
+          FOO: ${{ inputs.VERSION }}
