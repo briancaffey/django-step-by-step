@@ -42,11 +42,18 @@ runs:
           --task-definition ${{ inputs.CONTAINER_NAME }} \
           | jq '.taskDefinition' > task-definition.json
 
+    - name: Remove fields from task definition
+      id: cleaned-task-def
+      shell: bash
+      run: |
+        jq 'del(.compatibilities, .taskDefinitionArn, .requiresAttributes, .revision, .status, .registeredAt, .registeredBy)' task-definition.json > cleaned-task-definition.json
+
+
     - name: Render new task definition
       id: render-new-task-definition
       uses: aws-actions/amazon-ecs-render-task-definition@v1
       with:
-        task-definition: task-definition.json
+        task-definition: cleaned-task-definition.json
         container-name: ${{ inputs.CONTAINER_NAME }}
         image: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ inputs.AWS_REGION}}.amazonaws.com/${{ inputs.ECR_REPO }}:${{ inputs.VERSION }}
 
