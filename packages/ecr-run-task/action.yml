@@ -39,7 +39,7 @@ runs:
       shell: bash
       run: |
         aws ecs describe-task-definition \
-          --task-definition ${{ env.CONTAINER_NAME }} \
+          --task-definition ${{ inputs.CONTAINER_NAME }} \
           | jq '.taskDefinition' > task-definition.json
 
     - name: Render new task definition
