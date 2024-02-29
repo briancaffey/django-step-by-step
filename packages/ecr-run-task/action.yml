@@ -63,3 +63,65 @@ runs:
       with:
         cluster: ${{ inputs.APP_ENV }}-cluster
         task-definition: ${{ steps.render-new-task-definition.outputs.task-definition }}
+
+    - name: Run task
+      id: run-task
+      shell: bash
+      env:
+        TASK_DEFINITION_ARN: ${{ steps.deploy-new-task-definition.outputs.task-definition-arn }}
+      run: |
+        SUBNETS=$( \
+          aws ec2 describe-subnets \
+            --filters "Name=tag:base-env,Values=$BASE_ENV" "Name=tag:Name,Values=*application*" \
+            --query 'Subnets[*].SubnetId' \
+            --output text \
+        )
+
+        # replace spaces with commas using tr
+        SUBNET_IDS=$(echo $SUBNETS | tr ' ' ',')
+
+        echo "Subnet IDs $SUBNET_IDS"
+
+        VPC_ID=$(aws ec2 describe-vpcs --filters "Name=tag:base-env,Values=$BASE_ENV" --query 'Vpcs[*].VpcId' --output text)
+
+        echo "VPC ID $VPC_ID"
+
+        SECURITY_GROUPS=$(
+          aws ec2 describe-security-groups \
+            --group-names $BASE_ENV-app-sg \
+            --filter Name=vpc-id,Values=$VPC_ID
+            --query 'SecurityGroups[*].GroupId' \
+            --output text
+        )
+
+        echo "Security Groups $SECURITY_GROUPS"
+
+        echo "Running backend_update commands..."
+
+        # timestamp used for log retrieval (milliseconds after Jan 1, 1970 00:00:00 UTC)
+        START_TIME=$(date +%s000)
+
+        # run the migration task and capture the taskArn into a variable called TASK_ID
+        TASK_ID=$( \
+          aws ecs run-task \
+            --cluster $BASE_ENV-cluster \
+            --task-definition $TASK_DEFINITION_ARN \
+            --network-configuration "awsvpcConfiguration={subnets=[$SUBNET_IDS],securityGroups=[$SECURITY_GROUPS],assignPublicIp=ENABLED}" \
+            | jq -r '.tasks[0].taskArn' \
+          )
+
+        echo "Task ID is $TASK_ID"
+
+        aws ecs wait tasks-stopped \
+          --tasks $TASK_ID \
+          --cluster $BASE_ENV-cluster
+
+        END_TIME=$(date +%s000)
+
+        # print the CloudWatch log events to STDOUT
+        aws logs get-log-events \
+          --log-group-name "/ecs/$BASE_ENV/update" \
+          --log-stream-name "update/update/${TASK_ID##*/}" \
+          --start-time $START_TIME \
+          --end-time $END_TIME \
+          | jq -r '.events[].message'
