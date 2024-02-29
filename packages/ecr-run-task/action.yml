@@ -69,6 +69,7 @@ runs:
       shell: bash
       env:
         TASK_DEFINITION_ARN: ${{ steps.deploy-new-task-definition.outputs.task-definition-arn }}
+        BASE_ENV: ${{ inputs.BASE_ENV }}
       run: |
         SUBNETS=$( \
           aws ec2 describe-subnets \
