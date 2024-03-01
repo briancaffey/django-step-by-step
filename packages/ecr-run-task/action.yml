@@ -122,7 +122,7 @@ runs:
 
         # print the CloudWatch log events to STDOUT
         aws logs get-log-events \
-          --log-group-name "/ecs/$BASE_ENV/update" \
+          --log-group-name "/ecs/$BASE_ENV/update/" \
           --log-stream-name "update/update/${TASK_ID##*/}" \
           --start-time $START_TIME \
           --end-time $END_TIME \
