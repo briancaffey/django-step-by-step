@@ -2,7 +2,7 @@ import os
 
 import psycopg2
 
-from apps.core.db import from_secret
+from apps.core.utils import from_secret
 
 
 def create_database(database_name=None):
