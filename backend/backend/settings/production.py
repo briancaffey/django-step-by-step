@@ -18,6 +18,7 @@ INSTALLED_APPS += ("storages",)
 
 STATICFILES_STORAGE = "backend.storage_backends.StaticStorage"
 # static and media files
+AWS_DEFAULT_ACL = None
 AWS_STORAGE_BUCKET_NAME = os.environ["S3_BUCKET_NAME"]
 STATIC_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/"
 MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/"
