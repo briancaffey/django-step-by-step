@@ -10,14 +10,13 @@ from apps.core.db import create_database
 
 
 class Command(BaseCommand):
-
     def add_arguments(self, parser):
         parser.add_argument(
-            '--database_name',
-            action='store',
-            dest='database_name',
+            "--database_name",
+            action="store",
+            dest="database_name",
             default=None,
-            help='Optional database name argument',
+            help="Optional database name argument",
         )
 
     def handle(self, *args, **options):
