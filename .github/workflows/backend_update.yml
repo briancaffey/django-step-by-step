@@ -1,5 +1,5 @@
-name: '[CD] Backend update'
-run-name: '[CD] Backend update ${{ inputs.VERSION }} on ${{ inputs.APP_ENV }}' # TODO: add parameters to name
+name: '[CD] backend update'
+run-name: '[CD] backend update ${{ inputs.VERSION }} on ${{ inputs.APP_ENV }}'
 
 on:
   workflow_dispatch:

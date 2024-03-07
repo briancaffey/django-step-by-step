@@ -1,4 +1,5 @@
-name: ECR | Backend - Build Image & Push to ECR
+name: '[ECR] build and push'
+run-name: '[ECR] build and push ${{ github.ref_name }}'
 
 on:
   push:
@@ -12,12 +13,12 @@ jobs:
 
     steps:
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name }}
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -25,12 +26,13 @@ jobs:
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v2
 
       - name: "Build & Push Backend Docker Image"
         env:
           GIT_TAG: ${{ github.ref_name }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          DOCKER_BUILDKIT: '1'
         run: |
 
           TAG="${GIT_TAG##*/}"

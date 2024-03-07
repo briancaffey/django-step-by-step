@@ -1,15 +1,11 @@
 # github action to create or update an ad hoc environment
-name: k6 load test
+name: '[k6] load test'
+run-name: '[k6] load tests for ${{ inputs.url }}'
 
 on:
   workflow_dispatch:
     inputs:
-
-      # The Terraform workspace for the shared resources Terraform configuration
-      # that the ad hoc environment will use.
-      # This input typically will not be used since all ad hoc environments should use one set of shared resources
-      # This may be changed if major changes to the shared resources configuration are made to avoid disrupting existing ad hoc environments
-      url:
+      URL:
         description: 'URL to use for load test'
         required: true
         type: string
@@ -21,11 +17,11 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v4
 
       - name: Run local k6 test
-        uses: grafana/k6-action@v0.2.0
+        uses: grafana/k6-action@v0.3.1
         env:
-          BASE_URL: ${{ github.event.inputs.url }}
+          BASE_URL: ${{ inputs.URL }}
         with:
           filename: k6/script.js
