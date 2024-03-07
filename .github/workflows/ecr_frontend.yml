@@ -1,4 +1,5 @@
-name: ECR | Frontend - Build Image & Push to ECR
+name: '[ECR] build frontend image'
+run-name: '[ECR] build frontend image ${{ github.ref_name }}'
 
 on:
   push:
@@ -25,7 +26,7 @@ jobs:
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v2
 
       - name: "Build & Push Frontend Docker Image"
         env:
