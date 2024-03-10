@@ -7,6 +7,9 @@ on:
       STACK:
         required: true
         description: "Name of stack that will be deployed or destroyed"
+      DIRECTORY:
+        required: true
+        description: "Relative path the directory where CDK command will run"
 
 jobs:
   cdk:
@@ -35,4 +38,11 @@ jobs:
           cache: yarn
 
       - name: Installing dependencies 📦️
+        working-directory: 'iac/cdk'
         run: yarn install
+
+      - name: CDK Action
+        uses: briancaffey/aws-cdk-actions@main
+        with:
+          cdk_stack: ${{ inputs.STACK }}
+          directory: ${{ inputs.DIRECTORY }}
