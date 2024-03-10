@@ -1,5 +1,5 @@
-name: 'CDK Actions'
-run-name: 'CDK Actions'
+name: '[CDK] CDK GitHub Action'
+run-name: '[CDK] Actions'
 
 on:
   workflow_dispatch:
