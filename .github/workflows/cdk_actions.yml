@@ -1,0 +1,38 @@
+name: 'CDK Actions'
+run-name: 'CDK Actions'
+
+on:
+  workflow_dispatch:
+    inputs:
+      STACK:
+        required: true
+        description: "Name of stack that will be deployed or destroyed"
+
+jobs:
+  cdk:
+    name: "CDK"
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # Switch to role auth
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - uses: actions/checkout@v4
+
+      - name: Setup Node LTS
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+          cache: yarn
+
+      - name: Installing dependencies 📦️
+        run: yarn install

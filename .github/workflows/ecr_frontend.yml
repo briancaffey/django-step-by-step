@@ -1,5 +1,5 @@
-name: '[ECR] build frontend image'
-run-name: '[ECR] build frontend image ${{ github.ref_name }}'
+name: '[ECR] build & push frontend image'
+run-name: '[ECR] build & push ${{ github.ref_name }}'
 
 on:
   push:
