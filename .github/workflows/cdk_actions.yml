@@ -45,4 +45,4 @@ jobs:
         uses: briancaffey/aws-cdk-actions@main
         with:
           cdk_stack: ${{ inputs.STACK }}
-          directory: ${{ github.action_path }}/iac/cdk/${{ inputs.DIRECTORY }}/
+          directory: iac/cdk/${{ inputs.DIRECTORY }}/
