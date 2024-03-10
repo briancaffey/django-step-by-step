@@ -48,4 +48,4 @@ jobs:
         uses: briancaffey/aws-cdk-actions@main
         with:
           cdk_stack: ${{ inputs.STACK }}
-          directory: ${{ inputs.DIRECTORY }}
+          directory: ./iac/cdk/${{ inputs.DIRECTORY }}
