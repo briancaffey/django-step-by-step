@@ -11,10 +11,6 @@ on:
         required: true
         description: "Relative path the directory where CDK command will run"
 
-defaults:
-  run:
-    working-directory: './iac/cdk'
-
 jobs:
   cdk:
     name: "CDK"
@@ -22,6 +18,9 @@ jobs:
       id-token: write
       contents: read
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: './iac/cdk/'
 
     steps:
 
@@ -40,6 +39,7 @@ jobs:
         with:
           node-version: lts/*
           cache: yarn
+          cache-dependency-path: 'yarn.lock'
 
       - name: Installing dependencies 📦️
         run: yarn install
