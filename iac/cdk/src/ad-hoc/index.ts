@@ -34,11 +34,11 @@ const adHocApp = new AdHocApp(appStack, 'AdHocApp', {
   vpc: adHocBase.vpc,
   alb: adHocBase.alb,
   appSecurityGroup: adHocBase.appSecurityGroup,
-  serviceDiscoveryNamespace: adHocBase.serviceDiscoveryNamespace,
   rdsInstance: adHocBase.databaseInstance,
   assetsBucket: adHocBase.assetsBucket,
   domainName: adHocBase.domainName,
   listener: adHocBase.listener,
+  elastiCacheHost: adHocBase.elastiCacheHostname,
 });
 
 /**

@@ -11,6 +11,10 @@ on:
         required: true
         description: "Relative path the directory where CDK command will run"
 
+defaults:
+  run:
+    working-directory: 'iac/cdk'
+
 jobs:
   cdk:
     name: "CDK"
@@ -38,7 +42,6 @@ jobs:
           cache: yarn
 
       - name: Installing dependencies 📦️
-        working-directory: 'iac/cdk'
         run: yarn install
 
       - name: CDK Action
