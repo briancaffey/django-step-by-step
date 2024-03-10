@@ -18,9 +18,6 @@ jobs:
       id-token: write
       contents: read
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: './iac/cdk/'
 
     steps:
 
@@ -48,4 +45,4 @@ jobs:
         uses: briancaffey/aws-cdk-actions@main
         with:
           cdk_stack: ${{ inputs.STACK }}
-          directory: ./iac/cdk/${{ inputs.DIRECTORY }}
+          directory: ${{ github.action_path }}/iac/cdk/${{ inputs.DIRECTORY }}/
