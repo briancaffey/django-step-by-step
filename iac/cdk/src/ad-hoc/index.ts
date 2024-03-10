@@ -44,8 +44,9 @@ const adHocApp = new AdHocApp(appStack, 'AdHocApp', {
 /**
  * Add tagging for this construct and all child constructs
  */
-Tags.of(adHocBase).add('env', baseStack.stackName);
-Tags.of(adHocApp).add('env', appStack.stackName);
+Tags.of(adHocBase).add('base-env', baseStack.stackName);
+Tags.of(adHocBase).add('ad-hoc', 'true');
+Tags.of(adHocApp).add('app-env', appStack.stackName);
 
 
 app.synth();

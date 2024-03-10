@@ -39,7 +39,7 @@ jobs:
         with:
           node-version: lts/*
           cache: yarn
-          cache-dependency-path: 'yarn.lock'
+          cache-dependency-path: './iac/cdk/yarn.lock'
 
       - name: Installing dependencies 📦️
         run: yarn install
