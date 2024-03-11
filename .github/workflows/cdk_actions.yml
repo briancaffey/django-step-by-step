@@ -39,10 +39,16 @@ jobs:
           cache-dependency-path: './iac/cdk/yarn.lock'
 
       - name: Installing dependencies 📦️
+        working-directory: 'iac/cdk'
         run: yarn install
 
+      - name: Build
+        working-directory: 'iac/cdk'
+        run: |
+          yarn build
+
       - name: CDK Action
-        uses: briancaffey/aws-cdk-actions@main
-        with:
-          cdk_stack: ${{ inputs.STACK }}
-          directory: iac/cdk/${{ inputs.DIRECTORY }}/
+        working-directory: 'iac/cdk'
+        run: |
+          ls lib || echo 'error buidling'
+          cdk deploy --app='./lib/ad-hoc/index.js' -e ${{ inputs.STACK }}
