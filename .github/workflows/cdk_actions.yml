@@ -49,6 +49,9 @@ jobs:
 
       - name: CDK Action
         working-directory: 'iac/cdk'
+        env:
+          ACM_CERTIFICATE_ARN: ${{ secrets.ACM_CERTIFICATE_ARN }}
+          DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
         run: |
           ls lib || echo 'error buidling'
           cdk deploy --app='./lib/ad-hoc/index.js' -e ${{ inputs.STACK }}
