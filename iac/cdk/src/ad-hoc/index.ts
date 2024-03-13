@@ -24,7 +24,7 @@ const env = {
 const baseStack = new Stack(app, adHocBaseEnvName, { stackName: adHocBaseEnvName, env });
 baseStack.node.setContext('config', adHocBaseEnvConfig);
 
-const appStack = new Stack(app, 'ExampleAdHocAppStack', { stackName: adHocAppEnvName, env });
+const appStack = new Stack(app, adHocAppEnvName, { stackName: adHocAppEnvName, env });
 appStack.node.setContext('config', adHocAppEnvConfig);
 
 const adHocBase = new AdHocBase(baseStack, 'AdHocBase', { certificateArn, domainName });
