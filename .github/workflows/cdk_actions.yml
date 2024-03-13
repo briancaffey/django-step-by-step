@@ -7,10 +7,18 @@ on:
       STACK:
         required: true
         default: 'dev'
+        type: choice
+        options:
+          - 'dev'
+          - 'alpha'
         description: "Name of stack that will be deployed or destroyed"
       DIRECTORY:
         required: true
         default: 'ad-hoc'
+        type: choice
+        options:
+          - 'ad-hoc'
+          - 'prod'
         description: "Relative path the directory where CDK command will run"
 
 jobs:
