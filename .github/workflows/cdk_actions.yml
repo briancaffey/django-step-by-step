@@ -76,5 +76,9 @@ jobs:
         env:
           ACM_CERTIFICATE_ARN: ${{ secrets.ACM_CERTIFICATE_ARN }}
           DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+        # https://github.com/aws/aws-cdk/issues/3894#issuecomment-526933209
         run: |
-          cdk ${{ inputs.CDK_OPERATION }} --app='./lib/${{ inputs.DIRECTORY }}/index.js' -e ${{ inputs.STACK }} --require-approval never
+          cdk ${{ inputs.CDK_OPERATION }} \
+            --app='./lib/${{ inputs.DIRECTORY }}/index.js' \
+            -e ${{ inputs.STACK }} \
+            ${{ inputs.CDK_OPERATION == 'destroy' && '--force' || '--require-approval never'}}
