@@ -44,7 +44,7 @@ jobs:
 
       - name: install CDK
         run: |
-          cdk install -g aws-cdk
+          npm install -g aws-cdk
 
       - name: Build
         working-directory: 'iac/cdk'
