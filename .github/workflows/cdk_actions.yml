@@ -6,9 +6,11 @@ on:
     inputs:
       STACK:
         required: true
+        default: 'dev'
         description: "Name of stack that will be deployed or destroyed"
       DIRECTORY:
         required: true
+        default: 'ad-hoc'
         description: "Relative path the directory where CDK command will run"
 
 jobs:
@@ -60,4 +62,4 @@ jobs:
           ACM_CERTIFICATE_ARN: ${{ secrets.ACM_CERTIFICATE_ARN }}
           DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
         run: |
-          cdk deploy --app='./lib/ad-hoc/index.js' -e ${{ inputs.STACK }} --require-approval never
+          cdk deploy --app='./lib/${{ inputs.DIRECTORY }}/index.js' -e ${{ inputs.STACK }} --require-approval never
