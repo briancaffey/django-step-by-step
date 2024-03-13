@@ -21,7 +21,7 @@ const env = {
   region: process.env.CDK_DEFAULT_REGION,
 };
 
-const baseStack = new Stack(app, 'ExampleAdHocBaseStack', { stackName: adHocBaseEnvName, env });
+const baseStack = new Stack(app, adHocBaseEnvName, { stackName: adHocBaseEnvName, env });
 baseStack.node.setContext('config', adHocBaseEnvConfig);
 
 const appStack = new Stack(app, 'ExampleAdHocAppStack', { stackName: adHocAppEnvName, env });
