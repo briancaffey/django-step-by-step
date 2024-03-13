@@ -47,6 +47,10 @@ jobs:
         run: |
           yarn bundle
 
+      - name: install CDK
+        run: |
+          cdk install -g aws-cdk
+
       - name: CDK Action
         working-directory: 'iac/cdk'
         env:
