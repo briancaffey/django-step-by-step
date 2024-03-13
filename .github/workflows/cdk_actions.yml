@@ -52,8 +52,7 @@ jobs:
           ACM_CERTIFICATE_ARN: ${{ secrets.ACM_CERTIFICATE_ARN }}
           DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
         run: |
-          yarn run build
-          yarn run compile
+          tsc
 
       - name: CDK Action
         working-directory: 'iac/cdk'
