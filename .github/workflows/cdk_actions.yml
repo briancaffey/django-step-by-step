@@ -1,5 +1,5 @@
 name: '[CDK] CDK GitHub Action'
-run-name: '[CDK] Actions'
+run-name: '[CDK] ${{ inputs.CDK_OPERATION }} | stack: ${{ inputs.STACK }} | app: ${{ inputs.DIRECTORY }}'
 
 on:
   workflow_dispatch:
@@ -20,6 +20,13 @@ on:
           - 'ad-hoc'
           - 'prod'
         description: "Relative path the directory where CDK command will run"
+      CDK_OPERATION:
+        required: true
+        default: 'deploy'
+        type: choice
+        options:
+          - 'deploy'
+          - 'destroy'
 
 jobs:
   cdk:
