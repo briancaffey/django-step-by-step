@@ -49,7 +49,7 @@ jobs:
       - name: Build
         working-directory: 'iac/cdk'
         run: |
-          yarn bundle
+          yarn package
 
       - name: CDK Action
         working-directory: 'iac/cdk'
