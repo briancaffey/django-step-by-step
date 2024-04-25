@@ -39,3 +39,18 @@ jobs:
           VERSION: ${{ inputs.VERSION }}
           ECR_REPO: backend
           CONTAINER_NAME: update
+
+  update:
+    name: Update
+    permissions:
+      id-token: write
+      contents: read
+    strategy:
+      matrix:
+        service-name: [gunicorn, default-worker]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update the services
+        uses: ./packages/ecr
+        with:
+
