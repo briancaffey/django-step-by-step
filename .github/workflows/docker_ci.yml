@@ -45,6 +45,7 @@ jobs:
           package-type: 'container'
           min-versions-to-keep: 3
           num-old-versions-to-delete: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
 
   # lint-backend-code:
   #   name: Lint and test backend python code
