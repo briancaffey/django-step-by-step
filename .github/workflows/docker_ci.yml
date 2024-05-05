@@ -40,7 +40,7 @@ jobs:
           push: true
           context: "{{defaultContext}}:backend"
           file: ./Dockerfile
-          tags: v9.9.9
+          tags: ghcr.io/${{ github.repository }}/backend:v9.9.9
 
   # lint-backend-code:
   #   name: Lint and test backend python code
