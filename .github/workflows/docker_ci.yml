@@ -28,12 +28,16 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: check files
+        run: |
+          ls
+
       - name: Build and push
         uses: docker/build-push-action@v5
         with:
           push: true
-          file: ./Dockerfile
           context: ./backend/
+          file: ./Dockerfile
           tags: user/app:latest
 
   # lint-backend-code:
