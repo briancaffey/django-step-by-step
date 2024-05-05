@@ -34,7 +34,7 @@ jobs:
           # https://github.com/docker/build-push-action?tab=readme-ov-file#git-context
           context: "{{defaultContext}}:backend"
           file: ./Dockerfile
-          tags: ghcr.io/${{ github.repository }}/backend:v9.9.10
+          tags: ghcr.io/${{ github.repository }}/backend:v9.9.11
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
