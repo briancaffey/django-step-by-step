@@ -34,14 +34,14 @@ jobs:
           # https://github.com/docker/build-push-action?tab=readme-ov-file#git-context
           context: "{{defaultContext}}:backend"
           file: ./Dockerfile
-          tags: ghcr.io/${{ github.repository }}/backend:v9.9.12
+          tags: ghcr.io/${{ github.repository }}/backend:v9.9.13
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
       - uses: actions/delete-package-versions@v5
         with:
           # TODO: Confirm the package name needed
-          package-name: ghcr.io/${{ github.repository}}/backend
+          package-name: ${{ github.repository}}/backend
           package-type: 'container'
           min-versions-to-keep: 3
           num-old-versions-to-delete: 1
