@@ -29,6 +29,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           push: true
+          context: backend
           tags: user/app:latest
 
   # lint-backend-code:
