@@ -34,11 +34,13 @@ jobs:
 
       - name: Build and push
         uses: docker/build-push-action@v5
+        env:
+          DOCKER_BUILDKIT: 1
         with:
           push: true
           context: "{{defaultContext}}:backend"
           file: ./Dockerfile
-          tags: user/app:latest
+          tags: v9.9.9
 
   # lint-backend-code:
   #   name: Lint and test backend python code
