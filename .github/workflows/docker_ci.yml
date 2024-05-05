@@ -15,6 +15,9 @@ jobs:
 
     steps:
 
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -30,7 +33,7 @@ jobs:
         with:
           push: true
           file: Dockerfile
-          context: ./backend
+          context: ./backend/
           tags: user/app:latest
 
   # lint-backend-code:
