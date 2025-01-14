@@ -100,6 +100,12 @@ const linksList = [
     link: '/posts',
   },
   {
+    title: 'Chat',
+    caption: 'Chat with an AI bot',
+    icon: 'chat',
+    link: '/chat',
+  },
+  {
     title: 'User Profile',
     caption: 'Your μblog profile',
     icon: 'person',
