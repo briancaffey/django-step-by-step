@@ -98,11 +98,12 @@ def send_message(request, session_id):
     messages = [ChatMessage(role=message.role, content=message.content) for message in messages]
 
     # use LlamaIndex to make a request to openAI using the message history
-    resp = llm.chat(messages)
+    # resp = llm.chat(messages)
 
-    print(resp)
+    # print(resp)
 
-    response_message = resp.choices[0].text.strip()
+    # response_message = resp.choices[0].text.strip()
+    response_message = "THIS IS A TEST"
 
     print(response_message)
 

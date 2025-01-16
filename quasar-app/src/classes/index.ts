@@ -29,7 +29,8 @@ import {
   TokenResponse,
   // chat
   Message,
-  ChatResponse,
+  Messages,
+  // ChatResponse,
   SendMessageResponse
 } from '../types'
 
@@ -172,12 +173,15 @@ export default class ApiService {
   }
 
   // chat
-  async sendNewMessage(chatId: string, content: string): Promise<[Error | null, Message | null]> {
+  async sendNewMessage(chatId: number, content: string): Promise<[Error | null, Message | null]> {
+    console.log('Making API call...')
     try {
       const { data } = await api.post<SendMessageResponse>(`/api/chat/sessions/${chatId}/messages/send/`, {
         content,
       });
-      return [null, data.message];
+      console.log('Response data is ....');
+      console.log(data);
+      return [null, data];
     } catch (error: any) {
       console.error('Error sending message:', error);
       return [error, null];
@@ -186,13 +190,13 @@ export default class ApiService {
 
 
   // API functions
-  async fetchMessages(chatId: string): Promise<[Error | null, Message[] | null]> {
+  async fetchMessages(chatId: number): Promise<[Error | null, Messages | null]> {
     // TODO: make sure that the JWT is saved as an Http only cookie before making this request
     // This is failing when doing a hard refresh on the chat page
     await this.refreshToken();
     try {
-      const { data } = await api.get<ChatResponse>(`/api/chat/sessions/${chatId}/messages/`);
-      return [null, data.messages];
+      const { data } = await api.get<Messages>(`/api/chat/sessions/${chatId.toString()}/messages/`);
+      return [null, data];
     } catch (error: any) {
       console.error('Error fetching messages:', error);
       return [error, null];

@@ -1,33 +1,24 @@
 <template>
   <q-page padding>
     <div class="chat-container">
-      <!-- Messages display area -->
-      <!-- <q-card class="messages-container" ref="messagesContainer">
-        <div v-for="message in messages" :key="message.id" class="message">
-          {{ message.content }}
-        </div>
-      </q-card> -->
 
-      <div v-for="(message, i) in messages" :key="i">
-
-        <q-chat-message :text="[message.content]" :sent="!!message.sender_id" ref="messagesContainer">
-        </q-chat-message>
+      <div v-for="(message, i) in messages.messages" :key="i">
+        <q-chat-message :text="[message.content]" :sent="message.role == 'user'" ref="messagesContainer">
+        </q-chat-message> {{ message }}
       </div>
 
-
-      <!-- Input area -->
       <q-input
         v-model="messageText"
         filled
         autogrow
-        @keyup.enter="sendMessage"
+        @keyup.enter="sendMessageFunction"
       >
         <template v-slot:after>
           <q-btn
             color="purple"
             label="Send"
             :disable="!messageText.trim()"
-            @click="sendMessage"
+            @click="sendMessageFunction"
           />
         </template>
       </q-input>
@@ -41,25 +32,40 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/no-floating-promises */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 
-
-
-import { defineComponent, ref, onMounted, watch, computed, nextTick } from 'vue';
+import { defineComponent, ref, onMounted, computed, nextTick, watch } from 'vue';
 import { useRoute } from 'vue-router';
 // import { sendNewMessage } from
 import { Message, ChatResponse } from 'src/types';
 import { apiService } from 'src/classes';
+
+// import module
+import { useMessages } from '../../modules/chat';
+//
+
 export default defineComponent({
   name: 'ChatComponent',
 
   setup() {
+    const {
+      messageText,
+      messages,
+      loadingMessages,
+      errorLoadingMessages,
+      getMessages,
+      sendMessage,
+    } = useMessages();
+
+    // router
     const route = useRoute();
-    const messageText = ref('');
-    const messages = ref<Message[]>([]);
+    // const chatId = route.params.chatId as string;
+
     const messagesContainer = ref<HTMLElement | null>(null);
 
     // Get chat ID from URL parameter
     const chatId = computed(() => route.params.chatId as string);
+    console.log('chatId', chatId.value);
 
     // Function to scroll to bottom of messages
     const scrollToBottom = () => {
@@ -70,11 +76,12 @@ export default defineComponent({
 
     // Load initial messages
     onMounted(async () => {
-      const [error, fetchedMessages] = await apiService.fetchMessages(chatId.value);
+      const [error, fetchedMessages] = await apiService.fetchMessages(Number(chatId.value));
       if (fetchedMessages) {
         messages.value = fetchedMessages;
         nextTick(scrollToBottom);
       }
+      nextTick(scrollToBottom);
     });
 
     // Watch messages for changes and scroll to bottom
@@ -83,13 +90,17 @@ export default defineComponent({
     });
 
     // Handle sending message
-    const sendMessage = async () => {
+    const sendMessageFunction = async () => {
+      console.log('Sending a new message');
       if (!messageText.value.trim()) return;
+      console.log('Message text is valid');
+      messages.value.messages.push({content: messageText.value, id: -1, timestamp: '123', role: 'user'})
 
-      const [error, newMessage] = await apiService.sendNewMessage(chatId.value, messageText.value);
+      const [error, newMessage] = await apiService.sendNewMessage(Number(chatId.value), messageText.value);
 
       if (newMessage) {
-        messages.value.push(newMessage);
+        console.log(newMessage);
+        messages.value.messages.push(newMessage);
         messageText.value = ''; // Clear input after successful send
       }
     };
@@ -99,6 +110,8 @@ export default defineComponent({
       messages,
       sendMessage,
       messagesContainer,
+      chatId,
+      sendMessageFunction
     };
   },
 });

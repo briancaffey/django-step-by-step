@@ -88,7 +88,12 @@ export interface Message {
   id: number;
   content: string;
   timestamp: string;
-  sender_id: number;
+  role: string;
+}
+
+export interface Messages {
+  messages: Message[];
+  session_id: number;
 }
 
 export interface ChatResponse {
@@ -96,5 +101,8 @@ export interface ChatResponse {
 }
 
 export interface SendMessageResponse {
-  message: Message;
+  id: number;
+  content: string;
+  timestamp: string;
+  role: string;
 }
