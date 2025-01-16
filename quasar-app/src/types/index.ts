@@ -84,3 +84,17 @@ export type EmailAdminType = { message: string };
 
 export type EmailAdminResponse = [null, EmailAdminType] | [Error];
 
+export interface Message {
+  id: number;
+  content: string;
+  timestamp: string;
+  sender_id: number;
+}
+
+export interface ChatResponse {
+  messages: Message[];
+}
+
+export interface SendMessageResponse {
+  message: Message;
+}

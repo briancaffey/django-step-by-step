@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "apps.accounts",
     "apps.core",
     "apps.blog",
+    "apps.chat",
 ]
 
 MIDDLEWARE = [
