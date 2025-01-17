@@ -6,6 +6,8 @@ Views for:
 - sending a new message to a ChatSession (the user needs to be logged in and the user can only send messages to a ChatSession that is owned by the same user)
 """
 
+import os
+
 from llama_index.llms.openai import OpenAI
 from llama_index.core.llms import ChatMessage
 from rest_framework.decorators import api_view, permission_classes
@@ -97,15 +99,17 @@ def send_message(request, session_id):
     # format messages using LlamaIndex `ChatMessage` class
     messages = [ChatMessage(role=message.role, content=message.content) for message in messages]
 
-    # use LlamaIndex to make a request to openAI using the message history
-    # resp = llm.chat(messages)
+    if os.environ.get("OPENAI_API_KEY", None):
 
-    # print(resp)
+        # use LlamaIndex to make a request to openAI using the message history
+        resp = llm.chat(messages)
 
-    # response_message = resp.choices[0].text.strip()
-    response_message = "THIS IS A TEST"
+        print(resp)
 
-    print(response_message)
+        response_message = resp.choices[0].text.strip()
+    else:
+
+        response_message = f"This is a mocked response for user query ({content})"
 
     # create a new Message object in the database with the response_message
     message = Message.objects.create(
