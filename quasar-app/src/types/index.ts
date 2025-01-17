@@ -106,3 +106,8 @@ export interface SendMessageResponse {
   timestamp: string;
   role: string;
 }
+
+export interface Session {
+  session_id: number;
+  created_at: string;
+}

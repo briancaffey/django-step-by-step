@@ -268,3 +268,7 @@ sentry_sdk.init(
     # django.contrib.auth) you may enable sending PII data.
     send_default_pii=True,
 )
+
+if os.environ.get("OPENAI_API_KEY", None):
+    print(os.environ.get("OPENAI_API_KEY", None))
+    print("======= API KEY FOUND ========")

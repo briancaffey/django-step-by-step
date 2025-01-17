@@ -87,7 +87,7 @@ services:
       - POSTGRES_SERVICE_HOST=postgres
       - REDIS_SERVICE_HOST=redis
       - DJANGO_SETTINGS_MODULE=backend.settings.development
-      - OPENAI_API_KEY
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
 
       # celery beat
       - PIDFILE=/code/celerybeat.pid

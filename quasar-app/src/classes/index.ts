@@ -4,7 +4,8 @@
  *
  * Reference article: https://dev.to/blindkai/managing-api-layers-in-vue-js-with-typescript-hno
  */
-
+// @typescript-eslint/no-unsafe-assignment
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { api } from 'boot/axios';
 
 import {
@@ -30,6 +31,7 @@ import {
   // chat
   Message,
   Messages,
+  Session,
   // ChatResponse,
   SendMessageResponse
 } from '../types'
@@ -199,6 +201,30 @@ export default class ApiService {
       return [null, data];
     } catch (error: any) {
       console.error('Error fetching messages:', error);
+      return [error, null];
+    }
+  };
+
+  // function for getting sessions
+  async fetchSessions(): Promise<[Error | null, Session[] | null]> {
+    await this.refreshToken();
+    try {
+      const { data } = await api.get<Session[]>('/api/chat/get-sessions/');
+      return [null, data];
+    } catch (error: any) {
+      console.error('Error fetching sessions:', error);
+      return [error, null];
+    }
+  };
+
+  // function for creating a new session
+  async createSession(): Promise<[Error | null, any | null]> {
+    await this.refreshToken();
+    try {
+      const { data } = await api.post<any>('/api/chat/sessions/');
+      return [null, data];
+    } catch (error: any) {
+      console.error('Error creating session:', error);
       return [error, null];
     }
   };

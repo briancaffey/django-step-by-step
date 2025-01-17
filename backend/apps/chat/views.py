@@ -100,6 +100,7 @@ def send_message(request, session_id):
     messages = [ChatMessage(role=message.role, content=message.content) for message in messages]
 
     if os.environ.get("OPENAI_API_KEY", None):
+        print("======= API KEY FOUND ========")
 
         # use LlamaIndex to make a request to openAI using the message history
         resp = llm.chat(messages)
@@ -124,3 +125,22 @@ def send_message(request, session_id):
         'content': message.content,
         'timestamp': message.timestamp
     }, status=status.HTTP_201_CREATED)
+
+# write a function using DRF called get_chat_sessions that gets the sessions for the current user
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_chat_sessions(request):
+    """
+    Retrieve all chat sessions for the current user.
+    """
+    chat_sessions = ChatSession.objects.filter(user=request.user)
+    response_data = [
+        {
+            'session_id': session.id,
+            'created_at': session.created_at
+        } for session in chat_sessions
+    ]
+
+    return Response({
+        'sessions': response_data
+    }, status=status.HTTP_200_OK)

@@ -4,7 +4,7 @@
 
       <div v-for="(message, i) in messages.messages" :key="i">
         <q-chat-message :text="[message.content]" :sent="message.role == 'user'" ref="messagesContainer">
-        </q-chat-message> {{ message }}
+        </q-chat-message>
       </div>
 
       <q-input

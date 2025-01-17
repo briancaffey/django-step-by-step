@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import { apiService } from '../classes';
 
-import { Messages } from '../types';
+import { Messages, Session } from '../types';
 
 export function useMessages() {
 
@@ -9,6 +9,10 @@ export function useMessages() {
   const messages = ref<Messages>({ messages: [], session_id: 0 });
   // for the input field
   const messageText = ref('');
+
+  // sessions
+  const sessions = ref<Session[]>([]);
+
   // loading state
   const loadingMessages = ref(false);
   const errorLoadingMessages = ref(false);
@@ -46,6 +50,19 @@ export function useMessages() {
     }
   };
 
+  const getSessions = async (): Promise<void> => {
+    const [error, data] = await apiService.fetchSessions();
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    if (data) {
+      sessions.value = data;
+    }
+  };
+
   return {
     messageText,
     messages,
@@ -53,5 +70,7 @@ export function useMessages() {
     errorLoadingMessages,
     getMessages,
     sendMessage,
+    sessions,
+    getSessions,
   };
 }

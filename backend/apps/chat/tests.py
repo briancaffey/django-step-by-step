@@ -97,3 +97,20 @@ def test_get_messages_from_unauthorized_session(authenticated_client):
 
     response = authenticated_client.get(f"/api/chat/sessions/{chat_session.id}/messages/")
     assert response.status_code == status.HTTP_404_NOT_FOUND
+
+# write a test for the get_chat_messages function using pytest
+
+def test_chat_sessions(authenticated_client):
+    """
+    Test retrieving all chat sessions for the current user.
+    """
+    response = authenticated_client.get("/api/chat/get-sessions/")
+    assert response.status_code == status.HTTP_200_OK
+    assert "sessions" in response.data
+
+    # Verify ChatSession objects
+    chat_sessions = ChatSession.objects.filter(user=authenticated_client.user)
+    assert len(response.data["sessions"]) == chat_sessions.count()
+    for i, session in enumerate(chat_sessions):
+        assert response.data["sessions"][i]["session_id"] == session.id
+        assert response.data["sessions"][i]["created_at"] == session.created_at
