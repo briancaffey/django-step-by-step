@@ -16,6 +16,7 @@ from rest_framework import status
 from apps.accounts.serializers import (
     CustomUserSerializer,
     CustomUserRegistrationSerializer,
+    UserUpdateSerializer
 )
 from apps.accounts.tokens import account_activation_token
 
@@ -34,6 +35,17 @@ def get_user(request, pk):
     serializer = CustomUserSerializer(user)
 
     return Response(serializer.data)
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def update_user_details(request):
+    user = request.user
+    serializer = UserUpdateSerializer(user, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(["GET"])

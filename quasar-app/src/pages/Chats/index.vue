@@ -44,7 +44,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-call */
 /* eslint-disable @typescript-eslint/no-floating-promises */
 
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, onMounted } from 'vue';
 import { useMessages } from '../../modules/chat';
 import { apiService } from 'src/classes';
 import { useRouter } from 'vue-router';

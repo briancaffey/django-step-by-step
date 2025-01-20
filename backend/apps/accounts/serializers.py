@@ -7,11 +7,16 @@ from apps.accounts.tasks import send_confirmation_email
 
 User = get_user_model()
 
+class UserUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name']
+
 
 class CustomUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("email", "id")
+        fields = ("email", "id", "first_name", "last_name")
 
 
 class CustomUserRegistrationSerializer(serializers.ModelSerializer):
