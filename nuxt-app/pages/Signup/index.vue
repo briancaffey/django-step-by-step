@@ -5,18 +5,24 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { useAuthStore } from '@/stores/authStore'
 import { useProfile } from '@/composables/useProfile';
-import { useRouter } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router';
+import { useToast } from '@/components/ui/toast/use-toast'
+import { Toaster } from '@/components/ui/toast'
 
+const route = useRouter();
+const isActive = (path) => route.path === path
 const authStore = useAuthStore()
 const router = useRouter()
+const toast = useToast();
 
-const {fetchProfile } = useProfile();
+// const {fetchProfile } = useProfile();
 
 // Function to handle login
-const login = async () => {
+const signUp = async () => {
+  console.log('signing up')
   try {
     // this API call will set HttpOnly cookie with the access and refresh JWT tokens on the client
-    const response = await $fetch('http://localhost/api/auth/jwt/token/', {
+    const response = await $fetch('http://localhost/api/register/', {
       method: 'POST',
       body: {
         email: authStore.email,
@@ -24,10 +30,11 @@ const login = async () => {
       }
     });
 
-    // fetch the user profile data
-    authStore.setAuthenticated(true)
-    await fetchProfile();
+    toast({
+      description: 'Please click the link in the verification email we sent.',
+    });
     router.push('/') // Redirect to a dashboard or other page
+
 
   } catch (error) {
     console.log(error);
@@ -37,11 +44,12 @@ const login = async () => {
 </script>
 
 <template>
+  <Toaster />
   <div class="flex items-center justify-center">
     <Card class="w-full max-w-sm">
       <CardHeader>
-        <CardTitle class="text-2xl">Login</CardTitle>
-        <CardDescription>Enter your email below to login to your account.</CardDescription>
+        <CardTitle class="text-2xl">Sign Up</CardTitle>
+        <CardDescription>Enter your email below to sign up for a new account.</CardDescription>
       </CardHeader>
       <CardContent class="grid gap-4">
         <div class="grid gap-2">
@@ -65,15 +73,16 @@ const login = async () => {
         </div>
       </CardContent>
       <CardFooter>
-        <Button class="w-full" @click="login">Sign in</Button>
+        <Button class="w-full" @click="signUp">Sign up</Button>
       </CardFooter>
       <CardFooter>
+
         <NuxtLink
-          key="Sign Up"
-          to="/signup"
+          key="Login"
+          to="/login"
           class="text-sm font-medium transition"
           >
-          Sign up for a new account
+          Login to an existing account
         </NuxtLink>
       </CardFooter>
     </Card>

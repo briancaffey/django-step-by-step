@@ -3,8 +3,8 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: { enabled: true },
   colorMode: {
-    preference: 'dark',
-    fallback: 'dark'
+    preference: 'light',
+    fallback: 'light'
   },
   devServer: {
     port: 8081,
@@ -26,6 +26,6 @@ export default defineNuxtConfig({
      * Directory that the component lives in.
      * @default "./components/ui"
      */
-    componentDir: './components/ui'
+    componentDir: '@/components/ui'
   }
 })

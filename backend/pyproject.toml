@@ -51,6 +51,7 @@ sentry-sdk = "^1.5.1" # 2.19.2 !
 
 # flower
 flower = "^1.0" # 2.0.0 !
+llama-index-llms-nvidia = "^0.3.1"
 
 [tool.poetry.dev-dependencies]
 

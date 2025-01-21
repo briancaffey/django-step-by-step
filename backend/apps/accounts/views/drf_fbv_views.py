@@ -110,4 +110,9 @@ def verify_email(request, uidb64, token):
         user.is_active = True
         user.save()
 
-    return Response(status=status.HTTP_200_OK)
+    # set cookies for access and refresh tokens here
+    response = Response({"message": "Email verified"})
+
+    return response
+
+    # return Response(status=status.HTTP_200_OK)

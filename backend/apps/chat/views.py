@@ -9,6 +9,7 @@ Views for:
 import os
 
 from llama_index.llms.openai import OpenAI
+from llama_index.llms.nvidia import NVIDIA
 from llama_index.core.llms import ChatMessage
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -18,10 +19,6 @@ from .models import ChatSession, Message
 
 # from django.contrib.auth.models import User
 
-# LlamaIndex OpenAI
-llm = OpenAI(
-    model="gpt-4o-mini",
-)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -100,16 +97,24 @@ def send_message(request, session_id):
     messages = [ChatMessage(role=message.role, content=message.content) for message in messages]
 
     if os.environ.get("OPENAI_API_KEY", None):
-        print("======= API KEY FOUND ========")
+        print("Using OpenAI")
+
+        # LlamaIndex OpenAI
+        llm = OpenAI(
+            model="gpt-4o-mini",
+        )
+
+    elif os.environ.get("NVIDIA_API_KEY").startswith("nvapi-"):
+        print("Using NVIDIA")
+        llm = NVIDIA(model="meta/llama-3.3-70b-instruct")
 
         # use LlamaIndex to make a request to openAI using the message history
         resp = llm.chat(messages)
 
         print(resp)
 
-        response_message = resp.choices[0].text.strip()
+        response_message = resp.message.content
     else:
-
         response_message = f"This is a mocked response for user query ({content})"
 
     # create a new Message object in the database with the response_message

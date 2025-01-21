@@ -4,12 +4,15 @@ JWT tokens in HttpOnly cookies.
 """
 
 
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import (
     api_view,
     permission_classes,
 )
+from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+# from rest_framework
 from rest_framework_simplejwt.views import (
     TokenRefreshView,
     TokenObtainPairView,
@@ -31,6 +34,18 @@ class CookieTokenRefreshSerializer(TokenRefreshSerializer):
 
 class CookieTokenObtainPairView(TokenObtainPairView):
     def finalize_response(self, request, response, *args, **kwargs):
+        if response.data.get("access"):
+            # Set access token in HttpOnly cookie
+            response.set_cookie(
+                "access",
+                response.data["access"],
+                max_age=3600,  # 1 hour expiration
+                httponly=True,
+                samesite="None",
+                secure=True,
+            )
+            del response.data["access"]  # Remove token from response body
+
         if response.data.get("refresh"):
             cookie_max_age = 3600 * 24 * 14  # 14 days
             # https://docs.djangoproject.com/en/3.2/ref/request-response/#django.http.HttpResponse.set_cookie
@@ -48,6 +63,18 @@ class CookieTokenObtainPairView(TokenObtainPairView):
 
 class CookieTokenRefreshView(TokenRefreshView):
     def finalize_response(self, request, response, *args, **kwargs):
+
+        if response.data.get("access"):
+            response.set_cookie(
+                "access",
+                response.data["access"],
+                max_age=3600,  # 1 hour expiration
+                httponly=True,
+                samesite="None",
+                secure=True,
+            )
+            del response.data["access"]
+
         if response.data.get("refresh"):
             cookie_max_age = 3600 * 24 * 14  # 14 days
             response.set_cookie(
@@ -65,12 +92,14 @@ class CookieTokenRefreshView(TokenRefreshView):
 
 
 @api_view(["POST"])
-@permission_classes([IsAuthenticated])
+# @permission_classes([IsAuthenticated])
+@csrf_exempt
 def logout(request):
     """
-    This view is called from the frontend to remove the refresh token
+    This view is called from the frontend to remove the access and refresh token
     This effectively logs out the user
     """
     response = Response({"message": "logout successful"})
     response.delete_cookie("refresh_token")
+    response.delete_cookie("access")
     return response
