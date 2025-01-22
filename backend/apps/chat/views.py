@@ -20,30 +20,32 @@ from .models import ChatSession, Message
 # from django.contrib.auth.models import User
 
 
-@api_view(['POST'])
+@api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def create_chat_session(request):
     """
     Create a new ChatSession. Sets a system prompt.
     """
-    system_prompt = request.data.get('system_prompt', 'Default system prompt.')
+    system_prompt = request.data.get("system_prompt", "Default system prompt.")
 
     # Create the chat session
     chat_session = ChatSession.objects.create(user=request.user)
 
     # Save the initial system message
     Message.objects.create(
-        chat_session=chat_session,
-        role='assistant',
-        content=system_prompt
+        chat_session=chat_session, role="assistant", content=system_prompt
     )
 
-    return Response({
-        'message': 'Chat session created successfully.',
-        'session_id': chat_session.id,
-    }, status=status.HTTP_201_CREATED)
+    return Response(
+        {
+            "message": "Chat session created successfully.",
+            "session_id": chat_session.id,
+        },
+        status=status.HTTP_201_CREATED,
+    )
 
-@api_view(['GET'])
+
+@api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_chat_messages(request, session_id):
     """
@@ -52,23 +54,28 @@ def get_chat_messages(request, session_id):
     try:
         chat_session = ChatSession.objects.get(id=session_id, user=request.user)
     except ChatSession.DoesNotExist:
-        return Response({'error': 'Chat session not found or not owned by user.'}, status=status.HTTP_404_NOT_FOUND)
+        return Response(
+            {"error": "Chat session not found or not owned by user."},
+            status=status.HTTP_404_NOT_FOUND,
+        )
 
-    messages = chat_session.messages.all().order_by('timestamp')
+    messages = chat_session.messages.all().order_by("timestamp")
     response_data = [
         {
-            'role': message.role,
-            'content': message.content,
-            'timestamp': message.timestamp
-        } for message in messages
+            "role": message.role,
+            "content": message.content,
+            "timestamp": message.timestamp,
+        }
+        for message in messages
     ]
 
-    return Response({
-        'session_id': chat_session.id,
-        'messages': response_data
-    }, status=status.HTTP_200_OK)
+    return Response(
+        {"session_id": chat_session.id, "messages": response_data},
+        status=status.HTTP_200_OK,
+    )
 
-@api_view(['POST'])
+
+@api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def send_message(request, session_id):
     """
@@ -78,23 +85,29 @@ def send_message(request, session_id):
     try:
         chat_session = ChatSession.objects.get(id=session_id, user=request.user)
     except ChatSession.DoesNotExist:
-        return Response({'error': 'Chat session not found or not owned by user.'}, status=status.HTTP_404_NOT_FOUND)
+        return Response(
+            {"error": "Chat session not found or not owned by user."},
+            status=status.HTTP_404_NOT_FOUND,
+        )
 
-    content = request.data.get('content')
+    content = request.data.get("content")
     if not content:
-        return Response({'error': 'Message content is required.'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(
+            {"error": "Message content is required."},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
 
     message = Message.objects.create(
-        chat_session=chat_session,
-        role='user',
-        content=content
+        chat_session=chat_session, role="user", content=content
     )
 
     # get all messages for the chat session
-    messages = chat_session.messages.all().order_by('timestamp')
+    messages = chat_session.messages.all().order_by("timestamp")
 
     # format messages using LlamaIndex `ChatMessage` class
-    messages = [ChatMessage(role=message.role, content=message.content) for message in messages]
+    messages = [
+        ChatMessage(role=message.role, content=message.content) for message in messages
+    ]
 
     if os.environ.get("OPENAI_API_KEY", None):
         print("Using OpenAI")
@@ -119,20 +132,22 @@ def send_message(request, session_id):
 
     # create a new Message object in the database with the response_message
     message = Message.objects.create(
-        chat_session=chat_session,
-        role='assistant',
-        content=response_message
+        chat_session=chat_session, role="assistant", content=response_message
     )
 
-    return Response({
-        'message': 'Message sent successfully.',
-        'message_id': message.id,
-        'content': message.content,
-        'timestamp': message.timestamp
-    }, status=status.HTTP_201_CREATED)
+    return Response(
+        {
+            "message": "Message sent successfully.",
+            "message_id": message.id,
+            "content": message.content,
+            "timestamp": message.timestamp,
+        },
+        status=status.HTTP_201_CREATED,
+    )
+
 
 # write a function using DRF called get_chat_sessions that gets the sessions for the current user
-@api_view(['GET'])
+@api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_chat_sessions(request):
     """
@@ -140,12 +155,8 @@ def get_chat_sessions(request):
     """
     chat_sessions = ChatSession.objects.filter(user=request.user)
     response_data = [
-        {
-            'session_id': session.id,
-            'created_at': session.created_at
-        } for session in chat_sessions
+        {"session_id": session.id, "created_at": session.created_at}
+        for session in chat_sessions
     ]
 
-    return Response({
-        'sessions': response_data
-    }, status=status.HTTP_200_OK)
+    return Response({"sessions": response_data}, status=status.HTTP_200_OK)

@@ -7,12 +7,13 @@ from apps.accounts.tasks import send_confirmation_email
 
 User = get_user_model()
 
+
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name']
+        fields = ["first_name", "last_name"]
         # readonly fields should include setup_profile_complete
-        read_only_fields = ['profile_setup_complete']
+        read_only_fields = ["profile_setup_complete"]
 
 
 class CustomUserSerializer(serializers.ModelSerializer):

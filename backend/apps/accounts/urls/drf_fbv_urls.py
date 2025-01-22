@@ -6,7 +6,7 @@ from apps.accounts.views.drf_fbv_views import (
     get_profile,
     register,
     verify_email,
-    update_user_details
+    update_user_details,
 )
 
 urlpatterns = [
@@ -20,5 +20,5 @@ urlpatterns = [
     path("users/", get_users, name="drf-fbv-get-users"),
     # user profile
     path("profile/", get_profile, name="drf-fbv-get-profile"),
-    path('update-user/', update_user_details, name='update-user-details'),
+    path("update-user/", update_user_details, name="update-user-details"),
 ]

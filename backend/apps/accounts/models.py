@@ -11,12 +11,8 @@ class CustomUser(AbstractUser):
     email = models.EmailField(
         _("email address"), unique=True, validators=[validate_email]
     )
-    first_name = models.CharField(
-        _("first name"), max_length=30, blank=True, null=True
-    )
-    last_name = models.CharField(
-        _("last name"), max_length=30, blank=True, null=True
-    )
+    first_name = models.CharField(_("first name"), max_length=30, blank=True, null=True)
+    last_name = models.CharField(_("last name"), max_length=30, blank=True, null=True)
     profile_setup_complete = models.BooleanField(
         _("profile setup complete"), default=False
     )
