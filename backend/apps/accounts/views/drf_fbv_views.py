@@ -127,19 +127,26 @@ def verify_email(request, uidb64, token):
     refresh_token = str(refresh)
 
     # set cookies for access and refresh tokens here
-    response = Response({
-        "message": "Email verified successfully",
-        "user": {
-            "email": user.email,
-            "id": user.id
+    response = Response(
+        {
+            "message": "Email verified successfully",
+            "user": {"email": user.email, "id": user.id},
         }
-    })
+    )
 
     # Calculate expiry for cookies
-    access_token_expiry = datetime.now(timezone.utc) + settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
-    refresh_token_expiry = datetime.now(timezone.utc) + settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME']
-    access_token_max_age = int(settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds())
-    refresh_token_max_age = int(settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds())
+    access_token_expiry = (
+        datetime.now(timezone.utc) + settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"]
+    )
+    refresh_token_expiry = (
+        datetime.now(timezone.utc) + settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"]
+    )
+    access_token_max_age = int(
+        settings.SIMPLE_JWT["ACCESS_TOKEN_LIFETIME"].total_seconds()
+    )
+    refresh_token_max_age = int(
+        settings.SIMPLE_JWT["REFRESH_TOKEN_LIFETIME"].total_seconds()
+    )
 
     # Set access token cookie
     response.set_cookie(
