@@ -3,7 +3,7 @@
     <!-- Navigation Bar -->
     <nav class="border-b">
       <div class="container mx-auto flex justify-between items-center py-4 px-6">
-        <h1 class="text-xl font-semibold">My Nuxt App</h1>
+        <h1 class="text-xl font-semibold">App</h1>
         <NavigationMenu class="flex space-x-4">
           <!-- <DarkMode /> -->
 

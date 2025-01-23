@@ -221,7 +221,8 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=500),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),  # Adjust as needed
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),    #
 }
 
 # GraphQL

@@ -1,3 +1,6 @@
+from datetime import datetime, timezone
+
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
@@ -12,6 +15,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from apps.accounts.serializers import (
     CustomUserSerializer,
@@ -19,6 +23,7 @@ from apps.accounts.serializers import (
     UserUpdateSerializer,
 )
 from apps.accounts.tokens import account_activation_token
+
 
 User = get_user_model()
 
@@ -94,9 +99,15 @@ def register(request):
 @authentication_classes([])
 def verify_email(request, uidb64, token):
     """
-    Function-based view for verifying new user's email
+    Function-based view for verifying new user's email and setting JWT tokens as HttpOnly cookies.
 
-    This view should be called by a POST request from a frontend application
+    Args:
+        request: The HTTP request object
+        uidb64: Base64 encoded user ID
+        token: Email verification token
+
+    Returns:
+        Response with HttpOnly cookies for access and refresh JWT tokens
     """
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
@@ -110,9 +121,43 @@ def verify_email(request, uidb64, token):
         user.is_active = True
         user.save()
 
+    # Generate tokens
+    refresh = RefreshToken.for_user(user)
+    access_token = str(refresh.access_token)
+    refresh_token = str(refresh)
+
     # set cookies for access and refresh tokens here
-    response = Response({"message": "Email verified"})
+    response = Response({
+        "message": "Email verified successfully",
+        "user": {
+            "email": user.email,
+            "id": user.id
+        }
+    })
+
+    # Calculate expiry for cookies
+    access_token_expiry = datetime.now(timezone.utc) + settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME']
+    refresh_token_expiry = datetime.now(timezone.utc) + settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME']
+    access_token_max_age = int(settings.SIMPLE_JWT['ACCESS_TOKEN_LIFETIME'].total_seconds())
+    refresh_token_max_age = int(settings.SIMPLE_JWT['REFRESH_TOKEN_LIFETIME'].total_seconds())
+
+    # Set access token cookie
+    response.set_cookie(
+        "access",  # Changed from access_token to match your naming
+        access_token,
+        max_age=access_token_max_age,
+        httponly=True,
+        samesite="None",
+        secure=True,
+    )
+
+    response.set_cookie(
+        "refresh_token",
+        refresh_token,
+        max_age=refresh_token_max_age,
+        httponly=True,
+        samesite="None",
+        secure=True,
+    )
 
     return response
-
-    # return Response(status=status.HTTP_200_OK)

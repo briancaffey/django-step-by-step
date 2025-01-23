@@ -13,7 +13,7 @@ const route = useRouter();
 const isActive = (path) => route.path === path
 const authStore = useAuthStore()
 const router = useRouter()
-const toast = useToast();
+const { toast } = useToast();
 
 // const {fetchProfile } = useProfile();
 
@@ -29,11 +29,21 @@ const signUp = async () => {
         password: authStore.password
       }
     });
+    console.log('request was successful')
+    console.log('preparing toast...')
 
+    // router.push('/') // Redirect to a dashboard or other page
+
+        // Wait for 1.5 seconds before navigating
+    setTimeout(() => {
+      router.push('/')
+    }, 1500);
     toast({
+      title: 'Activate your account',
       description: 'Please click the link in the verification email we sent.',
     });
-    router.push('/') // Redirect to a dashboard or other page
+    authStore.email = '';
+    authStore.password = '';
 
 
   } catch (error) {
