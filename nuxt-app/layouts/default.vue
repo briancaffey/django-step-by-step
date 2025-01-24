@@ -3,9 +3,58 @@
     <!-- Navigation Bar -->
     <nav class="border-b">
       <div class="container mx-auto flex justify-between items-center py-4 px-6">
-        <h1 class="text-xl font-semibold">App</h1>
-        <NavigationMenu class="flex space-x-4">
-          <!-- <DarkMode /> -->
+        <h1 class="text-xl font-semibold">
+          <NuxtLink
+            key="Home"
+            to="/"
+          >
+            App
+          </NuxtLink>
+        </h1>
+
+        <div>
+          <Button @click="toggleDark" variant="secondary" size="icon" class="rounded-full">
+            <Icon
+              :icon="colorMode.preference == 'dark' ? 'radix-icons:moon' : 'radix-icons:sun'"
+              class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
+            />
+            <!-- <Icon icon="radix-icons:sun" class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" /> -->
+          </Button>
+          <DropdownMenu v-if="getIsAuthenticated">
+            <DropdownMenuTrigger as-child>
+              <Button variant="secondary" size="icon" class="rounded-full">
+                <CircleUser class="h-5 w-5" />
+                <span class="sr-only">Toggle user menu</span>
+              </Button>
+            </DropdownMenuTrigger>
+
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuSeparator />
+            <NuxtLink
+              v-if="getIsAuthenticated"
+              key="Profile"
+              to="/profile"
+              class="text-sm font-medium transition"
+              :class="{ 'text-blue-600': isActive('/profile') }"
+              >
+              <DropdownMenuItem style="cursor:pointer">
+                Profile
+              </DropdownMenuItem>
+            </NuxtLink>
+            <div v-if="getIsAuthenticated">
+              <DropdownMenuSeparator />
+              <DropdownMenuItem @click="logout">
+                <NuxtLink>
+                  Logout
+                </NuxtLink>
+              </DropdownMenuItem>
+            </div>
+            </DropdownMenuContent>
+
+        </DropdownMenu>
+      </div>
+        <!-- <NavigationMenu class="flex space-x-4">
 
           <NuxtLink
             key="Home"
@@ -64,7 +113,7 @@
             </NuxtLink>
           </PopoverContent>
         </Popover>
-        </NavigationMenu>
+        </NavigationMenu> -->
       </div>
     </nav>
     <!-- Page Content -->
@@ -76,6 +125,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
+import { CircleUser, Menu, Package2, Search } from 'lucide-vue-next'
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -90,6 +140,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
+import { Icon } from '@iconify/vue'
 
 import { Button } from '@/components/ui/button'
 
@@ -119,4 +178,9 @@ const logout = async () => {
     console.error('Logout failed:', error);
   }
 };
+
+const colorMode = useColorMode()
+const toggleDark = () => {
+  colorMode.preference = colorMode.preference == 'dark' ? 'light' : 'dark';
+}
 </script>

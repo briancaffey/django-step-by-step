@@ -12,6 +12,9 @@ import {
   TableRow
 } from '@/components/ui/table';
 
+// import button component from shadcn
+import { Button } from '@/components/ui/button';
+
 // Use the composable to fetch chat sessions
 const chatStore = await useChatStore();
 const router = useRouter();
@@ -46,11 +49,15 @@ const goToChat = (sessionId: number) => {
 </script>
 
 <template>
-    <h1 class="text-2xl font-bold mb-6">Chat Sessions</h1>
+  <div class="container mx-auto p-4">
+    <div class="flex items-center justify-between mb-4">
+      <h1 class="text-2xl font-bold">Chat Sessions</h1>
+      <Button @click="chatStore.newSession" class="">New Chat Session</Button>
+    </div>
     <Table class="w-full border rounded-lg shadow-md">
-      <TableCaption class="text-gray-600">List of your chat sessions</TableCaption>
+      <TableCaption>List of your chat sessions</TableCaption>
 
-      <TableHeader class="bg-gray-100">
+      <TableHeader>
         <TableRow>
           <TableHead class="p-3 text-left font-semibold">Session ID</TableHead>
           <TableHead class="p-3 text-left font-semibold">Created At</TableHead>
@@ -62,14 +69,14 @@ const goToChat = (sessionId: number) => {
         <TableRow
           v-for="session in chatStore.sessions"
           :key="session.session_id"
-          class="hover:bg-gray-50 transition-all"
+          class="transition-all"
         >
           <TableCell class="p-3">{{ session.session_id }}</TableCell>
           <TableCell class="p-3">{{ new Date(session.created_at).toLocaleString() }}</TableCell>
           <TableCell class="p-3">
             <button
               @click="goToChat(session.session_id)"
-              class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all"
+              class="bg-blue-500 text-white px-4 py-2 rounded-lg transition-all"
             >
               View Chat {{ session.session_id }}
             </button>
@@ -79,12 +86,13 @@ const goToChat = (sessionId: number) => {
 
       <TableBody v-else>
         <TableRow>
-          <TableCell class="p-3 text-center text-gray-500" colspan="3">
+          <TableCell class="p-3 text-center" colspan="3">
             No chat sessions available.
           </TableCell>
         </TableRow>
       </TableBody>
     </Table>
+  </div>
 </template>
 
 <style scoped>

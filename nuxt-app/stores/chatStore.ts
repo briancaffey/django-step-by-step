@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import { useRouter } from 'vue-router';
 
 export interface Message {
   id: number;
@@ -35,7 +36,8 @@ export const useChatStore = defineStore('chat', {
     messageText: '',
     sessions: [] as Session[],
     loadingMessages: false,
-    errorLoadingMessages: false
+    errorLoadingMessages: false,
+    systemPrompt: 'You are a helpful assistant'
   }),
 
   actions: {
@@ -135,6 +137,22 @@ export const useChatStore = defineStore('chat', {
 
       if (data) {
         this.sessions = data;
+      }
+    },
+
+    async newSession(): Promise<void> {
+      const router = useRouter();
+      try {
+        const response = await $fetch<{ session_id: number, message: string }>(`/api/chat/sessions/`, {
+          method: 'POST',
+          body: { system_prompt: this.systemPrompt }
+        });
+
+        navigateTo({ path: `/chat/${response.session_id}`});
+
+        // this.sessions.push({ session_id: response.session_id, created_at: new Date().toISOString() });
+      } catch (error: any) {
+        console.error('Error creating new session:', error);
       }
     }
   }

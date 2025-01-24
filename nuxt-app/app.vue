@@ -14,9 +14,3 @@ const {fetchProfile } = useProfile();
 await fetchProfile();
 </script>
 
-<style>
-.dark-mode body {
-  background-color: #091a28;
-  color: #ebf4f1;
-}
-</style>

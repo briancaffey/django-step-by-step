@@ -5,8 +5,8 @@
         v-for="message in chatStore.messagesData.messages"
         :key="message.id"
         :class="{
-          'self-end bg-blue-100 max-w-1/2': message.role === 'user',
-          'self-start bg-gray-100 max-w-1/2': message.role !== 'user'
+          'self-end max-w-1/2': message.role === 'user',
+          'self-start max-w-1/2': message.role !== 'user'
         }"
         class="message p-3 rounded-lg break-words shadow-md"
       >
