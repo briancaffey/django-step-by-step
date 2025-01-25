@@ -13,14 +13,14 @@
         </h1>
 
         <div>
-          <Button @click="toggleDark" variant="secondary" size="icon" class="rounded-full">
+          <Button @click="toggleDark" variant="secondary" size="icon" class="rounded-full mx-4">
             <Icon
               :icon="colorMode.preference == 'dark' ? 'radix-icons:moon' : 'radix-icons:sun'"
               class="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0"
             />
             <!-- <Icon icon="radix-icons:sun" class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" /> -->
           </Button>
-          <DropdownMenu v-if="getIsAuthenticated">
+          <DropdownMenu>
             <DropdownMenuTrigger as-child>
               <Button variant="secondary" size="icon" class="rounded-full">
                 <CircleUser class="h-5 w-5" />
@@ -31,6 +31,17 @@
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>My Account</DropdownMenuLabel>
               <DropdownMenuSeparator />
+              <NuxtLink
+                v-if="getIsAuthenticated && isProfileComplete"
+                key="Chat"
+                to="/chat"
+                class="text-sm font-medium transition"
+                :class="{ 'text-blue-600': isActive('/chat') }"
+              >
+                <DropdownMenuItem style="cursor:pointer">
+                  Chat
+                </DropdownMenuItem>
+              </NuxtLink>
             <NuxtLink
               v-if="getIsAuthenticated"
               key="Profile"
@@ -50,60 +61,36 @@
                 </NuxtLink>
               </DropdownMenuItem>
             </div>
-            </DropdownMenuContent>
+            <div v-else>
 
+              <NuxtLink
+              v-if="!getIsAuthenticated"
+              key="Login"
+              to="/login"
+              class="text-sm font-medium transition"
+              :class="{ 'text-blue-600': isActive('/login') }"
+              >
+              <DropdownMenuItem>
+                Login
+              </DropdownMenuItem>
+            </NuxtLink>
+
+            <NuxtLink
+              v-if="!getIsAuthenticated"
+              key="Sign Up"
+              to="/signup"
+              class="text-sm font-medium transition"
+              :class="{ 'text-blue-600': isActive('/signup') }"
+              >
+              <DropdownMenuItem>
+                Sign Up
+              </DropdownMenuItem>
+            </NuxtLink>
+            </div>
+            </DropdownMenuContent>
         </DropdownMenu>
       </div>
         <!-- <NavigationMenu class="flex space-x-4">
-
-          <NuxtLink
-            key="Home"
-            to="/"
-            class="text-sm font-medium transition"
-            :class="{ 'text-blue-600': isActive('/') }"
-          >
-            Home
-          </NuxtLink>
-
-          <NuxtLink
-            v-if="getIsAuthenticated && isProfileComplete"
-            key="Chat"
-            to="/chat"
-            class="text-sm font-medium transition"
-            :class="{ 'text-blue-600': isActive('/chat') }"
-          >
-            Chat
-          </NuxtLink>
-
-          <NuxtLink
-            v-if="getIsAuthenticated"
-            key="Profile"
-            to="/profile"
-            class="text-sm font-medium transition"
-            :class="{ 'text-blue-600': isActive('/profile') }"
-          >
-            Profile
-          </NuxtLink>
-
-          <NuxtLink
-            v-if="!getIsAuthenticated"
-            key="Login"
-            to="/login"
-            class="text-sm font-medium transition"
-            :class="{ 'text-blue-600': isActive('/login') }"
-          >
-            Login
-          </NuxtLink>
-
-          <NuxtLink
-            v-if="!getIsAuthenticated"
-            key="Sign Up"
-            to="/signup"
-            class="text-sm font-medium transition"
-            :class="{ 'text-blue-600': isActive('/signup') }"
-          >
-            Sign Up
-          </NuxtLink>
 
           <Popover v-if="authStore.getIsAuthenticated">
             <PopoverTrigger class="text-sm font-medium transition">Logout</PopoverTrigger>
