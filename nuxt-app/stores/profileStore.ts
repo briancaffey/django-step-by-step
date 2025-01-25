@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 
 export const useProfileStore = defineStore('profile', {
   state: () => ({
+    email: '',
     firstName: '',
     lastName: '',
     profileComplete: false,

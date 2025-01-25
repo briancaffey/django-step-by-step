@@ -5,7 +5,7 @@
         v-for="message in chatStore.messagesData.messages"
         :key="message.id"
         :class="{
-          'self-end max-w-1/2 dark:bg-red-200': message.role === 'user',
+          'self-end max-w-1/2': message.role === 'user',
           'self-start max-w-1/2': message.role !== 'user'
         }"
         class="message p-3 rounded-lg break-words"
@@ -18,14 +18,12 @@
     <!-- Chat input section -->
     <div class="sticky bottom-0 w-full p-4">
       <div class="flex items-center space-x-2">
-        <TextArea
+        <Textarea
           v-model="chatStore.messageText"
-          class="w-full p-3 border rounded-lg shadow-sm border-t"
-          rows="1"
+          class="bg-background"
           @keydown.enter.exact.prevent="handleSendMessage"
           placeholder="Type your message..."
-          style="max-height: 20rem; overflow-y: auto;"
-        ></TextArea>
+         />
         <Button
           @click="handleSendMessage"
         >
@@ -40,6 +38,7 @@
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
+import { Input } from '@/components/ui/input'
 
 import { ref, nextTick, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
@@ -51,12 +50,14 @@ const chatId = route.params.id;
 const sessionId = chatId;
 const chatContainer = ref(null);
 
-const chatStore = useChatStore();
+const pinia = usePinia();
+const chatStore = useChatStore(pinia);
 
 // Function to send message and clear input
 const handleSendMessage = async () => {
-  if (chatStore.messageText.trim() === '') return;
+  console.log('handleSendMessage')
 
+  if (chatStore.messageText.trim() === '') return;
   await chatStore.sendMessage(chatStore.messageText, sessionId);
   chatStore.messageText = '';
 
@@ -90,15 +91,5 @@ onMounted(() => {
 });
 </script>
 
-<style scoped>
-.chat-container {
-  display: flex;
-  flex-direction: column;
-}
-
-/* .message {
-  padding: 10px;
-  border-radius: 10px;
-  margin: 5px 0;
-} */
+<style>
 </style>

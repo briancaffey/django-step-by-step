@@ -2,13 +2,16 @@ import { useProfileStore } from '@/stores/profileStore'
 // import { useNuxtApp } from '#app'
 
 interface UserProfile {
+  email: string
   first_name: string
   last_name: string
   profile_setup_complete?: boolean
 }
 
 export function useProfile() {
+  // const { pinia } = usePinia();
   const profileStore = useProfileStore()
+  // const profileStore = useProfileStore(pinia)
   // const { $fetch } = useNuxtApp()
 
   const fetchProfile = async () => {
@@ -16,6 +19,7 @@ export function useProfile() {
       const data = await $fetch<UserProfile>('/api/profile/', {credentials: 'include'})
       profileStore.firstName = data.first_name || ''
       profileStore.lastName = data.last_name || ''
+      profileStore.email = data.email;
       profileStore.setProfileComplete(data.profile_setup_complete || false)
     } catch (error) {
       console.error('Error fetching profile:', error)

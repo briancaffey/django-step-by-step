@@ -2,6 +2,8 @@
   <div>Verifying your account...</div>
 </template>
 <script setup lang="ts">
+import { useAuth } from '@/composables/useAuth'
+import { useProfile } from '@/composables/useProfile'
 
 const route = useRoute();
 const { uid, token } = route.params;
@@ -15,6 +17,10 @@ const activateAccount = async () => {
   });
   if (response.status === 200) {
     console.log('Account activated successfully');
+
+    await useAuth();
+    await useProfile();
+    navigateTo('/profile');
   } else {
     console.error('Error activating account');
   }
@@ -22,7 +28,10 @@ const activateAccount = async () => {
 
 // onMounted, call the activateAccount function
 onMounted(() => {
-  activateAccount();
+  // TODO: remove this
+  setTimeout(() => {
+    activateAccount();
+  }, 2000);
 });
 
 </script>

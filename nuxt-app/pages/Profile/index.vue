@@ -45,9 +45,10 @@ const onSubmit = handleSubmit((values) => {
   updateProfile(values.firstName, values.lastName)
   toast({
     title: 'Profile Updated',
-    description: h('pre', { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
-      h('code', { class: 'text-white' }, JSON.stringify(values, null, 2))
-    ),
+    description: `Your profile name is now ${values.firstName} ${values.lastName}.`
+    // description: h('pre', { class: 'mt-2 w-[340px] rounded-md bg-slate-950 p-4' },
+    //   h('code', { class: 'text-white' }, JSON.stringify(values, null, 2))
+    // ),
   });
 })
 </script>
@@ -58,6 +59,16 @@ const onSubmit = handleSubmit((values) => {
     <Card class="w-full max-w-md p-6">
       <h1 class="text-3xl font-bold pb-4">Profile</h1>
       <form class="space-y-6" @submit.prevent="onSubmit">
+        <FormField v-slot="{ componentField }" name="email">
+          <FormItem>
+            <FormLabel>
+              Email
+            </FormLabel>
+          </FormItem>
+        </FormField>
+        <div>
+          {{ profileStore.email }}
+        </div>
         <FormField v-slot="{ componentField }" name="firstName">
           <FormItem>
             <FormLabel>First Name</FormLabel>

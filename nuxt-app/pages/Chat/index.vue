@@ -14,9 +14,9 @@ import {
 
 // import button component from shadcn
 import { Button } from '@/components/ui/button';
-
 // Use the composable to fetch chat sessions
-const chatStore = await useChatStore();
+const pinia = usePinia();
+const chatStore = await useChatStore(pinia);
 const router = useRouter();
 
 export interface Session {

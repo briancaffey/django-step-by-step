@@ -90,10 +90,11 @@ export const useChatComposable = async () => {
 
 
   const sendMessage = async (content: string, sessionId: number): Promise<void> => {
+    console.log('In sendMessage code...')
     const currentTime = Math.floor(Date.now() / 1000).toString();
     console.log(messages);
 
-    messages.value.push({id: sessionId, content, timestamp: currentTime, role: 'user'})
+    messages.value.messages.push({id: sessionId, content, timestamp: currentTime, role: 'user'})
     const [error, data] = await sendNewMessage(sessionId, content);
 
     if (error) {
@@ -104,7 +105,7 @@ export const useChatComposable = async () => {
 
     if (data) {
       console.log('there is data');
-      messages.value.push(data);
+      messages.value.messages.push(data);
     }
   };
 

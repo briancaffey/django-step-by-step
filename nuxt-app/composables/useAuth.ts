@@ -6,7 +6,7 @@ import { createPinia } from 'pinia'
 export const useAuth = async () => {
   console.log('Calling useAuth');
 
-  // const pinia = createPinia();
+  // const pinia = usePinia();
 
   const authStore = useAuthStore()
 

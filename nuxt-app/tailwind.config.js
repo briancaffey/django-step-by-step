@@ -2,10 +2,10 @@ const animate = require("tailwindcss-animate")
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: ["class"],
+  darkMode: "class",
   safelist: ["dark"],
   prefix: "",
-  content: ["./app.vue"],
+  content: ["./app.vue", './components/**/*.{vue,js,ts}'],
   theme: {
     container: {
       center: true,
