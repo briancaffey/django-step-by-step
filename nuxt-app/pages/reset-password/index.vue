@@ -14,14 +14,13 @@ const {fetchProfile } = useProfile();
 const apiBase = useNuxtApp().$apiBase;
 
 // Function to handle login
-const login = async () => {
+const resetPassword = async () => {
   try {
     // this API call will set HttpOnly cookie with the access and refresh JWT tokens on the client
     const response = await $fetch(`${apiBase}/api/auth/jwt/token/`, {
       method: 'POST',
       body: {
         email: authStore.email,
-        password: authStore.password
       }
     });
 
@@ -35,15 +34,16 @@ const login = async () => {
     console.error('Error during login:', error)
   }
 }
-useHead({title: 'Login'})
 </script>
 
 <template>
   <div class="flex items-center justify-center">
     <Card class="w-full max-w-sm">
       <CardHeader>
-        <CardTitle class="text-2xl">Login</CardTitle>
-        <CardDescription>Enter your email below to login to your account.</CardDescription>
+        <CardTitle class="text-2xl">Reset your password</CardTitle>
+        <CardDescription>
+          An email will be sent to this account with a password reset link if an account using this email exists.
+        </CardDescription>
       </CardHeader>
       <CardContent class="grid gap-4">
         <div class="grid gap-2">
@@ -56,41 +56,11 @@ useHead({title: 'Login'})
             required
           />
         </div>
-        <div class="grid gap-2">
-          <Label for="password">Password</Label>
-          <Input
-            id="password"
-            type="password"
-            v-model="authStore.password"
-            required
-          />
-        </div>
       </CardContent>
       <CardFooter>
-        <Button class="w-full" @click="login">Sign in</Button>
+        <Button class="w-full" @click="resetPassword">Reset Password</Button>
       </CardFooter>
-      <CardFooter>
-        <div>
-          <NuxtLink
-          key="Sign Up"
-          to="/signup"
-          class="text-sm font-medium transition"
-          >
-          Sign up for a new account
-        </NuxtLink>
-        </div>
-      </CardFooter>
-      <CardFooter>
-        <div>
-          <NuxtLink
-          key="Sign Up"
-          to="/reset-password"
-          class="text-sm font-medium transition"
-          >
-          Forgot your password?
-        </NuxtLink>
-      </div>
-      </CardFooter>
+
     </Card>
   </div>
 </template>

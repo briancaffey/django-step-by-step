@@ -47,7 +47,8 @@ export const useChatStore = defineStore('chat', {
 
     async fetchMessages(chatId: number): Promise<[Error | null, Messages | null]> {
       try {
-        const response = await $fetch<{messages: Message[], session_id: number}>(`/api/chat/sessions/${chatId.toString()}/messages/`);
+        const apiBase = useNuxtApp().$apiBase;
+        const response = await $fetch<{messages: Message[], session_id: number}>(`${apiBase}/api/chat/sessions/${chatId.toString()}/messages/`);
         return [null, response];
       } catch (error: any) {
         console.error('Error fetching messages:', error);
@@ -73,7 +74,8 @@ export const useChatStore = defineStore('chat', {
 
     async sendNewMessage(chatId: number, content: string): Promise<[Error | null, Message | null]> {
       try {
-        const response = await $fetch<SendMessageResponse>(`http://localhost/api/chat/sessions/${chatId}/messages/send/`, {
+        const apiBase = useNuxtApp().$apiBase;
+        const response = await $fetch<SendMessageResponse>(`${apiBase}/api/chat/sessions/${chatId}/messages/send/`, {
           method: 'POST',
           body: { content }
         });
@@ -119,7 +121,8 @@ export const useChatStore = defineStore('chat', {
 
     async fetchSessions(): Promise<[Error | null, Session[] | null]> {
       try {
-        const response = await $fetch<{ sessions: Session[] }>('/api/chat/get-sessions/');
+        const apiBase = useNuxtApp().$apiBase;
+        const response = await $fetch<{ sessions: Session[] }>(`${apiBase}/api/chat/get-sessions/`);
         return [null, response.sessions];
       } catch (error: any) {
         console.error('Error fetching sessions:', error);
@@ -143,7 +146,8 @@ export const useChatStore = defineStore('chat', {
     async newSession(): Promise<void> {
       const router = useRouter();
       try {
-        const response = await $fetch<{ session_id: number, message: string }>(`/api/chat/sessions/`, {
+        const apiBase = useNuxtApp().$apiBase;
+        const response = await $fetch<{ session_id: number, message: string }>(`${apiBase}/api/chat/sessions/`, {
           method: 'POST',
           body: { system_prompt: this.systemPrompt }
         });

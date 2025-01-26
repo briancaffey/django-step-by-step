@@ -1,5 +1,4 @@
 import { useProfileStore } from '@/stores/profileStore'
-// import { useNuxtApp } from '#app'
 
 interface UserProfile {
   email: string
@@ -12,11 +11,10 @@ export function useProfile() {
   // const { pinia } = usePinia();
   const profileStore = useProfileStore()
   // const profileStore = useProfileStore(pinia)
-  // const { $fetch } = useNuxtApp()
-
+  const apiBase = useNuxtApp().$apiBase;
   const fetchProfile = async () => {
     try {
-      const data = await $fetch<UserProfile>('/api/profile/', {credentials: 'include'})
+      const data = await $fetch<UserProfile>(`${apiBase}/api/profile/`, {credentials: 'include'})
       profileStore.firstName = data.first_name || ''
       profileStore.lastName = data.last_name || ''
       profileStore.email = data.email;
@@ -28,7 +26,7 @@ export function useProfile() {
 
   const updateProfile = async (firstName: string, lastName: string) => {
     try {
-      const response = await $fetch<{first_name: string, last_name: string}>('http://localhost/api/update-user/', {
+      const response = await $fetch<{first_name: string, last_name: string}>(`${apiBase}/api/update-user/`, {
         method: 'PATCH', credentials: 'include',
         body: {
           first_name: firstName,

@@ -14,6 +14,24 @@ services:
     networks:
       - main
 
+  nuxt-app:
+    container_name: nuxt-app
+    build:
+      context: ./nuxt-app
+      dockerfile: ./Dockerfile
+      # set the target to prod and rebuild to use production settings
+      target: dev
+    ports:
+      - "8081:3000"
+      - "24678:24678"
+    # environment:
+    #   - NUXT_PUBLIC_API_BASE=http://localhost
+    volumes:
+      - ./nuxt-app:/src
+      - node_modules:/src/node_modules
+      # TODO: fix this.. uncomment this when using prod
+      # - /src/.output
+
   postgres:
     container_name: postgres
     image: postgres:14
@@ -178,6 +196,7 @@ volumes:
   pg-data:
   redis-data:
   pgadmin:
+  node_modules:
 
 networks:
   main:

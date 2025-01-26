@@ -14,6 +14,7 @@ const isActive = (path) => route.path === path
 const authStore = useAuthStore()
 const router = useRouter()
 const { toast } = useToast();
+const apiBase = useNuxtApp().$apiBase;
 
 // const {fetchProfile } = useProfile();
 
@@ -22,7 +23,7 @@ const signUp = async () => {
   console.log('signing up')
   try {
     // this API call will set HttpOnly cookie with the access and refresh JWT tokens on the client
-    const response = await $fetch('http://localhost/api/register/', {
+    const response = await $fetch(`${apiBase}/api/register/`, {
       method: 'POST',
       body: {
         email: authStore.email,

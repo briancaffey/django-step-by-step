@@ -15,7 +15,6 @@ export default defineNuxtConfig({
   modules: ['@pinia/nuxt', '@nuxtjs/tailwindcss', 'shadcn-nuxt', '@nuxtjs/color-mode'],
   runtimeConfig: {
     public: {
-      // override with `NUXT_PUBLIC_API_BASE` in `nuxt-app/.env` (see `/nuxt-app/.env.example`)
       apiBase: 'http://localhost',
     }
   },

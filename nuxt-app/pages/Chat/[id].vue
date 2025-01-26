@@ -17,7 +17,7 @@
 
     <!-- Chat input section -->
     <div class="sticky bottom-0 w-full p-4">
-      <div class="flex items-center space-x-2">
+      <div class="flex items-center space-x-2 bg-background">
         <Textarea
           v-model="chatStore.messageText"
           class="bg-background"

@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/authStore'
 import { createPinia } from 'pinia'
 
 export const useAuth = async () => {
+  const apiBase = useNuxtApp().$apiBase;
   console.log('Calling useAuth');
 
   // const pinia = usePinia();
@@ -16,7 +17,7 @@ export const useAuth = async () => {
 
   try {
     // make a request to /api/auth/jwt/token/ to login using the email and password
-    const response = await $fetch<AuthResponse>('http://localhost/api/auth/jwt/token/refresh/', {
+    const response = await $fetch<AuthResponse>(`${apiBase}/api/auth/jwt/token/refresh/`, {
       method: 'POST',
     });
 

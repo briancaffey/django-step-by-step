@@ -1,4 +1,4 @@
-import { ref, reactive } from 'vue';
+import { ref } from 'vue';
 
 export interface Message {
   id: number;
@@ -28,7 +28,6 @@ export interface Session {
   created_at: string;
 }
 
-// export const useAuth = async () => {
 export const useChatComposable = async () => {
 
   // define the variable to hold messages in a chat session
@@ -42,10 +41,10 @@ export const useChatComposable = async () => {
   // loading state
   const loadingMessages = ref(false);
   const errorLoadingMessages = ref(false);
-
   const fetchMessages = async (chatId: number): Promise<[Error | null, Messages | null]> => {
     try {
-      const response = await $fetch<{messages: Messages, session_id: number}>(`/api/chat/sessions/${chatId.toString()}/messages/`);
+      const config = useRuntimeConfig();
+      const response = await $fetch<{messages: Messages, session_id: number}>(`${config.public.apiBase}/api/chat/sessions/${chatId.toString()}/messages/`);
       return [null, response.messages];
     } catch (error: any) {
       console.error('Error fetching messages:', error);
@@ -72,11 +71,9 @@ export const useChatComposable = async () => {
 
   // chat
   const sendNewMessage = async (chatId: number, content: any): Promise<[Error | null, Message | null]> => {
-    console.log('Making API call...')
-    console.log('problematic content is...')
-    console.log(content)
+    const apiBase = useNuxtApp().$apiBase;
     try {
-      const response = await $fetch<SendMessageResponse>(`http://localhost/api/chat/sessions/${chatId}/messages/send/`, {
+      const response = await $fetch<SendMessageResponse>(`${apiBase}/api/chat/sessions/${chatId}/messages/send/`, {
         method: 'POST', body: {
           content,
         }
@@ -90,7 +87,6 @@ export const useChatComposable = async () => {
 
 
   const sendMessage = async (content: string, sessionId: number): Promise<void> => {
-    console.log('In sendMessage code...')
     const currentTime = Math.floor(Date.now() / 1000).toString();
     console.log(messages);
 
@@ -112,7 +108,8 @@ export const useChatComposable = async () => {
   // function for getting sessions
   const fetchSessions = async (): Promise<[Error | null, Session[] | null]> => {
     try {
-      const response = await $fetch<{ sessions: Session[] }>('/api/chat/get-sessions/');
+      const apiBase = useNuxtApp().$apiBase;
+      const response = await $fetch<{ sessions: Session[] }>(`${apiBase}/api/chat/get-sessions/`);
       return [null, response.sessions];
     } catch (error: any) {
       console.error('Error fetching sessions:', error);

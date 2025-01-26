@@ -8,7 +8,7 @@
             key="Home"
             to="/"
           >
-            App
+            Appoij
           </NuxtLink>
         </h1>
 
@@ -104,7 +104,7 @@
       </div>
     </nav>
     <!-- Page Content -->
-    <main class="container mx-auto px-6 py-8">
+    <main class="container mx-auto px-6 py-8 pb-0">
       <NuxtPage />
     </main>
   </div>
@@ -154,10 +154,11 @@ const { isProfileComplete } = storeToRefs(profileStore);
 const route = useRoute()
 const router = useRouter()
 const isActive = (path) => route.path === path
+const apiBase = useNuxtApp().$apiBase;
 
 const logout = async () => {
   try {
-    await $fetch('http://localhost/api/auth/jwt/token/logout/', {method: 'POST', credentials: 'include'});
+    await $fetch(`${apiBase}/api/auth/jwt/token/logout/`, {method: 'POST', credentials: 'include'});
     authStore.setAuthenticated(false);
     router.push('/login')
 
