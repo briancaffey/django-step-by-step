@@ -1,10 +1,10 @@
 const { awscdk } = require('projen');
 const project = new awscdk.AwsCdkTypeScriptApp({
-  cdkVersion: '2.130.0',
+  cdkVersion: '2.177.0',
   defaultReleaseBranch: 'main',
   name: 'cdk',
 
-  deps: ['cdk-django@1.4.0'], /* Runtime dependencies of this module. */
+  deps: ['cdk-django@1.6.0'], /* Runtime dependencies of this module. */
   // description: undefined,  /* The description is just a string that helps people understand the purpose of the package. */
   // devDeps: [],             /* Build dependencies for this module. */
   // packageName: undefined,  /* The "name" in package.json. */

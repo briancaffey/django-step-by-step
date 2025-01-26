@@ -51,7 +51,7 @@ const resetPassword = async () => {
           <Input
             id="email"
             type="email"
-            placeholder="m@example.com"
+            placeholder="email@example.com"
             v-model="authStore.email"
             required
           />
