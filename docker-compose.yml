@@ -24,8 +24,9 @@ services:
     ports:
       - "8081:3000"
       - "24678:24678"
-    # environment:
-    #   - NUXT_PUBLIC_API_BASE=http://localhost
+    environment:
+      - NUXT_PUBLIC_APP_VERSION=v9.9.9
+      # - NUXT_PUBLIC_API_BASE=http://localhost
     volumes:
       - ./nuxt-app:/src
       - node_modules:/src/node_modules

@@ -16,6 +16,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiBase: 'http://localhost',
+      appVersion: 'v1.9.8.8' // this value is changed at runtime with NUXT_PUBLIC_APP_VERSION
     }
   },
   shadcn: {

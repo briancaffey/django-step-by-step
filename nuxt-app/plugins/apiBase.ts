@@ -3,4 +3,5 @@ export default defineNuxtPlugin((nuxtApp) => {
 
   // Provide the apiBase globally using provide/inject
   nuxtApp.provide('apiBase', config.public.apiBase);
+  nuxtApp.provide('appVersion', config.public.appVersion)
 });
