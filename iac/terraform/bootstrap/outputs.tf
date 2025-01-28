@@ -18,6 +18,10 @@ output "ecr_fe_repo_url" {
   value = aws_ecr_repository.frontend.repository_url
 }
 
+output "ecr_be_nginx_url" {
+  value = aws_ecr_repository.backend-nginx.repository_url
+}
+
 ################################################################################
 # Used for the S3 backend (backend.config)
 ################################################################################
