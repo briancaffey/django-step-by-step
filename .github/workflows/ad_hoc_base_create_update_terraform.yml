@@ -1,5 +1,5 @@
 # github action to create or update shared resources
-name: ad hoc | base | create / update
+name: [CD] ad hoc | base | create / update (for ${{ github.event.inputs.workspace }})
 
 on:
   workflow_dispatch:
