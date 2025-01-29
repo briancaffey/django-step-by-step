@@ -1,2 +1,2 @@
-be_image_tag = "v0.0.3"
-fe_image_tag = "v0.0.1"
+be_image_tag = "latest"
+fe_image_tag = "latest"
