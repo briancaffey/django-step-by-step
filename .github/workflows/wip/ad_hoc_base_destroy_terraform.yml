@@ -43,7 +43,6 @@ jobs:
 
           # Terraform variables
           TF_VAR_certificate_arn: ${{ secrets.ACM_CERTIFICATE_ARN }}
-          TF_VAR_key_name: ${{ secrets.KEY_NAME }}
 
         run: |
           export VAR_FILE=envs/${WORKSPACE}.tfvars

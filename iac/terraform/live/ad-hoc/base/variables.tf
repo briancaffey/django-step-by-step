@@ -7,10 +7,6 @@ variable "region" {
   default = "us-east-1"
 }
 
-# variable "key_name" {
-#   type = string
-# }
-
 variable "backend_name" {
   type = string
 }
