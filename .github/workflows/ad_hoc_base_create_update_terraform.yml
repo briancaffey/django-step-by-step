@@ -12,7 +12,7 @@ on:
 
 env:
   TF_DIR: iac/terraform/live/ad-hoc/base
-  TF_WORKSPACE: ${{ github.event.inputs.workspace }}
+  # TF_WORKSPACE: ${{ github.event.inputs.workspace }}
   TF_PLAN_FILE: tfplan-${{ github.event.inputs.workspace }}.bin
   TF_VAR_certificate_arn: ${{ secrets.ACM_CERTIFICATE_ARN }}
   TF_VAR_domain_name: ${{ secrets.DOMAIN_NAME }}
@@ -45,9 +45,6 @@ jobs:
             -backend-config="key=terraform.tfstate" \
             -backend-config="region=${{ secrets.AWS_DEFAULT_REGION }}" \
             -backend-config="workspace_key_prefix=shared-resources"
-
-          terraform -chdir=$TF_DIR workspace new $TF_WORKSPACE || true
-          terraform -chdir=$TF_DIR workspace select $TF_WORKSPACE
 
   terraform-plan:
     name: "Generate Terraform Plan"
