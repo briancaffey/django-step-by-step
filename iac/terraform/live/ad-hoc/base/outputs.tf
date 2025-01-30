@@ -48,3 +48,7 @@ output "base_stack_name" {
 output "redis_service_host" {
   value = module.main.redis_service_host
 }
+
+output "rds_password_secret_name" {
+  value = module.main.rds_password_secret_name
+}
