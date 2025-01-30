@@ -36,18 +36,18 @@ variable "domain_name" {
 # ECR
 ##############################################################################
 
-variable "ecr_be_repo_url" {
-  description = "URL of the ECR repository that contains the backend image. Take from output value of bootstrap"
-}
+# variable "ecr_be_repo_url" {
+#   description = "URL of the ECR repository that contains the backend image. Take from output value of bootstrap"
+# }
 
 variable "be_image_tag" {
   description = "Image tag to use in backend container definitions"
   default     = "latest"
 }
 
-variable "ecr_fe_repo_url" {
-  description = "URL of the ECR repository that contains the frontend image. Take from output value of bootstrap"
-}
+# variable "ecr_fe_repo_url" {
+#   description = "URL of the ECR repository that contains the frontend image. Take from output value of bootstrap"
+# }
 
 variable "fe_image_tag" {
   description = "Image tag to use in frontend container definitions"

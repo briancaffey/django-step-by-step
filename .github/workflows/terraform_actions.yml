@@ -28,7 +28,10 @@ env:
   TF_PLAN_FILE: tfplan-${{ github.event.inputs.workspace }}.bin
   TF_VAR_certificate_arn: ${{ secrets.ACM_CERTIFICATE_ARN }}
   TF_VAR_domain_name: ${{ secrets.DOMAIN_NAME }}
+  # TODO: consolidate terraform variables
   TF_VAR_backend_name: ${{ secrets.BACKEND_NAME }}
+  TF_VAR_app_name: ${{ secrets.BACKEND_NAME }}
+  TF_VAR_s3_bucket: ${{ secrets.BACKEND_NAME }}-bucket
 
 jobs:
   terraform-init:
