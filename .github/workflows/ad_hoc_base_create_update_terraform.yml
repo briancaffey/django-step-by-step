@@ -9,6 +9,11 @@ on:
         required: true
         default: 'dev'
         type: string
+      destroy:
+        description: 'Set to true to run terraform destroy instead of apply'
+        required: false
+        default: false
+        type: boolean
 
 env:
   TF_DIR: iac/terraform/live/ad-hoc/base
@@ -60,6 +65,7 @@ jobs:
   terraform-plan:
     name: "Generate Terraform Plan"
     needs: terraform-init
+    if: github.event.inputs.destroy != 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -105,6 +111,7 @@ jobs:
 
   terraform-apply:
     name: "Apply Terraform Changes"
+    if: github.event.inputs.destroy != 'true'
     needs: terraform-plan
     runs-on: ubuntu-latest
     steps:
@@ -145,3 +152,38 @@ jobs:
           terraform -chdir=${{ env.TF_DIR }} workspace new ${{ env.WORKSPACE }} || true
           terraform -chdir=${{ env.TF_DIR }} workspace select ${{ env.WORKSPACE }}
           terraform -chdir=${{ env.TF_DIR }} apply ${{ env.TF_PLAN_FILE }}
+
+
+  terraform-destroy:
+    name: "Destroy Terraform Resources"
+    needs: terraform-init
+    if: github.event.inputs.destroy == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.10.5
+          terraform_wrapper: false
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Download Workspace Context
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform-workspace
+
+      - name: Extract terraform directory
+        run: tar -xzf terraform-dir.tar.gz -C ${{ env.TF_DIR }}
+
+      - name: Terraform Destroy
+        run: |
+          terraform -chdir=${{ env.TF_DIR }} workspace new ${{ env.WORKSPACE }} || true
+          terraform -chdir=${{ env.TF_DIR }} workspace select ${{ env.WORKSPACE }}
+          terraform -chdir=${{ env.TF_DIR }} destroy -auto-approve
