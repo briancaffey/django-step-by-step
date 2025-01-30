@@ -56,7 +56,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: terraform-workspace
-          path: ${{ env.TF_DIR }}/.terraform
+          path: |
+            ${{ env.TF_DIR }}/.terraform/*
+            ${{ env.TF_DIR }}/.terraform/**
           if-no-files-found: error
 
   terraform-plan:
