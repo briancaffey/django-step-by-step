@@ -12,10 +12,12 @@ client = botocore.session.get_session().create_client(
 cache = SecretCache(client=client)
 
 DB_SECRET_NAME = os.environ.get("DB_SECRET_NAME", "")
+database_secret = cache.get_secret_string(DB_SECRET_NAME)
 
 
-@InjectKeywordedSecretString(
-    secret_id=DB_SECRET_NAME, cache=cache, func_password="password"
-)
-def from_secret(func_password):
-    return func_password
+# use this if the secret is JSON
+# @InjectKeywordedSecretString(
+#     secret_id=DB_SECRET_NAME, cache=cache, func_password="password"
+# )
+# def from_secret(func_password):
+#     return func_password

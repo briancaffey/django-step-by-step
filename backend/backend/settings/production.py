@@ -2,7 +2,7 @@
 
 from .base import *
 
-from apps.core.utils import from_secret
+from apps.core.utils import database_secret
 
 DEBUG = 0
 
@@ -11,7 +11,7 @@ DATABASES["default"]["OPTIONS"] = {
     "sslrootcert": "/usr/local/share/global-bundle.pem",
 }
 
-DATABASES["default"]["PASSWORD"] = from_secret()
+DATABASES["default"]["PASSWORD"] = database_secret
 
 # add django-storages to INSTALLED_APPS
 INSTALLED_APPS += ("storages",)

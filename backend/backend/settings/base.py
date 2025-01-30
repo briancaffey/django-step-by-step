@@ -22,12 +22,13 @@ from sentry_sdk.integrations.redis import RedisIntegration
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
+# Environment
+APP_NAME = os.environ.get("APP_NAME", "local")
+BASE_STACK_NAME = os.environ.get("BASE_STACK_NAME", "local")
+
 # Sentry
-SENTRY_DSN = os.environ.get(
-    "SENTRY_DSN",
-    "https://86e4637dfe544fffb393c16ccd0c8e42@o1111915.ingest.sentry.io/6141178",  # noqa
-)
-SENTRY_ENVIRONMENT = os.environ.get("SENTRY_ENVIRONMENT", "local")
+SENTRY_DSN = os.environ.get("SENTRY_DSN", None)
+SENTRY_ENVIRONMENT = f"{BASE_DIR}.${APP_NAME}"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
@@ -198,8 +199,14 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 
 EMAIL_HOST = os.environ.get("DJANGO_EMAIL_HOST", "localhost")
 EMAIL_PORT = os.environ.get("DJANGO_EMAIL_PORT", "1025")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "user@email.com")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "password")
+EMAIL_USE_TLS = not DEBUG
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+ADMINS = [("Admin", os.environ.get("ADMINS", ""))]
 
-ADMINS = [("Local Admin", "admin@dev.local")]
+if DEBUG:
+    ADMINS = [("Local Admin", "admin@dev.local")]
 
 # Login Redirect
 
@@ -254,22 +261,23 @@ FRONTEND_URL = os.environ.get("FRONTEND_URL", "http://localhost")
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 # Sentry
-sentry_sdk.init(
-    dsn=SENTRY_DSN,
-    integrations=[
-        DjangoIntegration(),
-        CeleryIntegration(),
-        RedisIntegration(),
-    ],
-    environment=SENTRY_ENVIRONMENT,
-    # Set traces_sample_rate to 1.0 to capture 100%
-    # of transactions for performance monitoring.
-    # We recommend adjusting this value in production.
-    traces_sample_rate=1.0,
-    # If you wish to associate users to errors (assuming you are using
-    # django.contrib.auth) you may enable sending PII data.
-    send_default_pii=True,
-)
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[
+            DjangoIntegration(),
+            CeleryIntegration(),
+            RedisIntegration(),
+        ],
+        environment=SENTRY_ENVIRONMENT,
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for performance monitoring.
+        # We recommend adjusting this value in production.
+        traces_sample_rate=1.0,
+        # If you wish to associate users to errors (assuming you are using
+        # django.contrib.auth) you may enable sending PII data.
+        send_default_pii=True,
+    )
 
 if os.environ.get("OPENAI_API_KEY", None):
     print(os.environ.get("OPENAI_API_KEY", None))
