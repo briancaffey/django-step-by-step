@@ -1,5 +1,6 @@
 # github action to create or update shared resources
 name: "[IaC] Terraform GitHub Action"
+run-name: "[IaC] terraform ${{ inputs.destroy && 'destroy' || 'apply'}} -> ${{ inputs.stack }} [Workspace: ${{ inputs.workspace }}]"
 
 on:
   workflow_dispatch:
