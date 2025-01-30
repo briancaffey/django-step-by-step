@@ -12,7 +12,7 @@ on:
 
 env:
   TF_DIR: iac/terraform/live/ad-hoc/base
-  TF_WORKSPACE: ${{ github.event.inputs.workspace }}
+  WORKSPACE: ${{ github.event.inputs.workspace }}
   TF_PLAN_FILE: tfplan-${{ github.event.inputs.workspace }}.bin
   TF_VAR_certificate_arn: ${{ secrets.ACM_CERTIFICATE_ARN }}
   TF_VAR_domain_name: ${{ secrets.DOMAIN_NAME }}
@@ -49,8 +49,8 @@ jobs:
           ls -al $TF_DIR
 
           # Create or select workspace
-          terraform -chdir=$TF_DIR workspace select $TF_WORKSPACE || \
-            terraform -chdir=$TF_DIR workspace new $TF_WORKSPACE
+          terraform -chdir=$TF_DIR workspace select $WORKSPACE || \
+            terraform -chdir=$TF_DIR workspace new $WORKSPACE
 
       - name: Upload Workspace Context
         uses: actions/upload-artifact@v4
@@ -71,10 +71,16 @@ jobs:
           terraform_version: 1.10.5
           terraform_wrapper: false
 
+      - name: Download Workspace Context
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform-workspace
+          path: $TF_DIR/.terraform
+
       - name: Terraform Plan
         run: |
-          terraform -chdir=$TF_DIR workspace new $TF_WORKSPACE || true
-          terraform -chdir=$TF_DIR workspace select $TF_WORKSPACE
+          terraform -chdir=$TF_DIR workspace new $WORKSPACE || true
+          terraform -chdir=$TF_DIR workspace select $WORKSPACE
 
           terraform -chdir=$TF_DIR plan \
             -var-file=envs/$TF_WORKSPACE.tfvars \
@@ -114,7 +120,7 @@ jobs:
 
       - name: Terraform Apply
         run: |
-          terraform -chdir=$TF_DIR workspace new $TF_WORKSPACE || true
-          terraform -chdir=$TF_DIR workspace select $TF_WORKSPACE
+          terraform -chdir=$TF_DIR workspace new $WORKSPACE || true
+          terraform -chdir=$TF_DIR workspace select $WORKSPACE
 
           terraform -chdir=$TF_DIR apply $TF_PLAN_FILE
