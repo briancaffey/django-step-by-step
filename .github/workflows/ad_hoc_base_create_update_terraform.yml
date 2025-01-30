@@ -90,7 +90,7 @@ jobs:
           terraform -chdir=$TF_DIR workspace select $WORKSPACE
 
           terraform -chdir=$TF_DIR plan \
-            -var-file=envs/$TF_WORKSPACE.tfvars \
+            -var-file=envs/$WORKSPACE.tfvars \
             -out=$TF_PLAN_FILE
 
           # Save plan file as artifact
