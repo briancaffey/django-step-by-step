@@ -1,5 +1,57 @@
 # Changelog
 
+## [0.2.0](https://github.com/briancaffey/django-step-by-step/compare/v0.1.0...v0.2.0) (2025-01-30)
+
+
+### Features
+
+* **gha:** fix build pipeline for frontend app image building ([ce368f0](https://github.com/briancaffey/django-step-by-step/commit/ce368f0d661820acb8245fb155295189eeda058e))
+* **gha:** move workflow into workflows dir ([bc830df](https://github.com/briancaffey/django-step-by-step/commit/bc830df6d3cb2f0fec9d5769c655de23d452f277))
+* **gha:** update gha for building backend image, added top-level app name ([19c5636](https://github.com/briancaffey/django-step-by-step/commit/19c563600c5c6e1530ef6482cc67f0090cdc4ff7))
+* **gha:** update gha for terraform ad hoc base workflow ([a18d8f3](https://github.com/briancaffey/django-step-by-step/commit/a18d8f3aa8d2043dee1882f46a3bce459926d114))
+* **settings:** update settings for email and fix database secret fetching ([43d3a5f](https://github.com/briancaffey/django-step-by-step/commit/43d3a5f3834d9bf7f403579d85179dc3853358f7))
+* **tf:** add option for running terraform destroy ([67a689c](https://github.com/briancaffey/django-step-by-step/commit/67a689ce4f2dfe4bf7baded23074017c4cd6297b))
+
+
+### Bug Fixes
+
+* **gha:** final fixes for tf gha ([338dc42](https://github.com/briancaffey/django-step-by-step/commit/338dc42a1e13200eec89c14382180788a689bb4f))
+* **gha:** fix syntax in workflow ([674c3c0](https://github.com/briancaffey/django-step-by-step/commit/674c3c05592fe0481d628db3dbdca62ff66f5f12))
+* **gha:** fix syntax in workflow ([f7c092d](https://github.com/briancaffey/django-step-by-step/commit/f7c092ddcffe5358ae4f376138f8f45a192468fc))
+* **gha:** fixes for using a single tf github action ([9dba7ad](https://github.com/briancaffey/django-step-by-step/commit/9dba7ad402700d18f4f5456e8d37866797ad649a))
+* **gha:** improvements for tf gha ([afb6d4e](https://github.com/briancaffey/django-step-by-step/commit/afb6d4ea0b7d7e0d3076ca754be653059bd3e5de))
+* **gha:** improvements for tf gha ([4775622](https://github.com/briancaffey/django-step-by-step/commit/4775622f8ddeeae896acb8f7f0cbf8e9f284e21b))
+* **gha:** improvements for tf gha ([e9c97e1](https://github.com/briancaffey/django-step-by-step/commit/e9c97e1784174af9531e3ac36c46fc3960dea434))
+* **gha:** improvements for tf gha ([f1823d1](https://github.com/briancaffey/django-step-by-step/commit/f1823d1c1a0462150d5c571a33acc9474dc98d92))
+* **gha:** improvements for tf gha ([392a003](https://github.com/briancaffey/django-step-by-step/commit/392a0036a11fe39097e67839b59facf02769be46))
+* **gha:** improvements for tf gha ([3fc0fab](https://github.com/briancaffey/django-step-by-step/commit/3fc0fabe8719034430c603bf43e56cd2f7bfd185))
+* **gha:** improvements for tf gha ([6c595d2](https://github.com/briancaffey/django-step-by-step/commit/6c595d2f04c928eccb5c92283f646da16f86a6d0))
+* **gha:** improvements for tf gha ([83d8612](https://github.com/briancaffey/django-step-by-step/commit/83d86126c5089db04df59eef2a764a80e3e8c083))
+* **gha:** improvements for tf gha ([2a4666c](https://github.com/briancaffey/django-step-by-step/commit/2a4666c1b243b0919dc3dfac2b3c3930a3d2d2db))
+* **gha:** improvements for tf gha ([6907a0a](https://github.com/briancaffey/django-step-by-step/commit/6907a0a3f4c8f50c7e09dc6f16b626fa99089f36))
+* **gha:** improvements for tf gha ([356abbc](https://github.com/briancaffey/django-step-by-step/commit/356abbcf6ec10d55dbbc9b03b2a9ee93b8136efb))
+* **gha:** improvements for tf gha ([2e32528](https://github.com/briancaffey/django-step-by-step/commit/2e3252826f3fbf13de4a950f4cf2963d1147e377))
+* **gha:** improvements for tf gha ([40a4a6f](https://github.com/briancaffey/django-step-by-step/commit/40a4a6f6618bbe74535e11096329155f89887d28))
+* **gha:** improvements for tf gha add credentials ([1a65f5c](https://github.com/briancaffey/django-step-by-step/commit/1a65f5cd317f620010edeff682855d614197f5f3))
+* **gha:** improvements for tf gha tf workspace env var ([f6bed62](https://github.com/briancaffey/django-step-by-step/commit/f6bed62f442c5697ff23c7432ba4916855264cfb))
+* **gha:** improvements for tf gha tf workspace env var ([aa440da](https://github.com/briancaffey/django-step-by-step/commit/aa440daeacebcfcec3bf4b29577a8e13f9fbde99))
+* **gha:** improvements for tf gha tf workspace env var ([2c2571c](https://github.com/briancaffey/django-step-by-step/commit/2c2571ca66b1da03e5ee429467470f0ea801518e))
+* **gha:** improvements for tf gha tf workspace env var ([978cfeb](https://github.com/briancaffey/django-step-by-step/commit/978cfebe5499cb85b212006aee52c9386cf19ac3))
+* **gha:** update run-name for terraform action ([79c6600](https://github.com/briancaffey/django-step-by-step/commit/79c6600497c809fdc127be9da8154b4b89a24336))
+* **terraform:** fix env vars for terraform ([8f8dd8c](https://github.com/briancaffey/django-step-by-step/commit/8f8dd8cd30de32837e9bca44b7048c2a117c4c83))
+* **terraform:** fixes and debuggin tf scripts ([56af84d](https://github.com/briancaffey/django-step-by-step/commit/56af84d280298b2d80f7233fdea70e88f39cb84b))
+* **terraform:** rename terraform gha workflow and file ([785056a](https://github.com/briancaffey/django-step-by-step/commit/785056a498e80720bb24c6bb96b0d6b0bf005098))
+* **tf:** add rds password secret name output ([472152d](https://github.com/briancaffey/django-step-by-step/commit/472152dc715866228745298f75c5c1df3078d82f))
+* **tf:** add variable for rds secret name ([526fc1a](https://github.com/briancaffey/django-step-by-step/commit/526fc1a69f700ffe8c0a6b605c53037f5bb7a157))
+* **tf:** fix env vars for terraform gha ([da8f1a2](https://github.com/briancaffey/django-step-by-step/commit/da8f1a2cef060ee42d2bbaa8505f8232919b6b3a))
+* **tf:** fix issues with tf app stack ([5e5b422](https://github.com/briancaffey/django-step-by-step/commit/5e5b422ccf01d3f60a07872846fa2401b88b84db))
+* **tf:** fix module source ([05daba0](https://github.com/briancaffey/django-step-by-step/commit/05daba0393a79706f74e897e1c6886588727ea18))
+* **tf:** fix output value for app stack redis_service_host ([521c39d](https://github.com/briancaffey/django-step-by-step/commit/521c39d5865eea9b891f8960cf2346138dd1c2a2))
+* **tf:** fix source value to point to git repo rather than local dir ([8bf72a0](https://github.com/briancaffey/django-step-by-step/commit/8bf72a0c9e95b68094fc805fcfe7a1c279afdd3d))
+* **tf:** fix typo in var name ([4a8ec35](https://github.com/briancaffey/django-step-by-step/commit/4a8ec3506256171ceef6f25854348c13f337e682))
+* **tf:** remove unused variable ([9cb1a39](https://github.com/briancaffey/django-step-by-step/commit/9cb1a39a2428bd034f291e2beb2442e4b42d5ba4))
+* **typo:** fix typo in terraform module ([081fde4](https://github.com/briancaffey/django-step-by-step/commit/081fde42de2f277b68f95aa68cc0e77ef0668e88))
+
 ## [0.1.0](https://github.com/briancaffey/django-step-by-step/compare/v0.0.5...v0.1.0) (2025-01-28)
 
 
