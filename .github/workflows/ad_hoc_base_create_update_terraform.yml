@@ -12,7 +12,7 @@ on:
 
 env:
   TF_DIR: iac/terraform/live/ad-hoc/base
-  # TF_WORKSPACE: ${{ github.event.inputs.workspace }}
+  TF_WORKSPACE: ${{ github.event.inputs.workspace }}
   TF_PLAN_FILE: tfplan-${{ github.event.inputs.workspace }}.bin
   TF_VAR_certificate_arn: ${{ secrets.ACM_CERTIFICATE_ARN }}
   TF_VAR_domain_name: ${{ secrets.DOMAIN_NAME }}
@@ -50,7 +50,8 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: terraform-workspace
-          path: $TF_DIR/.terraform
+          path: ${{ env.TF_DIR }}/.terraform
+          retention-days: 1
 
   terraform-plan:
     name: "Generate Terraform Plan"
@@ -68,7 +69,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: terraform-workspace
-          path: $TF_DIR/.terraform
+          path: ${{ env.TF_DIR }}/.terraform
 
       - name: Terraform Plan
         run: |
