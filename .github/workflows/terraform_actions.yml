@@ -59,7 +59,7 @@ jobs:
             -backend-config="dynamodb_table=${{ secrets.BACKEND_NAME }}-lock-table" \
             -backend-config="key=terraform.tfstate" \
             -backend-config="region=${{ secrets.AWS_DEFAULT_REGION }}" \
-            -backend-config="workspace_key_prefix=shared-resources"
+            -backend-config="workspace_key_prefix=${{ github.event.inputs.stack == 'base' && 'shared-resources' || 'app-resources' }}"
 
       - name: Tar terraform directory
         run: tar -czf terraform-dir.tar.gz -C ${{ env.TF_DIR }} .terraform .terraform.lock.hcl
