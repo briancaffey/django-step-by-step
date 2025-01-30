@@ -50,12 +50,21 @@ jobs:
         run: |
           ls $TF_DIR/.terraform
 
+      # - name: Upload Workspace Context
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: terraform-workspace
+      #     path: ${{ env.TF_DIR }}/.terraform
+      #     retention-days: 1
+
       - name: Upload Workspace Context
         uses: actions/upload-artifact@v4
         with:
           name: terraform-workspace
-          path: ${{ env.TF_DIR }}/.terraform
-          retention-days: 1
+          path: |
+            ${{ env.TF_DIR }}/.terraform/**
+            ${{ env.TF_DIR }}/.terraform.*
+          if-no-files-found: error
 
   terraform-plan:
     name: "Generate Terraform Plan"
