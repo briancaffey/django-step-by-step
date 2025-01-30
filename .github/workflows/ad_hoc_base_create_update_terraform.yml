@@ -46,6 +46,12 @@ jobs:
             -backend-config="region=${{ secrets.AWS_DEFAULT_REGION }}" \
             -backend-config="workspace_key_prefix=shared-resources"
 
+      - name: Upload Workspace Context
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-workspace
+          path: $TF_DIR/.terraform
+
   terraform-plan:
     name: "Generate Terraform Plan"
     needs: terraform-init
