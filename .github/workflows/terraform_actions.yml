@@ -1,5 +1,5 @@
 # github action to create or update shared resources
-name: "[CD] ad hoc | base | create / update"
+name: "[IaC] Terraform GitHub Action"
 
 on:
   workflow_dispatch:
