@@ -4,6 +4,13 @@ name: "[CD] ad hoc | base | create / update"
 on:
   workflow_dispatch:
     inputs:
+      stack:
+        required: true
+        default: 'base'
+        type: choice
+        options:
+          - 'app'
+          - 'base'
       workspace:
         description: 'Terraform workspace for shared resources env'
         required: true
@@ -16,7 +23,7 @@ on:
         type: boolean
 
 env:
-  TF_DIR: iac/terraform/live/ad-hoc/base
+  TF_DIR: iac/terraform/live/ad-hoc/${{ github.event.inputs.stack }}
   WORKSPACE: ${{ github.event.inputs.workspace }}
   TF_PLAN_FILE: tfplan-${{ github.event.inputs.workspace }}.bin
   TF_VAR_certificate_arn: ${{ secrets.ACM_CERTIFICATE_ARN }}
