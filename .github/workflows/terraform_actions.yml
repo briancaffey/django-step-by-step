@@ -27,12 +27,15 @@ env:
   TF_DIR: iac/terraform/live/ad-hoc/${{ github.event.inputs.stack }}
   WORKSPACE: ${{ github.event.inputs.workspace }}
   TF_PLAN_FILE: tfplan-${{ github.event.inputs.workspace }}.bin
+  # TF_VAR used for base stack
   TF_VAR_certificate_arn: ${{ secrets.ACM_CERTIFICATE_ARN }}
   TF_VAR_domain_name: ${{ secrets.DOMAIN_NAME }}
-  # TODO: consolidate terraform variables
-  TF_VAR_backend_name: ${{ secrets.BACKEND_NAME }}
+  # TF_VAR used for app stacks
   TF_VAR_app_name: ${{ secrets.BACKEND_NAME }}
   TF_VAR_s3_bucket: ${{ secrets.BACKEND_NAME }}-bucket
+  # email
+  TF_VAR_email_host_user: ${{ secrets.EMAIL_HOST_USER }}
+  TF_VAR_email_host_password: ${{ secrets.EMAIL_HOST_PASSWORD}}
 
 jobs:
   terraform-init:
