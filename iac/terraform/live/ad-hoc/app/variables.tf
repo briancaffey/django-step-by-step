@@ -193,3 +193,8 @@ variable "fe_image_tag" {
 #   description = "Amount (in MiB) of memory used by the task"
 #   type        = number
 # }
+
+variable "rds_password_secret_name" {
+  type = string
+  description = "AWS Secrets Manager secret name used for RDS instance"
+}
