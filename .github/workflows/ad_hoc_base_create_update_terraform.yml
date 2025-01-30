@@ -46,26 +46,6 @@ jobs:
             -backend-config="region=${{ secrets.AWS_DEFAULT_REGION }}" \
             -backend-config="workspace_key_prefix=shared-resources"
 
-      - name: Check terraform workspace
-        run: |
-          ls $TF_DIR/.terraform
-
-      # - name: Upload Workspace Context
-      #   uses: actions/upload-artifact@v4
-      #   with:
-      #     name: terraform-workspace
-      #     path: ${{ env.TF_DIR }}/.terraform
-      #     retention-days: 1
-
-      - name: Upload Workspace Context
-        uses: actions/upload-artifact@v4
-        with:
-          name: terraform-workspace
-          path: |
-            ${{ env.TF_DIR }}/.terraform/**
-            ${{ env.TF_DIR }}/.terraform.*
-          if-no-files-found: error
-
   terraform-plan:
     name: "Generate Terraform Plan"
     needs: terraform-init
@@ -77,12 +57,6 @@ jobs:
         with:
           terraform_version: 1.10.5
           terraform_wrapper: false
-
-      - name: Download Workspace Context
-        uses: actions/download-artifact@v4
-        with:
-          name: terraform-workspace
-          path: ${{ env.TF_DIR }}/.terraform
 
       - name: Terraform Plan
         run: |
