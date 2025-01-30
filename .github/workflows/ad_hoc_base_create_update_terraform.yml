@@ -55,6 +55,7 @@ jobs:
           name: terraform-workspace
           path: terraform-dir.tar.gz
           retention-days: 1
+          if-no-files-found: error
 
   terraform-plan:
     name: "Generate Terraform Plan"
@@ -72,7 +73,9 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: terraform-workspace
-          path: $TF_DIR/.terraform
+
+      - name: Extract terraform directory
+        run: tar -xzf terraform-dir.tar.gz -C ${{ env.TF_DIR }}
 
       - name: Terraform Plan
         run: |
