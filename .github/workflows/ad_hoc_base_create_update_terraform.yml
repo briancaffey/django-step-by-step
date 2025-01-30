@@ -10,65 +10,107 @@ on:
         default: 'dev'
         type: string
 
+env:
+  TF_DIR: iac/terraform/live/ad-hoc/base
+  TF_WORKSPACE: ${{ github.event.inputs.workspace }}
+  TF_PLAN_FILE: tfplan-${{ github.event.inputs.workspace }}.bin
+  TF_VAR_certificate_arn: ${{ secrets.ACM_CERTIFICATE_ARN }}
+  TF_VAR_domain_name: ${{ secrets.DOMAIN_NAME }}
+  TF_VAR_backend_name: ${{ secrets.BACKEND_NAME }}
+
 jobs:
-  create_update_shared_resources:
-    name: "Create or update shared resources [${{ github.event.inputs.workspace }}]"
-    environment: shared-resources-${{ github.event.inputs.workspace }}
+  terraform-init:
+    name: "Initialize Terraform"
     runs-on: ubuntu-latest
-
     steps:
+      - uses: actions/checkout@v4
 
-      - uses: hashicorp/setup-terraform@v1
+      - uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.10.5
           terraform_wrapper: false
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-      - uses: actions/checkout@v3
-
-      - name: "terraform init, plan and apply for shared resources"
-        id: terraform_init_plan_apply_shared_resources
-        env:
-          BACKEND_NAME: ${{ secrets.BACKEND_NAME }}
-          BACKEND_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
-          WORKSPACE: ${{ github.event.inputs.workspace }} # environment-specific name based on Terraform workspace
-
-          # Terraform variables
-          TF_VAR_certificate_arn: ${{ secrets.ACM_CERTIFICATE_ARN }}
-          TF_VAR_domain_name: ${{ secrets.DOMAIN_NAME }}
-          TF_VAR_backend_name: ${{ secrets.BACKEND_NAME }}
-
+      - name: Terraform Init
         run: |
-          export VAR_FILE=envs/${WORKSPACE}.tfvars
-
-          terraform -chdir=iac/terraform/live/ad-hoc/base \
-            init \
-            -backend-config="bucket=${BACKEND_NAME}-bucket" \
-            -backend-config="dynamodb_table=${BACKEND_NAME}-lock-table" \
+          terraform -chdir=$TF_DIR init \
+            -backend-config="bucket=${{ secrets.BACKEND_NAME }}-bucket" \
+            -backend-config="dynamodb_table=${{ secrets.BACKEND_NAME }}-lock-table" \
             -backend-config="key=terraform.tfstate" \
-            -backend-config="region=${BACKEND_REGION}" \
+            -backend-config="region=${{ secrets.AWS_DEFAULT_REGION }}" \
             -backend-config="workspace_key_prefix=shared-resources"
 
-          # create the workspace if it doesn't exist already
-          terraform workspace new ${WORKSPACE} || echo "Workspace ${WORKSPACE} already exists or cannot be created"
+          terraform -chdir=$TF_DIR workspace new $TF_WORKSPACE || true
+          terraform -chdir=$TF_DIR workspace select $TF_WORKSPACE
 
-          # set the TF_WORKSPACE environment variable
-          export TF_WORKSPACE=$WORKSPACE
+  terraform-plan:
+    name: "Generate Terraform Plan"
+    needs: terraform-init
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
 
-          terraform -chdir=iac/terraform/live/ad-hoc/base \
-            plan \
-            -no-color \
-            -var-file=$VAR_FILE
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.10.5
+          terraform_wrapper: false
 
-          # terraform -chdir=iac/terraform/live/ad-hoc/base \
-          #   apply \
-          #   -auto-approve \
-          #   -var-file=$VAR_FILE
+      - name: Download Workspace Context
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform-workspace
+          path: $TF_DIR/.terraform
 
-          # terraform -chdir=iac/terraform/live/ad-hoc/base output -json
+      - name: Terraform Plan
+        run: |
+          terraform -chdir=$TF_DIR workspace new $TF_WORKSPACE || true
+          terraform -chdir=$TF_DIR workspace select $TF_WORKSPACE
+
+          terraform -chdir=$TF_DIR plan \
+            -var-file=envs/$TF_WORKSPACE.tfvars \
+            -out=$TF_PLAN_FILE
+
+          # Save plan file as artifact
+          mkdir -p tf_artifacts
+          mv $TF_DIR/$TF_PLAN_FILE tf_artifacts/
+
+      - name: Upload Plan Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-plan
+          path: tf_artifacts/$TF_PLAN_FILE
+
+  terraform-apply:
+    name: "Apply Terraform Changes"
+    needs: terraform-plan
+    # TODO: add environment for manual approvals
+    # environment:
+    #   name: production
+    #   url: https://github.com/${{ github.repository }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.10.5
+          terraform_wrapper: false
+
+      - name: Download Plan Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform-plan
+          path: $TF_DIR
+
+      - name: Terraform Apply
+        run: |
+          terraform -chdir=$TF_DIR workspace new $TF_WORKSPACE || true
+          terraform -chdir=$TF_DIR workspace select $TF_WORKSPACE
+
+          terraform -chdir=$TF_DIR apply $TF_PLAN_FILE
