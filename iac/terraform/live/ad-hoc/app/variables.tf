@@ -193,3 +193,11 @@ variable "fe_image_tag" {
 #   description = "Amount (in MiB) of memory used by the task"
 #   type        = number
 # }
+
+variable "email_host_password" {
+  type = string
+}
+
+variable "email_host_user" {
+  type = string
+}

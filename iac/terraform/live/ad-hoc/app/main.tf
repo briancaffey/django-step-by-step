@@ -31,4 +31,6 @@ module "main" {
   redis_service_host             = data.terraform_remote_state.this.outputs.redis_service_host
   app_name                       = var.app_name
   rds_password_secret_name       = data.terraform_remote_state.this.outputs.rds_password_secret_name
+  email_host_user                = var.email_host_user
+  email_host_password            = var.email_host_password
 }
