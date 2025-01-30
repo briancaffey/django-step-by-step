@@ -89,24 +89,23 @@ jobs:
           terraform -chdir=${{ env.TF_DIR }} workspace new ${{ env.WORKSPACE }} || true
           terraform -chdir=${{ env.TF_DIR }} workspace select ${{ env.WORKSPACE }}
 
-          # Create plan and save it to TF_DIR
           terraform -chdir=${{ env.TF_DIR }} plan \
             -var-file=envs/${{ env.WORKSPACE }}.tfvars \
             -out=${{ env.TF_PLAN_FILE }}
+
+          # Create artifacts directory and copy plan file
+          mkdir -p tf_artifacts
+          cp ${{ env.TF_DIR }}/${{ env.TF_PLAN_FILE }} tf_artifacts/
 
       - name: Upload Plan Artifact
         uses: actions/upload-artifact@v4
         with:
           name: terraform-plan
-          path: tf_artifacts/$TF_PLAN_FILE
+          path: tf_artifacts/${{ env.TF_PLAN_FILE }}
 
   terraform-apply:
     name: "Apply Terraform Changes"
     needs: terraform-plan
-    # TODO: add environment for manual approvals
-    # environment:
-    #   name: production
-    #   url: https://github.com/${{ github.repository }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -135,7 +134,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: terraform-plan
-          path: ${{ env.TF_DIR }}
+          path: tf_artifacts
+
+      - name: Copy Plan to TF DIR
+        run: |
+          cp tf_artifacts/${{ env.TF_PLAN_FILE }} ${{ env.TF_DIR }}/
 
       - name: Terraform Apply
         run: |
