@@ -86,16 +86,13 @@ jobs:
 
       - name: Terraform Plan
         run: |
-          terraform -chdir=$TF_DIR workspace new $WORKSPACE || true
-          terraform -chdir=$TF_DIR workspace select $WORKSPACE
+          terraform -chdir=${{ env.TF_DIR }} workspace new ${{ env.WORKSPACE }} || true
+          terraform -chdir=${{ env.TF_DIR }} workspace select ${{ env.WORKSPACE }}
 
-          terraform -chdir=$TF_DIR plan \
-            -var-file=envs/$WORKSPACE.tfvars \
-            -out=$TF_PLAN_FILE
-
-          # Save plan file as artifact
-          mkdir -p tf_artifacts
-          mv $TF_DIR/$TF_PLAN_FILE tf_artifacts/
+          # Create plan and save it to TF_DIR
+          terraform -chdir=${{ env.TF_DIR }} plan \
+            -var-file=envs/${{ env.WORKSPACE }}.tfvars \
+            -out=${{ env.TF_PLAN_FILE }}
 
       - name: Upload Plan Artifact
         uses: actions/upload-artifact@v4
