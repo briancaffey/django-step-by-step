@@ -44,3 +44,7 @@ output "domain_name" {
 output "base_stack_name" {
   value = module.main.base_stack_name
 }
+
+output "redis_service_host" {
+  value = module.main.redis_service_host
+}
