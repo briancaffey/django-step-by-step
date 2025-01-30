@@ -16,9 +16,7 @@ data "terraform_remote_state" "this" {
 # main
 
 module "main" {
-  # uncomment for easy local development and testing
-  # source                         = "../../../../../../terraform-aws-django/modules/ad-hoc/app"
-  source                         = "git::https://github.com/briancaffey/terraform-aws-django.git//modules/ad-hoc/base" # add ?ref=<branch> to use a branch
+  source                         = "git::https://github.com/briancaffey/terraform-aws-django.git//modules/ad-hoc/app" # add ?ref=<branch> to use a branch
   vpc_id                         = data.terraform_remote_state.this.outputs.vpc_id
   assets_bucket_name             = data.terraform_remote_state.this.outputs.assets_bucket_name
   private_subnet_ids             = data.terraform_remote_state.this.outputs.private_subnet_ids
