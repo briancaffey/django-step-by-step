@@ -75,7 +75,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: task-definition.json
-          container-name: ${{ github.event.inputs.APP_ENV }}-web-ui
+          container-name: web-ui
           image: ${{ github.event.inputs.VERSION }}
 
       - name: Deploy Amazon ECS task definition
