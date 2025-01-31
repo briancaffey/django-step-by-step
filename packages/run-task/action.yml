@@ -1,0 +1,150 @@
+name: 'Action for deploying a new version of a task to an ECS service'
+description: 'Action for running ECS task'
+author: 'Brian Caffey'
+inputs:
+  APP_NAME:
+    required: true
+    #TODO: consider renaming to COMPANY_NAME to avoid confusion with APP_ENV
+    description: 'Top level name (e.g. acme)'
+  APP_ENV:
+    required: true
+    description: 'App env name (e.g. alpha)'
+  CONTAINER_NAME:
+    description: 'The name of the container being updated (e.g. web-ui)'
+    required: true
+  BASE_ENV:
+    description: 'The name of the base infrastructure environment (e.g., dev, stage, prod)'
+    required: true
+    default: 'dev'
+
+runs:
+  using: "composite"
+  steps:
+    # Note: this assumes that your ECR repo lives in the same AWS account as your ECS cluster
+    - name: Get current AWS Account
+      id: get-aws-account
+      shell: bash
+      run: |
+        AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r .Account)
+        echo $AWS_ACCOUNT_ID
+        echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> $GITHUB_ENV
+
+      # https://github.com/aws-actions/amazon-ecs-deploy-task-definition/blob/master/action.yml
+    - name: Fetch run-task input values (subnets, security groups)
+      id: fetch-run-task-inputs
+      shell: bash
+      env:
+        BASE_ENV: dev # TODO: add this as input
+      run: |
+        SUBNETS=$( \
+          aws ec2 describe-subnets \
+            --filters "Name=tag:base-env,Values=$BASE_ENV" "Name=tag:Name,Values=*application*" \
+            --query 'Subnets[*].SubnetId' \
+            --output text \
+        )
+        SUBNET_IDS=$(echo $SUBNETS | tr ' ' ',')
+        echo "subnet-ids=$SUBNET_IDS" >> $GITHUB_ENV
+
+        VPC_ID=$(aws ec2 describe-vpcs --filters "Name=tag:base-env,Values=$BASE_ENV" --query 'Vpcs[*].VpcId' --output text)
+
+        echo "VPC ID $VPC_ID"
+
+        SECURITY_GROUPS=$(
+            aws ec2 describe-security-groups \
+            --filters Name=vpc-id,Values=$VPC_ID Name=tag:base-env,Values=$BASE_ENV Name=tag:Name,Values=$BASE_ENV-app-sg \
+            --query 'SecurityGroups[*].GroupId' \
+            --output text
+        )
+
+        echo "security-groups=$SECURITY_GROUPS" >> $GITHUB_ENV
+
+    - name: Run pre_update task
+      id: run-pre-update-task
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+      with:
+        task-definition: ${{ steps.render-new-task-definition.outputs.task-definition }}
+        service: ${{ github.event.inputs.APP_ENV}}-${{ inputs.CONTAINER_NAME }}
+        cluster: ${{ github.event.inputs.APP_ENV}}-cluster
+        run-task: true
+        run-task-subnets: ${{ env.subnet-ids }}
+        run-task-security-groups: ${{ env.security-groups }}
+        run-task-assign-public-IP: ENABLED # TODO: remove this
+        wait-for-task-stopped: true
+
+    # - name: Run task
+    #   id: run-task
+    #   shell: bash
+    #   env:
+    #     BASE_ENV: ${{ inputs.BASE_ENV }}
+    #     APP_ENV: ${{ inputs.APP_ENV }}
+    #     CONTAINER_NAME: ${{ inputs.CONTAINER_NAME }}
+    #   run: |
+    #     SUBNETS=$( \
+    #       aws ec2 describe-subnets \
+    #         --filters "Name=tag:base-env,Values=$BASE_ENV" "Name=tag:Name,Values=*application*" \
+    #         --query 'Subnets[*].SubnetId' \
+    #         --output text \
+    #     )
+
+    #     # replace spaces with commas using tr
+    #     SUBNET_IDS=$(echo $SUBNETS | tr ' ' ',')
+
+    #     echo "Subnet IDs $SUBNET_IDS"
+
+    #     VPC_ID=$(aws ec2 describe-vpcs --filters "Name=tag:base-env,Values=$BASE_ENV" --query 'Vpcs[*].VpcId' --output text)
+
+    #     echo "VPC ID $VPC_ID"
+
+    #     SECURITY_GROUPS=$(
+    #         aws ec2 describe-security-groups \
+    #         --filters Name=vpc-id,Values=$VPC_ID Name=tag:base-env,Values=$BASE_ENV Name=tag:Name,Values=$BASE_ENV-app-sg \
+    #         --query 'SecurityGroups[*].GroupId' \
+    #         --output text
+    #     )
+
+    #     echo "Security Groups $SECURITY_GROUPS"
+
+    #     echo "Running backend_update commands..."
+
+    #     # timestamp used for log retrieval (milliseconds after Jan 1, 1970 00:00:00 UTC)
+    #     START_TIME=$(date +%s000)
+
+    #     # run the migration task and capture the taskArn into a variable called TASK_ID
+    #     TASK_ID=$( \
+    #       aws ecs run-task \
+    #         --cluster $APP_ENV-cluster \
+    #         --launch-type FARGATE \
+    #         --task-definition $TASK_DEFINITION_ARN \
+    #         --network-configuration "awsvpcConfiguration={subnets=[$SUBNET_IDS],securityGroups=[$SECURITY_GROUPS],assignPublicIp=ENABLED}" \
+    #         | jq -r '.tasks[0].taskArn' \
+    #       )
+
+    #     echo "Task ID is $TASK_ID"
+
+    #     aws ecs wait tasks-stopped \
+    #       --tasks $TASK_ID \
+    #       --cluster $APP_ENV-cluster
+
+    #     END_TIME=$(date +%s000)
+
+    #     # print the CloudWatch log events to STDOUT
+    #     aws logs get-log-events \
+    #       --log-group-name "/ecs/$APP_ENV/update/" \
+    #       --log-stream-name "update/update/${TASK_ID##*/}" \
+    #       --start-time $START_TIME \
+    #       --end-time $END_TIME \
+    #       | jq -r '.events[].message'
+
+    #     # Get exit code
+    #     TASK_EXIT_CODE=$(
+    #       aws ecs describe-tasks \
+    #         --cluster $APP_ENV-cluster \
+    #         --tasks $TASK_ID \
+    #         --query "tasks[0].containers[?name=='$CONTAINER_NAME'].exitCode" \
+    #         --output text)
+
+    #     echo "Task exit code is $TASK_EXIT_CODE"
+
+    #     # exit with the same code
+    #     # if this fails, we should not continue with rest of the deployment
+    #     exit $TASK_EXIT_CODE

@@ -1,15 +1,24 @@
 name: '[CD] App update'
-run-name: '[CD] updating app with version ${{ inputs.VERSION }} on ${{ inputs.APP_ENV }}'
+run-name: '[CD] updating app (BE ${{ inputs.BACKEND_VERSION }}) on ${{ inputs.APP_ENV }}'
 
 on:
   workflow_dispatch:
     inputs:
-      VERSION:
-        required: true
-        description: 'Git tag to deploy (e.g. v1.2.3)'
+      BACKEND_VERSION:
+        required: false
+        description: 'Backend git tag to deploy (e.g. v1.2.3)'
+      FRONTEND_VERSION:
+        required: false
+        description: 'Frontend git tag to deploy (e.g. v1.2.3)'
+        default: ''
       APP_ENV:
         required: true
         description: 'App env name (e.g. alpha)'
+        default: alpha
+      BASE_ENV:
+        required: true
+        description: 'Name for the base infrastructure environment (e.g. dev, stage, prod)'
+        default: dev
 
 env:
   IMAGE_VERSION: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/${{ secrets.APP_NAME }}-frontend:latest
@@ -30,57 +39,34 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
-      - name: Update a part of the application to a specific version
+      # Update the pre-update task definition
+      - name: Update pre-update task
+        if: ${{ inputs.BACKEND_VERSION != '' }}
         uses: ./packages/app-update
         with:
           APP_ENV: ${{ inputs.APP_ENV }}
           APP_NAME: ${{ secrets.APP_NAME }}
-          VERSION: ${{ inputs.VERSION }}
+          VERSION: ${{ inputs.BACKEND_VERSION }}
+          CONTAINER_NAME: 'backend_update'
+          ECR_REPO: 'backend'
+          DEPLOY: 'false'
+
+      - name: Run pre-update task (migrations, collectstatic, etc.)
+        if: ${{ inputs.BACKEND_VERSION != '' }}
+        uses: ./packages/run-task
+        with:
+          APP_ENV: ${{ inputs.APP_ENV }}
+          APP_NAME: ${{ secrets.APP_NAME }}
+          CONTAINER_NAME: 'backend_update'
+          BASE_ENV: ${{ inputs.BASE_ENV }}
+
+      - name: Update a part of the application to a specific version
+        uses: ./packages/app-update
+        if: ${{ inputs.FRONTEND_VERSION != '' }}
+        with:
+          APP_ENV: ${{ inputs.APP_ENV }}
+          APP_NAME: ${{ secrets.APP_NAME }}
+          VERSION: ${{ inputs.FRONTEND_VERSION }}
           CONTAINER_NAME: 'web-ui'
           ECR_REPO: 'frontend'
           DEPLOY: 'true'
-
-      # - name: Get Latest Task Definition
-      #   id: get_task_definition
-      #   run: |
-      #     TASK_FAMILY="${{ inputs.APP_ENV }}-web-ui"
-
-      #     # Get the latest task definition ARN for the task family
-      #     LATEST_TASK_DEF=$(aws ecs list-task-definitions \
-      #       --family-prefix "$TASK_FAMILY" \
-      #       --sort DESC \
-      #       --query "taskDefinitionArns[0]" \
-      #       --output text)
-
-      #     if [ "$LATEST_TASK_DEF" == "None" ]; then
-      #       echo "No task definition found for $TASK_FAMILY"
-      #       exit 1
-      #     fi
-
-      #     echo $LATEST_TASK_DEF
-      #     echo "$LATEST_TASK_DEF"
-
-      #     # Fetch and save the full task definition JSON
-      #     aws ecs describe-task-definition \
-      #       --task-definition "$LATEST_TASK_DEF" \
-      #       --query "taskDefinition" \
-      #       --output json > task-definition.json
-
-      #     echo "Task definition JSON saved to task-definition.json"
-
-      # - name: Fill in the new image ID in the Amazon ECS task definition
-      #   id: task-def
-      #   uses: aws-actions/amazon-ecs-render-task-definition@v1
-      #   with:
-      #     task-definition: task-definition.json
-      #     container-name: web-ui
-      #     image: ${{ env.IMAGE_VERSION }}
-
-      # - name: Deploy Amazon ECS task definition
-      #   id: deploy-task-definition
-      #   uses: aws-actions/amazon-ecs-deploy-task-definition@v2
-      #   with:
-      #     task-definition: ${{ steps.task-def.outputs.task-definition }}
-      #     service: ${{ github.event.inputs.APP_ENV}}-web-ui
-      #     cluster: ${{ github.event.inputs.APP_ENV}}-cluster
-      #     wait-for-service-stability: true
