@@ -5,7 +5,7 @@ import psycopg2
 from apps.core.utils import database_secret
 
 
-def create_database(database_name=None):
+def create_database(database_name):
     """
     This function is only used with ad-hoc environments
 
