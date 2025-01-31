@@ -83,11 +83,11 @@ runs:
         container-name: ${{ inputs.CONTAINER_NAME }}
         image: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ inputs.AWS_REGION}}.amazonaws.com/${{ inputs.APP_NAME }}-${{ inputs.ECR_REPO }}:${{ inputs.VERSION }}
 
-    - name: Debug Rendered Task Definition
-      shell: bash
-      run: |
-        echo Version is: ${{ inputs.VERSION }}
-        cat ${{ steps.render-new-task-definition.outputs.task-definition }}
+    # - name: Debug Rendered Task Definition
+    #   shell: bash
+    #   run: |
+    #     echo Version is: ${{ inputs.VERSION }}
+    #     cat ${{ steps.render-new-task-definition.outputs.task-definition }}
 
     - name: Deploy Amazon ECS task definition
       id: deploy-task-definition
@@ -98,6 +98,16 @@ runs:
         service: ${{ github.event.inputs.APP_ENV}}-${{ inputs.CONTAINER_NAME }}
         cluster: ${{ github.event.inputs.APP_ENV}}-cluster
         wait-for-service-stability: true
+
+    - name: Deploy Amazon ECS task definition
+      id: deploy-task-definition
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+      if: ${{ inputs.DEPLOY != 'true'}}
+      with:
+        task-definition: ${{ steps.render-new-task-definition.outputs.task-definition }}
+        # service: ${{ github.event.inputs.APP_ENV}}-${{ inputs.CONTAINER_NAME }}
+        cluster: ${{ github.event.inputs.APP_ENV}}-cluster
+        # wait-for-service-stability: true
 
     # - name: Deploy new task definition
     #   # if: ${{ inputs.DEPLOY == 'true' }}

@@ -38,6 +38,7 @@ jobs:
 
       # Update the pre-update task definition
       - name: Update pre-update task
+        id: update-pre-update-task-def
         if: ${{ inputs.BACKEND_VERSION != '' }}
         uses: ./packages/app-update
         with:
