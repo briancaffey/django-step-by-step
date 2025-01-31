@@ -2,7 +2,7 @@ import os
 
 import psycopg2
 
-from apps.core.utils import from_secret
+from apps.core.utils import database_secret
 
 
 def create_database(database_name=None):
@@ -17,7 +17,7 @@ def create_database(database_name=None):
             dbname="postgres",
             user="postgres",
             host=os.environ.get("POSTGRES_SERVICE_HOST", "localhost"),
-            password=from_secret(),  # os.environ.get("POSTGRES_PASSWORD", "postgres")
+            password=database_secret,  # os.environ.get("POSTGRES_PASSWORD", "postgres")
         )
 
         # https://www.psycopg.org/docs/connection.html#connection.set_isolation_level
