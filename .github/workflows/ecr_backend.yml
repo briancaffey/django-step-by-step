@@ -29,13 +29,10 @@ jobs:
 
       - name: "Build & Push Backend Docker Image"
         env:
-          GIT_TAG: ${{ github.ref_name }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           DOCKER_BUILDKIT: '1'
           APP_NAME: ${{ secrets.APP_NAME }}
         run: |
-
-          TAG="${GIT_TAG##*/}"
 
           IMAGE_URI=${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/${APP_NAME}-backend
 
