@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.1](https://github.com/briancaffey/django-step-by-step/compare/v0.6.0...v0.6.1) (2025-01-31)
+
+
+### Bug Fixes
+
+* **gha:** fix github action steps ([a4e538a](https://github.com/briancaffey/django-step-by-step/commit/a4e538a027e6f90cd6107afe876c93a3c972b5c8))
+
 ## [0.6.0](https://github.com/briancaffey/django-step-by-step/compare/v0.5.2...v0.6.0) (2025-01-31)
 
 
