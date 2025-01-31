@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.2](https://github.com/briancaffey/django-step-by-step/compare/v0.5.1...v0.5.2) (2025-01-31)
+
+
+### Bug Fixes
+
+* **email:** add admin email setting ([86feb1e](https://github.com/briancaffey/django-step-by-step/commit/86feb1e6d4d1caf10ae9733be7204dcdfe4beffd))
+
 ## [0.5.1](https://github.com/briancaffey/django-step-by-step/compare/v0.5.0...v0.5.1) (2025-01-31)
 
 
