@@ -101,6 +101,7 @@ runs:
         task-definition: cleaned-task-definition.json
         # service: ${{ github.event.inputs.APP_ENV}}-${{ inputs.CONTAINER_NAME }}
         cluster: ${{ github.event.inputs.APP_ENV}}-cluster
+        run-task-launch-type: 'FARGATE'
         run-task: true
         run-task-subnets: ${{ env.subnet-ids }}
         run-task-security-groups: ${{ env.security-groups }}
