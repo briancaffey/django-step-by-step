@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://github.com/briancaffey/django-step-by-step/compare/v0.5.2...v0.6.0) (2025-01-31)
+
+
+### Features
+
+* **gha:** split app_update into different jobs ([07e27e1](https://github.com/briancaffey/django-step-by-step/commit/07e27e18ce8be565d4e52019c2ddd0df14f711c6))
+
 ## [0.5.2](https://github.com/briancaffey/django-step-by-step/compare/v0.5.1...v0.5.2) (2025-01-31)
 
 
