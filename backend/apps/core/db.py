@@ -7,9 +7,8 @@ from apps.core.utils import database_secret
 
 def create_database(database_name):
     """
-    This function is only used with ad-hoc environments
-
-    It creates a database for the ad-hoc environment in which it runs. This currently only supports postgres.
+    This function creates a database for the given environment if it does not already exist.
+    Currently only supports postgres.
     """
 
     try:

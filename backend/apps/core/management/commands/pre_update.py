@@ -21,7 +21,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         # create database for the environment if it does not exist
-        create_database()
+        call_command("create_database")
 
         # collectstatic
         call_command("collectstatic", "--no-input")
