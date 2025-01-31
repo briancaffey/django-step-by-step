@@ -82,13 +82,24 @@ runs:
         container-name: ${{ inputs.CONTAINER_NAME }}
         image: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ inputs.AWS_REGION}}.amazonaws.com/${{ inputs.APP_NAME }}-${{ inputs.ECR_REPO }}:${{ inputs.VERSION }}
 
-    - name: Deploy new task definition
-      if: ${{ inputs.DEPLOY == 'true' }}
-      id: deploy-new-task-definition
-      uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+    - name: Deploy Amazon ECS task definition
+      id: deploy-task-definition
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v2
       with:
-        cluster: ${{ inputs.APP_ENV }}-cluster
         task-definition: ${{ steps.render-new-task-definition.outputs.task-definition }}
+        service: ${{ github.event.inputs.APP_ENV}}-${{ github.event.inputs.CONTAINER_NAME }}
+        cluster: ${{ github.event.inputs.APP_ENV}}-cluster
+        wait-for-service-stability: true
+
+    # - name: Deploy new task definition
+    #   # if: ${{ inputs.DEPLOY == 'true' }}
+    #   id: deploy-new-task-definition
+    #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+    #   with:
+    #     cluster: ${{ inputs.APP_ENV }}-cluster
+    #     task-definition: ${{ steps.render-new-task-definition.outputs.task-definition }}
+
+
 
     # - name: Run task
     #   id: run-task
