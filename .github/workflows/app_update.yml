@@ -65,6 +65,14 @@ jobs:
       matrix:
         service: [gunicorn, beat, default]
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
       # Update the pre-update task definition
       - name: Update pre-update task
         id: update-pre-update-task-def
@@ -83,6 +91,16 @@ jobs:
     runs-on: ubuntu-latest
     if: ${{ inputs.FRONTEND_VERSION != '' }}
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
       - name: Update a part of the application to a specific version
         uses: ./packages/app-update
         if: ${{ inputs.FRONTEND_VERSION != '' }}
