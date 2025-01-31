@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.1](https://github.com/briancaffey/django-step-by-step/compare/v0.7.0...v0.7.1) (2025-01-31)
+
+
+### Bug Fixes
+
+* **settings:** add csrf settings to production settings ([583aed1](https://github.com/briancaffey/django-step-by-step/commit/583aed1ecd0a554070d683a3d9291202fd5f06e5))
+
 ## [0.7.0](https://github.com/briancaffey/django-step-by-step/compare/v0.6.1...v0.7.0) (2025-01-31)
 
 
