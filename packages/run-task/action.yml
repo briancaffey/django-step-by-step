@@ -38,20 +38,20 @@ runs:
       run: |
         SUBNETS=$( \
           aws ec2 describe-subnets \
-            --filters "Name=tag:base-env,Values=$BASE_ENV" "Name=tag:Name,Values=*application*" \
+            --filters "Name=tag:env,Values=$BASE_ENV" "Name=tag:Name,Values=*application*" \
             --query 'Subnets[*].SubnetId' \
             --output text \
         )
         SUBNET_IDS=$(echo $SUBNETS | tr ' ' ',')
         echo "subnet-ids=$SUBNET_IDS" >> $GITHUB_ENV
 
-        VPC_ID=$(aws ec2 describe-vpcs --filters "Name=tag:base-env,Values=$BASE_ENV" --query 'Vpcs[*].VpcId' --output text)
+        VPC_ID=$(aws ec2 describe-vpcs --filters "Name=tag:env,Values=$BASE_ENV" --query 'Vpcs[*].VpcId' --output text)
 
         echo "VPC ID $VPC_ID"
 
         SECURITY_GROUPS=$(
             aws ec2 describe-security-groups \
-            --filters Name=vpc-id,Values=$VPC_ID Name=tag:base-env,Values=$BASE_ENV Name=tag:Name,Values=$BASE_ENV-app-sg \
+            --filters Name=vpc-id,Values=$VPC_ID Name=tag:env,Values=$BASE_ENV Name=tag:Name,Values=$BASE_ENV-app-sg \
             --query 'SecurityGroups[*].GroupId' \
             --output text
         )
