@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.2](https://github.com/briancaffey/django-step-by-step/compare/v0.3.1...v0.3.2) (2025-01-31)
+
+
+### Bug Fixes
+
+* **db:** fix db scripts, update poetry ([b6667c0](https://github.com/briancaffey/django-step-by-step/commit/b6667c0f086e12bc873af57c63a51bb039889b60))
+
 ## [0.3.1](https://github.com/briancaffey/django-step-by-step/compare/v0.3.0...v0.3.1) (2025-01-31)
 
 
