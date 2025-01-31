@@ -11,13 +11,7 @@ def create_database(database_name=None):
 
     It creates a database for the ad-hoc environment in which it runs. This currently only supports postgres.
     """
-    dbname = database_name or os.environ.get("APP_ENV")
 
-    # TODO: remove this
-    print(f"database secret is: {database_secret}")
-
-    # add -db suffix
-    dbname = f"{dbname}-db"
     try:
         conn = psycopg2.connect(
             dbname="postgres",
@@ -32,15 +26,15 @@ def create_database(database_name=None):
         cur = conn.cursor()
 
         # Check if the database already exists
-        cur.execute("SELECT 1 FROM pg_database WHERE datname = %s;", (dbname,))
+        cur.execute("SELECT 1 FROM pg_database WHERE datname = %s;", (database_name,))
         exists = cur.fetchone() is not None
 
         if not exists:
             # Execute the CREATE DATABASE command if the database does not exist
-            cur.execute(f"CREATE DATABASE \"{dbname}\";")
-            print(f"Database '{dbname}' created successfully.")
+            cur.execute(f"CREATE DATABASE \"{database_name}\";")
+            print(f"Database '{database_name}' created successfully.")
         else:
-            print(f"Database '{dbname}' already exists.")
+            print(f"Database '{database_name}' already exists.")
 
         # Commit the changes if any
         conn.commit()
