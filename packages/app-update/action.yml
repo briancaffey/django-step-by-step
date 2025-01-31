@@ -67,6 +67,7 @@ runs:
           --output json > task-definition.json
 
         echo "Task definition JSON saved to task-definition.json"
+        echo Version to use is ${{ inputs.VERSION }}
 
     - name: Remove fields from task definition
       id: cleaned-task-def
@@ -81,6 +82,12 @@ runs:
         task-definition: cleaned-task-definition.json
         container-name: ${{ inputs.CONTAINER_NAME }}
         image: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ inputs.AWS_REGION}}.amazonaws.com/${{ inputs.APP_NAME }}-${{ inputs.ECR_REPO }}:${{ inputs.VERSION }}
+
+    - name: Debug Rendered Task Definition
+      shell: bash
+      run: |
+        echo Version is: ${{ inputs.VERSION }}
+        cat ${{ steps.render-new-task-definition.outputs.task-definition }}
 
     - name: Deploy Amazon ECS task definition
       id: deploy-task-definition
