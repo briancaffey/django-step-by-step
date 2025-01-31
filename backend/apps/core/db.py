@@ -13,6 +13,9 @@ def create_database(database_name=None):
     """
     dbname = database_name or os.environ.get("APP_ENV")
 
+    # TODO: remove this
+    print(f"database secret is: {database_secret}")
+
     # add -db suffix
     dbname = f"{dbname}-db"
     try:
@@ -29,12 +32,12 @@ def create_database(database_name=None):
         cur = conn.cursor()
 
         # Check if the database already exists
-        cur.execute(f"SELECT  1 FROM pg_database WHERE datname = '{dbname}';")
+        cur.execute("SELECT 1 FROM pg_database WHERE datname = %s;", (dbname,))
         exists = cur.fetchone() is not None
 
         if not exists:
             # Execute the CREATE DATABASE command if the database does not exist
-            cur.execute(f"CREATE DATABASE {dbname};")
+            cur.execute(f"CREATE DATABASE \"{dbname}\";")
             print(f"Database '{dbname}' created successfully.")
         else:
             print(f"Database '{dbname}' already exists.")
