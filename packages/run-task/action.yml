@@ -38,7 +38,7 @@ runs:
       run: |
         SUBNETS=$( \
           aws ec2 describe-subnets \
-            --filters "Name=tag:env,Values=$BASE_ENV" \
+            --filters "Name=tag:env,Values=$BASE_ENV" "Name=tag:Name,Values=*private*" \
             --query 'Subnets[*].SubnetId' \
             --output text \
         )
