@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.2](https://github.com/briancaffey/django-step-by-step/compare/v0.7.1...v0.7.2) (2025-01-31)
+
+
+### Bug Fixes
+
+* **nvidia:** add nvidia tf var to terraform actions workflow ([90abf69](https://github.com/briancaffey/django-step-by-step/commit/90abf69c8ed34118bb63a266c9d26237766fe06a))
+
 ## [0.7.1](https://github.com/briancaffey/django-step-by-step/compare/v0.7.0...v0.7.1) (2025-01-31)
 
 
