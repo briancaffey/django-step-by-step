@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.3.1](https://github.com/briancaffey/django-step-by-step/compare/v0.3.0...v0.3.1) (2025-01-31)
+
+
+### Bug Fixes
+
+* **gha:** fix issue where with render task def where task is not updated ([0010e72](https://github.com/briancaffey/django-step-by-step/commit/0010e728ed2e7fe0adf545b86f30c8d38686684b))
+* **gha:** fix issue with deploying new task definition ([b1cbce6](https://github.com/briancaffey/django-step-by-step/commit/b1cbce6e413b8674e8a14cf88cdf91baa483a015))
+* **gha:** fix issue with deploying new task definition ([99bb5b3](https://github.com/briancaffey/django-step-by-step/commit/99bb5b354338dc77a5bcd11e8ecec0293ecfe375))
+
 ## [0.3.0](https://github.com/briancaffey/django-step-by-step/compare/v0.2.0...v0.3.0) (2025-01-31)
 
 
