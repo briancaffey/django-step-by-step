@@ -1,0 +1,88 @@
+name: '[CD] App update'
+run-name: '[CD] updating app with version ${{ inputs.VERSION }} on ${{ inputs.APP_ENV }}'
+
+on:
+  workflow_dispatch:
+    inputs:
+      VERSION:
+        required: true
+        description: 'Git tag to deploy (e.g. v1.2.3)'
+      APP_ENV:
+        required: true
+        description: 'App env name (e.g. alpha)'
+
+env:
+  AWS_REGION: MY_AWS_REGION                   # set this to your preferred AWS region, e.g. us-west-1
+  ECR_REPOSITORY: MY_ECR_REPOSITORY           # set this to your Amazon ECR repository name
+  ECS_SERVICE: MY_ECS_SERVICE                 # set this to your Amazon ECS service name
+  ECS_CLUSTER: MY_ECS_CLUSTER                 # set this to your Amazon ECS cluster name
+  ECS_TASK_DEFINITION: MY_ECS_TASK_DEFINITION # set this to the path to your Amazon ECS task definition
+                                               # file, e.g. .aws/task-definition.json
+  CONTAINER_NAME: MY_CONTAINER_NAME           # set this to the name of the container in the
+                                               # containerDefinitions section of your task definition
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Get task definition for the application being updated
+        id: get-task-definition
+        run: |
+          ls
+
+      - name: Get Latest Task Definition
+        id: get_task_definition
+        run: |
+          TASK_FAMILY="${{ inputs.APP_ENV }}-web-ui"
+
+          # Get the latest task definition ARN for the task family
+          LATEST_TASK_DEF=$(aws ecs list-task-definitions \
+            --family-prefix "$TASK_FAMILY" \
+            --sort DESC \
+            --query "taskDefinitionArns[0]" \
+            --output text)
+
+          if [ "$LATEST_TASK_DEF" == "None" ]; then
+            echo "No task definition found for $TASK_FAMILY"
+            exit 1
+          fi
+
+          echo $LATEST_TASK_DEF
+          echo "$LATEST_TASK_DEF"
+
+          # Fetch and save the full task definition JSON
+          aws ecs describe-task-definition \
+            --task-definition "$LATEST_TASK_DEF" \
+            --query "taskDefinition" \
+            --output json > task-definition.json
+
+          echo "Task definition JSON saved to task-definition.json"
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: task-definition.json
+          container-name: ${{ github.event.inputs.APP_ENV }}-web-ui
+          image: ${{ github.event.inputs.VERSION }}
+
+      - name: Deploy Amazon ECS task definition
+        id: deploy-task-definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ github.event.inputs.APP_ENV}}-web-ui
+          cluster: ${{ github.event.inputs.APP_ENV}}-cluster
+          wait-for-service-stability: true
