@@ -59,7 +59,9 @@ runs:
 
         SECURITY_GROUPS=$(
             aws ec2 describe-security-groups \
-            --filters Name=vpc-id,Values=$VPC_ID Name=tag:env,Values=$BASE_ENV Name=tag:Name,Values=$BASE_ENV-app-sg \
+            --filters "Name=vpc-id,Values=$VPC_ID" \
+                      "Name=tag:env,Values=$BASE_ENV" \
+                      "Name=tag:Name,Values=$BASE_ENV-ecs-sg" \
             --query 'SecurityGroups[*].GroupId' \
             --output text
         )
