@@ -11,4 +11,4 @@ from apps.core.db import create_database
 class Command(BaseCommand):
     def handle(self, *args, **options):
         database_name = os.environ.get("APP_NAME", None)
-        create_database(f"{database_name}-db")
+        create_database(database_name=f"{database_name}-db")
