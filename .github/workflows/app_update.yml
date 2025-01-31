@@ -20,9 +20,6 @@ on:
         description: 'Name for the base infrastructure environment (e.g. dev, stage, prod)'
         default: dev
 
-env:
-  IMAGE_VERSION: ${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-east-1.amazonaws.com/${{ secrets.APP_NAME }}-frontend:latest
-
 jobs:
   deploy:
     name: Deploy
