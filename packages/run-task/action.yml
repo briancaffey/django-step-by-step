@@ -88,11 +88,17 @@ runs:
 
         echo "Task definition JSON saved to task-definition.json"
 
+    - name: Remove fields from task definition
+      id: cleaned-task-def
+      shell: bash
+      run: |
+        jq 'del(.compatibilities, .taskDefinitionArn, .requiresAttributes, .revision, .status, .registeredAt, .registeredBy)' task-definition.json > cleaned-task-definition.json
+
     - name: Run pre_update task
       id: run-pre-update-task
       uses: aws-actions/amazon-ecs-deploy-task-definition@v2
       with:
-        task-definition: ${{ steps.get-task-definition.outputs.task-definition }}
+        task-definition: cleaned-task-definition.json
         # service: ${{ github.event.inputs.APP_ENV}}-${{ inputs.CONTAINER_NAME }}
         cluster: ${{ github.event.inputs.APP_ENV}}-cluster
         run-task: true
