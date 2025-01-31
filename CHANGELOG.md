@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.4.0](https://github.com/briancaffey/django-step-by-step/compare/v0.3.3...v0.4.0) (2025-01-31)
+
+
+### Features
+
+* **gha:** final fixes for gha build push ([9f1442c](https://github.com/briancaffey/django-step-by-step/commit/9f1442cc2553ee67c6d9a651e43f4209d499db43))
+
+
+### Bug Fixes
+
+* **db:** final fix for management command that creates database ([fd108c6](https://github.com/briancaffey/django-step-by-step/commit/fd108c650d5b358369633d9a06f238cae60c71ea))
+* **db:** final fix for management command that creates database ([30964a7](https://github.com/briancaffey/django-step-by-step/commit/30964a79958f5a666117ad179ad1d1fd2021b743))
+* **db:** final fix for management command that creates database ([ee845c8](https://github.com/briancaffey/django-step-by-step/commit/ee845c8f748dd98208dcc168ca84005cfd93bef5))
+* **db:** logging for db ([627bb71](https://github.com/briancaffey/django-step-by-step/commit/627bb71fae60aa9ea308b3fdda6ce0300ad36136))
+* **gha:** update be build push pipeline ([23878fe](https://github.com/briancaffey/django-step-by-step/commit/23878fef4289394be4ad4dd903c90d14ae55bcc3))
+
 ## [0.3.3](https://github.com/briancaffey/django-step-by-step/compare/v0.3.2...v0.3.3) (2025-01-31)
 
 
