@@ -1,5 +1,37 @@
 # Changelog
 
+## [0.3.0](https://github.com/briancaffey/django-step-by-step/compare/v0.2.0...v0.3.0) (2025-01-31)
+
+
+### Features
+
+* **gha:** add app update workflow for frontend app ([4d28090](https://github.com/briancaffey/django-step-by-step/commit/4d2809003192b03e04ff585242f416e0d4ea3d63))
+* **gha:** add workflow for running backend pre-update task for db migrations ([00b4a68](https://github.com/briancaffey/django-step-by-step/commit/00b4a682ad3b0ca163352f51a90510e06052f259))
+
+
+### Bug Fixes
+
+* **db:** fix for the script that creates postgres databases for new environments ([671fa6a](https://github.com/briancaffey/django-step-by-step/commit/671fa6af2f08a5c289273e9c00a4ed0719e3cb1f))
+* **gha:** add fargate launch type to run-task action step ([99f1bf8](https://github.com/briancaffey/django-step-by-step/commit/99f1bf87c120545bea91de8ee05181b29bf1f502))
+* **gha:** add fargate launch type to run-task action step ([9ebf11d](https://github.com/briancaffey/django-step-by-step/commit/9ebf11de4f23d3fc9c881cff45463c2b39e8dae5))
+* **gha:** add if conditional to gha deploy step for when only updating task def ([09812ca](https://github.com/briancaffey/django-step-by-step/commit/09812cab59fd8c6d88e2c8f8cbffab6e6a5e39e3))
+* **gha:** add step to get task definition ([c79fbc2](https://github.com/briancaffey/django-step-by-step/commit/c79fbc28b0d3ec907e0801d9da240c157ef5ef10))
+* **gha:** add step to get task definition ([0137ebd](https://github.com/briancaffey/django-step-by-step/commit/0137ebd8955d06071e629c80d5877d2d84eb6de3))
+* **gha:** fix env vars for tf gha ([ee98ec3](https://github.com/briancaffey/django-step-by-step/commit/ee98ec38b2eb350a067650ffe72bd9f6fd072cd6))
+* **gha:** fix gha task deployment issue ([232b2a2](https://github.com/briancaffey/django-step-by-step/commit/232b2a2455caba5f65a56f3ac6adad166b0b1b5a))
+* **gha:** fix gha task input issue ([bab44f5](https://github.com/briancaffey/django-step-by-step/commit/bab44f5cabb3b93296400a560b51f6ab14982341))
+* **gha:** fix image reference in render task def step ([93d9baf](https://github.com/briancaffey/django-step-by-step/commit/93d9baf129a84c397be7e10351b0f1f0d244622f))
+* **gha:** fix input for reusable gha ([e6340a7](https://github.com/briancaffey/django-step-by-step/commit/e6340a7022de892de9315d7047cf8c3d316fbf53))
+* **gha:** fix tag lookup for run task ([955a2db](https://github.com/briancaffey/django-step-by-step/commit/955a2db1b2b1b6b43396eb9ea16c546bb6b746c9))
+* **gha:** fix tag lookup for security groups ([2eb564f](https://github.com/briancaffey/django-step-by-step/commit/2eb564fb4d162c32b750fb101782e40956197cc3))
+* **gha:** fix tag lookup for subnets ([c901458](https://github.com/briancaffey/django-step-by-step/commit/c901458d9f09fd6d988d1b16b8f85f26d04a9266))
+* **gha:** fix tag lookup for vpc id ([b39343f](https://github.com/briancaffey/django-step-by-step/commit/b39343f70b8b3e8a134e612d87fef82583a63dde))
+* **gha:** fix workflow container-name value ([a88d741](https://github.com/briancaffey/django-step-by-step/commit/a88d741ea3101f6078afab4847819f4ebe921d59))
+* **gha:** move app update to reusable action ([58b891f](https://github.com/briancaffey/django-step-by-step/commit/58b891ff9b36c2e443c0cc323f4b7fec6e3382e5))
+* **gha:** remove unused var backend_name ([5fb354d](https://github.com/briancaffey/django-step-by-step/commit/5fb354dac1bc991992ca6bb18a82c54d704bca29))
+* **gha:** run pre update task fixes ([6a90658](https://github.com/briancaffey/django-step-by-step/commit/6a90658fa14c354541fb5fa5a0e35036ca4a5c0d))
+* **tf:** fix variables for app stack ([94263de](https://github.com/briancaffey/django-step-by-step/commit/94263de3e0c2a2b513eced6ec9b19688f8015dbc))
+
 ## [0.2.0](https://github.com/briancaffey/django-step-by-step/compare/v0.1.0...v0.2.0) (2025-01-30)
 
 
