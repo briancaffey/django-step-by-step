@@ -7,9 +7,9 @@ variable "region" {
   default = "us-east-1"
 }
 
-variable "backend_name" {
-  type = string
-}
+# variable "backend_name" {
+#   type = string
+# }
 
 variable "domain_name" {
   type = string
