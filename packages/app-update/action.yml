@@ -87,7 +87,7 @@ runs:
       uses: aws-actions/amazon-ecs-deploy-task-definition@v2
       with:
         task-definition: ${{ steps.render-new-task-definition.outputs.task-definition }}
-        service: ${{ github.event.inputs.APP_ENV}}-${{ github.event.inputs.CONTAINER_NAME }}
+        service: ${{ github.event.inputs.APP_ENV}}-${{ inputs.CONTAINER_NAME }}
         cluster: ${{ github.event.inputs.APP_ENV}}-cluster
         wait-for-service-stability: true
 
