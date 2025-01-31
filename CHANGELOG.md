@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/briancaffey/django-step-by-step/compare/v0.6.1...v0.7.0) (2025-01-31)
+
+
+### Features
+
+* **nvidia:** add nvidia api key variable to tf config ([81382df](https://github.com/briancaffey/django-step-by-step/commit/81382dfc3c965837dc65ac1ec640d8b635e19617))
+
 ## [0.6.1](https://github.com/briancaffey/django-step-by-step/compare/v0.6.0...v0.6.1) (2025-01-31)
 
 
