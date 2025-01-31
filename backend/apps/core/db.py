@@ -30,7 +30,7 @@ def create_database(database_name):
 
         if not exists:
             # Execute the CREATE DATABASE command if the database does not exist
-            cur.execute(f"CREATE DATABASE \"{database_name}\";")
+            cur.execute(f'CREATE DATABASE "{database_name}";')
             print(f"Database '{database_name}' created successfully.")
         else:
             print(f"Database '{database_name}' already exists.")

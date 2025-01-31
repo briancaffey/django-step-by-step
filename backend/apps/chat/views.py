@@ -153,7 +153,9 @@ def get_chat_sessions(request):
     """
     Retrieve all chat sessions for the current user.
     """
-    chat_sessions = ChatSession.objects.filter(user=request.user).order_by("-created_at")
+    chat_sessions = ChatSession.objects.filter(user=request.user).order_by(
+        "-created_at"
+    )
     response_data = [
         {"session_id": session.id, "created_at": session.created_at}
         for session in chat_sessions

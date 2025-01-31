@@ -10,6 +10,6 @@ from apps.core.db import create_database
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        print(f"APP_NAME is {os.environ.get("APP_NAME", None)}")
+        print(f"APP_NAME is {os.environ.get('APP_NAME', None)}")
         database_name = os.environ.get("APP_NAME", None)
         create_database(f"{database_name}-db")
