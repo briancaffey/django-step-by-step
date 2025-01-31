@@ -58,12 +58,42 @@ runs:
 
         echo "security-groups=$SECURITY_GROUPS" >> $GITHUB_ENV
 
+      # TODO: move this to composite action for DRY code
+    - name: Get Latest Task Definition
+      shell: bash
+      id: get-task-definition
+      run: |
+        TASK_FAMILY="${{ inputs.APP_ENV }}-${{ inputs.CONTAINER_NAME }}"
+
+        # Get the latest task definition ARN for the task family
+        LATEST_TASK_DEF=$(aws ecs list-task-definitions \
+          --family-prefix "$TASK_FAMILY" \
+          --sort DESC \
+          --query "taskDefinitionArns[0]" \
+          --output text)
+
+        if [ "$LATEST_TASK_DEF" == "None" ]; then
+          echo "No task definition found for $TASK_FAMILY"
+          exit 1
+        fi
+
+        echo $LATEST_TASK_DEF
+        echo "$LATEST_TASK_DEF"
+
+        # Fetch and save the full task definition JSON
+        aws ecs describe-task-definition \
+          --task-definition "$LATEST_TASK_DEF" \
+          --query "taskDefinition" \
+          --output json > task-definition.json
+
+        echo "Task definition JSON saved to task-definition.json"
+
     - name: Run pre_update task
       id: run-pre-update-task
       uses: aws-actions/amazon-ecs-deploy-task-definition@v2
       with:
-        task-definition: ${{ steps.render-new-task-definition.outputs.task-definition }}
-        service: ${{ github.event.inputs.APP_ENV}}-${{ inputs.CONTAINER_NAME }}
+        task-definition: ${{ steps.get-task-definition.outputs.task-definition }}
+        # service: ${{ github.event.inputs.APP_ENV}}-${{ inputs.CONTAINER_NAME }}
         cluster: ${{ github.event.inputs.APP_ENV}}-cluster
         run-task: true
         run-task-subnets: ${{ env.subnet-ids }}
