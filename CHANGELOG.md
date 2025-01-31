@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.1](https://github.com/briancaffey/django-step-by-step/compare/v0.5.0...v0.5.1) (2025-01-31)
+
+
+### Bug Fixes
+
+* **lint:** format code with black ([1e05cc0](https://github.com/briancaffey/django-step-by-step/commit/1e05cc0963c745e7295059290983a5f99ce4d869))
+
 ## [0.5.0](https://github.com/briancaffey/django-step-by-step/compare/v0.4.0...v0.5.0) (2025-01-31)
 
 
