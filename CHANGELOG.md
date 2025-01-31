@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.3](https://github.com/briancaffey/django-step-by-step/compare/v0.3.2...v0.3.3) (2025-01-31)
+
+
+### Bug Fixes
+
+* **db:** fix script for creating db ([1b18311](https://github.com/briancaffey/django-step-by-step/commit/1b18311a039c4c193934b904d6b025a7f1747570))
+
 ## [0.3.2](https://github.com/briancaffey/django-step-by-step/compare/v0.3.1...v0.3.2) (2025-01-31)
 
 
