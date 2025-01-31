@@ -85,6 +85,7 @@ runs:
     - name: Deploy Amazon ECS task definition
       id: deploy-task-definition
       uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+      if: ${{ inputs.DEPLOY == 'true'}}
       with:
         task-definition: ${{ steps.render-new-task-definition.outputs.task-definition }}
         service: ${{ github.event.inputs.APP_ENV}}-${{ inputs.CONTAINER_NAME }}
