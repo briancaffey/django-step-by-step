@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/briancaffey/django-step-by-step/compare/v0.4.0...v0.5.0) (2025-01-31)
+
+
+### Features
+
+* **gha:** final fix for create db function ([9b1f71b](https://github.com/briancaffey/django-step-by-step/commit/9b1f71b775eb02d785eddf310a0e5cc1c4d21e8f))
+
 ## [0.4.0](https://github.com/briancaffey/django-step-by-step/compare/v0.3.3...v0.4.0) (2025-01-31)
 
 
