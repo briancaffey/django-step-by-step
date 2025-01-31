@@ -38,10 +38,11 @@ runs:
       run: |
         SUBNETS=$( \
           aws ec2 describe-subnets \
-            --filters "Name=tag:env,Values=$BASE_ENV" "Name=tag:Name,Values=*application*" \
+            --filters "Name=tag:env,Values=$BASE_ENV" \
             --query 'Subnets[*].SubnetId' \
             --output text \
         )
+
         SUBNET_IDS=$(echo $SUBNETS | tr ' ' ',')
         echo "subnet-ids=$SUBNET_IDS" >> $GITHUB_ENV
 
