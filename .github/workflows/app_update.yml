@@ -34,6 +34,7 @@ jobs:
         uses: ./packages/app-update
         with:
           APP_ENV: ${{ inputs.APP_ENV }}
+          APP_NAME: ${{ secrets.APP_NAME }}
           VERSION: ${{ inputs.VERSION }}
           CONTAINER_NAME: 'web-ui'
           ECR_REPO: 'frontend'

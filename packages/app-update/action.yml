@@ -2,6 +2,10 @@ name: 'Action for deploying a new version of a task to an ECS service'
 description: 'Action for running ECS task'
 author: 'Brian Caffey'
 inputs:
+  APP_NAME:
+    required: true
+    #TODO: consider renaming to COMPANY_NAME to avoid confusion with APP_ENV
+    description: 'Top level name (e.g. acme)'
   APP_ENV:
     required: true
     description: 'App env name (e.g. alpha)'
@@ -76,7 +80,7 @@ runs:
       with:
         task-definition: cleaned-task-definition.json
         container-name: ${{ inputs.CONTAINER_NAME }}
-        image: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ inputs.AWS_REGION}}.amazonaws.com/${{ secrets.APP_NAME }}-${{ inputs.ECR_REPO }}:${{ inputs.VERSION }}
+        image: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ inputs.AWS_REGION}}.amazonaws.com/${{ inputs.APP_NAME }}-${{ inputs.ECR_REPO }}:${{ inputs.VERSION }}
 
     - name: Deploy new task definition
       if: ${{ inputs.DEPLOY == 'true' }}
