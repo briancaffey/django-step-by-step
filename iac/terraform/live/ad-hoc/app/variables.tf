@@ -201,3 +201,8 @@ variable "email_host_password" {
 variable "email_host_user" {
   type = string
 }
+
+variable "nvidia_api_key" {
+  type = string
+  default = ""
+}

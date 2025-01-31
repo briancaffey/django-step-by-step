@@ -33,4 +33,5 @@ module "main" {
   rds_password_secret_name       = data.terraform_remote_state.this.outputs.rds_password_secret_name
   email_host_user                = var.email_host_user
   email_host_password            = var.email_host_password
+  nvidia_api_key                 = var.nvidia_api_key
 }
