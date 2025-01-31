@@ -11,7 +11,10 @@ def create_database(database_name=None):
 
     It creates a database for the ad-hoc environment in which it runs. This currently only supports postgres.
     """
-    dbname = database_name or os.environ.get("APP_ENV_NAME")
+    dbname = database_name or os.environ.get("APP_ENV")
+
+    # add -db suffix
+    dbname = f"{dbname}-db"
     try:
         conn = psycopg2.connect(
             dbname="postgres",

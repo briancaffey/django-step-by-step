@@ -20,9 +20,8 @@ from apps.core.db import create_database
 class Command(BaseCommand):
     def handle(self, *args, **options):
 
-        # create database if environment is ad hoc
-        if os.environ.get("AD_HOC_ENV"):
-            create_database()
+        # create database for the environment if it does not exist
+        create_database()
 
         # collectstatic
         call_command("collectstatic", "--no-input")

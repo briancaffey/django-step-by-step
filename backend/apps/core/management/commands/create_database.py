@@ -20,5 +20,5 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        database_name = options.get("database_name", os.environ.get("APP_ENV_NAME"))
+        database_name = options.get("database_name", os.environ.get("APP_ENV"))
         create_database(database_name)
