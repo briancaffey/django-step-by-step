@@ -36,6 +36,7 @@ env:
   # email
   TF_VAR_email_host_user: ${{ secrets.EMAIL_HOST_USER }}
   TF_VAR_email_host_password: ${{ secrets.EMAIL_HOST_PASSWORD}}
+  TF_VAR_nvidia_api_key: ${{ secrets.NVIDIA_API_KEY }}
 
 jobs:
   terraform-init:
