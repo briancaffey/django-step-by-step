@@ -203,6 +203,7 @@ EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "user@email.com")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "password")
 EMAIL_USE_TLS = not DEBUG
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
+ADMIN_EMAIL = DEFAULT_FROM_EMAIL
 ADMINS = [("Admin", os.environ.get("ADMINS", ""))]
 
 if DEBUG:
