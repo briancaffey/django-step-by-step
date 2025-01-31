@@ -58,6 +58,9 @@ runs:
 
         echo "security-groups=$SECURITY_GROUPS" >> $GITHUB_ENV
 
+        echo Security Groups are: $SECURITY_GROUPS
+        echo Subnet IDs are: $SUBNET_IDS
+
       # TODO: move this to composite action for DRY code
     - name: Get Latest Task Definition
       shell: bash
