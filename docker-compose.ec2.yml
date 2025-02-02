@@ -135,3 +135,7 @@ volumes:
   redis-data:
   # pgadmin:
   node_modules:
+
+networks:
+  main:
+    driver: bridge
