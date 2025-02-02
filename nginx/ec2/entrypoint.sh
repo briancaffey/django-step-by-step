@@ -9,9 +9,9 @@ fi
 
 # Use envsubst to replace placeholders in the template
 envsubst '${DOMAIN_NAME}' < /templates/init.conf.template > /output/init.conf
-envsubst '${DOMAIN_NAME}' < /templates/default.conf.template > /output/default.conf
+envsubst '${DOMAIN_NAME}' < /templates/app.conf.template > /output/app.conf
 
 
 echo "Generated Nginx config:"
 cat /output/init.conf
-cat /output/default.conf
+cat /output/app.conf
