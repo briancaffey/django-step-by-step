@@ -1,4 +1,19 @@
 services:
+
+  # used only to get the certificate from certbot - this keeps things clean
+  nginx-init:
+    image: nginx
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/init.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./web-content:/usr/share/nginx/html:ro
+      - certbot-etc:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+    command: ["nginx", "-g", "daemon off;"]
+
   nginx:
     image: nginx
     container_name: nginx
@@ -7,16 +22,13 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      # Use your custom NGINX configuration
-      - ./nginx/ec2/default.conf:/etc/nginx/conf.d/default.conf:ro
-      # Mount the official website content (for testing)
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
       - ./web-content:/usr/share/nginx/html:ro
-      # Shared volumes for certificate data and webroot for challenges
       - certbot-etc:/etc/letsencrypt
       - certbot-www:/var/www/certbot
+    command: ["nginx", "-g", "daemon off;"]
 
-  # Run this container one time to obtain a certificate.
-  # After running it successfully, you can remove it or comment it out.
+  # Certbot: Run this one time to get the certificate
   certbot-init:
     image: certbot/certbot
     container_name: certbot-init
@@ -25,7 +37,7 @@ services:
       - certbot-www:/var/www/certbot
     command: certonly --webroot --webroot-path=/var/www/certbot --email briancaffey2010@gmail.com --agree-tos --no-eff-email -d ec2.briancaffey.com
 
-  # A renewal service that periodically renews the certificate and reloads NGINX.
+  # Automatically renew SSL and reload NGINX
   certbot-renew:
     image: certbot/certbot
     container_name: certbot-renew
@@ -33,7 +45,17 @@ services:
     volumes:
       - certbot-etc:/etc/letsencrypt
       - certbot-www:/var/www/certbot
-    entrypoint: /bin/sh -c "trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot && nginx -s reload; sleep 12h; done"
+    entrypoint: /bin/sh -c "
+      trap exit TERM;
+      while :;
+      do
+        certbot renew --webroot -w /var/www/certbot;
+        if [ -f /etc/letsencrypt/live/ec2.briancaffey.com/fullchain.pem ]; then
+          echo 'SSL Certificate exists. Reloading NGINX...';
+          docker exec nginx nginx -s reload;
+        fi;
+        sleep 12h;
+      done"
 
 volumes:
   certbot-etc:
