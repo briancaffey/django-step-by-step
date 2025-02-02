@@ -8,7 +8,7 @@ services:
     ports:
       - "80:80"
     volumes:
-      - ./nginx/init.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/ec2/init.conf:/etc/nginx/conf.d/default.conf:ro
       - ./web-content:/usr/share/nginx/html:ro
       - certbot-etc:/etc/letsencrypt
       - certbot-www:/var/www/certbot
@@ -22,7 +22,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./nginx/ec2/default.conf:/etc/nginx/conf.d/default.conf:ro
       - ./web-content:/usr/share/nginx/html:ro
       - certbot-etc:/etc/letsencrypt
       - certbot-www:/var/www/certbot
