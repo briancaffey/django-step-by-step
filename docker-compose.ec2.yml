@@ -9,11 +9,11 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - nginx-config:/etc/nginx/conf.d
+      - nginx-config:/etc/nginx
       - certbot-etc:/etc/letsencrypt
       - certbot-www:/var/www/certbot
       - ./nginx/ec2/index.html:/usr/share/nginx/html/index.html:ro
-    command: ["nginx", "-g", "daemon off;", "-c", "/etc/nginx/conf.d/default.conf"]
+    command: ["nginx", "-g", "daemon off;", "-c", "/etc/nginx/default.conf"]
 
   postgres:
     container_name: postgres
@@ -97,15 +97,16 @@ services:
     - "default"
     ports: []
 
-  celery_beat:
-    <<: *backend
-    container_name: celery_beat
-    command:
-      - "celery"
-      - "--app=backend.celery_app:app"
-      - "beat"
-      - "--loglevel=INFO"
-    ports: []
+  # TODO: debug failures
+  # celery_beat:
+  #   <<: *backend
+  #   container_name: celery_beat
+  #   command:
+  #     - "celery"
+  #     - "--app=backend.celery_app:app"
+  #     - "beat"
+  #     - "--loglevel=INFO"
+  #   ports: []
 
   # Automatically renew SSL and reload NGINX
   certbot-renew:
