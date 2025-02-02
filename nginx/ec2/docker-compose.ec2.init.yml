@@ -79,3 +79,7 @@ volumes:
   certbot-etc:
   certbot-www:
   nginx-config:
+
+networks:
+  main:
+    driver: bridge
