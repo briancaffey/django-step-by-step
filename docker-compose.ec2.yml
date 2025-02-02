@@ -1,0 +1,40 @@
+services:
+  nginx:
+    image: nginx
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Use your custom NGINX configuration
+      - ./nginx/ec2/default.conf:/etc/nginx/conf.d/default.conf:ro
+      # Mount the official website content (for testing)
+      - ./web-content:/usr/share/nginx/html:ro
+      # Shared volumes for certificate data and webroot for challenges
+      - certbot-etc:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+
+  # Run this container one time to obtain a certificate.
+  # After running it successfully, you can remove it or comment it out.
+  certbot-init:
+    image: certbot/certbot
+    container_name: certbot-init
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+    command: certonly --webroot --webroot-path=/var/www/certbot --email briancaffey2010@gmail.com --agree-tos --no-eff-email -d ec2.briancaffey.com
+
+  # A renewal service that periodically renews the certificate and reloads NGINX.
+  certbot-renew:
+    image: certbot/certbot
+    container_name: certbot-renew
+    restart: always
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+    entrypoint: /bin/sh -c "trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot && nginx -s reload; sleep 12h; done"
+
+volumes:
+  certbot-etc:
+  certbot-www:
