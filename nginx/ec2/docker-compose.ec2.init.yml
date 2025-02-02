@@ -12,7 +12,7 @@ services:
 
   nginx-init:
     image: nginx
-    container_name: nginx
+    container_name: nginx-init
     restart: always
     ports:
       - "80:80"
