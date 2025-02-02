@@ -197,8 +197,8 @@ AUTH_USER_MODEL = "accounts.CustomUser"
 
 # Email
 
-EMAIL_HOST = os.environ.get("DJANGO_EMAIL_HOST", "localhost")
-EMAIL_PORT = os.environ.get("DJANGO_EMAIL_PORT", "1025")
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "localhost")
+EMAIL_PORT = os.environ.get("EMAIL_PORT", "1025")
 EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "user@email.com")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "password")
 EMAIL_USE_TLS = not DEBUG
