@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.3](https://github.com/briancaffey/django-step-by-step/compare/v0.7.2...v0.7.3) (2025-02-02)
+
+
+### Bug Fixes
+
+* **email:** fix email settings in base settings ([7bd0978](https://github.com/briancaffey/django-step-by-step/commit/7bd0978f77c626b0c814d0dcb7f01810a872d9f2))
+
 ## [0.7.2](https://github.com/briancaffey/django-step-by-step/compare/v0.7.1...v0.7.2) (2025-01-31)
 
 
