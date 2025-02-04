@@ -7,7 +7,7 @@ services:
       - ./nginx/ec2/templates/init.conf.template:/templates/init.conf.template:ro
       - ./nginx/ec2/entrypoint.sh:/templates/entrypoint.sh
     environment:
-      - DOMAIN_NAME
+      - DOMAIN_NAME=${DOMAIN_NAME}
     entrypoint: ["/bin/sh", "-c", "/templates/entrypoint.sh"]
     restart: "no"
 
@@ -48,12 +48,12 @@ services:
       - certbot-etc:/etc/letsencrypt
       - certbot-www:/var/www/certbot
     environment:
+      - DOMAIN_NAME=${DOMAIN_NAME}
       - CERTBOT_EMAIL=${CERTBOT_EMAIL}
-      - CERTBOT_DOMAIN=${CERTBOT_DOMAIN}
     command: >
       certonly --webroot --webroot-path=/var/www/certbot
       --email ${CERTBOT_EMAIL}
-      --agree-tos --no-eff-email -d ${CERTBOT_DOMAIN}
+      --agree-tos --no-eff-email -d ${DOMAIN_NAME}
 
   # Automatically renew SSL and reload NGINX
   certbot-renew:
