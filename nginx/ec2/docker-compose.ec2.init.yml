@@ -2,13 +2,13 @@ services:
   config-generator:
     image: nginx:alpine
     volumes:
-      - nginx-config:/output
-      - ./nginx/ec2/templates/app.conf.template:/templates/app.conf.template:ro
-      - ./nginx/ec2/templates/init.conf.template:/templates/init.conf.template:ro
-      - ./nginx/ec2/entrypoint.sh:/templates/entrypoint.sh
+      - nginx-config:/output:rw
+      - ./templates/app.conf.template:/templates/app.conf.template:ro
+      - ./templates/init.conf.template:/templates/init.conf.template:ro
+      - ./entrypoint.sh:/entrypoint.sh
     environment:
       - DOMAIN_NAME=${DOMAIN_NAME}
-    entrypoint: ["/bin/sh", "-c", "/templates/entrypoint.sh"]
+    entrypoint: ["/bin/sh", "-c", "/entrypoint.sh"]
     restart: "no"
 
   nginx-init:
@@ -19,26 +19,11 @@ services:
       - "80:80"
     volumes:
       - nginx-config:/etc/nginx/conf.d
-      - ./nginx/ec2/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/ec2/index.html:/usr/share/nginx/html/index.html:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./index.html:/usr/share/nginx/html/index.html:ro
       - certbot-etc:/etc/letsencrypt
       - certbot-www:/var/www/certbot
     command: ["nginx", "-g", "daemon off;", "-c", "/etc/nginx/conf.d/init.conf"]
-
-  # # Note: this compose service is used in the docker-compose.ec2.yml file
-  # nginx:
-  #   image: nginx
-  #   container_name: nginx
-  #   restart: always
-  #   ports:
-  #     - "80:80"
-  #     - "443:443"
-  #   volumes:
-  #     - nginx-config:/etc/nginx/conf.d
-  #     - certbot-etc:/etc/letsencrypt
-  #     - certbot-www:/var/www/certbot
-  #     - ./nginx/ec2/index.html:/usr/share/nginx/html/index.html:ro
-  #   command: ["nginx", "-g", "daemon off;", "-c", "/etc/nginx/conf.d/app.conf"]
 
   # Certbot: Run this one time to get the certificate
   certbot-init:
@@ -49,7 +34,7 @@ services:
       - certbot-www:/var/www/certbot
     environment:
       - DOMAIN_NAME=${DOMAIN_NAME}
-      - CERTBOT_EMAIL=${CERTBOT_EMAIL}
+      - CERTBOT_EMAIL=${CERTBOT_EMAIL:-jpj@navy.mil}
     command: >
       certonly --webroot --webroot-path=/var/www/certbot
       --email ${CERTBOT_EMAIL}
@@ -64,13 +49,13 @@ services:
       - certbot-etc:/etc/letsencrypt
       - certbot-www:/var/www/certbot
     environment:
-      - CERTBOT_DOMAIN=${CERTBOT_DOMAIN}
+      - DOMAIN_NAME=${DOMAIN_NAME}
     entrypoint: /bin/sh -c "
       trap exit TERM;
       while :;
       do
         certbot renew --webroot -w /var/www/certbot;
-        if [ -f /etc/letsencrypt/live/${CERTBOT_DOMAIN}/fullchain.pem ]; then
+        if [ -f /etc/letsencrypt/live/${DOMAIN_NAME}/fullchain.pem ]; then
           echo 'SSL Certificate exists. Reloading NGINX...';
           docker exec nginx nginx -s reload;
         fi;
