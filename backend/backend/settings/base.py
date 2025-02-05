@@ -195,12 +195,17 @@ PRIVATE_MEDIA_STORAGE = "backend.storage_backends.PrivateMediaStorage"
 # Custom user model
 AUTH_USER_MODEL = "accounts.CustomUser"
 
-# Email
+# Email (using SES)
+
+EMAIL_BACKEND = "anymail.backends.amazon_ses.EmailBackend"
+EMAIL_DOMAIN_NAME = os.environ.get("DOMAIN_NAME", "example.com")
+DEFAULT_EMAIL = f"hello@{EMAIL_DOMAIN_NAME}"
+DEFAULT_FROM_EMAIL = DEFAULT_EMAIL
 
 EMAIL_HOST = os.environ.get("EMAIL_HOST", "localhost")
 EMAIL_PORT = os.environ.get("EMAIL_PORT", "1025")
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "user@email.com")
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "password")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", DEFAULT_EMAIL)
+EMAIL_HOST_PASSWORD = DEFAULT_FROM_EMAIL
 EMAIL_USE_TLS = not DEBUG
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 ADMIN_EMAIL = DEFAULT_FROM_EMAIL
