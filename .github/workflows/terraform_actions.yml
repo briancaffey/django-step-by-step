@@ -24,7 +24,7 @@ on:
         type: boolean
 
 env:
-  TF_DIR: iac/terraform/live/ad-hoc/${{ github.event.inputs.stack }}
+  TF_DIR: iac/terraform/live/ecs/${{ github.event.inputs.stack }}
   WORKSPACE: ${{ github.event.inputs.workspace }}
   TF_PLAN_FILE: tfplan-${{ github.event.inputs.workspace }}.bin
   # TF_VAR used for base stack

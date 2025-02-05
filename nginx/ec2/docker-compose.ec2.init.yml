@@ -33,12 +33,12 @@ services:
       - certbot-etc:/etc/letsencrypt
       - certbot-www:/var/www/certbot
     environment:
-      - DOMAIN_NAME=${DOMAIN_NAME}
-      - CERTBOT_EMAIL=${CERTBOT_EMAIL:-jpj@navy.mil}
+      - DOMAIN_NAME
+      - CERTBOT_EMAIL
     command: >
       certonly --webroot --webroot-path=/var/www/certbot
-      --email ${CERTBOT_EMAIL}
-      --agree-tos --no-eff-email -d ${DOMAIN_NAME}
+      --register-unsafely-without-email
+      --agree-tos --no-eff-email -d example.domain.com
 
   # Automatically renew SSL and reload NGINX
   certbot-renew:

@@ -27,11 +27,6 @@ output "alb_dns_name" {
   value = module.main.alb_dns_name
 }
 
-# output "service_discovery_namespace_id" {
-#   value       = module.main.service_discovery_namespace_id
-#   description = "service discovery namespace id"
-# }
-
 output "rds_address" {
   value       = module.main.rds_address
   description = "address of the RDS instance"
