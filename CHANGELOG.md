@@ -1,5 +1,34 @@
 # Changelog
 
+## [0.8.0](https://github.com/briancaffey/django-step-by-step/compare/v0.7.3...v0.8.0) (2025-02-05)
+
+
+### Features
+
+* **compose:** setup docker compose config for ec2 ([5e10e89](https://github.com/briancaffey/django-step-by-step/commit/5e10e89a32f45256aa654aa3ea3b7bfaa82eb3b2))
+* **compose:** setup docker compose config for ec2 ([ace0fb7](https://github.com/briancaffey/django-step-by-step/commit/ace0fb7b57567c7b49f954198dc65178e588c5e1))
+* **compose:** setup docker compose config for ec2 ([9e463dd](https://github.com/briancaffey/django-step-by-step/commit/9e463ddff049e24943c7571853a502079a48cc98))
+* **compose:** setup docker compose config for ec2 typo ([56d9760](https://github.com/briancaffey/django-step-by-step/commit/56d97604eeef0d7fa3f8b7defc4c9bc6acf29550))
+* **compose:** setup docker compose config for ec2 typo ([04fb4de](https://github.com/briancaffey/django-step-by-step/commit/04fb4debe8a81a802ea1beee2c9958cde8d9bd90))
+* **docker-compose:** add a docker compose config that can run on ec2 ([1e82118](https://github.com/briancaffey/django-step-by-step/commit/1e82118a0197cf3202ed52605e090fb8c4b5ac8c))
+* **docker-compose:** add a docker compose config that can run on ec2 ([020fe08](https://github.com/briancaffey/django-step-by-step/commit/020fe0817ce18ba879f88606d227532bb858124b))
+* **docker-compose:** add a docker compose config that can run on ec2 ([58867f5](https://github.com/briancaffey/django-step-by-step/commit/58867f539dde252b958a421cbab56b57f562fd55))
+* **email:** updated email settings to support ses ([bec6224](https://github.com/briancaffey/django-step-by-step/commit/bec6224d4cc82f204f84ca4e373bcd31d9117753))
+* **terraform:** update terraform code to support new module structure ([5a824f5](https://github.com/briancaffey/django-step-by-step/commit/5a824f5ce4fb9e4f21bc70ba6d10550b37919452))
+
+
+### Bug Fixes
+
+* **ec2:** chmod for entrypoint.sh ([3e05e83](https://github.com/briancaffey/django-step-by-step/commit/3e05e83f8601b6e4c976b8caca925d029e7573e1))
+* **ec2:** fix docker compose volumes for ec2 init compose ([070afe2](https://github.com/briancaffey/django-step-by-step/commit/070afe2f50ef0d81d60e27c63835e3f8dc2ea304))
+* **ec2:** fix docker compose volumes for ec2 init compose ([2a16172](https://github.com/briancaffey/django-step-by-step/commit/2a16172327aa34aebcf579b9461c5121d50aaa75))
+* **nginx:** fix docker compose nginx config ([6156b10](https://github.com/briancaffey/django-step-by-step/commit/6156b10cf6a7244751d350f384c1aea49da140e4))
+* **nginx:** fix docker compose nginx config ([d7a1eb1](https://github.com/briancaffey/django-step-by-step/commit/d7a1eb1ce032ee8c7c23570d98459f4fe7d6ec6c))
+* **nginx:** fix docker compose nginx config ([85fd12e](https://github.com/briancaffey/django-step-by-step/commit/85fd12e45117b3b0eb5183dc0f0248507112b079))
+* **nginx:** fix docker compose nginx config typo ([4d2844c](https://github.com/briancaffey/django-step-by-step/commit/4d2844cc0d5573f56574e0e2e12ac980d1a20efe))
+* **nginx:** fix nginx configs in docker compose for ec2 ([5e84d50](https://github.com/briancaffey/django-step-by-step/commit/5e84d5098696d26e1d62d2162bc619f44e05c441))
+* **nginx:** fix nginx configs in docker compose for ec2 ([099723c](https://github.com/briancaffey/django-step-by-step/commit/099723c34f3e496b96ac17d7ca87d15d159088d3))
+
 ## [0.7.3](https://github.com/briancaffey/django-step-by-step/compare/v0.7.2...v0.7.3) (2025-02-02)
 
 
