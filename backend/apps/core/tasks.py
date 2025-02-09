@@ -35,7 +35,7 @@ def send_email_debug_task():
     email = EmailMessage(
         subject,
         html_message,
-        os.environ.get("DJANGO_EMAIL_HOST_USER", "debug+email@local.dev"),
+        settings.DEFAULT_FROM_EMAIL,
         [settings.ADMIN_EMAIL],
     )
     email.content_subtype = "html"
