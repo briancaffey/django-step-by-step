@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.1](https://github.com/briancaffey/django-step-by-step/compare/v0.8.0...v0.8.1) (2025-02-09)
+
+
+### Bug Fixes
+
+* **email:** fix to email for celery task confirmation email ([19aa9a5](https://github.com/briancaffey/django-step-by-step/commit/19aa9a53640bba54d64b919c4c1b34cdac4729d4))
+
 ## [0.8.0](https://github.com/briancaffey/django-step-by-step/compare/v0.7.3...v0.8.0) (2025-02-05)
 
 
