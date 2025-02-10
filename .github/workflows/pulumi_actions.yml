@@ -52,7 +52,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: yarn
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -64,6 +63,7 @@ jobs:
       - name: Pulumi init
         working-directory: ${{ env.PULUMI_DIR }}
         run: |
+          yarn install
           pulumi stack init ${{ env.ENV_NAME }} || true
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
@@ -92,7 +92,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: yarn
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -100,6 +99,13 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Yarn install
+        working-directory: ${{ env.PULUMI_DIR }}
+        run: |
+          yarn install
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
 
       - name: Pulumi Up
         uses: pulumi/actions@v6
@@ -123,7 +129,13 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: yarn
+
+      - name: Yarn install
+        working-directory: ${{ env.PULUMI_DIR }}
+        run: |
+          yarn install
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
