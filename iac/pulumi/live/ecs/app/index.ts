@@ -1,10 +1,10 @@
 import * as pulumi from "@pulumi/pulumi";
-import { AdHocAppComponent } from 'pulumi-aws-django';
+import { EcsAppComponent } from 'pulumi-aws-django';
 
 const org = process.env.PULUMI_ORG || "briancaffey";
-const environment = process.env.PULUMI_ENVIRONMENT || "alpha";
+const environment = process.env.PULUMI_ENVIRONMENT || "dev";
 
-const stackReference = new pulumi.StackReference(`${org}/adhoc-app/${environment}`)
+const stackReference = new pulumi.StackReference(`${org}/ecs-base/${environment}`)
 
 const vpcId = stackReference.getOutput("vpcId") as pulumi.Output<string>;
 const assetsBucketName = stackReference.getOutput("assetsBucketName") as pulumi.Output<string>;
@@ -13,13 +13,13 @@ const appSgId = stackReference.getOutput("appSgId") as pulumi.Output<string>;
 const albSgId = stackReference.getOutput("albSgId") as pulumi.Output<string>;
 const listenerArn = stackReference.getOutput("listenerArn") as pulumi.Output<string>;
 const albDnsName = stackReference.getOutput("albDnsName") as pulumi.Output<string>;
-const serviceDiscoveryNamespaceId = stackReference.getOutput("serviceDiscoveryNamespaceId") as pulumi.Output<string>;
+const redisServiceHost = stackReference.getOutput("redisServiceHost") as pulumi.Output<string>;
 const rdsAddress = stackReference.getOutput("rdsAddress") as pulumi.Output<string>;
 const domainName = stackReference.getOutput("domainName") as pulumi.Output<string>;
 const baseStackName = stackReference.getOutput("baseStackName") as pulumi.Output<string>;
-
+const rdsPasswordSecretName = stackReference.getOutput("rdsPasswordSecretName") as pulumi.Output<string>;
 // ad hoc app env
-const adHocAppComponent = new AdHocAppComponent("AdHocAppComponent", {
+const ecsAppComponent = new EcsAppComponent("AdHocAppComponent", {
   vpcId,
   assetsBucketName,
   privateSubnets,
@@ -27,11 +27,13 @@ const adHocAppComponent = new AdHocAppComponent("AdHocAppComponent", {
   albSgId,
   listenerArn,
   albDnsName,
-  serviceDiscoveryNamespaceId,
+  redisServiceHost,
   rdsAddress,
   domainName,
-  baseStackName
+  baseStackName,
+  rdsPasswordSecretName
 });
 
 // exports
-export const backendUpdateScript = adHocAppComponent.backendUpdateScript;
+export const ssmAccessCommand = ecsAppComponent.ssmAccessCommand;
+

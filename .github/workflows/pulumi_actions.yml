@@ -60,10 +60,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
+      - run: yarn install
+        working-directory: ${{ env.PULUMI_DIR }}
+
       - name: Pulumi init
         working-directory: ${{ env.PULUMI_DIR }}
         run: |
-          yarn install
           pulumi stack init ${{ env.ENV_NAME }} || true
         env:
           PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
