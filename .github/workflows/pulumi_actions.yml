@@ -1,5 +1,5 @@
 name: "[IaC] Pulumi GitHub Action"
-run-name: "[IaC] pulumi ${{ inputs.destroy && 'destroy' || 'up' }} -> ecs-${{ inputs.stack }}/${{ inputs.app_env || inputs.base_env }}"
+run-name: "[IaC] pulumi ${{ inputs.destroy && 'destroy' || 'up' }} -> ecs-${{ inputs.stack }}/${{ inputs.stack == 'base' && inputs.base_env || inputs.app_env }}"
 
 on:
   workflow_dispatch:
@@ -15,7 +15,7 @@ on:
       app_env:
         description: 'Pulumi app environment for the stack (for example, dev, staging, prod)'
         required: false
-        default: dev
+        default: gamma
         type: string
       base_env:
         description: 'Pulumi base environment for the stack (for example, alpha, beta, app)'
