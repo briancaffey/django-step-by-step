@@ -21,9 +21,9 @@ on:
         default: dev
 
 jobs:
-  pre-update:
+  pre-backend-update:
     if: ${{ inputs.BACKEND_VERSION != '' }}
-    name: pre-update
+    name: pre-backend-update
     runs-on: ubuntu-latest
 
     steps:
@@ -57,10 +57,10 @@ jobs:
           CONTAINER_NAME: 'backend_update'
           BASE_ENV: ${{ inputs.BASE_ENV }}
 
-  update:
-    name: update
+  backend-update:
+    name: backend-update
     runs-on: ubuntu-latest
-    needs: pre-update
+    needs: pre-backend-update
     strategy:
       matrix:
         service: [gunicorn, beat, default]
@@ -86,9 +86,10 @@ jobs:
           ECR_REPO: 'backend'
           DEPLOY: 'true'
 
-  frontend:
+  frontend-update:
     name: deploy frontend
     runs-on: ubuntu-latest
+    needs: backend-update
     if: ${{ inputs.FRONTEND_VERSION != '' }}
     steps:
       - name: Checkout
