@@ -1,0 +1,123 @@
+name: "[IaC] Pulumi GitHub Action"
+run-name: "[IaC] pulumi ${{ inputs.destroy && 'destroy' || 'up' }} -> ${{ inputs.stack }} [Env: ${{ inputs.env }}]"
+
+on:
+  workflow_dispatch:
+    inputs:
+      stack:
+        description: 'Select the Pulumi stack (app or base)'
+        required: true
+        default: base
+        type: choice
+        options:
+          - app
+          - base
+      env:
+        description: 'Pulumi environment for the stack (for example, dev, staging, prod)'
+        required: true
+        default: dev
+        type: string
+      destroy:
+        description: 'Set to true to run pulumi destroy instead of up'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  PULUMI_DIR: iac/pulumi/live/ecs/${{ github.event.inputs.stack }}
+
+jobs:
+  pulumi-preview:
+    name: "Preview Pulumi Changes"
+    if: ${{ github.event.inputs.destroy != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: yarn
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Pulumi Preview
+        uses: pulumi/actions@v6
+        with:
+          command: preview
+          comment-on-summary: true
+          stack-name: ${{ secrets.PULUMI_ORG }}/ecs-${{ github.event.inputs.stack }}/${{ github.event.inputs.env }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          work-dir: ${{ env.PULUMI_DIR }}
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+  pulumi-up:
+    name: "Apply Pulumi Changes"
+    if: ${{ github.event.inputs.destroy != 'true' }}
+    needs: pulumi-preview
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: yarn
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Pulumi Up
+        uses: pulumi/actions@v6
+        with:
+          command: up
+          stack-name: ${{ secrets.PULUMI_ORG }}/ecs-${{ github.event.inputs.stack }}/${{ github.event.inputs.env }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          work-dir: ${{ env.PULUMI_DIR }}
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
+
+  pulumi-destroy:
+    name: "Destroy Pulumi Stack"
+    if: ${{ github.event.inputs.destroy == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: yarn
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Pulumi Destroy
+        uses: pulumi/actions@v6
+        with:
+          command: destroy
+          stack-name: ${{ secrets.PULUMI_ORG }}/ecs-${{ github.event.inputs.stack }}/${{ github.event.inputs.env }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          work-dir: ${{ env.PULUMI_DIR }}
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
