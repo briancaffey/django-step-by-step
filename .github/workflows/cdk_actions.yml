@@ -1,5 +1,5 @@
-name: '[CDK] CDK GitHub Action'
-run-name: '[CDK] ${{ inputs.CDK_OPERATION }} | stack: ${{ inputs.STACK }} | app: ${{ inputs.DIRECTORY }}'
+name: '[IaC] CDK GitHub Action'
+run-name: '[IaC | CDK] ${{ inputs.CDK_OPERATION }} | stack: ${{ inputs.STACK }} | app: ${{ inputs.DIRECTORY }}'
 
 on:
   workflow_dispatch:
