@@ -65,6 +65,8 @@ jobs:
         working-directory: ${{ env.PULUMI_DIR }}
         run: |
           pulumi stack init ${{ env.ENV_NAME }} || true
+        env:
+          PULUMI_ACCESS_TOKEN: ${{ secrets.PULUMI_ACCESS_TOKEN }}
 
       - name: Pulumi Preview
         uses: pulumi/actions@v6
