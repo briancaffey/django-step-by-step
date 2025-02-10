@@ -13,12 +13,12 @@ on:
           - app
           - base
       app_env:
-        description: 'Pulumi environment for the stack (for example, dev, staging, prod)'
+        description: 'Pulumi app environment for the stack (for example, dev, staging, prod)'
         required: false
         default: dev
         type: string
       base_env:
-        description: 'Pulumi environment for the stack (for example, dev, staging, prod)'
+        description: 'Pulumi base environment for the stack (for example, alpha, beta, app)'
         required: true
         default: dev
         type: string
