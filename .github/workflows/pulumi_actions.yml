@@ -25,6 +25,12 @@ on:
 
 env:
   PULUMI_DIR: iac/pulumi/live/ecs/${{ github.event.inputs.stack }}
+  CERTIFICATE_ARN: ${{ secrets.ACM_CERTIFICATE_ARN }}
+  DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+  COMPANY_NAME: ${{ secrets.COMPANY_NAME }}
+  AWS_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+  AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
 
 jobs:
   pulumi-preview:
