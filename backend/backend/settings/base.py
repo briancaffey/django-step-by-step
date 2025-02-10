@@ -28,7 +28,7 @@ BASE_STACK_NAME = os.environ.get("BASE_STACK_NAME", "local")
 
 # Sentry
 SENTRY_DSN = os.environ.get("SENTRY_DSN", None)
-SENTRY_ENVIRONMENT = f"{BASE_DIR}.${APP_NAME}"
+SENTRY_ENVIRONMENT = f"{BASE_STACK_NAME}.${APP_NAME}"
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
