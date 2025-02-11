@@ -113,6 +113,7 @@ jobs:
         uses: pulumi/actions@v6
         with:
           command: up
+          suppress-progress: true
           stack-name: ${{ secrets.PULUMI_ORG }}/ecs-${{ github.event.inputs.stack }}/${{ env.ENV_NAME }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           work-dir: ${{ env.PULUMI_DIR }}
@@ -150,6 +151,7 @@ jobs:
         uses: pulumi/actions@v6
         with:
           command: destroy
+          suppress-progress: true
           stack-name: ${{ secrets.PULUMI_ORG }}/ecs-${{ github.event.inputs.stack }}/${{ env.ENV_NAME }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           work-dir: ${{ env.PULUMI_DIR }}

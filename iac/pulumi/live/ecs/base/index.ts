@@ -6,7 +6,7 @@ const ecsBaseEnv = new EcsBaseEnvComponent('myEcsEnv', {
 });
 
 export const vpcId = ecsBaseEnv.vpc.vpcId;
-export const assetsBucket = ecsBaseEnv.assetsBucket.id;
+export const assetsBucketName = ecsBaseEnv.assetsBucket.id;
 export const privateSubnetIds = ecsBaseEnv.vpc.privateSubnetIds;
 export const appSgId = ecsBaseEnv.appSecurityGroup.id;
 export const albSgId = ecsBaseEnv.albSecurityGroup.id;
