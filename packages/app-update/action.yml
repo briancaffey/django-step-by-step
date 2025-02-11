@@ -97,6 +97,7 @@ runs:
         task-definition: ${{ steps.render-new-task-definition.outputs.task-definition }}
         service: ${{ github.event.inputs.APP_ENV}}-${{ inputs.CONTAINER_NAME }}
         cluster: ${{ github.event.inputs.APP_ENV}}-cluster
+        desired-count: 1
         wait-for-service-stability: true
 
     - name: Deploy Amazon ECS task definition
