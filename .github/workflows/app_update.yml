@@ -89,7 +89,7 @@ jobs:
   frontend-update:
     name: deploy frontend
     runs-on: ubuntu-latest
-    needs: backend-update
+    # needs: backend-update
     if: ${{ inputs.FRONTEND_VERSION != '' }}
     steps:
       - name: Checkout
