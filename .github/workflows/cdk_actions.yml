@@ -1,4 +1,4 @@
-name: '[IaC] CDK GitHub Action'
+name: '[IaC] CDK GitHub Action OLD'
 run-name: '[IaC | CDK] ${{ inputs.CDK_OPERATION }} | stack: ${{ inputs.STACK }} | app: ${{ inputs.DIRECTORY }}'
 
 on:
