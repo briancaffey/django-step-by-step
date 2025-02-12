@@ -93,13 +93,13 @@ jobs:
           echo "Synthesizing CloudFormation template..."
           cdk synth --app "$CDK_APP" -e $CDK_ENV $CDK_FLAGS
 
-      - name: Upload Synth Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: cdk-synth
-          path: ${{ env.CDK_DIR }}/cdk.out
-          retention-days: 1
-          if-no-files-found: error
+      # - name: Upload Synth Artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: cdk-synth
+      #     path: ${{ env.CDK_DIR }}/cdk.out
+      #     retention-days: 1
+      #     if-no-files-found: error
 
   cdk-deploy:
     name: "Deploy CDK Changes"
@@ -130,14 +130,14 @@ jobs:
       - run: tsc
         working-directory: ${{ env.CDK_DIR }}
 
-      - name: Download Synth Artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: cdk-synth
-          path: cdk_artifacts
+      # - name: Download Synth Artifact
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: cdk-synth
+      #     path: cdk_artifacts
 
-      - name: Copy Cloud Assembly to CDK Directory
-        run: cp -r cdk_artifacts/cdk.out ${{ env.CDK_DIR }}/
+      # - name: Copy Cloud Assembly to CDK Directory
+      #   run: cp -r cdk_artifacts/cdk.out ${{ env.CDK_DIR }}/
 
       - name: CDK Deploy
         id: cdk_deploy
@@ -146,7 +146,7 @@ jobs:
           echo "Available stacks in this CDK app:"
           cdk ls
           echo "Deploying stack using cloud assembly..."
-          cdk --app cdk.out deploy -e $CDK_ENV $CDK_FLAGS
+          cdk deploy --app $CDK_APP -e $CDK_ENV $CDK_FLAGS
 
   cdk-destroy:
     name: "Destroy CDK Resources"
