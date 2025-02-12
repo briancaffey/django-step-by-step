@@ -143,8 +143,10 @@ jobs:
         id: cdk_deploy
         run: |
           cd $CDK_DIR
+          echo "Available stacks in this CDK app:"
+          cdk ls
           echo "Deploying stack using cloud assembly..."
-          cdk deploy --app cdk.out -e $CDK_ENV $CDK_FLAGS
+          cdk --app cdk.out deploy -e $CDK_ENV $CDK_FLAGS
 
   cdk-destroy:
     name: "Destroy CDK Resources"
