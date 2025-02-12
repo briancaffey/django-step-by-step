@@ -41,8 +41,8 @@ env:
   AWS_REGION: ${{ secrets.AWS_DEFAULT_REGION }}           # e.g. us-east-1
   COMPANY_NAME: ${{ secrets.COMPANY_NAME }}               # e.g. abc
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}           # e.g. 123456789
-  APP_NAME: ${{ github.event.inputs.app_name }}           # e.g. alpha
-  BASE_NAME: ${{ github.event.inputs.base_name }}         # e.g. dev
+  APP_NAME: ${{ github.event.inputs.app_env }}           # e.g. alpha
+  BASE_NAME: ${{ github.event.inputs.base_env }}         # e.g. dev
 
 jobs:
   cdk-synth:
