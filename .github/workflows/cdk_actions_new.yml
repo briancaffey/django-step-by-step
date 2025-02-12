@@ -91,13 +91,13 @@ jobs:
         run: |
           cd $CDK_DIR
           echo "Synthesizing CloudFormation template..."
-          cdk synth --app "$CDK_APP" -e $CDK_ENV $CDK_FLAGS > synth.yml
+          cdk synth --app "$CDK_APP" -e $CDK_ENV $CDK_FLAGS
 
       - name: Upload Synth Artifact
         uses: actions/upload-artifact@v4
         with:
           name: cdk-synth
-          path: ${{ env.CDK_DIR }}/synth.yml
+          path: ${{ env.CDK_DIR }}/cdk.out
           retention-days: 1
           if-no-files-found: error
 
@@ -136,15 +136,15 @@ jobs:
           name: cdk-synth
           path: cdk_artifacts
 
-      - name: Copy Synth Artifact to CDK Directory
-        run: cp cdk_artifacts/synth.yml ${{ env.CDK_DIR }}/synth.yml
+      - name: Copy Cloud Assembly to CDK Directory
+        run: cp -r cdk_artifacts/cdk.out ${{ env.CDK_DIR }}/
 
       - name: CDK Deploy
         id: cdk_deploy
         run: |
           cd $CDK_DIR
-          echo "Deploying stack using synthesized template..."
-          cdk deploy --app synth.yml -e $CDK_ENV $CDK_FLAGS
+          echo "Deploying stack using cloud assembly..."
+          cdk deploy --app cdk.out -e $CDK_ENV $CDK_FLAGS
 
   cdk-destroy:
     name: "Destroy CDK Resources"
