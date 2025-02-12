@@ -37,7 +37,7 @@ env:
   CDK_VERSION: '2.178.1'
 
   DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}                 # e.g. example.com
-  CERTIFICATE_ARN: ${{ secrets.CERTIFICATE_ARN }}         # e.g. arn:aws:acm:us-east-1:111111111111:certificate/11111111-1111-1111-1111-111111111111
+  CERTIFICATE_ARN: ${{ secrets.ACM_CERTIFICATE_ARN }}         # e.g. arn:aws:acm:us-east-1:111111111111:certificate/11111111-1111-1111-1111-111111111111
   AWS_REGION: ${{ secrets.AWS_DEFAULT_REGION }}           # e.g. us-east-1
   COMPANY_NAME: ${{ secrets.COMPANY_NAME }}               # e.g. abc
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}           # e.g. 123456789
