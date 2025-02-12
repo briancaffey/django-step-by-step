@@ -70,7 +70,7 @@ jobs:
       - run: npm i -g aws-cdk@$CDK_VERSION
         working-directory: ${{ env.CDK_DIR }}
 
-      - run: npx projen build
+      - run: tsc
         working-directory: ${{ env.CDK_DIR }}
 
       - name: CDK Diff and Append to Summary
@@ -127,7 +127,7 @@ jobs:
       - run: npm i -g aws-cdk@$CDK_VERSION
         working-directory: ${{ env.CDK_DIR }}
 
-      - run: npx projen build
+      - run: tsc
         working-directory: ${{ env.CDK_DIR }}
 
       - name: Download Synth Artifact
@@ -171,7 +171,7 @@ jobs:
       - run: npm i -g aws-cdk@$CDK_VERSION
         working-directory: ${{ env.CDK_DIR }}
 
-      - run: npx projen build
+      - run: tsc
         working-directory: ${{ env.CDK_DIR }}
 
       - name: CDK Destroy
