@@ -46,12 +46,12 @@ jobs:
       - name: "cdk diff"
         id: cdk_diff
         run: |
-          cd iac/cdk/ && cdk diff --app='lib/ad-hoc/index.js' -e ExampleAdHocBaseStack --require-approval never
+          cd iac/cdk/ && cdk diff --app='lib/ad-hoc/index.js' -e base --require-approval never
 
       - name: "cdk synth"
         id: cdk_synth
         run: |
-          cd iac/cdk && cdk synth --app='lib/ad-hoc/index.js' -e ExampleAdHocBaseStack --require-approval never > synth.yml
+          cd iac/cdk && cdk synth --app='lib/ad-hoc/index.js' -e base --require-approval never > synth.yml
 
       - name: "ls"
         id: ls
@@ -95,4 +95,4 @@ jobs:
       - name: "cdk deploy"
         id: cdk_deploy
         run: |
-          cd iac/cdk && cdk deploy --app synth.yml -e ExampleAdHocBaseStack --require-approval never
+          cd iac/cdk && cdk deploy --app synth.yml -e base --require-approval never
