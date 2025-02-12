@@ -34,6 +34,7 @@ env:
   CDK_APP: lib/ecs/index.js
   CDK_ENV: ${{ github.event.inputs.stack }}
   CDK_FLAGS: --require-approval never
+  CDK_VERSION: '2.178.1'
 
   DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}                 # e.g. example.com
   CERTIFICATE_ARN: ${{ secrets.CERTIFICATE_ARN }}         # e.g. arn:aws:acm:us-east-1:111111111111:certificate/11111111-1111-1111-1111-111111111111
@@ -64,6 +65,9 @@ jobs:
           node-version: '20'
 
       - run: yarn install
+        working-directory: ${{ env.CDK_DIR }}
+
+      - run: npm i -g aws-cdk@$CDK_VERSION
         working-directory: ${{ env.CDK_DIR }}
 
       - name: CDK Diff and Append to Summary
@@ -117,6 +121,9 @@ jobs:
       - run: yarn install
         working-directory: ${{ env.CDK_DIR }}
 
+      - run: npm i -g aws-cdk@$CDK_VERSION
+        working-directory: ${{ env.CDK_DIR }}
+
       - name: Download Synth Artifact
         uses: actions/download-artifact@v4
         with:
@@ -153,6 +160,9 @@ jobs:
           node-version: '20'
 
       - run: yarn install
+        working-directory: ${{ env.CDK_DIR }}
+
+      - run: npm i -g aws-cdk@$CDK_VERSION
         working-directory: ${{ env.CDK_DIR }}
 
       - name: CDK Destroy
