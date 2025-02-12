@@ -32,7 +32,7 @@ env:
   # Directory and application entrypoint for CDK commands
   CDK_DIR: iac/cdk
   CDK_APP: lib/ecs/index.js
-  CDK_ENV: ${{ github.event.inputs.stack }}
+  CDK_ENV: ${{ github.event.inputs.stack == 'base' && github.event.inputs.base_env || github.event.inputs.app_env }}
   CDK_FLAGS: --require-approval never
   CDK_VERSION: '2.178.1'
 
