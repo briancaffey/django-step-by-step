@@ -351,26 +351,26 @@ tf-fmt:
 
 ## initialize terraform for the backend
 tf-bootstrap-init:
-	cd iac/terraform/bootstrap && terraform init --var-file=bootstrap.tfvars
+	terraform -chdir=iac/terraform/bootstrap init --var-file=bootstrap.tfvars
 
 ## initialize terraform for the backend
 tf-bootstrap-init-upgrade:
-	cd iac/terraform/bootstrap && terraform init -upgrade --var-file=bootstrap.tfvars
+	terraform -chdir=iac/terraform/bootstrap init -upgrade --var-file=bootstrap.tfvars
 
 ## plan terraform S3 backend configuration
 tf-bootstrap-plan:
-	cd iac/terraform/bootstrap && terraform plan --var-file=bootstrap.tfvars
+	terraform -chdir=iac/terraform/bootstrap plan --var-file=bootstrap.tfvars
 
 ## apply terraform S3 backend configuration
 tf-bootstrap-apply:
-	cd iac/terraform/bootstrap && terraform apply --var-file=bootstrap.tfvars
+	terraform -chdir=iac/terraform/bootstrap apply --var-file=bootstrap.tfvars
 
 ## init, plan and apply terraform backend configuration
 tf-bootstrap:	tf-bootstrap-init	tf-bootstrap-plan	tf-bootstrap-apply
 
 ## destroy terraform backend and ecr resources
 tf-bootstrap-destroy:
-	cd iac/terraform/bootstrap && terraform destroy --var-file=bootstrap.tfvars
+	terraform -chdir=iac/terraform/bootstrap destroy --var-file=bootstrap.tfvars
 
 ## -- CDK Targets --
 projen:

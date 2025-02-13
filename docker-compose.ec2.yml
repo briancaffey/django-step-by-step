@@ -1,0 +1,143 @@
+services:
+
+  # Note: this compose service is used in the docker-compose.ec2.yml file
+  nginx:
+    image: nginx
+    container_name: nginx
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - nginx-config:/etc/nginx/conf.d
+      - certbot-etc:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+      - ./nginx/ec2/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ec2/index.html:/usr/share/nginx/html/index.html:ro
+    command: ["nginx", "-g", "daemon off;", "-c", "/etc/nginx/conf.d/app.conf"]
+
+  postgres:
+    container_name: postgres
+    image: postgres:17.2
+    networks:
+      - main
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=postgres
+
+  nuxt-app:
+    container_name: nuxt-app
+    build:
+      context: ./nuxt-app
+      dockerfile: ./Dockerfile
+      target: prod
+    ports:
+      - "8081:3000"
+      - "24678:24678"
+    environment:
+      - NUXT_PUBLIC_APP_VERSION=v9.9.9
+      # - NUXT_PUBLIC_API_BASE
+    volumes:
+      - ./nuxt-app:/src
+      - node_modules:/src/node_modules
+      - /src/.output
+
+  redis:
+    image: redis:alpine
+    volumes:
+      - redis-data:/data
+    container_name: redis
+    networks:
+      - main
+
+  backend: &backend
+    container_name: backend
+    build:
+      context: ./backend
+      target: prod
+    command:
+      - "gunicorn"
+      - "-t"
+      - "1000"
+      - "-b"
+      - "0.0.0.0:8000"
+      - "--log-level"
+      - "info"
+      - "backend.wsgi"
+    volumes:
+      - ./backend:/code
+    ports:
+      - "8000:8000"
+    networks:
+      - main
+    environment:
+      - DEBUG=0
+      - POSTGRES_SERVICE_HOST=postgres
+      - POSTGRES_PASSWORD=postgres
+      - REDIS_SERVICE_HOST=redis
+      - DJANGO_SETTINGS_MODULE=backend.settings.ec2
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - NVIDIA_API_KEY=${NVIDIA_API_KEY}
+      - PIDFILE=/code/celerybeat.pid
+    depends_on:
+      - postgres
+      - redis
+
+  celery_worker:
+    <<: *backend
+    container_name: celery_worker
+    command:
+    - "celery"
+    - "--app=backend.celery_app:app"
+    - "worker"
+    - "--loglevel=INFO"
+    - "-Q"
+    - "default"
+    ports: []
+
+  # TODO: debug failures
+  # celery_beat:
+  #   <<: *backend
+  #   container_name: celery_beat
+  #   command:
+  #     - "celery"
+  #     - "--app=backend.celery_app:app"
+  #     - "beat"
+  #     - "--loglevel=INFO"
+  #   ports: []
+
+  # Automatically renew SSL and reload NGINX
+  certbot-renew:
+    image: certbot/certbot
+    container_name: certbot-renew
+    restart: always
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+    entrypoint: /bin/sh -c "
+      trap exit TERM;
+      while :;
+      do
+        certbot renew --webroot -w /var/www/certbot;
+        if [ -f /etc/letsencrypt/live/ec2.briancaffey.com/fullchain.pem ]; then
+          echo 'SSL Certificate exists. Reloading NGINX...';
+          docker exec nginx nginx -s reload;
+        fi;
+        sleep 12h;
+      done"
+
+volumes:
+  certbot-etc:
+  certbot-www:
+  nginx-config:
+  pg-data:
+  redis-data:
+  # pgadmin:
+  node_modules:
+
+networks:
+  main:
+    driver: bridge

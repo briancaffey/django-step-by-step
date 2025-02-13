@@ -1,0 +1,84 @@
+name: '[IaC] CDK GitHub Action OLD'
+run-name: '[IaC | CDK] ${{ inputs.CDK_OPERATION }} | stack: ${{ inputs.STACK }} | app: ${{ inputs.DIRECTORY }}'
+
+on:
+  workflow_dispatch:
+    inputs:
+      STACK:
+        required: true
+        default: 'dev'
+        type: choice
+        options:
+          - 'dev'
+          - 'alpha'
+        description: "Name of stack that will be deployed or destroyed"
+      DIRECTORY:
+        required: true
+        default: 'ad-hoc'
+        type: choice
+        options:
+          - 'ad-hoc'
+          - 'prod'
+        description: "Relative path the directory where CDK command will run"
+      CDK_OPERATION:
+        required: true
+        default: 'deploy'
+        type: choice
+        options:
+          - 'deploy'
+          - 'destroy'
+
+jobs:
+  cdk:
+    name: "CDK"
+    permissions:
+      id-token: write
+      contents: read
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # Switch to role auth
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - uses: actions/checkout@v4
+
+      - name: Setup Node LTS
+        uses: actions/setup-node@v3
+        with:
+          node-version: lts/*
+          cache: yarn
+          cache-dependency-path: './iac/cdk/yarn.lock'
+
+      - name: Installing dependencies 📦️
+        working-directory: 'iac/cdk'
+        run: yarn install
+
+      - name: install CDK
+        run: |
+          npm install -g aws-cdk
+
+      - name: Build
+        working-directory: 'iac/cdk'
+        env:
+          ACM_CERTIFICATE_ARN: ${{ secrets.ACM_CERTIFICATE_ARN }}
+          DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+        run: |
+          tsc
+
+      - name: CDK Action
+        working-directory: 'iac/cdk'
+        env:
+          ACM_CERTIFICATE_ARN: ${{ secrets.ACM_CERTIFICATE_ARN }}
+          DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+        # https://github.com/aws/aws-cdk/issues/3894#issuecomment-526933209
+        run: |
+          cdk ${{ inputs.CDK_OPERATION }} \
+            --app='./lib/${{ inputs.DIRECTORY }}/index.js' \
+            -e ${{ inputs.STACK }} \
+            ${{ inputs.CDK_OPERATION == 'destroy' && '--force' || '--require-approval never'}}

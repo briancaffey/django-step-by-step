@@ -18,7 +18,9 @@ jobs:
       id-token: write
       contents: read
     runs-on: ubuntu-latest
+
     steps:
+
       # Switch to role auth
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
@@ -26,7 +28,9 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
       - uses: actions/checkout@v4
+
       - name: Run the pre-update command
         uses: ./packages/ecr-run-task
         with:

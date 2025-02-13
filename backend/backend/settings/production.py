@@ -2,7 +2,7 @@
 
 from .base import *
 
-from apps.core.utils import from_secret
+from apps.core.utils import database_secret
 
 DEBUG = 0
 
@@ -11,7 +11,7 @@ DATABASES["default"]["OPTIONS"] = {
     "sslrootcert": "/usr/local/share/global-bundle.pem",
 }
 
-DATABASES["default"]["PASSWORD"] = from_secret()
+DATABASES["default"]["PASSWORD"] = database_secret
 
 # add django-storages to INSTALLED_APPS
 INSTALLED_APPS += ("storages",)
@@ -29,4 +29,8 @@ AWS_STATIC_LOCATION = "static"
 # If True, cookies will be allowed to be included in cross-site HTTP requests. Defaults to False.
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = False
-CORS_ALLOWED_ORIGINS = [os.environ.get("FRONTEND_URL")]
+CORS_ALLOWED_ORIGINS = [FRONTEND_URL]
+CSRF_TRUSTED_ORIGINS = [FRONTEND_URL]
+
+CSRF_COOKIE_SECURE = True
+CSRF_COOKIE_HTTPONLY = True

@@ -65,6 +65,7 @@ urlpatterns = [
         csrf_exempt(GraphQLView.as_view(graphiql=True)),
         name="graphql",
     ),
+    path("api/chat/", include("apps.chat.urls")),
 ]
 
 # static files

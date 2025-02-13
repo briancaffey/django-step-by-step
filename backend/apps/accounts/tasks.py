@@ -42,8 +42,8 @@ def send_confirmation_email(*, user_id, domain):
     email = EmailMessage(
         subject,
         html_message,
-        os.environ.get("DJANGO_EMAIL_HOST_USER", "debug+email@local.dev"),
-        [settings.ADMIN_EMAIL],
+        settings.DEFAULT_FROM_EMAIL,
+        [user.email],
     )
     email.content_subtype = "html"
     email.send()

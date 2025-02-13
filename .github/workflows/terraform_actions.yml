@@ -1,0 +1,204 @@
+# github action to create or update shared resources
+name: "[IaC] Terraform GitHub Action"
+run-name: "[IaC] terraform ${{ inputs.destroy && 'destroy' || 'apply'}} -> ${{ inputs.stack }} [Workspace: ${{ inputs.workspace }}]"
+
+on:
+  workflow_dispatch:
+    inputs:
+      stack:
+        required: true
+        default: 'base'
+        type: choice
+        options:
+          - 'app'
+          - 'base'
+      workspace:
+        description: 'Terraform workspace for shared resources env'
+        required: true
+        default: 'dev'
+        type: string
+      destroy:
+        description: 'Set to true to run terraform destroy instead of apply'
+        required: false
+        default: false
+        type: boolean
+
+env:
+  TF_DIR: iac/terraform/live/ecs/${{ github.event.inputs.stack }}
+  WORKSPACE: ${{ github.event.inputs.workspace }}
+  TF_PLAN_FILE: tfplan-${{ github.event.inputs.workspace }}.bin
+  # TF_VAR used for base stack
+  TF_VAR_certificate_arn: ${{ secrets.ACM_CERTIFICATE_ARN }}
+  TF_VAR_domain_name: ${{ secrets.DOMAIN_NAME }}
+  # TF_VAR used for app stacks
+  TF_VAR_app_name: ${{ secrets.BACKEND_NAME }}
+  TF_VAR_s3_bucket: ${{ secrets.BACKEND_NAME }}-bucket
+  # email
+  TF_VAR_email_host_user: ${{ secrets.EMAIL_HOST_USER }}
+  TF_VAR_email_host_password: ${{ secrets.EMAIL_HOST_PASSWORD}}
+  TF_VAR_nvidia_api_key: ${{ secrets.NVIDIA_API_KEY }}
+
+jobs:
+  terraform-init:
+    name: "Initialize Terraform"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.10.5
+          terraform_wrapper: false
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Terraform Init
+        run: |
+          terraform -chdir=$TF_DIR init \
+            -backend-config="bucket=${{ secrets.BACKEND_NAME }}-bucket" \
+            -backend-config="dynamodb_table=${{ secrets.BACKEND_NAME }}-lock-table" \
+            -backend-config="key=terraform.tfstate" \
+            -backend-config="region=${{ secrets.AWS_DEFAULT_REGION }}" \
+            -backend-config="workspace_key_prefix=${{ github.event.inputs.stack == 'base' && 'shared-resources' || 'app-resources' }}"
+
+      - name: Tar terraform directory
+        run: tar -czf terraform-dir.tar.gz -C ${{ env.TF_DIR }} .terraform .terraform.lock.hcl
+
+      - name: Upload Workspace Context
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-workspace
+          path: terraform-dir.tar.gz
+          retention-days: 1
+          if-no-files-found: error
+
+  terraform-plan:
+    name: "Generate Terraform Plan"
+    needs: terraform-init
+    if: github.event.inputs.destroy != 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.10.5
+          terraform_wrapper: false
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Download Workspace Context
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform-workspace
+
+      - name: Extract terraform directory
+        run: tar -xzf terraform-dir.tar.gz -C ${{ env.TF_DIR }}
+
+      - name: Terraform Plan
+        run: |
+          terraform -chdir=${{ env.TF_DIR }} workspace new ${{ env.WORKSPACE }} || true
+          terraform -chdir=${{ env.TF_DIR }} workspace select ${{ env.WORKSPACE }}
+
+          terraform -chdir=${{ env.TF_DIR }} plan \
+            -var-file=envs/${{ env.WORKSPACE }}.tfvars \
+            -out=${{ env.TF_PLAN_FILE }}
+
+          # Create artifacts directory and copy plan file
+          mkdir -p tf_artifacts
+          cp ${{ env.TF_DIR }}/${{ env.TF_PLAN_FILE }} tf_artifacts/
+
+      - name: Upload Plan Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: terraform-plan
+          path: tf_artifacts/${{ env.TF_PLAN_FILE }}
+
+  terraform-apply:
+    name: "Apply Terraform Changes"
+    if: github.event.inputs.destroy != 'true'
+    needs: terraform-plan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.10.5
+          terraform_wrapper: false
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Download Workspace Context
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform-workspace
+
+      - name: Extract terraform directory
+        run: tar -xzf terraform-dir.tar.gz -C ${{ env.TF_DIR }}
+
+      - name: Download Plan Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform-plan
+          path: tf_artifacts
+
+      - name: Copy Plan to TF DIR
+        run: |
+          cp tf_artifacts/${{ env.TF_PLAN_FILE }} ${{ env.TF_DIR }}/
+
+      - name: Terraform Apply
+        run: |
+          terraform -chdir=${{ env.TF_DIR }} workspace new ${{ env.WORKSPACE }} || true
+          terraform -chdir=${{ env.TF_DIR }} workspace select ${{ env.WORKSPACE }}
+          terraform -chdir=${{ env.TF_DIR }} apply ${{ env.TF_PLAN_FILE }}
+
+
+  terraform-destroy:
+    name: "Destroy Terraform Resources"
+    needs: terraform-init
+    if: github.event.inputs.destroy == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.10.5
+          terraform_wrapper: false
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Download Workspace Context
+        uses: actions/download-artifact@v4
+        with:
+          name: terraform-workspace
+
+      - name: Extract terraform directory
+        run: tar -xzf terraform-dir.tar.gz -C ${{ env.TF_DIR }}
+
+      - name: Terraform Destroy
+        run: |
+          terraform -chdir=${{ env.TF_DIR }} workspace new ${{ env.WORKSPACE }} || true
+          terraform -chdir=${{ env.TF_DIR }} workspace select ${{ env.WORKSPACE }}
+          terraform -chdir=${{ env.TF_DIR }} destroy -auto-approve

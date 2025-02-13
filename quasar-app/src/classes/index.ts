@@ -4,7 +4,8 @@
  *
  * Reference article: https://dev.to/blindkai/managing-api-layers-in-vue-js-with-typescript-hno
  */
-
+// @typescript-eslint/no-unsafe-assignment
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { api } from 'boot/axios';
 
 import {
@@ -27,6 +28,12 @@ import {
   RefreshResponse,
   TogglePostLikeResponse,
   TokenResponse,
+  // chat
+  Message,
+  Messages,
+  Session,
+  // ChatResponse,
+  SendMessageResponse
 } from '../types'
 
 /**
@@ -166,7 +173,64 @@ export default class ApiService {
       return [error]
     }
   }
+
+  // chat
+  async sendNewMessage(chatId: number, content: string): Promise<[Error | null, Message | null]> {
+    console.log('Making API call...')
+    try {
+      const { data } = await api.post<SendMessageResponse>(`/api/chat/sessions/${chatId}/messages/send/`, {
+        content,
+      });
+      console.log('Response data is ....');
+      console.log(data);
+      return [null, data];
+    } catch (error: any) {
+      console.error('Error sending message:', error);
+      return [error, null];
+    }
+  };
+
+
+  // API functions
+  async fetchMessages(chatId: number): Promise<[Error | null, Messages | null]> {
+    // TODO: make sure that the JWT is saved as an Http only cookie before making this request
+    // This is failing when doing a hard refresh on the chat page
+    await this.refreshToken();
+    try {
+      const { data } = await api.get<Messages>(`/api/chat/sessions/${chatId.toString()}/messages/`);
+      return [null, data];
+    } catch (error: any) {
+      console.error('Error fetching messages:', error);
+      return [error, null];
+    }
+  };
+
+  // function for getting sessions
+  async fetchSessions(): Promise<[Error | null, Session[] | null]> {
+    await this.refreshToken();
+    try {
+      const { data } = await api.get<Session[]>('/api/chat/get-sessions/');
+      return [null, data];
+    } catch (error: any) {
+      console.error('Error fetching sessions:', error);
+      return [error, null];
+    }
+  };
+
+  // function for creating a new session
+  async createSession(): Promise<[Error | null, any | null]> {
+    await this.refreshToken();
+    try {
+      const { data } = await api.post<any>('/api/chat/sessions/');
+      return [null, data];
+    } catch (error: any) {
+      console.error('Error creating session:', error);
+      return [error, null];
+    }
+  };
 }
+
+
 
 // import apiService into modules when making API calls
 export const apiService = new ApiService();

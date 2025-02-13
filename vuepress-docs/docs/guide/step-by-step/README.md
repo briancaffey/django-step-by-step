@@ -1855,7 +1855,7 @@ def send_email_debug_task():
     email = EmailMessage(
         "Django Step-by-step",
         "This email was sent from Celery.",
-        os.environ.get("DJANGO_EMAIL_HOST_USER", "debug+email@local.dev"),
+        settings.DEFAULT_FROM_EMAIL,
         [settings.ADMIN_EMAIL],
     )
 

@@ -1,5 +1,5 @@
-name: '[ECR] build frontend image'
-run-name: '[ECR] build frontend image ${{ github.ref_name }}'
+name: '[ECR] build & push frontend image'
+run-name: '[ECR] build & push ${{ github.ref_name }}'
 
 on:
   push:
@@ -32,17 +32,18 @@ jobs:
         env:
           GIT_TAG: ${{ github.ref_name }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+          APP_NAME: ${{ secrets.APP_NAME }}
         run: |
 
           TAG="${GIT_TAG##*/}"
 
-          IMAGE_URI=${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/frontend
+          IMAGE_URI=${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/${APP_NAME}-frontend
 
           docker build \
             --build-arg VERSION=$TAG \
+            --target prod \
             -t $IMAGE_URI:$TAG \
             -t $IMAGE_URI:latest \
-            -f nginx/ecs/Dockerfile \
-            .
+            ./nuxt-app
 
           docker push --all-tags $IMAGE_URI

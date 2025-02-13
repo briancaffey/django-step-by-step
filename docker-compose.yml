@@ -1,5 +1,3 @@
-version: "2.4"
-
 services:
 
   nginx:
@@ -16,9 +14,28 @@ services:
     networks:
       - main
 
+  nuxt-app:
+    container_name: nuxt-app
+    build:
+      context: ./nuxt-app
+      dockerfile: ./Dockerfile
+      # set the target to prod and rebuild to use production settings
+      target: dev
+    ports:
+      - "8081:3000"
+      - "24678:24678"
+    environment:
+      - NUXT_PUBLIC_APP_VERSION=v9.9.9
+      # - NUXT_PUBLIC_API_BASE=http://localhost
+    volumes:
+      - ./nuxt-app:/src
+      - node_modules:/src/node_modules
+      # TODO: fix this.. uncomment this when using prod
+      # - /src/.output
+
   postgres:
     container_name: postgres
-    image: postgres:14
+    image: postgres:17
     networks:
       - main
     ports:
@@ -89,6 +106,8 @@ services:
       - POSTGRES_SERVICE_HOST=postgres
       - REDIS_SERVICE_HOST=redis
       - DJANGO_SETTINGS_MODULE=backend.settings.development
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - NVIDIA_API_KEY=${NVIDIA_API_KEY}
 
       # celery beat
       - PIDFILE=/code/celerybeat.pid
@@ -178,6 +197,7 @@ volumes:
   pg-data:
   redis-data:
   pgadmin:
+  node_modules:
 
 networks:
   main:

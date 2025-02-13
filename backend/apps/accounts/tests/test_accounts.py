@@ -51,6 +51,38 @@ class UsersManagersTests(TestCase):
                 email="super@user.com", password="foo", is_superuser=False
             )
 
+    def test_profile_setup_complete(self):
+        User = get_user_model()
+
+        # Create user with no first or last name
+        user = User.objects.create_user(email="test@user.com", password="foo")
+        self.assertFalse(user.profile_setup_complete)
+
+        # Add first name and last name
+        user.first_name = "Test"
+        user.last_name = "User"
+        user.save()
+        user.refresh_from_db()
+        self.assertTrue(user.profile_setup_complete)
+
+        # Clear first name
+        user.first_name = ""
+        user.save()
+        user.refresh_from_db()
+        self.assertFalse(user.profile_setup_complete)
+
+        # Add first name back
+        user.first_name = "Test"
+        user.save()
+        user.refresh_from_db()
+        self.assertTrue(user.profile_setup_complete)
+
+        # Clear last name
+        user.last_name = ""
+        user.save()
+        user.refresh_from_db()
+        self.assertFalse(user.profile_setup_complete)
+
 
 def extract_urls(string):
     """

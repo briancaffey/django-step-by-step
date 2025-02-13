@@ -1,0 +1,200 @@
+name: 'Action for deploying a new version of a task to an ECS service'
+description: 'Action for running ECS task'
+author: 'Brian Caffey'
+inputs:
+  APP_NAME:
+    required: true
+    #TODO: consider renaming to COMPANY_NAME to avoid confusion with APP_ENV
+    description: 'Top level name (e.g. acme)'
+  APP_ENV:
+    required: true
+    description: 'App env name (e.g. alpha)'
+  VERSION:
+    required: true
+    description: 'Application version git tag (e.g. v1.2.3)'
+  CONTAINER_NAME:
+    description: 'The name of the container being updated (e.g. web-ui)'
+    required: true
+  ECR_REPO:
+    required: true
+    description: 'ECR repo to use (e.g. backend)'
+  AWS_REGION:
+    required: true
+    default: us-east-1
+    description: 'The AWS region where the ECR registry was created'
+  DEPLOY:
+    required: true
+    default: 'true'
+    description: 'Set to true when the updated task definition should be deployed to associated service'
+
+runs:
+  using: "composite"
+  steps:
+    # Note: this assumes that your ECR repo lives in the same AWS account as your ECS cluster
+    - name: Get current AWS Account
+      id: get-aws-account
+      shell: bash
+      run: |
+        AWS_ACCOUNT_ID=$(aws sts get-caller-identity | jq -r .Account)
+        echo $AWS_ACCOUNT_ID
+        echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> $GITHUB_ENV
+
+    - name: Get Latest Task Definition
+      shell: bash
+      id: get_task_definition
+      run: |
+        TASK_FAMILY="${{ inputs.APP_ENV }}-${{ inputs.CONTAINER_NAME }}"
+
+        # Get the latest task definition ARN for the task family
+        LATEST_TASK_DEF=$(aws ecs list-task-definitions \
+          --family-prefix "$TASK_FAMILY" \
+          --sort DESC \
+          --query "taskDefinitionArns[0]" \
+          --output text)
+
+        if [ "$LATEST_TASK_DEF" == "None" ]; then
+          echo "No task definition found for $TASK_FAMILY"
+          exit 1
+        fi
+
+        echo $LATEST_TASK_DEF
+        echo "$LATEST_TASK_DEF"
+
+        # Fetch and save the full task definition JSON
+        aws ecs describe-task-definition \
+          --task-definition "$LATEST_TASK_DEF" \
+          --query "taskDefinition" \
+          --output json > task-definition.json
+
+        echo "Task definition JSON saved to task-definition.json"
+        echo Version to use is ${{ inputs.VERSION }}
+
+    - name: Remove fields from task definition
+      id: cleaned-task-def
+      shell: bash
+      run: |
+        jq 'del(.compatibilities, .taskDefinitionArn, .requiresAttributes, .revision, .status, .registeredAt, .registeredBy)' task-definition.json > cleaned-task-definition.json
+
+    - name: Render new task definition
+      id: render-new-task-definition
+      uses: aws-actions/amazon-ecs-render-task-definition@v1
+      with:
+        task-definition: cleaned-task-definition.json
+        container-name: ${{ inputs.CONTAINER_NAME }}
+        image: ${{ env.AWS_ACCOUNT_ID }}.dkr.ecr.${{ inputs.AWS_REGION}}.amazonaws.com/${{ inputs.APP_NAME }}-${{ inputs.ECR_REPO }}:${{ inputs.VERSION }}
+
+    # - name: Debug Rendered Task Definition
+    #   shell: bash
+    #   run: |
+    #     echo Version is: ${{ inputs.VERSION }}
+    #     cat ${{ steps.render-new-task-definition.outputs.task-definition }}
+
+    - name: Deploy Amazon ECS task definition
+      id: deploy-task-definition
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+      if: ${{ inputs.DEPLOY == 'true'}}
+      with:
+        task-definition: ${{ steps.render-new-task-definition.outputs.task-definition }}
+        service: ${{ github.event.inputs.APP_ENV}}-${{ inputs.CONTAINER_NAME }}
+        cluster: ${{ github.event.inputs.APP_ENV}}-cluster
+        desired-count: 1
+        wait-for-service-stability: true
+
+    - name: Deploy Amazon ECS task definition
+      id: deploy-task-definition-publish-only
+      uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+      if: ${{ inputs.DEPLOY != 'true'}}
+      with:
+        task-definition: ${{ steps.render-new-task-definition.outputs.task-definition }}
+        # service: ${{ github.event.inputs.APP_ENV}}-${{ inputs.CONTAINER_NAME }}
+        cluster: ${{ github.event.inputs.APP_ENV}}-cluster
+        # wait-for-service-stability: true
+
+    # - name: Deploy new task definition
+    #   # if: ${{ inputs.DEPLOY == 'true' }}
+    #   id: deploy-new-task-definition
+    #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+    #   with:
+    #     cluster: ${{ inputs.APP_ENV }}-cluster
+    #     task-definition: ${{ steps.render-new-task-definition.outputs.task-definition }}
+
+
+
+    # - name: Run task
+    #   id: run-task
+    #   shell: bash
+    #   env:
+    #     TASK_DEFINITION_ARN: ${{ steps.deploy-new-task-definition.outputs.task-definition-arn }}
+    #     BASE_ENV: ${{ inputs.BASE_ENV }}
+    #     APP_ENV: ${{ inputs.APP_ENV }}
+    #     CONTAINER_NAME: ${{ inputs.CONTAINER_NAME }}
+    #   run: |
+    #     SUBNETS=$( \
+    #       aws ec2 describe-subnets \
+    #         --filters "Name=tag:base-env,Values=$BASE_ENV" "Name=tag:Name,Values=*application*" \
+    #         --query 'Subnets[*].SubnetId' \
+    #         --output text \
+    #     )
+
+    #     # replace spaces with commas using tr
+    #     SUBNET_IDS=$(echo $SUBNETS | tr ' ' ',')
+
+    #     echo "Subnet IDs $SUBNET_IDS"
+
+    #     VPC_ID=$(aws ec2 describe-vpcs --filters "Name=tag:base-env,Values=$BASE_ENV" --query 'Vpcs[*].VpcId' --output text)
+
+    #     echo "VPC ID $VPC_ID"
+
+    #     SECURITY_GROUPS=$(
+    #         aws ec2 describe-security-groups \
+    #         --filters Name=vpc-id,Values=$VPC_ID Name=tag:base-env,Values=$BASE_ENV Name=tag:Name,Values=$BASE_ENV-app-sg \
+    #         --query 'SecurityGroups[*].GroupId' \
+    #         --output text
+    #     )
+
+    #     echo "Security Groups $SECURITY_GROUPS"
+
+    #     echo "Running backend_update commands..."
+
+    #     # timestamp used for log retrieval (milliseconds after Jan 1, 1970 00:00:00 UTC)
+    #     START_TIME=$(date +%s000)
+
+    #     # run the migration task and capture the taskArn into a variable called TASK_ID
+    #     TASK_ID=$( \
+    #       aws ecs run-task \
+    #         --cluster $APP_ENV-cluster \
+    #         --launch-type FARGATE \
+    #         --task-definition $TASK_DEFINITION_ARN \
+    #         --network-configuration "awsvpcConfiguration={subnets=[$SUBNET_IDS],securityGroups=[$SECURITY_GROUPS],assignPublicIp=ENABLED}" \
+    #         | jq -r '.tasks[0].taskArn' \
+    #       )
+
+    #     echo "Task ID is $TASK_ID"
+
+    #     aws ecs wait tasks-stopped \
+    #       --tasks $TASK_ID \
+    #       --cluster $APP_ENV-cluster
+
+    #     END_TIME=$(date +%s000)
+
+    #     # print the CloudWatch log events to STDOUT
+    #     aws logs get-log-events \
+    #       --log-group-name "/ecs/$APP_ENV/update/" \
+    #       --log-stream-name "update/update/${TASK_ID##*/}" \
+    #       --start-time $START_TIME \
+    #       --end-time $END_TIME \
+    #       | jq -r '.events[].message'
+
+    #     # Get exit code
+    #     TASK_EXIT_CODE=$(
+    #       aws ecs describe-tasks \
+    #         --cluster $APP_ENV-cluster \
+    #         --tasks $TASK_ID \
+    #         --query "tasks[0].containers[?name=='$CONTAINER_NAME'].exitCode" \
+    #         --output text)
+
+    #     echo "Task exit code is $TASK_EXIT_CODE"
+
+    #     # exit with the same code
+    #     # if this fails, we should not continue with rest of the deployment
+    #     exit $TASK_EXIT_CODE

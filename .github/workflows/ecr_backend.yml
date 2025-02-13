@@ -1,10 +1,10 @@
-name: '[ECR] build and push'
-run-name: '[ECR] build and push ${{ github.ref_name }}'
+name: '[ECR] build & push backend image'
+run-name: '[ECR] build & push ${{ github.ref_name }}'
 
 on:
   push:
     tags:
-      - "backend/v*"
+      - "v*.*.*"
 
 jobs:
   build_and_push:
@@ -12,7 +12,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name }}
@@ -30,19 +29,17 @@ jobs:
 
       - name: "Build & Push Backend Docker Image"
         env:
-          GIT_TAG: ${{ github.ref_name }}
           AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
           DOCKER_BUILDKIT: '1'
+          APP_NAME: ${{ secrets.APP_NAME }}
         run: |
 
-          TAG="${GIT_TAG##*/}"
-
-          IMAGE_URI=${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/backend
+          IMAGE_URI=${AWS_ACCOUNT_ID}.dkr.ecr.us-east-1.amazonaws.com/${APP_NAME}-backend
 
           docker build \
-            --build-arg SOURCE_TAG=$TAG \
+            --build-arg SOURCE_TAG=${{ github.ref_name }} \
             --target prod \
-            -t $IMAGE_URI:$TAG \
+            -t $IMAGE_URI:${{ github.ref_name }} \
             -t $IMAGE_URI:latest \
             ./backend
 

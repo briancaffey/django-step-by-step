@@ -1,0 +1,114 @@
+name: '[CD] App update'
+run-name: '[CD] updating app (BE ${{ inputs.BACKEND_VERSION }}) on ${{ inputs.APP_ENV }}'
+
+on:
+  workflow_dispatch:
+    inputs:
+      BACKEND_VERSION:
+        required: false
+        description: 'Backend git tag to deploy (e.g. v1.2.3)'
+      FRONTEND_VERSION:
+        required: false
+        description: 'Frontend git tag to deploy (e.g. v1.2.3)'
+        default: ''
+      APP_ENV:
+        required: true
+        description: 'App env name (e.g. alpha)'
+        default: alpha
+      BASE_ENV:
+        required: true
+        description: 'Name for the base infrastructure environment (e.g. dev, stage, prod)'
+        default: dev
+
+jobs:
+  pre-backend-update:
+    if: ${{ inputs.BACKEND_VERSION != '' }}
+    name: pre-backend-update
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      # Update the pre-update task definition
+      - name: Update pre-update task
+        id: update-pre-update-task-def
+        uses: ./packages/app-update
+        with:
+          APP_ENV: ${{ inputs.APP_ENV }}
+          APP_NAME: ${{ secrets.APP_NAME }}
+          VERSION: ${{ inputs.BACKEND_VERSION }}
+          CONTAINER_NAME: 'backend_update'
+          ECR_REPO: 'backend'
+          DEPLOY: 'false'
+
+      - name: Run pre-update task (migrations, collectstatic, etc.)
+        uses: ./packages/run-task
+        with:
+          APP_ENV: ${{ inputs.APP_ENV }}
+          APP_NAME: ${{ secrets.APP_NAME }}
+          CONTAINER_NAME: 'backend_update'
+          BASE_ENV: ${{ inputs.BASE_ENV }}
+
+  backend-update:
+    name: backend-update
+    runs-on: ubuntu-latest
+    needs: pre-backend-update
+    strategy:
+      matrix:
+        service: [gunicorn, beat, default]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+      # Update the pre-update task definition
+      - name: Update pre-update task
+        id: update-pre-update-task-def
+        if: ${{ inputs.BACKEND_VERSION != '' }}
+        uses: ./packages/app-update
+        with:
+          APP_ENV: ${{ inputs.APP_ENV }}
+          APP_NAME: ${{ secrets.APP_NAME }}
+          VERSION: ${{ inputs.BACKEND_VERSION }}
+          CONTAINER_NAME: ${{ matrix.service }}
+          ECR_REPO: 'backend'
+          DEPLOY: 'true'
+
+  frontend-update:
+    name: deploy frontend
+    runs-on: ubuntu-latest
+    # needs: backend-update
+    if: ${{ inputs.FRONTEND_VERSION != '' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+      - name: Update a part of the application to a specific version
+        uses: ./packages/app-update
+        if: ${{ inputs.FRONTEND_VERSION != '' }}
+        with:
+          APP_ENV: ${{ inputs.APP_ENV }}
+          APP_NAME: ${{ secrets.APP_NAME }}
+          VERSION: ${{ inputs.FRONTEND_VERSION }}
+          CONTAINER_NAME: 'web-ui'
+          ECR_REPO: 'frontend'
+          DEPLOY: 'true'

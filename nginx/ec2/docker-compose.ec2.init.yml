@@ -1,0 +1,69 @@
+services:
+  config-generator:
+    image: nginx:alpine
+    volumes:
+      - nginx-config:/output:rw
+      - nginx-init:/init:rw
+      - ./templates/app.conf.template:/templates/app.conf.template:ro
+      - ./templates/init.conf.template:/templates/init.conf.template:ro
+      - ./entrypoint.sh:/entrypoint.sh
+    environment:
+      - DOMAIN_NAME=${DOMAIN_NAME}
+    entrypoint: ["/bin/sh", "-c", "/entrypoint.sh"]
+    restart: "no"
+
+  nginx-init:
+    image: nginx
+    container_name: nginx-init
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - nginx-init:/etc/nginx/conf.d
+      - ./index.html:/usr/share/nginx/html/index.html:ro
+      - certbot-etc:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+    command: ["nginx", "-g", "daemon off;"]
+
+  # Certbot: Run this one time to get the certificate
+  certbot-init:
+    image: certbot/certbot
+    container_name: certbot-init
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+    environment:
+      - DOMAIN_NAME
+      - CERTBOT_EMAIL
+    command: >
+      certonly --webroot --webroot-path=/var/www/certbot
+      --register-unsafely-without-email
+      --agree-tos --no-eff-email -d example.domain.com
+
+  # Automatically renew SSL and reload NGINX
+  certbot-renew:
+    image: certbot/certbot
+    container_name: certbot-renew
+    restart: always
+    volumes:
+      - certbot-etc:/etc/letsencrypt
+      - certbot-www:/var/www/certbot
+    environment:
+      - DOMAIN_NAME=${DOMAIN_NAME}
+    entrypoint: /bin/sh -c "
+      trap exit TERM;
+      while :;
+      do
+        certbot renew --webroot -w /var/www/certbot;
+        if [ -f /etc/letsencrypt/live/${DOMAIN_NAME}/fullchain.pem ]; then
+          echo 'SSL Certificate exists. Reloading NGINX...';
+          docker exec nginx nginx -s reload;
+        fi;
+        sleep 12h;
+      done"
+
+volumes:
+  certbot-etc:
+  certbot-www:
+  nginx-config:
+  nginx-init:

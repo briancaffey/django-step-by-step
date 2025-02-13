@@ -1,0 +1,165 @@
+name: "[IaC] CDK GitHub Action"
+run-name: "[IaC] cdk ${{ inputs.destroy == true && 'destroy' || 'deploy' }} -> ${{ inputs.stack }}/${{ inputs.stack == 'base' && inputs.base_env || inputs.app_env }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      stack:
+        description: "The CDK stack/environment to update"
+        required: true
+        default: "base"
+        type: choice
+        options:
+          - "app"
+          - "base"
+      app_env:
+        description: 'Pulumi app environment for the stack (for example, dev, staging, prod)'
+        required: false
+        default: alpha
+        type: string
+      base_env:
+        description: 'Pulumi base environment for the stack (for example, alpha, beta, app)'
+        required: true
+        default: dev
+        type: string
+      destroy:
+        description: "Set to true to run cdk destroy instead of deploy"
+        required: false
+        default: false
+        type: boolean
+
+env:
+  CDK_DIR: iac/cdk
+  CDK_APP: lib/ecs/index.js
+  CDK_ENV: ${{ github.event.inputs.stack == 'base' && github.event.inputs.base_env || github.event.inputs.app_env }}
+  CDK_FLAGS: --require-approval never
+  CDK_VERSION: '2.178.1'
+  DOMAIN_NAME: ${{ secrets.DOMAIN_NAME }}
+  CERTIFICATE_ARN: ${{ secrets.ACM_CERTIFICATE_ARN }}
+  AWS_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
+  COMPANY_NAME: ${{ secrets.COMPANY_NAME }}
+  AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
+  APP_NAME: ${{ github.event.inputs.app_env }}
+  BASE_NAME: ${{ github.event.inputs.base_env }}
+
+jobs:
+  cdk-synth:
+    name: "Generate CDK Synth"
+    if: ${{ github.event.inputs.destroy != 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - run: yarn install
+        working-directory: ${{ env.CDK_DIR }}
+
+      - run: npm i -g aws-cdk@$CDK_VERSION
+        working-directory: ${{ env.CDK_DIR }}
+
+      - run: tsc
+        working-directory: ${{ env.CDK_DIR }}
+
+      - name: CDK Diff and Append to Summary
+        id: cdk_diff
+        run: |
+          cd $CDK_DIR
+          echo "Running 'cdk diff' for environment: $CDK_ENV"
+          DIFF_OUTPUT=$(cdk diff --app "$CDK_APP" -e $CDK_ENV $CDK_FLAGS || true)
+          echo "$DIFF_OUTPUT" > diff_output.txt
+          # Append diff output to the GitHub Actions summary
+          echo "## CDK Diff" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          echo "$DIFF_OUTPUT" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+
+      - name: CDK Synth
+        id: cdk_synth
+        run: |
+          cd $CDK_DIR
+          echo "Synthesizing CloudFormation template..."
+          cdk synth --app "$CDK_APP" -e $CDK_ENV $CDK_FLAGS
+
+  cdk-deploy:
+    name: "Deploy CDK Changes"
+    if: ${{ github.event.inputs.destroy != 'true' }}
+    needs: cdk-synth
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - run: yarn install
+        working-directory: ${{ env.CDK_DIR }}
+
+      - run: npm i -g aws-cdk@$CDK_VERSION
+        working-directory: ${{ env.CDK_DIR }}
+
+      - run: tsc
+        working-directory: ${{ env.CDK_DIR }}
+
+      - name: CDK Deploy
+        id: cdk_deploy
+        run: |
+          cd $CDK_DIR
+          echo "Available stacks in this CDK app:"
+          cdk ls
+          echo "Deploying stack using cloud assembly..."
+          cdk deploy --app $CDK_APP -e $CDK_ENV $CDK_FLAGS
+
+  cdk-destroy:
+    name: "Destroy CDK Resources"
+    if: ${{ github.event.inputs.destroy == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - run: yarn install
+        working-directory: ${{ env.CDK_DIR }}
+
+      - run: npm i -g aws-cdk@$CDK_VERSION
+        working-directory: ${{ env.CDK_DIR }}
+
+      - run: tsc
+        working-directory: ${{ env.CDK_DIR }}
+
+      - name: CDK Destroy
+        id: cdk_destroy
+        run: |
+          cd $CDK_DIR
+          echo "Destroying CDK stack for environment: $CDK_ENV"
+          cdk destroy --app "$CDK_APP" -e $CDK_ENV $CDK_FLAGS --force

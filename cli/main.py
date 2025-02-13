@@ -53,15 +53,17 @@ def main():
     # use aws cli get the ecs cluster name with tags app-env = app_env_name and base-env = base_env_name
     cluster_name = f"{app_env_name}-cluster"
 
-    ecs_client = boto3.client("ecs")
-    task_id = ecs_client.list_tasks(cluster=cluster_name, serviceName=f"{app_env_name}-ecs-exec")["taskArns"][0]
+    ecs_client = boto3.client("ecs", region_name="us-east-1")
+    task_id = ecs_client.list_tasks(cluster=cluster_name, serviceName=f"{app_env_name}-gunicorn")["taskArns"][0]
+
+    print(f"Task ID: {task_id}")
 
     aws_command = [
         'aws', 'ecs', 'execute-command',
         '--cluster', cluster_name,
         '--task', task_id,
         '--command', 'bash',
-        '--interactive'
+        '--interactive', '--region', 'us-east-1'
     ]
 
     try:
