@@ -1255,10 +1255,10 @@ available-typed-arrays@^1.0.7:
   dependencies:
     possible-typed-array-names "^1.0.0"
 
-aws-cdk-lib@^2.178.1:
-  version "2.178.1"
-  resolved "https://registry.yarnpkg.com/aws-cdk-lib/-/aws-cdk-lib-2.178.1.tgz#99699ec2b9c24c32309a59bdbe14624eec7f4426"
-  integrity sha512-Sl6/posIlvfoD3ILHlABaCVw2C84jbhlQ+mA8J3DEFbN2RvrPkG4dz4HQfC5IiXQJigu39kmj73JPQCnSKl2iA==
+aws-cdk-lib@^2.178.2:
+  version "2.178.2"
+  resolved "https://registry.yarnpkg.com/aws-cdk-lib/-/aws-cdk-lib-2.178.2.tgz#2ab3d681f41617e10bbc3e730eb34bba120e43e3"
+  integrity sha512-8UZFzQMlP0exyfddQZrle5dAW+oahlUHKMnBTvnPT1zQNT1KkSnwL9ObthoV0tl+cllIyd1tbz2sOsKVf7qgtw==
   dependencies:
     "@aws-cdk/asset-awscli-v1" "^2.2.208"
     "@aws-cdk/asset-kubectl-v20" "^2.1.3"
@@ -1453,10 +1453,10 @@ case@1.6.3, case@^1.6.3:
   resolved "https://registry.yarnpkg.com/case/-/case-1.6.3.tgz#0a4386e3e9825351ca2e6216c60467ff5f1ea1c9"
   integrity sha512-mzDSXIPaFwVDvZAHqZ9VlbyF4yyXRuX6IvB06WvPYkqJVO24kX1PPhv9bfpKNFZyxYFmmgo03HUiD8iklmJYRQ==
 
-cdk-django@1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/cdk-django/-/cdk-django-1.7.0.tgz#ed010cc3037eeb5127bd2df9ceb511598ef46e35"
-  integrity sha512-T/WPCHYe8QJlArVcgnA701PGwJ+IAQNHhTD6JsyTLVA7JhWQzUP4weHqHudS1P1wtsKM3jz9t6tdg17RZuEb0w==
+cdk-django@1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/cdk-django/-/cdk-django-1.8.0.tgz#8ac161d57b18950c0df552db3d3c3ab62bab3713"
+  integrity sha512-BD3vEdfSN12+7VjFkgeIcZJA/gtT9ecS530ThFrdM087RVeoNWa51BaFQgpC4aSfZMKolg5VU7z2f9vzmgWA2A==
 
 chalk@^4.0.0, chalk@^4.0.2, chalk@^4.1.2:
   version "4.1.2"
