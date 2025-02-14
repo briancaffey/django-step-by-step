@@ -7,6 +7,12 @@ ENV PYTHONUNBUFFERED=1 \
 ARG SOURCE_TAG
 ENV SOURCE_TAG=$SOURCE_TAG
 
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+      build-essential \
+      curl && \
+    rm -rf /var/lib/apt/lists/*
+
 RUN useradd --create-home --home-dir /code --shell /bin/bash app
 
 WORKDIR /code
