@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.4](https://github.com/briancaffey/django-step-by-step/compare/v0.9.3...v0.9.4) (2025-02-14)
+
+
+### Bug Fixes
+
+* **static:** add static root and media root settings ([ebfac01](https://github.com/briancaffey/django-step-by-step/commit/ebfac01dab03e522edc8974b3b11dadbc1b7fe97))
+
 ## [0.9.3](https://github.com/briancaffey/django-step-by-step/compare/v0.9.2...v0.9.3) (2025-02-14)
 
 
