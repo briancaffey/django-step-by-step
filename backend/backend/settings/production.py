@@ -22,6 +22,11 @@ AWS_DEFAULT_ACL = None
 AWS_STORAGE_BUCKET_NAME = os.environ["S3_BUCKET_NAME"]
 STATIC_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/"
 MEDIA_URL = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/"
+
+# TODO: update to use cloudfront
+STATIC_ROOT = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/static/"
+MEDIA_ROOT = f"https://{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com/media/"
+
 AWS_PRIVATE_MEDIA_LOCATION = "media/private"
 AWS_STATIC_LOCATION = "static"
 
