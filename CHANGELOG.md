@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.5](https://github.com/briancaffey/django-step-by-step/compare/v0.9.4...v0.9.5) (2025-02-14)
+
+
+### Bug Fixes
+
+* **static:** fix STATIC_ROOT setting ([2888302](https://github.com/briancaffey/django-step-by-step/commit/28883026460d6695d8cef7e1af5b62668324c472))
+
 ## [0.9.4](https://github.com/briancaffey/django-step-by-step/compare/v0.9.3...v0.9.4) (2025-02-14)
 
 
