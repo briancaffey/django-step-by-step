@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.2](https://github.com/briancaffey/django-step-by-step/compare/v0.9.1...v0.9.2) (2025-02-14)
+
+
+### Bug Fixes
+
+* **docker:** add curl to python slim ([873167f](https://github.com/briancaffey/django-step-by-step/commit/873167fcdbee38852f9d2aab6c1c766603ec6db0))
+
 ## [0.9.1](https://github.com/briancaffey/django-step-by-step/compare/v0.9.0...v0.9.1) (2025-02-14)
 
 
