@@ -12,7 +12,7 @@ from django.utils import autoreload
 # sets the PIDFILE environment variable
 # docker-compose.yml sets a value for the PIDFILE environment variable
 # otherwise use the default value for local python virtual environment
-PIDFILE = os.environ.get("PIDFILE", "./backend/celerybeat.pid")
+PIDFILE = os.environ.get("PIDFILE", "")
 
 
 def restart_celery_beat():

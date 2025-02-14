@@ -111,7 +111,7 @@ services:
       - NVIDIA_API_KEY=${NVIDIA_API_KEY:-.}
 
       # celery beat
-      - PIDFILE=/code/celerybeat.pid
+      - PIDFILE=
     depends_on:
       - postgres
       - redis

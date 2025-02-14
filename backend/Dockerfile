@@ -1,8 +1,8 @@
-FROM python:3.11.8 AS base
+FROM python:3.13.2-slim AS base
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    POETRY_VERSION='1.8.0'
+    POETRY_VERSION='2.0.1'
 
 ARG SOURCE_TAG
 ENV SOURCE_TAG=$SOURCE_TAG
@@ -21,5 +21,6 @@ RUN chown -R app:app /code
 USER app
 
 FROM base AS local
+RUN apt-get update && apt-get install procps -y # for pkill
 RUN POETRY_VIRTUALENVS_CREATE=false poetry install --with dev
 USER app

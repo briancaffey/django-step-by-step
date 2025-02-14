@@ -72,12 +72,12 @@
     },
     {
       "name": "aws-cdk-lib",
-      "version": "^2.178.1",
+      "version": "^2.178.2",
       "type": "runtime"
     },
     {
       "name": "cdk-django",
-      "version": "1.7.0",
+      "version": "1.8.1",
       "type": "runtime"
     },
     {
