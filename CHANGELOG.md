@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.9.1](https://github.com/briancaffey/django-step-by-step/compare/v0.9.0...v0.9.1) (2025-02-14)
+
+
+### Bug Fixes
+
+* **cdk:** bump cdk-django version for dependency fix ([c6df6e4](https://github.com/briancaffey/django-step-by-step/commit/c6df6e442cc3043512e10120c29b14150fd2d14e))
+* **cdk:** bump cdk-django version for dependency fix to 1.8.1 ([e9d28dc](https://github.com/briancaffey/django-step-by-step/commit/e9d28dc625afe115056daddea0ff241a17f1bfd3))
+* **chat:** fix issue with chat when using openai api key ([980fe62](https://github.com/briancaffey/django-step-by-step/commit/980fe62c957687eed65641be2b1124fe88ccddc8))
+* **gha:** upgrade python version to 3.13.2 in github action ci script ([f830acb](https://github.com/briancaffey/django-step-by-step/commit/f830acbdb40eed2fe2dd899a9607992364299595))
+* **lint:** format code with black ([acda08f](https://github.com/briancaffey/django-step-by-step/commit/acda08f6c7fc8fff4c913fb8005cc84a89526aa2))
+* **pytest:** fix pytest config filterwarnings section ([aadf5f3](https://github.com/briancaffey/django-step-by-step/commit/aadf5f3994d9766caea3d92ccbb88523414d846b))
+
 ## [0.8.1](https://github.com/briancaffey/django-step-by-step/compare/v0.8.0...v0.8.1) (2025-02-09)
 
 
