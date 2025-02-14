@@ -3,44 +3,46 @@ name = "backend"
 version = "0.1.0"
 description = "Dependencies for django-step-by-step"
 authors = ["Brian Caffey <briancaffey2010@gmail.com>"]
+package-mode = false
 
 [tool.poetry.dependencies]
-python = "==3.11.8"
+python = "==3.13.2"
 
 # TODO: complete major version upgrades for dependencies (!)
 # Update to Django 3.2 requires additional changes
-Django = "~4.2.10" # 5.4.0 !
-djangorestframework = "^3.13.1" # 3.15.2
+Django = "~5.1.6"
+djangorestframework = "^3.15.2"
 
 # redis
-redis = "^4.1.0" # 5.2.1 !
+redis = "^5.2.1"
 
 # celery
-celery= "^5.2.3" # 5.4.0 OK
+celery= "^5.4.0"
 
 # for OpenAPI
-uritemplate = "^3.0.1" # uritemplate 4.1.1  https://pypi.org/project/uritemplate/
+uritemplate = "^4.1.1"
 coreapi = "^2.3.3"
 pyyaml = "^6.0.1"
 
 # graphql
-graphene-django = "^2.15.0" # v3.2.2 https://github.com/graphql-python/graphene-django/
-django-graphql-jwt = "^0.3.4" # django-graphql-jwt 0.4.0 https://pypi.org/project/django-graphql-jwt/
+graphene-django = "^3.2.2"
+django-graphql-jwt = "^0.4.0"
 # TODO: watch this issue
 # https://github.com/flavors/django-graphql-jwt/issues/241
 PyJWT = ">2" # PyJWT 2.10.1
-gunicorn = "^20.1.0" # gunicorn 23.0.0
+gunicorn = "^23.0.0"
 # psycopg2-binary = { version = "^2.8.6", markers = "platform_machine == 'x86_64'" }
-psycopg2-binary = "^2.9.3" # 2.9.10
-aws-secretsmanager-caching = "^1.1.1" # 1.1.3 https://github.com/aws/aws-secretsmanager-caching-python
-Pillow = "^9.0.0" # 11.1.0 https://pypi.org/project/pillow/
-graphene-file-upload = "^1.3.0" # ?
-django-storages = {extras = ["boto3"], version = "^1.14.4"} # 1.14.4 https://django-storages.readthedocs.io/en/latest/
-dj-database-url = "^0.5.0" # 2.3.0 ?
-whitenoise = "^5.3.0" # 6.8.2 !
-boto3 = "^1.20.31" # 1.35.97
-django-cors-headers = "^3.10.0" # 4.6.0 !
-djangorestframework-simplejwt = "^5.0.0" # 5.4.0
+psycopg2-binary = "^2.9.10"
+aws-secretsmanager-caching = "^1.1.3"
+Pillow = "^11.1.0"
+graphene-file-upload = "^1.3.0"
+django-storages = {extras = ["boto3"], version = "^1.14.4"}
+dj-database-url = "^2.3.0"
+whitenoise = "^6.8.2"
+boto3 = "^1.35.54" # https://github.com/jschneier/django-storages/issues/1482
+botocore = "^1.35.54"
+django-cors-headers = "^4.6.0"
+djangorestframework-simplejwt = "^5.4.0"
 
 # llama index
 llama-index = "*"
@@ -50,50 +52,49 @@ llama-index-llms-openai = "*"
 sentry-sdk = "^1.5.1" # 2.19.2 !
 
 # flower
-flower = "^1.0" # 2.0.0 !
+flower = "^2.0.1" # 2.0.0 !
 llama-index-llms-nvidia = "^0.3.1"
 django-anymail = {extras = ["amazon-ses"], version = "^12.0"}
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 
 # test dependencies
-black = "^22.8.0" # 24.10.0 ! https://pypi.org/project/black/
-flake8 = "^4.0.1" # 7.1.1 ! https://pypi.org/project/flake8/
-pytest = "^6.2.5" # 8.3.4 !
-pytest-cov = "^3.0.0" # 6.0.0 !
-pytest-django = "^4.5.2" # 4.8.0
+black = "^24.10.0"
+flake8 = "^7.1.1"
+pytest = "^8.3.4"
+pytest-cov = "^6.0.0"
+pytest-django = "^4.8.2"
 
 # factory
-factory-boy = "^3.2.1" # 3.3.0
+factory-boy = "^3.3.0"
 
 # dev dependencies
-
-django-debug-toolbar = "^3.2.4" # 5.0.0
+django-debug-toolbar = "^5.0.0"
 
 # for runserver_plus
-django-extensions = "^3.1.5" # 3.2.3
-Werkzeug = "^2.0.2" # 3.1.3
+django-extensions = "^3.2.3"
+Werkzeug = "^3.1.3"
 
 # for Jupyter notebooks
-ipython = "^7.31.0" # 8.31.0
+ipython = "^8.31.0"
 # jupyter's dependency on argon2-cffi can't be installed on Apple M1
 # jupyter = { version = "^1.0.0", markers = "platform_machine == 'x86_64'" }
-jupyter = "^1.0.0" # 1.1.1
+jupyter = "^1.1.1"
 
 # OpenAPI
 pyyaml = "^6.0.1"
 argh = "^0.31.2"
 
 # faker
-faker = "^11.3.0" # 33.3.1 !
+faker = "^33.3.1"
 
 # django-silk
-django-silk = "^5.1.0" # 5.3.1
+django-silk = "^5.3.0"
 
 # pyparsing
 # poetry 1.0.0 requires pyparsing<3.0,>=2.2 but packaging tries to install a 3.0.6 which is not compatible
-pyparsing = "^2.2.0" # 3.2.1
+pyparsing = "^3.2.1" # 3.2.1
 
 [build-system]
-requires = ["poetry-core>=1.9.0"]
+requires = ["poetry-core>=2.0.1"]
 build-backend = "poetry.core.masonry.api"
