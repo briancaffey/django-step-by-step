@@ -35,7 +35,7 @@ services:
 
   postgres:
     container_name: postgres
-    image: postgres:17
+    image: postgres:17.2
     networks:
       - main
     ports:
@@ -44,6 +44,7 @@ services:
       - pg-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_PASSWORD=postgres
+      - POSTGRES_HOST_AUTH_METHOD=trust
 
   pgadmin:
     container_name: pgadmin
@@ -107,7 +108,7 @@ services:
       - REDIS_SERVICE_HOST=redis
       - DJANGO_SETTINGS_MODULE=backend.settings.development
       - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - NVIDIA_API_KEY=${NVIDIA_API_KEY}
+      - NVIDIA_API_KEY=${NVIDIA_API_KEY:-.}
 
       # celery beat
       - PIDFILE=/code/celerybeat.pid
@@ -161,16 +162,16 @@ services:
   #     - backend
   #   restart: "on-failure"
 
-  notebook:
-    <<: *backend
-    container_name: notebook
-    command:
-      - python3
-      - manage.py
-      - shell_plus
-      - --notebook
-    ports:
-      - "8888:8888"
+  # notebook:
+  #   <<: *backend
+  #   container_name: notebook
+  #   command:
+  #     - python3
+  #     - manage.py
+  #     - shell_plus
+  #     - --notebook
+  #   ports:
+  #     - "8888:8888"
 
   mailhog:
     container_name: mailhog

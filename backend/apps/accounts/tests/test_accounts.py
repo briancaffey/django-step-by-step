@@ -107,21 +107,39 @@ class EmailConfirmationTest(TestCase):
 
     def test_email_confirmation(self):
         domain = "http://localhost:8000"
+        # Create the user
         user = User.objects.create_user(email="user@email.com", password="foo")
         send_confirmation_email(user_id=user.id, domain=domain)
-        subject = f"Activate Your Account for {domain}"
+
+        # Confirm the email subject
+        expected_subject = f"Activate Your Account for {domain}"
         self.assertEqual(len(mail.outbox), 1)
-        self.assertEqual(mail.outbox[0].subject, subject)
+        self.assertEqual(mail.outbox[0].subject, expected_subject)
 
-        confirmation_link = mail.outbox[0].body
+        # Extract the verification link from the email body
+        confirmation_email_body = mail.outbox[0].body
+        links = extract_urls(confirmation_email_body)
+        # Assume the last link is the verification link (/verify/<uid>/<token>)
+        verification_link = links[-1]
 
-        links = extract_urls(confirmation_link)
+        # Parse the UID and token from the verification link using a regex
+        pattern = r"/verify/(?P<uid>[^/]+)/(?P<token>[^/]+)/?"
+        match = re.search(pattern, verification_link)
+        self.assertIsNotNone(match, "Verification link did not contain uid and token")
+        uid = match.group("uid")
+        token = match.group("token")
 
-        confirmation_link = links[-1]
+        # Build the new API activation URL: /api/activate/<uid>/<token>/
+        activation_url = f"{domain}/api/activate/{uid}/{token}/"
 
-        response = self.client.get(confirmation_link, follow=True)
+        # Make a request to the activation endpoint.
+        # (Use GET or POST as appropriate for your API; here we use GET.)
+        response = self.client.post(activation_url)
+        self.assertEqual(response.status_code, 200)
 
-        assert "Your email has been confirmed." in response.content.decode("utf-8")
+        # Refresh the user from the database and assert the user is now active.
+        user.refresh_from_db()
+        self.assertTrue(user.is_active)
 
 
 @pytest.mark.django_db(transaction=True)
