@@ -109,13 +109,15 @@ def send_message(request, session_id):
         ChatMessage(role=message.role, content=message.content) for message in messages
     ]
 
-    if os.environ.get("OPENAI_API_KEY", None):
+    if os.environ.get("OPENAI_API_KEY", None).startswith("sk-proj-"):
         print("Using OpenAI")
 
         # LlamaIndex OpenAI
-        llm = OpenAI(
-            model="gpt-4o-mini",
-        )
+        llm = OpenAI(model="gpt-4o")
+
+        resp = llm.chat(messages)
+
+        response_message = resp.message.content
 
     elif os.environ.get("NVIDIA_API_KEY").startswith("nvapi-"):
         print("Using NVIDIA")

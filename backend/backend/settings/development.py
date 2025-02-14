@@ -28,3 +28,6 @@ NOTEBOOK_ARGUMENTS = [
 
 # PRIVATE_MEDIA_STORAGE = "backend.storage_backends"
 DEFAULT_FILE_STORAGE = "backend.storage_backends.PrivateVolumeMediaStorage"
+
+# Email
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

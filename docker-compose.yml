@@ -102,12 +102,12 @@ services:
       - main
     environment:
       - CELERY_TASK_ALWAYS_EAGER=${CELERY_TASK_ALWAYS_EAGER:-0}
-      - DJANGO_EMAIL_HOST=mailhog
+      - EMAIL_HOST=mailhog
       - DEBUG=1
       - POSTGRES_SERVICE_HOST=postgres
       - REDIS_SERVICE_HOST=redis
       - DJANGO_SETTINGS_MODULE=backend.settings.development
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-.}
       - NVIDIA_API_KEY=${NVIDIA_API_KEY:-.}
 
       # celery beat
