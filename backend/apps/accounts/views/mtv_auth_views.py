@@ -54,7 +54,6 @@ class ActivateAccount(View):
 
 
 class CustomLogoutView(auth_views.LogoutView):
-
     """
     https://stackoverflow.com/questions/11393929/django-message-when-logout
     """

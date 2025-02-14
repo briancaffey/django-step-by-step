@@ -79,7 +79,6 @@ def test_anonymous_post(client):
 
 @pytest.mark.django_db(transaction=True)
 def test_create_post(client):
-
     """
     Test the view that creates a post. This indirectly tests PostForm
     """

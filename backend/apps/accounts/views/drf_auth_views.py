@@ -3,7 +3,6 @@ These views override the default DRF authentication views to support storing
 JWT tokens in HttpOnly cookies.
 """
 
-
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import (
     api_view,

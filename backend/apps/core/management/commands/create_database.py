@@ -1,6 +1,7 @@
 """
 This command is used to create databases for ad hoc environments
 """
+
 import os
 
 from django.core.management.base import BaseCommand
