@@ -1,5 +1,46 @@
 # Changelog
 
+## [0.9.0](https://github.com/briancaffey/django-step-by-step/compare/v0.8.1...v0.9.0) (2025-02-14)
+
+
+### Features
+
+* **cdk:** add github actions pipeline for cdk operations ([63f4757](https://github.com/briancaffey/django-step-by-step/commit/63f47572b1571a22a89c8049baf81129c61fc151))
+* **pulumi:** add github actions workflow for pulumi iac operations ([a0ee814](https://github.com/briancaffey/django-step-by-step/commit/a0ee814eb1b61892dc7b97df8fe6bf3b7942e6dc))
+
+
+### Bug Fixes
+
+* **cdk:** add npx projen build step to build cdk application ([483d34e](https://github.com/briancaffey/django-step-by-step/commit/483d34e2fd3c2c8518d8da4ea06cdc04a7f66b08))
+* **cdk:** add setup node step and yarn install step to cdk action ([112e6c7](https://github.com/briancaffey/django-step-by-step/commit/112e6c74742a649589e4fcde32d4bef73365e249))
+* **cdk:** add step to install aws cli in cdk action workflow ([6fac385](https://github.com/briancaffey/django-step-by-step/commit/6fac38597679369e83a2036d36e01afffbf04d04))
+* **cdk:** add tsc step to build cdk application ([a74411e](https://github.com/briancaffey/django-step-by-step/commit/a74411e49b1216408beac09a98663d0a1aedb165))
+* **cdk:** fix cdk deploy step using cdk.out path for synthesized cloudformation ([061a6f4](https://github.com/briancaffey/django-step-by-step/commit/061a6f4a869d68523a42e6c102bed4488337df00))
+* **cdk:** fix github actions pipeline for cdk operations ([1fec0aa](https://github.com/briancaffey/django-step-by-step/commit/1fec0aa726ea92ef64dc0073bb7c2b4446e6502f))
+* **cdk:** fix issue with cdk stack selection ([f505a63](https://github.com/briancaffey/django-step-by-step/commit/f505a63231c2a7989679ff54a08c61fca7e9df44))
+* **cdk:** fix title for cdk gha ([90e6643](https://github.com/briancaffey/django-step-by-step/commit/90e66436a5428f63fbd7c74f3d092edd7f58d286))
+* **cdk:** fix typo in cdk deploy command ([4549e6a](https://github.com/briancaffey/django-step-by-step/commit/4549e6aef92ef749236a037c3255e37d80720b1e))
+* **cdk:** remove artifacts and run cdk deploy directly ([07102c9](https://github.com/briancaffey/django-step-by-step/commit/07102c9ea16b1d1ccde7ab4be1c34d966be0a4b0))
+* **gha:** add desired count to ecs action to avoid issue with CDK ([eee08c3](https://github.com/briancaffey/django-step-by-step/commit/eee08c33515acb0dcd0db6c30252a9c94c29dee7))
+* **gha:** bumb gha versions for aws creds steps ([08e3995](https://github.com/briancaffey/django-step-by-step/commit/08e399508c93fd454f89da48acdae1c6ba558e55))
+* **gha:** do frontend update after backend update ([0209511](https://github.com/briancaffey/django-step-by-step/commit/0209511f976ebeffe07bd61e27585edfd91d2985))
+* **gha:** fix descriptions for cdk actions ([729d7ba](https://github.com/briancaffey/django-step-by-step/commit/729d7ba16fdb8d2bf299ae04132d4fa24d9155f6))
+* **gha:** fix run task gha package to lookup subnets by application or private ([db88224](https://github.com/briancaffey/django-step-by-step/commit/db88224c8184c94835c9522091e6f19214c66d2f))
+* **gha:** fix title for cdk actions ([cf8224c](https://github.com/briancaffey/django-step-by-step/commit/cf8224c729f3c511613ada693204d0f97eac0826))
+* **gha:** fix title for pulumi actions ([b69f6aa](https://github.com/briancaffey/django-step-by-step/commit/b69f6aa25fb3eba587a4d864d6b14e32c2dac1ad))
+* **gha:** remove frontend update job dependency on backend update job ([4358aab](https://github.com/briancaffey/django-step-by-step/commit/4358aab3177f8b5571c3cdf1e4bf3e567d0d6262))
+* **misc:** fix sentry environment and tf tags ([80290ad](https://github.com/briancaffey/django-step-by-step/commit/80290ad9f3623ceb116f280f19491d9aba681f04))
+* **pulumi:** add env vars used in pulumi code ([5e1efd2](https://github.com/briancaffey/django-step-by-step/commit/5e1efd21a6bf11db1c0ca3bf115aad6d7241dd21))
+* **pulumi:** add pulumi access token to init step ([e373c06](https://github.com/briancaffey/django-step-by-step/commit/e373c06c234e03e7f4431712ea6c31245b06624b))
+* **pulumi:** add pulumi stack init step before doing preview to ensure that the stack has been initialized ([8fac1ea](https://github.com/briancaffey/django-step-by-step/commit/8fac1ea399a8f55b39a811d8c9e4deb6d7e59258))
+* **pulumi:** add yarn install step for pulumi jobs ([15119dd](https://github.com/briancaffey/django-step-by-step/commit/15119dd7a7f1a1920b5c57609ad69feeb1532236))
+* **pulumi:** fix export name for s3 bucket ([54399c5](https://github.com/briancaffey/django-step-by-step/commit/54399c58194c4320e31316ecf801b8a69a058c49))
+* **pulumi:** fix name property in Pulumi yaml files ([dbf76bb](https://github.com/briancaffey/django-step-by-step/commit/dbf76bb13cb0ae55e29ee8e060b994b9f9df3263))
+* **pulumi:** fix pulumi iac example to use correct inputs and exports ([93137b6](https://github.com/briancaffey/django-step-by-step/commit/93137b671c825de6ab4b720129fe7006f464c24b))
+* **tests:** fix pytest and remove old github action files ([#60](https://github.com/briancaffey/django-step-by-step/issues/60)) ([269c444](https://github.com/briancaffey/django-step-by-step/commit/269c4440230b152be72c3927b30e5aef84a6c3c2))
+* **typo:** fix typo in cdk gha ([68aebbe](https://github.com/briancaffey/django-step-by-step/commit/68aebbe0d6c3723af258c17cf1aa2d6ce8651aa3))
+* **typo:** fix typo in env var for acm cert ([eab39bf](https://github.com/briancaffey/django-step-by-step/commit/eab39bfbdd149c8bb623403fcd7e8736878dce9d))
+
 ## [0.8.1](https://github.com/briancaffey/django-step-by-step/compare/v0.8.0...v0.8.1) (2025-02-09)
 
 
