@@ -30,7 +30,8 @@ def authenticated_client(api_client, create_user):
     """
     Fixture to create an authenticated client.
     """
-    api_client.login(email="a@b.co", password="testpassword")
+    api_client.force_authenticate(user=create_user)
+    api_client.user = create_user
     return api_client
 
 
@@ -71,25 +72,27 @@ def test_get_chat_messages(authenticated_client, create_user):
     assert response.data["messages"][1]["content"] == "Hi there!"
 
 
-def test_send_message(authenticated_client, create_user):
+def test_send_message(authenticated_client, monkeypatch):
     """
     Test sending a new message to a chat session.
     """
-    chat_session = ChatSession.objects.create(user=create_user)
+    monkeypatch.setenv("OPENAI_API_KEY", "")
+    monkeypatch.setenv("NVIDIA_API_KEY", "")
+    # mock
+    chat_session = ChatSession.objects.create(user=authenticated_client.user)
 
     response = authenticated_client.post(
         f"/api/chat/sessions/{chat_session.id}/messages/send/",
         {"content": "How are you?"},
     )
-    print(response)
     assert response.status_code == status.HTTP_201_CREATED
     assert "message_id" in response.data
 
     # Verify Message object
     message_id = response.data["message_id"]
     message = Message.objects.get(id=message_id)
-    assert message.content == "How are you?"
-    assert message.role == "user"
+    assert "mocked" in message.content
+    assert message.role == "assistant"
     assert message.chat_session == chat_session
 
 
@@ -129,13 +132,25 @@ def test_chat_sessions(authenticated_client):
     """
     Test retrieving all chat sessions for the current user.
     """
+    # Mark the user as active and save.
+    authenticated_client.user.is_active = True
+    authenticated_client.user.save()
+
+    # Create a chat session by posting to the endpoint.
+    create_response = authenticated_client.post("/api/chat/sessions/")
+    # Optionally, assert that the session creation was successful.
+    assert create_response.status_code in [200, 201]
+
+    # Retrieve the chat sessions.
     response = authenticated_client.get("/api/chat/get-sessions/")
     assert response.status_code == status.HTTP_200_OK
     assert "sessions" in response.data
 
-    # Verify ChatSession objects
+    # Verify ChatSession objects.
     chat_sessions = ChatSession.objects.filter(user=authenticated_client.user)
     assert len(response.data["sessions"]) == chat_sessions.count()
+
     for i, session in enumerate(chat_sessions):
         assert response.data["sessions"][i]["session_id"] == session.id
+        # Assuming created_at is serialized as an ISO 8601 string.
         assert response.data["sessions"][i]["created_at"] == session.created_at

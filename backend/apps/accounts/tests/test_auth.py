@@ -30,7 +30,7 @@ def test_obtain_jwt_token(client):
     data = {"email": email, "password": password}
     response = client.post(url, data=data)
 
-    # THEN has a JWT in the response body and a refresh HttpOnly cookie
+    # THEN has an access and refresh_token HttpOnly cookie (containing the JWT)
     assert response.status_code == status.HTTP_200_OK
-    assert "access" in json.loads(response.content).keys()
     assert "HttpOnly;" in str(response.client.cookies.get("refresh_token"))
+    assert "HttpOnly;" in str(response.client.cookies.get("access"))
