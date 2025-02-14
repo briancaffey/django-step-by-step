@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.3](https://github.com/briancaffey/django-step-by-step/compare/v0.9.2...v0.9.3) (2025-02-14)
+
+
+### Bug Fixes
+
+* **storage:** remove default_acl setting on static file storage ([9a18786](https://github.com/briancaffey/django-step-by-step/commit/9a187867243442060f1e73c6b89f97f29ea1e3ac))
+
 ## [0.9.2](https://github.com/briancaffey/django-step-by-step/compare/v0.9.1...v0.9.2) (2025-02-14)
 
 
