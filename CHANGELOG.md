@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.9.6](https://github.com/briancaffey/django-step-by-step/compare/v0.9.5...v0.9.6) (2025-02-16)
+
+
+### Bug Fixes
+
+* **poetry:** split dev dependencies in pyproject.toml into test and dev groups Fixes [#34](https://github.com/briancaffey/django-step-by-step/issues/34) ([#66](https://github.com/briancaffey/django-step-by-step/issues/66)) ([b4cbdd1](https://github.com/briancaffey/django-step-by-step/commit/b4cbdd13033ebe2c66b581dcd5c709aaf8568895))
+* **poetry:** split dev deps into test and dev ([daca4ea](https://github.com/briancaffey/django-step-by-step/commit/daca4eaa74570ad1170817f66df922fe0f4c4d95))
+
 ## [0.9.5](https://github.com/briancaffey/django-step-by-step/compare/v0.9.4...v0.9.5) (2025-02-14)
 
 
