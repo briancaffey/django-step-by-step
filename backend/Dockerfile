@@ -28,5 +28,5 @@ USER app
 
 FROM base AS local
 RUN apt-get update && apt-get install procps -y # for pkill
-RUN POETRY_VIRTUALENVS_CREATE=false poetry install --with dev
+RUN POETRY_VIRTUALENVS_CREATE=false poetry install --with test,dev
 USER app
