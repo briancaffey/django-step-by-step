@@ -45,7 +45,7 @@ jobs:
           cache-dependency-path: '**/poetry.lock'
       - name: Install dependencies
         run: |
-          cd backend && poetry install --no-interaction --no-root --with dev
+          cd backend && poetry install --no-interaction --no-root --with test
 
       - name: Code formatting check with Black
         run: |
