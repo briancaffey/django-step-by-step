@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.9.6](https://github.com/briancaffey/django-step-by-step/compare/v0.9.5...v0.9.6) (2025-04-07)
+
+
+### Bug Fixes
+
+* **compose:** fix docker compose issue with nuxt app and nginx ([0068f86](https://github.com/briancaffey/django-step-by-step/commit/0068f862b3da7a50edd6f9f3dc3b1925ceb7b6cd))
+* **poetry:** split dev dependencies in pyproject.toml into test and dev groups Fixes [#34](https://github.com/briancaffey/django-step-by-step/issues/34) ([#66](https://github.com/briancaffey/django-step-by-step/issues/66)) ([b4cbdd1](https://github.com/briancaffey/django-step-by-step/commit/b4cbdd13033ebe2c66b581dcd5c709aaf8568895))
+* **poetry:** split dev deps into test and dev ([daca4ea](https://github.com/briancaffey/django-step-by-step/commit/daca4eaa74570ad1170817f66df922fe0f4c4d95))
+
 ## [0.9.5](https://github.com/briancaffey/django-step-by-step/compare/v0.9.4...v0.9.5) (2025-02-14)
 
 
