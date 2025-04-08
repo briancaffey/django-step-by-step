@@ -1,6 +1,6 @@
 ---
-next: /topics/quasar
-prev: /topics/twelve-factor-app
+next: /topics/docker-compose
+prev: /intro
 ---
 
 # About the Django Application

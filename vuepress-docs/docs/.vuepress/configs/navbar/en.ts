@@ -10,24 +10,16 @@ export const en: NavbarConfig = [
     link: '/topics',
     children: [
       {
-        text: 'Twelve-Factor App',
-        link: '/topics/twelve-factor-app',
-      },
-      {
         text: 'Django Application',
         link: '/topics/django/',
       },
       {
-        text: 'Quasar Application',
-        link: '/topics/quasar/',
+        text: 'Nuxt Application',
+        link: '/topics/nuxt/',
       },
       {
         text: 'Docker Compose',
         link: '/topics/docker-compose/',
-      },
-      {
-        text: 'Authentication',
-        link: '/topics/jwt-authentication/',
       },
       {
         text: 'VuePress Documentation',
@@ -56,17 +48,12 @@ export const en: NavbarConfig = [
   },
   {
     text: 'Deploy',
-    link: '/deploy/',
+    // link: '/deploy/',
     children: [
       {
-        text: 'Overview',
-        link: '/deploy/aws/',
+        link: '/deploy/aws',
+        text: 'AWS ECS',
         children: [
-          {
-            link: '/deploy/aws/cdk',
-            text: 'CDK',
-            ariaLabel: 'CDK',
-          },
           {
             link: '/deploy/aws/terraform',
             text: 'Terraform'
@@ -74,9 +61,23 @@ export const en: NavbarConfig = [
           {
             link: '/deploy/aws/pulumi',
             text: 'Pulumi'
+          },
+          {
+            link: '/deploy/aws/cdk',
+            text: 'CDK'
           }
-        ],
+        ]
       },
-    ],
-  },
+      {
+        text: 'Application Updates',
+        // link: '/deploy/app'
+        children: [
+          {
+            link: '/deploy/app',
+            text: 'GitHub Action'
+          }
+        ]
+      }
+    ]
+  }
 ]

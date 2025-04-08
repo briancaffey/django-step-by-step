@@ -11,7 +11,7 @@ head:
   #     href: https://briancaffey.github.io/django-step-by-step/
 ---
 
-# IaC with CDK
+# AWS CDK (Cloud Development Kit)
 
 ## Repo
 
@@ -28,9 +28,5 @@ For the most up-to-date information on `cdk-django`, please see the repository's
 :::
 
 - `cdk-django` is a CDK Component Library that is built using the `projen` framework
-- This project supports ad-hoc environments and production environments
-- Ad-hoc and production environments both use a base stack and an app stack
-- The base and app stack in both ad-hoc and production environments have 2 stacks in the same CDK **app**
+- The base and app stack have 2 stacks in the same CDK **app**
 - The related Pulumi and Terraform libraries pass references via unique identifiers, CDK uses stack references
-- This project is not yet fully implemented in GitHub Actions.
-- The production application has not yet implemented autoscaling
