@@ -9,13 +9,14 @@ services:
       - "80:80"
     depends_on:
       - backend
+      - nuxt
     volumes:
       - ./nginx/dev/dev.conf:/etc/nginx/nginx.conf:ro
     networks:
       - main
 
-  nuxt-app:
-    container_name: nuxt-app
+  nuxt:
+    container_name: nuxt
     build:
       context: ./nuxt-app
       dockerfile: ./Dockerfile
@@ -32,6 +33,8 @@ services:
       - node_modules:/src/node_modules
       # TODO: fix this.. uncomment this when using prod
       # - /src/.output
+    networks:
+      - main
 
   postgres:
     container_name: postgres

@@ -8,6 +8,7 @@ notes
 cdk.out
 .raspberrypi.env
 cdk.context.json
+backend/celerybeat-schedule-*
 
 # Redis .rdb files
 *.rdb
