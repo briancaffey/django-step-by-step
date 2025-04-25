@@ -6,7 +6,7 @@ authors = ["Brian Caffey <briancaffey2010@gmail.com>"]
 package-mode = false
 
 [tool.poetry.dependencies]
-python = "==3.13.2"
+python = "==3.13.3"
 
 # TODO: complete major version upgrades for dependencies (!)
 # Update to Django 3.2 requires additional changes
