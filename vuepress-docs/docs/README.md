@@ -3,7 +3,7 @@ home: true
 
 actions:
   - text: Introduction
-    link: /intro
+    link: /intro/
     type: primary
 heroImage: /images/ublog.png
 

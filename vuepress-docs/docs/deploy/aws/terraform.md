@@ -1,14 +1,11 @@
 ---
 next: /deploy/aws/pulumi
-prev: /deploy/aws/cdk
+prev: /deploy/aws
 
 head:
   - - meta
     - name: description
       content: Using Terraform for Infrastructure as Code for Django projects
-  # - - link
-  #   - rel: canonical
-  #     href: https://briancaffey.github.io/
 ---
 
 # Iac with Terraform

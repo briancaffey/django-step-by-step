@@ -1,14 +1,11 @@
 ---
-next: /deploy/aws/cdk
+next: /deploy/aws/terraform
 prev: /guide/ci-cd/github-actions
 
 head:
   - - meta
     - name: description
       content: Using different Infrastructure as Code tools for deploying Django projects
-  # - - link
-  #   - rel: canonical
-  #     href: https://briancaffey.github.io/
 ---
 
 # Overview of options for deploying μblog

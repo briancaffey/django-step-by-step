@@ -11,44 +11,24 @@ export const en: NavbarConfig = [
     children: [
       {
         text: 'Django Application',
-        link: '/topics/django/',
+        link: '/topics/django',
       },
       {
         text: 'Nuxt Application',
-        link: '/topics/nuxt/',
+        link: '/topics/nuxt',
       },
       {
         text: 'Docker Compose',
-        link: '/topics/docker-compose/',
+        link: '/topics/docker-compose',
       },
       {
         text: 'VuePress Documentation',
-        link: '/topics/vuepress/',
-      }
-    ],
-  },
-  {
-    text: 'Guide',
-    link: '/guide/',
-    children: [
-      {
-        text: 'Step by step guide',
-        link: '/guide/step-by-step/',
-      },
-      {
-        text: 'CI/CD',
-        children: [
-          {
-            text: 'GitHub Actions',
-            link: '/guide/ci-cd/github-actions/',
-          }
-        ]
+        link: '/topics/vuepress',
       }
     ],
   },
   {
     text: 'Deploy',
-    // link: '/deploy/',
     children: [
       {
         link: '/deploy/aws',
@@ -70,10 +50,10 @@ export const en: NavbarConfig = [
       },
       {
         text: 'Application Updates',
-        // link: '/deploy/app'
+        link: '/deploy/app',
         children: [
           {
-            link: '/deploy/app',
+            link: '/deploy/github-actions',
             text: 'GitHub Action'
           }
         ]

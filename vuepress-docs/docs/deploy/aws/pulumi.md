@@ -1,14 +1,11 @@
 ---
-prev: /deploy/aws/terraform
-next: /deploy/aws
+prev: /deploy/aws/cdk
+next: /deploy/terraform
 
 head:
   - - meta
     - name: description
       content: Using Pulumi for Infrastructure as Code for Django projects
-  # - - link
-  #   - rel: canonical
-  #     href: https://briancaffey.github.io/django-step-by-step/deploy/aws/docker-swarm-ec2/
 ---
 
 # IaC with Pulumi

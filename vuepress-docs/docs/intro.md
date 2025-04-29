@@ -1,5 +1,5 @@
 ---
-next: /topics/twelve-factor-app
+next: /topics/django
 ---
 
 # Project Introduction

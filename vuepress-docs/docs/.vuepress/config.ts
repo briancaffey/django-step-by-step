@@ -1,8 +1,11 @@
 import { defineUserConfig } from 'vuepress'
-import type { DefaultThemeOptions } from 'vuepress'
+import { viteBundler } from '@vuepress/bundler-vite'
+import { searchPlugin } from '@vuepress/plugin-search'
 import { navbar } from './configs';
+import { defaultTheme } from '@vuepress/theme-default';
 
-export default defineUserConfig<DefaultThemeOptions>({
+export default defineUserConfig({
+  bundler: viteBundler(),
   port: 8089,
   base: '/django-step-by-step/',
   head: [
@@ -19,15 +22,7 @@ export default defineUserConfig<DefaultThemeOptions>({
     ],
   ],
   plugins: [
-    [
-      '@vuepress/pwa',
-      {
-        skipWaiting: true,
-      },
-    ],
-    [
-      '@vuepress/plugin-search',
-      {
+    searchPlugin({
         locales: {
           '/': {
             placeholder: 'Search',
@@ -36,11 +31,10 @@ export default defineUserConfig<DefaultThemeOptions>({
             placeholder: '搜索',
           },
         },
-      },
-    ],
+    })
   ],
-  // site-level locales config
 
+  // site-level locales config
   locales: {
     '/': {
       lang: 'en-US',
@@ -54,9 +48,10 @@ export default defineUserConfig<DefaultThemeOptions>({
     },
   },
 
-  themeConfig: {
+  theme: defaultTheme({
+
     logo: '/images/ublog.png',
-    darkMode: true,
+    // darkMode: true,
     repo: 'https://github.com/briancaffey/django-step-by-step',
 
     docsDir: 'vuepress-docs/docs',
@@ -107,10 +102,10 @@ export default defineUserConfig<DefaultThemeOptions>({
 
         // a11y
         openInNewWindow: '在新窗口打开',
-        toggleDarkMode: '切换夜间模式',
+        // toggleDarkMode: '切换夜间模式',
       },
     },
-  },
+  }),
   lang: 'en-US',
   title: 'Django Step by Step Documentation',
   description: 'Documentation for Django Step by Step',

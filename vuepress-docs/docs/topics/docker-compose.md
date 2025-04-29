@@ -1,6 +1,6 @@
 ---
-next: /topics/jwt-authentication
-prev: /topics/django
+next: /topics/vuepress
+prev: /topics/nuxt
 ---
 
 # Using docker compose

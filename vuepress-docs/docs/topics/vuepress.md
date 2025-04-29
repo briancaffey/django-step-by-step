@@ -1,6 +1,6 @@
 ---
-next: /guide/step-by-step
-prev: /topics/jwt-authentication
+next: /guide/ci-cd/github-actions
+prev: /topics/docker-compose
 ---
 
 # A guide to this VuePress site
@@ -51,7 +51,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v2
         with:
-          node-version: "14"
+          node-version: "20"
 
       - name: Cache dependencies
         uses: actions/cache@v2
