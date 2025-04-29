@@ -86,20 +86,9 @@
             </DropdownMenuContent>
         </DropdownMenu>
       </div>
-        <!-- <NavigationMenu class="flex space-x-4">
-
-          <Popover v-if="authStore.getIsAuthenticated">
-            <PopoverTrigger class="text-sm font-medium transition">Logout</PopoverTrigger>
-            <PopoverContent class="p-2 w-auto">
-            <NuxtLink>
-              <Button @click="logout">Logout</Button>
-            </NuxtLink>
-          </PopoverContent>
-        </Popover>
-        </NavigationMenu> -->
       </div>
     </nav>
-    <!-- Page Content -->
+
     <main class="container mx-auto px-6 py-8 pb-0">
       <NuxtPage />
     </main>
@@ -109,20 +98,6 @@
 <script setup lang="ts">
 import { storeToRefs } from 'pinia';
 import { CircleUser, Menu, Package2, Search } from 'lucide-vue-next'
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  NavigationMenuViewport,
-} from '@/components/ui/navigation-menu'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
 import {
   DropdownMenu,
   DropdownMenuContent,

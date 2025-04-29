@@ -1,12 +1,10 @@
 <template>
   <NuxtLayout>
     <NuxtPage class="dark-mode dark" />
-    <Toaster />
   </NuxtLayout>
 </template>
 
 <script setup lang="ts">
-import Toaster from '@/components/ui/toast/Toaster.vue'
 import { useAuth } from '@/composables/useAuth'
 import { useProfile } from '@/composables/useProfile';
 await useAuth();

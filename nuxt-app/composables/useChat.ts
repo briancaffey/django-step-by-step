@@ -1,32 +1,5 @@
 import { ref } from 'vue';
 
-export interface Message {
-  id: number;
-  content: string;
-  timestamp: string;
-  role: string;
-}
-
-export interface Messages {
-  messages: Message[];
-  session_id: number;
-}
-
-export interface ChatResponse {
-  messages: Message[];
-}
-
-export interface SendMessageResponse {
-  id: number;
-  content: string;
-  timestamp: string;
-  role: string;
-}
-
-export interface Session {
-  session_id: number;
-  created_at: string;
-}
 
 export const useChatComposable = async () => {
 

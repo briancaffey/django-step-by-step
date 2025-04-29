@@ -164,6 +164,9 @@ CELERY_BEAT_SCHEDULE = {
 
 CELERY_TASK_ALWAYS_EAGER = bool(int(os.environ.get("CELERY_TASK_ALWAYS_EAGER", 0)))
 
+# broker_connection_retry_on_startup
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 

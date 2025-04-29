@@ -18,6 +18,7 @@ MIDDLEWARE += [
 INTERNAL_IPS = ["127.0.0.1"]
 
 ADMIN_EMAIL = "user@email.com"
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 
 NOTEBOOK_ARGUMENTS = [
     "--ip",

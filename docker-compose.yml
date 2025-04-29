@@ -115,6 +115,7 @@ services:
 
       # celery beat
       - PIDFILE=
+      - TZ=America/New_York
     depends_on:
       - postgres
       - redis
@@ -127,6 +128,11 @@ services:
       - "manage.py"
       - "start_celery_worker"
     ports: []
+    healthcheck:
+      test: ["CMD", "celery", "--app=backend.celery_app:app", "inspect", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   celery_beat:
     <<: *backend
@@ -193,9 +199,11 @@ services:
     networks:
       - main
     depends_on:
-      - celery_worker
+      celery_worker:
+        condition: service_healthy
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/1
+      - TZ=America/New_York
 
 volumes:
   pg-data:
