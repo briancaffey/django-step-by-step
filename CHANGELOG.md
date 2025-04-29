@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.10.0](https://github.com/briancaffey/django-step-by-step/compare/v0.9.5...v0.10.0) (2025-04-29)
+
+
+### Features
+
+* **docs:** update vuepress documentation site and fix issues with links ([2b5063b](https://github.com/briancaffey/django-step-by-step/commit/2b5063bb88eba04cac3b4d7cbdec95ce59a55f90))
+* **home-page:** add home page content in nuxt app, fix docs pipeline ([2d04bc3](https://github.com/briancaffey/django-step-by-step/commit/2d04bc382237c45a678cf206556c95e07c45c4f7))
+* **readme:** update readme ([7889dc3](https://github.com/briancaffey/django-step-by-step/commit/7889dc32f6ef7ebb4c9d12b33152dde7380e12a9))
+
+
+### Bug Fixes
+
+* **compose:** fix docker compose issue with nuxt app and nginx ([0068f86](https://github.com/briancaffey/django-step-by-step/commit/0068f862b3da7a50edd6f9f3dc3b1925ceb7b6cd))
+* **dev:** various fixes for local development ([7e08a3c](https://github.com/briancaffey/django-step-by-step/commit/7e08a3ca8c435ca3c4279fc68b98dc895adc89be))
+* **poetry:** split dev dependencies in pyproject.toml into test and dev groups Fixes [#34](https://github.com/briancaffey/django-step-by-step/issues/34) ([#66](https://github.com/briancaffey/django-step-by-step/issues/66)) ([b4cbdd1](https://github.com/briancaffey/django-step-by-step/commit/b4cbdd13033ebe2c66b581dcd5c709aaf8568895))
+* **poetry:** split dev deps into test and dev ([daca4ea](https://github.com/briancaffey/django-step-by-step/commit/daca4eaa74570ad1170817f66df922fe0f4c4d95))
+
 ## [0.9.5](https://github.com/briancaffey/django-step-by-step/compare/v0.9.4...v0.9.5) (2025-02-14)
 
 
